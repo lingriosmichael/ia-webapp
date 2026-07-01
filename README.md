@@ -52,3 +52,5 @@ npm run format
 1. Start `gr_backend`.
 2. In a separate terminal, start `gr_webapp` with `npm run dev`.
 3. Open `http://localhost:8080`.
+# ia-webapp
+Frontend Infrastructure for a Impact Atlas
