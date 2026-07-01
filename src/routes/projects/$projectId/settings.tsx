@@ -1,0 +1,92 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
+import { PageHeader, TopBar } from "@/components/WorkspaceUI";
+import { ProjectSettingsPanel } from "@/components/ProjectSettingsPanel";
+import { useWorkspaceShell } from "@/components/WorkspaceShell";
+import { useRequireAuth } from "@/hooks/use-auth";
+import {
+  useOrganizationWorkspaceQuery,
+  useProjectQuery,
+} from "@/hooks/use-grantready";
+import { useWorkspaceLocale } from "@/hooks/use-workspace-locale";
+
+export const Route = createFileRoute("/projects/$projectId/settings")({
+  component: ProjectSettingsPage,
+});
+
+function ProjectSettingsPage() {
+  const { projectId } = Route.useParams();
+  const auth = useRequireAuth();
+  const locale = useWorkspaceLocale();
+  const { t } = useTranslation();
+  const { openProjectDeleteDialog } = useWorkspaceShell();
+  const projectQuery = useProjectQuery(projectId, Boolean(auth.token));
+  const workspaceQuery = useOrganizationWorkspaceQuery(
+    projectQuery.data?.organizationId ?? "",
+    Boolean(auth.token && projectQuery.data?.organizationId),
+  );
+
+  if (
+    !auth.token ||
+    auth.isLoading ||
+    projectQuery.isLoading ||
+    workspaceQuery.isLoading
+  ) {
+    return <CenteredState label={t("project.loading")} />;
+  }
+
+  if (!projectQuery.data || !workspaceQuery.data) {
+    return <CenteredState label={t("project.loadFailed")} />;
+  }
+
+  const project = projectQuery.data;
+  const workspace = workspaceQuery.data;
+
+  return (
+    <>
+      <TopBar
+        crumbs={[
+          {
+            label: workspace.organization.name,
+            to: "/organizations/$organizationId",
+            params: { organizationId: workspace.organization.id },
+          },
+          {
+            label: project.name,
+            to: "/projects/$projectId",
+            params: { projectId },
+          },
+          { label: locale.sidebar.projectSettings },
+        ]}
+      />
+
+      <div className="mx-auto w-full max-w-6xl px-8 py-10">
+        <PageHeader
+          eyebrow={locale.projectSettings.eyebrow}
+          title={locale.projectSettings.title}
+          description={locale.projectSettings.description}
+        />
+
+        <ProjectSettingsPanel
+          project={project}
+          organizationName={workspace.organization.name}
+          onDeleteProject={() =>
+            openProjectDeleteDialog({
+              id: project.id,
+              name: project.name,
+              organizationId: project.organizationId,
+            })
+          }
+        />
+      </div>
+    </>
+  );
+}
+
+function CenteredState({ label }: { label: string }) {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-background text-sm text-muted-foreground">
+      {label}
+    </div>
+  );
+}

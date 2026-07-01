@@ -1,0 +1,56 @@
+import { Link } from '@tanstack/react-router';
+import { BarChart3, FileText, LayoutGrid, Settings2, Sparkles } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
+import { cn } from '@/lib/utils';
+
+interface Tab {
+  to: string;
+  label: string;
+  icon: ReactNode;
+}
+
+export function ActivityTabs({
+  projectId,
+  activityId,
+  className,
+}: {
+  projectId: string;
+  activityId: string;
+  className?: string;
+}) {
+  const { t } = useTranslation();
+
+  const tabs: Tab[] = [
+    { to: '/projects/$projectId/activities/$activityId/overview', label: t('activityTabs.brief'), icon: <FileText className="h-3.5 w-3.5" /> },
+    { to: '/projects/$projectId/activities/$activityId/data-review', label: t('activityTabs.schema'), icon: <LayoutGrid className="h-3.5 w-3.5" /> },
+    { to: '/projects/$projectId/activities/$activityId/analysis', label: t('activityTabs.analytics'), icon: <BarChart3 className="h-3.5 w-3.5" /> },
+    { to: '/projects/$projectId/activities/$activityId/insights', label: t('activityTabs.insights'), icon: <Sparkles className="h-3.5 w-3.5" /> },
+    { to: '/projects/$projectId/activities/$activityId/settings', label: t('activityTabs.settings'), icon: <Settings2 className="h-3.5 w-3.5" /> },
+  ];
+
+  return (
+    <nav
+      className={cn(
+        'flex w-full gap-1 overflow-x-auto border-b border-border pb-px',
+        className,
+      )}
+    >
+      {tabs.map((tItem) => (
+        <Link
+          key={tItem.to}
+          to={tItem.to}
+          params={{ projectId, activityId }}
+          className={cn(
+            'inline-flex items-center gap-1.5 rounded-t-md border-b-2 border-transparent px-3 py-2 text-[12.5px] font-medium text-muted-foreground transition-colors',
+            'hover:text-foreground',
+            'data-[status=active]:border-primary data-[status=active]:text-primary',
+          )}
+        >
+          {tItem.icon}
+          {tItem.label}
+        </Link>
+      ))}
+    </nav>
+  );
+}
