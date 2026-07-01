@@ -1,0 +1,1 @@
+import{c as e}from"./use-auth-D3BwKFUv.js";async function t(t){try{let n=(await e.getWorkspace(t)).projects[0]?.id;if(n)return{to:`/projects/$projectId`,params:{projectId:n}}}catch{}return{to:`/organizations/$organizationId`,params:{organizationId:t}}}export{t};
