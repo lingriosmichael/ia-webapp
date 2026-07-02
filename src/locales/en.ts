@@ -123,11 +123,16 @@ const en = {
     invitationCardTitle: 'Accept invitation',
     invitationCardDescription:
       'You are joining {{organization}} with {{email}}.',
+    invitationExistingAccountDescription:
+      'This invitation is linked to an existing account. Sign in as {{email}} to join {{organization}}.',
+    invitationExistingAccountMismatch:
+      'You are signed in as {{signedInEmail}}. Sign in as {{invitedEmail}} to accept this invitation.',
     acceptingInvitation: 'Accepting invitation…',
     acceptInvitation: 'Accept invitation',
+    signInToAcceptInvitation: 'Sign in to accept invitation',
     invitationAccepted: 'Invitation accepted. You can sign in now.',
     invitationAcceptedExistingAccount:
-      'Invitation accepted. Sign in with your existing account password.',
+      'Invitation accepted. Redirecting to the workspace.',
     invitationAcceptFailed: 'Invitation could not be accepted.',
   },
   organization: {

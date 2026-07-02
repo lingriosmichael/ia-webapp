@@ -131,6 +131,7 @@ export interface InvitationSummary {
   organizationName: string;
   email: string;
   role: "PROJECT_MANAGER";
+  acceptanceMode: "create_account" | "sign_in";
   status: "pending" | "accepted" | "revoked";
   token: string;
   invitedById: string;
@@ -142,7 +143,7 @@ export interface InvitationSummary {
 
 export interface InvitationAcceptanceSummary {
   invitation: InvitationSummary;
-  hasExistingAccount: boolean;
+  acceptanceMode: InvitationSummary["acceptanceMode"];
 }
 
 export interface CreateProjectPayload {
@@ -445,7 +446,7 @@ export const apiClient = {
   },
   acceptInvitation(
     token: string,
-    payload: { fullName: string; password: string },
+    payload: { fullName?: string; password?: string },
   ): Promise<InvitationAcceptanceSummary> {
     return request(`/invitations/${token}/accept`, {
       method: "POST",

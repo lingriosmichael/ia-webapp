@@ -2,10 +2,7 @@ import { Outlet, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createContext, useContext, useEffect } from "react";
 import { WorkspaceShell } from "@/components/WorkspaceShell";
 import { useLogout, useRequireAuth } from "@/hooks/use-auth";
-import {
-  useOrganizationMembersQuery,
-  useOrganizationWorkspaceQuery,
-} from "@/hooks/use-grantready";
+import { useOrganizationWorkspaceQuery } from "@/hooks/use-grantready";
 import { resolveActiveOrganizationId } from "@/lib/organization-selection";
 import { resolveWorkspaceDestination } from "@/lib/workspace-routing";
 
@@ -13,7 +10,6 @@ interface OrganizationWorkspacePageContextValue {
   organizationId: string;
   userName: string;
   workspace: NonNullable<ReturnType<typeof useOrganizationWorkspaceQuery>["data"]>;
-  members: NonNullable<ReturnType<typeof useOrganizationMembersQuery>["data"]>;
 }
 
 const OrganizationWorkspacePageContext =
@@ -42,10 +38,6 @@ function OrganizationLayout() {
     organizationId,
     Boolean(auth.token),
   );
-  const membersQuery = useOrganizationMembersQuery(
-    organizationId,
-    Boolean(auth.token),
-  );
 
   useEffect(() => {
     if (!auth.data?.organizations.length) {
@@ -66,7 +58,7 @@ function OrganizationLayout() {
     );
   }, [auth.data?.organizations, navigate, organizationId]);
 
-  if (!auth.token || auth.isLoading || workspaceQuery.isLoading || membersQuery.isLoading) {
+  if (!auth.token || auth.isLoading || workspaceQuery.isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-sm text-muted-foreground">
         Loading workspace…
@@ -74,7 +66,7 @@ function OrganizationLayout() {
     );
   }
 
-  if (!workspaceQuery.data || !membersQuery.data) {
+  if (!workspaceQuery.data) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-sm text-muted-foreground">
         Workspace could not be loaded.
@@ -90,7 +82,6 @@ function OrganizationLayout() {
         organizationId,
         userName,
         workspace: workspaceQuery.data,
-        members: membersQuery.data,
       }}
     >
       <WorkspaceShell

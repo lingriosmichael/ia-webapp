@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { Card, PageHeader, TopBar } from "@/components/WorkspaceUI";
 import {
   useCreateInvitationMutation,
+  useOrganizationMembersQuery,
   useOrganizationInvitationsQuery,
   useRemoveOrganizationMemberMutation,
 } from "@/hooks/use-grantready";
@@ -16,9 +17,13 @@ export const Route = createFileRoute("/organizations/$organizationId/members")({
 });
 
 function OrganizationMembersPage() {
-  const { workspace, members, organizationId } = useOrganizationWorkspacePage();
+  const { workspace, organizationId } = useOrganizationWorkspacePage();
   const locale = useWorkspaceLocale();
   const [email, setEmail] = useState("");
+  const membersQuery = useOrganizationMembersQuery(
+    organizationId,
+    workspace.organization.permissions.canManageMembers,
+  );
   const invitationsQuery = useOrganizationInvitationsQuery(
     organizationId,
     workspace.organization.permissions.canManageMembers,
@@ -29,6 +34,16 @@ function OrganizationMembersPage() {
   if (!workspace.organization.permissions.canManageMembers) {
     return <Navigate to="/organizations/$organizationId" params={{ organizationId }} />;
   }
+
+  if (membersQuery.isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center text-sm text-muted-foreground">
+        Loading members…
+      </div>
+    );
+  }
+
+  const members = membersQuery.data ?? [];
 
   async function inviteMember(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

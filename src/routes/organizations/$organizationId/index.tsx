@@ -3,6 +3,7 @@ import { BarChart3, FolderKanban, Sparkles, Users2 } from "lucide-react";
 import { OrganizationCard } from "@/components/OrganizationCard";
 import { Card, PageHeader, TopBar } from "@/components/WorkspaceUI";
 import { useWorkspaceShell } from "@/components/WorkspaceShell";
+import { useOrganizationMembersQuery } from "@/hooks/use-grantready";
 import { useWorkspaceLocale } from "@/hooks/use-workspace-locale";
 import { useOrganizationWorkspacePage } from "./route";
 
@@ -11,10 +12,12 @@ export const Route = createFileRoute("/organizations/$organizationId/")({
 });
 
 function OrganizationWorkspacePage() {
-  const { workspace, members, organizationId } = useOrganizationWorkspacePage();
+  const { workspace, organizationId } = useOrganizationWorkspacePage();
   const { openProjectDialog } = useWorkspaceShell();
   const locale = useWorkspaceLocale();
   const isOrganizationAdmin = workspace.organization.role === "ORGANIZATION_ADMIN";
+  const membersQuery = useOrganizationMembersQuery(organizationId, isOrganizationAdmin);
+  const members = membersQuery.data ?? [];
   const recentProjects = [...workspace.projects]
     .sort(
       (left, right) =>
@@ -55,7 +58,7 @@ function OrganizationWorkspacePage() {
         <div className="mt-8 space-y-6">
           <OrganizationCard
             organization={workspace.organization}
-            memberCount={members.length}
+            memberCount={isOrganizationAdmin ? (membersQuery.data?.length ?? null) : null}
             projectCount={workspace.projects.length}
             readOnly={!workspace.organization.permissions.canManageProfile}
           />
@@ -123,23 +126,23 @@ function OrganizationWorkspacePage() {
               </div>
 
               <div className="space-y-6">
-                <Card className="p-6">
-                  <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
-                    <Users2 className="h-4 w-4 text-primary" />
-                    {locale.organizationPage.membersSummary}
-                  </div>
-                  <div className="mt-4 space-y-3">
-                    {members.slice(0, 5).map((member) => (
-                      <div
-                        key={member.id}
-                        className="rounded-2xl border border-border bg-secondary/20 px-4 py-3"
-                      >
-                        <div className="text-sm font-medium text-foreground">{member.fullName}</div>
-                        <div className="text-xs text-muted-foreground">{member.email}</div>
-                      </div>
-                    ))}
-                  </div>
-                  {isOrganizationAdmin ? (
+                {isOrganizationAdmin ? (
+                  <Card className="p-6">
+                    <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
+                      <Users2 className="h-4 w-4 text-primary" />
+                      {locale.organizationPage.membersSummary}
+                    </div>
+                    <div className="mt-4 space-y-3">
+                      {members.slice(0, 5).map((member) => (
+                        <div
+                          key={member.id}
+                          className="rounded-2xl border border-border bg-secondary/20 px-4 py-3"
+                        >
+                          <div className="text-sm font-medium text-foreground">{member.fullName}</div>
+                          <div className="text-xs text-muted-foreground">{member.email}</div>
+                        </div>
+                      ))}
+                    </div>
                     <Link
                       to="/organizations/$organizationId/members"
                       params={{ organizationId }}
@@ -147,8 +150,8 @@ function OrganizationWorkspacePage() {
                     >
                       {locale.organizationPage.manageMembers}
                     </Link>
-                  ) : null}
-                </Card>
+                  </Card>
+                ) : null}
 
                 <Card className="p-6">
                   <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">

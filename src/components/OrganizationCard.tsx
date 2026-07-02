@@ -14,7 +14,7 @@ export function OrganizationCard({
   readOnly = false,
 }: {
   organization: OrganizationSummary;
-  memberCount: number;
+  memberCount: number | null;
   projectCount: number;
   readOnly?: boolean;
 }) {
@@ -66,7 +66,7 @@ export function OrganizationCard({
         <MetricTile
           icon={<Users2 className="h-4 w-4 text-primary" />}
           label={locale.organizationCard.members}
-          value={String(memberCount)}
+          value={memberCount === null ? "—" : String(memberCount)}
         />
         <MetricTile
           icon={<FolderKanban className="h-4 w-4 text-primary" />}

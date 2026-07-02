@@ -311,8 +311,22 @@ export function useRemoveOrganizationMemberMutation(organizationId: string) {
 }
 
 export function useAcceptInvitationMutation(token: string) {
-  return useMutation<InvitationAcceptanceSummary, ApiError, { fullName: string; password: string }>({
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    InvitationAcceptanceSummary,
+    ApiError,
+    { fullName?: string; password?: string }
+  >({
     mutationFn: (payload) => apiClient.acceptInvitation(token, payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: invitationQueryKey(token),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: sessionQueryKey,
+      });
+    },
   });
 }
 

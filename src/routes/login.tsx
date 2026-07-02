@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import { z } from 'zod';
 import { PublicMarketingShell } from '@/components/PublicMarketingShell';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,11 +15,15 @@ import { resolveWorkspaceDestination } from '@/lib/workspace-routing';
 import { ApiError } from '@/services/api-client';
 
 export const Route = createFileRoute('/login')({
+  validateSearch: z.object({
+    invitationToken: z.string().optional(),
+  }),
   component: LoginPage,
 });
 
 function LoginPage() {
   const navigate = useNavigate();
+  const search = Route.useSearch();
   const loginMutation = useLoginMutation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,6 +34,15 @@ function LoginPage() {
 
     try {
       const response = await loginMutation.mutateAsync({ email, password });
+      if (search.invitationToken) {
+        toast.success(t('auth.loginSuccessToast'));
+        void navigate({
+          to: '/invitations/$token/accept',
+          params: { token: search.invitationToken },
+        });
+        return;
+      }
+
       const organizationId = resolveActiveOrganizationId(
         response.organizations,
         response.organizations[0]?.id,

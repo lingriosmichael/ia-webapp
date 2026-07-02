@@ -126,11 +126,16 @@ const de = {
     invitationCardTitle: 'Einladung annehmen',
     invitationCardDescription:
       'Sie treten {{organization}} mit {{email}} bei.',
+    invitationExistingAccountDescription:
+      'Diese Einladung gehört zu einem bestehenden Konto. Melden Sie sich als {{email}} an, um {{organization}} beizutreten.',
+    invitationExistingAccountMismatch:
+      'Sie sind als {{signedInEmail}} angemeldet. Melden Sie sich als {{invitedEmail}} an, um die Einladung anzunehmen.',
     acceptingInvitation: 'Einladung wird angenommen…',
     acceptInvitation: 'Einladung annehmen',
+    signInToAcceptInvitation: 'Zum Annehmen anmelden',
     invitationAccepted: 'Einladung angenommen. Sie können sich jetzt anmelden.',
     invitationAcceptedExistingAccount:
-      'Einladung angenommen. Melden Sie sich mit Ihrem bestehenden Passwort an.',
+      'Einladung angenommen. Weiterleitung in den Workspace.',
     invitationAcceptFailed: 'Einladung konnte nicht angenommen werden.',
   },
   organization: {
