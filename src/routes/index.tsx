@@ -2,10 +2,11 @@ import { Link, createFileRoute, useNavigate } from '@tanstack/react-router';
 import { ArrowRight, Building2, FolderKanban, Layers } from 'lucide-react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { PublicSiteHeader } from '@/components/PublicSiteHeader';
 import { useSessionQuery } from '@/hooks/use-auth';
 import { resolveActiveOrganizationId } from '@/lib/organization-selection';
 import { resolveWorkspaceDestination } from '@/lib/workspace-routing';
+import { getAccessToken } from '@/services/auth-storage';
 
 export const Route = createFileRoute('/')({
   component: LandingPage,
@@ -14,12 +15,26 @@ export const Route = createFileRoute('/')({
 function LandingPage() {
   const navigate = useNavigate();
   const sessionQuery = useSessionQuery();
+  const token = getAccessToken();
   const activeOrganizationId = resolveActiveOrganizationId(
     sessionQuery.data?.organizations ?? [],
   );
   const { t } = useTranslation();
 
   useEffect(() => {
+    if (!token) {
+      return;
+    }
+
+    if (sessionQuery.isLoading) {
+      return;
+    }
+
+    if (!sessionQuery.data?.organizations.length) {
+      void navigate({ to: '/onboarding/workspace' });
+      return;
+    }
+
     if (!activeOrganizationId) {
       return;
     }
@@ -38,23 +53,12 @@ function LandingPage() {
     return () => {
       cancelled = true;
     };
-  }, [activeOrganizationId, navigate]);
+  }, [activeOrganizationId, navigate, sessionQuery.data?.organizations.length, sessionQuery.isLoading, token]);
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(9,126,105,0.18),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(197,132,24,0.16),_transparent_22%),linear-gradient(180deg,_#fbf7ee_0%,_#f4efe6_44%,_#ffffff_100%)] text-foreground">
       <div className="mx-auto max-w-7xl px-6 py-8">
-        <header className="flex items-center justify-between gap-4">
-          <div className="text-sm font-semibold tracking-[0.18em] text-primary">{t('common.brand')}</div>
-          <div className="flex items-center gap-3">
-            <LanguageSwitcher />
-            <Link to="/login" className="inline-flex h-9 items-center rounded-md px-4 text-sm font-medium hover:bg-accent hover:text-accent-foreground">
-              {t('common.logIn')}
-            </Link>
-            <Link to="/register" className="inline-flex h-9 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90">
-              {t('common.register')}
-            </Link>
-          </div>
-        </header>
+        <PublicSiteHeader currentPage="landing" />
 
         <section className="grid gap-12 py-20 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
           <div>

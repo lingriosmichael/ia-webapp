@@ -1,5 +1,10 @@
 const workspaceDe = {
   sidebar: {
+    workspace: "Workspace",
+    projects: "Projekte",
+    members: "Mitglieder",
+    billing: "Abrechnung",
+    organizationProfile: "Organisationsprofil",
     sectionTitle: "Projekte",
     projectSingular: "Projekt",
     projectPlural: "Projekte",
@@ -21,6 +26,7 @@ const workspaceDe = {
     organizationSettings: "Organisationseinstellungen",
     projectActions: "Projektaktionen",
     deleteProject: "Projekt löschen",
+    readOnlyProject: "Projekt im Lesemodus",
   },
   status: {
     planning: "Planung",
@@ -28,31 +34,63 @@ const workspaceDe = {
     completed: "Abgeschlossen",
   },
   role: {
-    owner: "Eigentümer",
-    member: "Mitglied",
+    ORGANIZATION_ADMIN: "Organisationsadministration",
+    PROJECT_MANAGER: "Projektleitung",
+  },
+  organizationCard: {
+    eyebrow: "Organisation",
+    noMission:
+      "Fügen Sie eine kurze Mission hinzu, damit der Workspace leichter erkennbar ist.",
+    members: "Mitglieder",
+    projects: "Projekte",
+    workspace: "Workspace",
+    workspaceReady: "Bereit",
+    readOnly: "Nur lesen",
   },
   organizationPage: {
     eyebrow: "Organisations-Workspace",
-    title: "Verwalten Sie Projekte in Ihrer Organisation",
-    description:
-      "Erstellen Sie hier Projekte und führen Sie Ihr Team direkt in den Evidenz-Workspace.",
+    adminTitle: "Organisations-Workspace",
+    managerTitle: "Mein Workspace",
+    adminDescription:
+      "Behalten Sie die gesamte Organisation im Blick, respektieren Sie Projektverantwortung und führen Sie Ihr Team in den Evidenz-Workflow.",
+    managerDescription:
+      "Sie sind Teil dieser Organisation. Öffnen Sie Ihre Projekte oder erstellen Sie das nächste Projekt, das Sie betreuen möchten.",
     primaryAction: "Projekt erstellen",
     emptyTitle: "Noch keine Projekte",
     emptyDescription:
-      "Verwenden Sie die Seitenleiste oder die Schaltfläche unten, um Ihr erstes Projekt zu erstellen.",
+      "Projekte organisieren Nachweise über Aktivitäten, Uploads, Analysen und Erkenntnisse hinweg.",
+    emptyAction: "Erstes Projekt erstellen",
+    projectOverview: "Projektüberblick",
+    myProjects: "Meine Projekte",
+    recentActivity: "Letzte Aktivität",
+    membersSummary: "Mitgliederübersicht",
+    manageMembers: "Mitglieder verwalten",
+    analyticsPlaceholder: "Organisationsanalysen",
+    analyticsAdminDescription:
+      "Hier werden organisationsweite Analysen und Erkenntnisse sichtbar, sobald mehr Evidenz vorliegt.",
+    analyticsManagerDescription:
+      "Nutzen Sie Ihre Projekte, um Evidenz aufzubauen. Organisationsweite Analysen bleiben für Admins sichtbar.",
+    activitiesLabel: "Aktivitäten",
+    noProjectDescription: "Noch keine Projektbeschreibung vorhanden.",
   },
   organizationSettings: {
     eyebrow: "Organisationseinstellungen",
     title: "Organisationsprofil",
     description:
-      "Aktualisieren Sie Name, Beschreibung und Logo Ihrer Organisation. Nach dem Speichern erscheint die Änderung sofort in der Seitenleiste.",
+      "Aktualisieren Sie Namen, Mission und Logo Ihrer Organisation. Nach dem Speichern erscheint die Änderung sofort in der Workspace-Karte.",
+    settingsEyebrow: "Workspace-Einstellungen",
+    settingsTitle: "Organisationseinstellungen",
+    settingsDescription:
+      "Halten Sie das Organisationsprofil getrennt von künftigen workspaceweiten Einstellungen.",
+    settingsPlaceholder:
+      "Weitere workspaceweite Einstellungen können später hier ergänzt werden, ohne das Organisationsprofil zu überladen.",
     general: "Allgemein",
     generalDescription:
       "Pflegen Sie hier die sichtbare Identität Ihrer Organisation im Workspace.",
     nameLabel: "Organisationsname",
     namePlaceholder: "PHINEO",
-    descriptionLabel: "Beschreibung",
-    descriptionPlaceholder:
+    missionLabel: "Mission",
+    missionPlaceholder:
       "Beschreiben Sie kurz, wofür Ihre Organisation steht und wie Sie mit Evidenz arbeiten.",
     logoLabel: "Organisationslogo",
     logoDescription:
@@ -70,6 +108,53 @@ const workspaceDe = {
     invalidFile: "Bitte laden Sie ein PNG-, JPG-, JPEG- oder WebP-Bild hoch.",
     dropzoneTitle: "Logo hierher ziehen",
     dropzoneAction: "Datei vom Computer auswählen",
+  },
+  organizationProjects: {
+    eyebrow: "Projekte",
+    title: "Projekte in diesem Workspace",
+    description:
+      "Öffnen Sie ein bestehendes Projekt oder erstellen Sie das nächste Projekt, das Sie betreuen möchten.",
+    primaryAction: "Projekt erstellen",
+    noDescription: "Noch keine Projektbeschreibung vorhanden.",
+    activities: "Aktivitäten",
+  },
+  organizationActivities: {
+    eyebrow: "Aktivitäten",
+    title: "Aktivitäten über meine Projekte hinweg",
+    description:
+      "Öffnen Sie eine Ihrer Aktivitäten, um Nachweise hochzuladen oder Erkenntnisse weiterzuverfolgen.",
+    noDescription: "Noch keine Aktivitätsbeschreibung vorhanden.",
+    openActivity: "Aktivität öffnen",
+  },
+  members: {
+    eyebrow: "Mitglieder",
+    title: "Projektleitungen einladen und verwalten",
+    description:
+      "Laden Sie Projektleitungen ein, prüfen Sie die aktuelle Mitgliederliste und halten Sie Verantwortlichkeiten klar.",
+    inviteTitle: "Team einladen",
+    inviteDescription:
+      "Erstellen Sie Einladungsdatensätze für Projektleitungen, damit sie beitreten und Projekte anlegen können.",
+    emailPlaceholder: "team@organisation.de",
+    projectManagerRole: "Projektleitung",
+    organizationAdminRole: "Organisationsadministration",
+    sendInvitation: "Einladung senden",
+    inviting: "Einladung wird gesendet…",
+    inviteSuccess: "Einladung wurde erstellt.",
+    inviteFailure: "Einladung konnte nicht erstellt werden.",
+    pendingInvitations: "Ausstehende Einladungen",
+    pendingStatus: "Wartet auf Annahme",
+    currentMembers: "Aktuelle Mitglieder",
+    removeAction: "Entfernen",
+    removeSuccess: "Mitglied wurde entfernt.",
+    removeFailure: "Mitglied konnte nicht entfernt werden.",
+  },
+  organizationBilling: {
+    eyebrow: "Abrechnung",
+    title: "Abo und Abrechnung",
+    description:
+      "Abrechnung bleibt auf Organisationsebene, damit Projektverantwortung klar getrennt bleibt.",
+    placeholder:
+      "Das Abonnementmanagement kann später hier ergänzt werden, ohne das Projekt- und Aktivitätsmodell zu verändern.",
   },
   projectPage: {
     viewInsights: "Erkenntnisse anzeigen",

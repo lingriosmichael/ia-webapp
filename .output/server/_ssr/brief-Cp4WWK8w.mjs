@@ -1,6 +1,6 @@
 import { i as __toESM } from "../_runtime.mjs";
 import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
-import { P as useNavigate } from "../_libs/@tanstack/react-router+[...].mjs";
+import { F as useNavigate } from "../_libs/@tanstack/react-router+[...].mjs";
 import { c as require_jsx_runtime } from "../_libs/@radix-ui/react-arrow+[...].mjs";
 import { t as useTranslation } from "../_libs/react-i18next.mjs";
 import { t as Route } from "./brief-COunA5k5.mjs";

@@ -16,6 +16,7 @@ import {
   ApiError,
   type CreateActivityPayload,
   type CreateProjectPayload,
+  type OrganizationPermissions,
   type OrganizationRole,
   type WorkspaceProject,
 } from "@/services/api-client";
@@ -48,6 +49,7 @@ export function WorkspaceShell({
   organizationId,
   organizationName,
   organizationRole,
+  organizationPermissions,
   organizationLogoUrl,
   userName,
   projects,
@@ -58,6 +60,7 @@ export function WorkspaceShell({
   organizationId: string;
   organizationName: string;
   organizationRole: OrganizationRole;
+  organizationPermissions: OrganizationPermissions;
   organizationLogoUrl: string | null;
   userName: string;
   projects: WorkspaceProject[];
@@ -82,6 +85,10 @@ export function WorkspaceShell({
   const activeActivityProjectId = useMemo(
     () => activityDialogProjectId ?? currentProjectId ?? "",
     [activityDialogProjectId, currentProjectId],
+  );
+  const currentProject = useMemo(
+    () => projects.find((project) => project.id === currentProjectId) ?? null,
+    [currentProjectId, projects],
   );
   const createActivityMutation = useCreateActivityMutation(
     activeActivityProjectId,
@@ -183,11 +190,13 @@ export function WorkspaceShell({
         <AppSidebar
           organizationName={organizationName}
           organizationRole={organizationRole}
+          organizationPermissions={organizationPermissions}
           organizationLogoUrl={organizationLogoUrl}
           organizationId={organizationId}
           userName={userName}
           projects={projects}
           currentProjectId={currentProjectId}
+          currentProject={currentProject}
           onCreateProject={workspaceShellActions.openProjectDialog}
           onCreateActivity={workspaceShellActions.openActivityDialog}
           onDeleteProject={workspaceShellActions.openProjectDeleteDialog}

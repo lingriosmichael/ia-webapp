@@ -83,6 +83,7 @@ function ActivityBriefPage() {
   const unresolvedIssues = getSchema(t).filter(
     (column) => column.clarifyingQuestion || column.confidence < 0.8,
   ).length;
+  const canUploadEvidence = activity.permissions.canUploadEvidence;
 
   const workflowState = deriveWorkflowState({
     uploadPending: uploadMutation.isPending,
@@ -138,6 +139,11 @@ function ActivityBriefPage() {
       return;
     }
 
+    if (!canUploadEvidence) {
+      toast.error(t('activityBrief.readOnlyUpload'));
+      return;
+    }
+
     try {
       setActiveUploadName(file.name);
       await uploadMutation.mutateAsync(file);
@@ -174,7 +180,12 @@ function ActivityBriefPage() {
           unresolvedIssues={unresolvedIssues}
           lastUploadName={lastUpload?.originalFileName ?? activeUploadName}
           latestJobStatus={latestJobStatus}
-          onOpenUploader={() => setShowUploader(true)}
+          onOpenUploader={() => {
+            if (canUploadEvidence) {
+              setShowUploader(true);
+            }
+          }}
+          canUploadEvidence={canUploadEvidence}
         />
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -222,7 +233,7 @@ function ActivityBriefPage() {
           />
         )}
 
-        {shouldShowUploader && !uploadMutation.isPending && (
+        {canUploadEvidence && shouldShowUploader && !uploadMutation.isPending && (
           <UploadComposer
             file={file}
             dragActive={dragActive}
@@ -264,7 +275,7 @@ function ActivityBriefPage() {
               >
                 {primaryNextAction.label}
               </Link>
-            ) : workflowState.key !== 'empty' ? (
+            ) : workflowState.key !== 'empty' && canUploadEvidence ? (
               <button
                 type="button"
                 onClick={() => setShowUploader(true)}
@@ -330,6 +341,7 @@ function OverviewHero({
   lastUploadName,
   latestJobStatus,
   onOpenUploader,
+  canUploadEvidence,
 }: {
   state: WorkflowStateKey;
   projectId: string;
@@ -338,6 +350,7 @@ function OverviewHero({
   lastUploadName: string | null;
   latestJobStatus: string | null;
   onOpenUploader: () => void;
+  canUploadEvidence: boolean;
 }) {
   const { t } = useTranslation();
   const icon =
@@ -382,7 +395,7 @@ function OverviewHero({
         </div>
 
         <div className="flex shrink-0 flex-wrap gap-3">
-          {state === 'ready' ? (
+          {state === 'ready' && canUploadEvidence ? (
             <>
               <Link
                 to={
@@ -406,7 +419,7 @@ function OverviewHero({
                 {t('activityBrief.hero.uploadAnother')}
               </button>
             </>
-          ) : state === 'empty' || state === 'attention' ? (
+          ) : (state === 'empty' || state === 'attention') && canUploadEvidence ? (
             <button
               type="button"
               onClick={onOpenUploader}

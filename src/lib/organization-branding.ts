@@ -21,11 +21,13 @@ export function getOrganizationBranding({
   const isGerman = language.startsWith('de');
   const displayName = organizationName;
   const roleLabel =
-    organizationRole === 'owner'
-      ? 'Administrator'
+    organizationRole === 'ORGANIZATION_ADMIN'
+      ? isGerman
+        ? 'Organisationsadministration'
+        : 'Organization Admin'
       : isGerman
-        ? 'Programmleitung'
-        : 'Programme Manager';
+        ? 'Projektleitung'
+        : 'Project Manager';
 
   return {
     displayName,

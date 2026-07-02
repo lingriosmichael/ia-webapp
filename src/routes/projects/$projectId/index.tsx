@@ -58,13 +58,15 @@ function ProjectOverview() {
 
     return (
       <>
-        <button
-          type="button"
-          onClick={() => openActivityDialog(projectId)}
-          className="inline-flex h-10 items-center rounded-md border border-border bg-card px-4 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
-        >
-          {t('project.addActivity')}
-        </button>
+        {project.permissions.canCreateActivity ? (
+          <button
+            type="button"
+            onClick={() => openActivityDialog(projectId)}
+            className="inline-flex h-10 items-center rounded-md border border-border bg-card px-4 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+          >
+            {t('project.addActivity')}
+          </button>
+        ) : null}
         <Link
           to="/projects/$projectId/insights"
           params={{ projectId }}
@@ -113,13 +115,15 @@ function ProjectOverview() {
               <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
                 {t('project.emptyStateSupporting')}
               </p>
-              <button
-                type="button"
-                onClick={() => openActivityDialog(projectId)}
-                className="mt-8 inline-flex h-11 items-center rounded-md bg-primary px-5 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
-              >
-                {t('project.emptyStateAction')}
-              </button>
+              {project.permissions.canCreateActivity ? (
+                <button
+                  type="button"
+                  onClick={() => openActivityDialog(projectId)}
+                  className="mt-8 inline-flex h-11 items-center rounded-md bg-primary px-5 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
+                >
+                  {t('project.emptyStateAction')}
+                </button>
+              ) : null}
             </div>
           </Card>
         ) : (
@@ -213,13 +217,15 @@ function ProjectOverview() {
                   {t('project.activitiesDescription')}
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={() => openActivityDialog(projectId)}
-                className="inline-flex h-9 items-center rounded-md border border-border bg-card px-3.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
-              >
-                {t('project.addAnotherActivity')}
-              </button>
+              {project.permissions.canCreateActivity ? (
+                <button
+                  type="button"
+                  onClick={() => openActivityDialog(projectId)}
+                  className="inline-flex h-9 items-center rounded-md border border-border bg-card px-3.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+                >
+                  {t('project.addAnotherActivity')}
+                </button>
+              ) : null}
             </div>
 
             <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">

@@ -331,6 +331,28 @@ var UserRound = createLucideIcon("user-round", [["circle", {
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
+var UsersRound = createLucideIcon("users-round", [
+	["path", {
+		d: "M18 21a8 8 0 0 0-16 0",
+		key: "3ypg7q"
+	}],
+	["circle", {
+		cx: "10",
+		cy: "8",
+		r: "5",
+		key: "o932ke"
+	}],
+	["path", {
+		d: "M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3",
+		key: "10s06x"
+	}]
+]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
 var Activity = createLucideIcon("activity", [["path", {
 	d: "M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2",
 	key: "169zse"
@@ -509,6 +531,26 @@ var Clock3 = createLucideIcon("clock-3", [["circle", {
 var Command = createLucideIcon("command", [["path", {
 	d: "M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3",
 	key: "11bfej"
+}]]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
+var CreditCard = createLucideIcon("credit-card", [["rect", {
+	width: "20",
+	height: "14",
+	x: "2",
+	y: "5",
+	rx: "2",
+	key: "ynyp8z"
+}], ["line", {
+	x1: "2",
+	x2: "22",
+	y1: "10",
+	y2: "10",
+	key: "1b3vmo"
 }]]);
 /**
 * @license lucide-react v0.575.0 - ISC
@@ -1064,4 +1106,4 @@ var Zap = createLucideIcon("zap", [["path", {
 	key: "1xq2db"
 }]]);
 //#endregion
-export { ChevronDown as A, Layers as B, FileSpreadsheet as C, Circle as D, Clock3 as E, ArrowRight as F, CircleAlert as G, CloudUpload as H, Activity as I, ChartColumn as K, UserRound as L, CalendarRange as M, Building2 as N, ChevronUp as O, ArrowUpRight as P, TriangleAlert as R, FileText as S, Command as T, CircleQuestionMark as U, Ellipsis as V, CircleCheck as W, LayoutGrid as _, TrendingUp as a, ImagePlus as b, ShieldCheck as c, Search as d, Plus as f, Lightbulb as g, LogOut as h, Upload as i, Check as j, ChevronRight as k, ShieldAlert as l, MapPin as m, X as n, Trash2 as o, MapPinned as p, Workflow as r, Target as s, Zap as t, Settings2 as u, LayoutDashboard as v, Database as w, FolderKanban as x, Languages as y, Sparkles as z };
+export { ChevronRight as A, TriangleAlert as B, FileSpreadsheet as C, Clock3 as D, Command as E, ArrowUpRight as F, CircleQuestionMark as G, Layers as H, ArrowRight as I, ChartColumn as J, CircleCheck as K, Activity as L, Check as M, CalendarRange as N, Circle as O, Building2 as P, UsersRound as R, FileText as S, CreditCard as T, Ellipsis as U, Sparkles as V, CloudUpload as W, LayoutGrid as _, TrendingUp as a, ImagePlus as b, ShieldCheck as c, Search as d, Plus as f, Lightbulb as g, LogOut as h, Upload as i, ChevronDown as j, ChevronUp as k, ShieldAlert as l, MapPin as m, X as n, Trash2 as o, MapPinned as p, CircleAlert as q, Workflow as r, Target as s, Zap as t, Settings2 as u, LayoutDashboard as v, Database as w, FolderKanban as x, Languages as y, UserRound as z };

@@ -1,5 +1,10 @@
 const workspaceEn = {
   sidebar: {
+    workspace: "Workspace",
+    projects: "Projects",
+    members: "Members",
+    billing: "Billing",
+    organizationProfile: "Organization Profile",
     sectionTitle: "Projects",
     projectSingular: "Project",
     projectPlural: "Projects",
@@ -20,6 +25,7 @@ const workspaceEn = {
     organizationSettings: "Organization Settings",
     projectActions: "Project actions",
     deleteProject: "Delete project",
+    readOnlyProject: "Read-only project view",
   },
   status: {
     planning: "Planning",
@@ -27,31 +33,62 @@ const workspaceEn = {
     completed: "Completed",
   },
   role: {
-    owner: "Owner",
-    member: "Member",
+    ORGANIZATION_ADMIN: "Organization Admin",
+    PROJECT_MANAGER: "Project Manager",
+  },
+  organizationCard: {
+    eyebrow: "Organization",
+    noMission: "Add a short mission statement to make this workspace easier to recognize.",
+    members: "Members",
+    projects: "Projects",
+    workspace: "Workspace",
+    workspaceReady: "Ready",
+    readOnly: "Read-only",
   },
   organizationPage: {
     eyebrow: "Organization Workspace",
-    title: "Manage projects inside your organization",
-    description:
-      "Create projects here and move your team straight into the evidence workspace.",
+    adminTitle: "Organization workspace",
+    managerTitle: "My workspace",
+    adminDescription:
+      "View the full organization, monitor project ownership, and guide the team into the evidence workflow.",
+    managerDescription:
+      "You are part of this organization. Open your projects or create the next one you want to manage.",
     primaryAction: "Create project",
     emptyTitle: "No projects yet",
     emptyDescription:
-      "Use the sidebar or the button below to create your first project.",
+      "Projects help organize evidence across activities, uploads, analytics, and insights.",
+    emptyAction: "Create your first project",
+    projectOverview: "Project overview",
+    myProjects: "My projects",
+    recentActivity: "Recent activity",
+    membersSummary: "Members summary",
+    manageMembers: "Manage members",
+    analyticsPlaceholder: "Organization analytics",
+    analyticsAdminDescription:
+      "Organization-wide analytics and insights will expand here as more evidence flows in.",
+    analyticsManagerDescription:
+      "Use your projects to build evidence. Organization-wide analytics remain visible to admins.",
+    activitiesLabel: "activities",
+    noProjectDescription: "No project description yet.",
   },
   organizationSettings: {
     eyebrow: "Organization Settings",
     title: "Organization profile",
     description:
-      "Update your organization name, description, and logo. Once saved, the sidebar refreshes immediately.",
+      "Update your organization name, mission, and logo. Once saved, the workspace card refreshes immediately.",
+    settingsEyebrow: "Workspace Settings",
+    settingsTitle: "Organization settings",
+    settingsDescription:
+      "Keep the organization profile separate from future workspace-level settings.",
+    settingsPlaceholder:
+      "Additional workspace-level settings can be added here without mixing them into the organization profile.",
     general: "General",
     generalDescription:
       "Manage the visible identity of your organization inside this workspace.",
     nameLabel: "Organization name",
     namePlaceholder: "PHINEO",
-    descriptionLabel: "Description",
-    descriptionPlaceholder:
+    missionLabel: "Mission",
+    missionPlaceholder:
       "Briefly explain what your organization does and how your team uses evidence.",
     logoLabel: "Organization logo",
     logoDescription:
@@ -69,6 +106,49 @@ const workspaceEn = {
     invalidFile: "Please upload a PNG, JPG, JPEG, or WebP image.",
     dropzoneTitle: "Drop your logo here",
     dropzoneAction: "Choose a file from your computer",
+  },
+  organizationProjects: {
+    eyebrow: "Projects",
+    title: "Projects in this workspace",
+    description: "Open an existing project or create the next one you want to manage.",
+    primaryAction: "Create project",
+    noDescription: "No project description yet.",
+    activities: "activities",
+  },
+  organizationActivities: {
+    eyebrow: "Activities",
+    title: "Activities across my projects",
+    description: "Open any activity you own to continue uploading evidence or reviewing insights.",
+    noDescription: "No activity description yet.",
+    openActivity: "Open activity",
+  },
+  members: {
+    eyebrow: "Members",
+    title: "Invite and manage your project managers",
+    description: "Invite project managers, review the current member list, and keep ownership clear.",
+    inviteTitle: "Invite your team",
+    inviteDescription:
+      "Create invitation records for project managers so they can join and start creating projects.",
+    emailPlaceholder: "team@organization.org",
+    projectManagerRole: "Project Manager",
+    organizationAdminRole: "Organization Admin",
+    sendInvitation: "Send invitation",
+    inviting: "Sending invitation…",
+    inviteSuccess: "Invitation created.",
+    inviteFailure: "Invitation could not be created.",
+    pendingInvitations: "Pending invitations",
+    pendingStatus: "Pending acceptance",
+    currentMembers: "Current members",
+    removeAction: "Remove",
+    removeSuccess: "Member removed.",
+    removeFailure: "Member could not be removed.",
+  },
+  organizationBilling: {
+    eyebrow: "Billing",
+    title: "Subscription and billing",
+    description: "Billing remains organization-level so project ownership rules stay simple.",
+    placeholder:
+      "Subscription management can be added here later without changing the project and activity model.",
   },
   projectPage: {
     viewInsights: "View insights",

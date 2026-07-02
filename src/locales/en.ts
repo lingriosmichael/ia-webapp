@@ -5,7 +5,7 @@ const en = {
     english: 'EN',
   },
   common: {
-    brand: 'GrantReady AI',
+    brand: 'Impact Atlas',
     evidenceWorkspace: 'Evidence Workspace',
     logIn: 'Log in',
     register: 'Register',
@@ -30,42 +30,42 @@ const en = {
     backToHome: 'Back to home',
   },
   landing: {
-    badge: 'SaaS foundation first',
+    badge: 'AI-supported impact analysis',
     title: 'Organizations, projects, and activities before AI processing.',
     description:
-      'Start with the workflow your team will actually use: onboard an organization, create projects, track activities, upload evidence, and store job metadata on a real backend.',
+      'Start with the workflow your team will actually use: onboard an organization, create projects, track activities, upload evidence, and store job metadata on a real backend. ImpactPilot automatically interprets your project data and turns evidence into meaningful analyses, visualizations, and reports for sound decisions, effective communication, and reliable funder reporting.',
     createWorkspace: 'Create workspace',
     useExistingAccount: 'Use existing account',
     features: {
       organizations: {
         title: 'Organizations',
         description:
-          'Each account starts inside an organization workspace with scoped access and ownership.',
+          'Each account starts inside an organization workspace with scoped access and ownership. The AI identifies content and connections across your project data.',
       },
       projects: {
         title: 'Projects',
         description:
-          'Projects become the funding or programme containers where evidence work is organized.',
+          'Projects become the funding or programme containers where evidence work is organized. Automatically calculated metrics and clear visualizations show actual project progress.',
       },
       activities: {
         title: 'Activities',
         description:
-          'Activities sit under projects and become the target for uploads, jobs, and result history.',
+          'Activities sit under projects and become the target for uploads, jobs, and result history. Prepare impact evidence and reports efficiently for funders, partners, and public communications.',
       },
     },
   },
   auth: {
-    foundation: 'SaaS foundation',
     loginMarketingTitle: 'Build a grant evidence workspace before the AI layer.',
     loginMarketingDescription:
       'Start with organizations, projects, activities, authentication, and a durable backend. Semantic processing comes later.',
-    registerMarketingTitle: 'Create the organization workspace first.',
+    registerMarketingTitle: 'Your projects already tell a story.',
     registerMarketingDescription:
-      'Your first account becomes the owner of a new organization. From there you can create projects, add activities, and upload evidence.',
+      'Create your account first, then provision the workspace, refine the organization profile, and invite your project managers.',
     loginTitle: 'Log in',
     loginDescription: 'Sign in to access your organization workspace.',
     registerTitle: 'Create account',
-    registerDescription: 'Register your owner account and first organization.',
+    registerDescription:
+      'After registration, you can create projects, upload evidence, and clearly present the impact of your programmes with meaningful analyses, visualizations, and reports.',
     email: 'Email',
     password: 'Password',
     fullName: 'Full name',
@@ -77,6 +77,7 @@ const en = {
     organizationPlaceholder: 'Example Foundation',
     loggingIn: 'Logging in…',
     creatingAccount: 'Creating account…',
+    creatingWorkspace: 'Creating workspace…',
     createAccount: 'Create account',
     newHere: 'New here?',
     createAnAccount: 'Create an account',
@@ -84,10 +85,50 @@ const en = {
     noOrganizationToast: 'No organization is linked to this account yet.',
     loginSuccessToast: 'Logged in.',
     loginFailed: 'Login failed.',
-    registerNoOrganizationToast:
-      'Registration succeeded but no organization was created.',
     registerSuccessToast: 'Account created.',
     registerFailed: 'Registration failed.',
+    workspaceProvisioningTitle: 'Create the organization workspace first.',
+    workspaceProvisioningDescription:
+      'Create the organization record before inviting project managers and routing them into the workspace.',
+    workspaceProvisioningCardTitle: 'Create workspace',
+    workspaceProvisioningCardDescription:
+      'Use the organization name exactly as your team expects to see it inside Impact Atlas.',
+    workspaceCreatedToast: 'Workspace created.',
+    workspaceCreateFailed: 'Workspace could not be created.',
+    welcomeTitle: 'Welcome to Impact Atlas.',
+    welcomeDescription:
+      'Your workspace is ready. Configure the organization before inviting the rest of the team.',
+    welcomeCardTitle: 'Your workspace is ready.',
+    welcomeCardDescription:
+      "Let's configure your organization before inviting your team.",
+    profileTitle: 'Give the workspace an identity.',
+    profileDescription:
+      'Keep the organization profile intentionally lightweight: name, mission, and logo.',
+    inviteTitle: 'Invite your team.',
+    inviteDescription:
+      'Invite your project managers so they can start creating projects and uploading evidence.',
+    inviteCardTitle: 'Invite Project Managers',
+    inviteCardDescription:
+      'Email sending can stay mocked for now. We only need invitation records and a working acceptance flow.',
+    inviteSuccessToast: 'Invitation sent.',
+    inviteFailedToast: 'Invitation could not be created.',
+    projectManagerOnly: 'Role: Project Manager',
+    inviting: 'Sending invitation…',
+    sendInvitation: 'Send invitation',
+    pendingInvitation: 'Pending acceptance',
+    finishOnboarding: 'Finish onboarding',
+    invitationTitle: 'Accept your invitation.',
+    invitationDescription:
+      'Join the organization, create your password, then sign in to enter the workspace.',
+    invitationCardTitle: 'Accept invitation',
+    invitationCardDescription:
+      'You are joining {{organization}} with {{email}}.',
+    acceptingInvitation: 'Accepting invitation…',
+    acceptInvitation: 'Accept invitation',
+    invitationAccepted: 'Invitation accepted. You can sign in now.',
+    invitationAcceptedExistingAccount:
+      'Invitation accepted. Sign in with your existing account password.',
+    invitationAcceptFailed: 'Invitation could not be accepted.',
   },
   organization: {
     loading: 'Loading workspace…',
@@ -142,6 +183,10 @@ const en = {
     viewInsights: 'View insights',
     eyebrow: 'Project',
     noDescription: 'No project description yet.',
+    readOnlyBannerTitle: 'Viewing as Organization Admin',
+    readOnlyBannerDescription:
+      'This project is owned by {{owner}}. You can review it here, but edits remain restricted to the owner.',
+    unknownOwner: 'another project manager',
     stats: {
       activities: 'Activities',
       activitiesDelta: 'Tracked inside this project',
@@ -335,7 +380,7 @@ const en = {
       titles: {
         empty: 'Upload your first dataset',
         uploading: 'Uploading your dataset',
-        processing: 'GrantReady AI is preparing your evidence',
+        processing: 'Impact Atlas is preparing your evidence',
         ready: 'Your evidence is ready for the next step',
         attention: 'This dataset needs another look',
       },
@@ -390,7 +435,7 @@ const en = {
       eyebrow: 'Add evidence',
       title: 'Bring monitoring data into this activity',
       description:
-        'Upload one CSV or Excel file and GrantReady AI will guide you through review, analysis, and insights from here.',
+        'Upload one CSV or Excel file and Impact Atlas will guide you through review, analysis, and insights from here.',
       cta: 'Start AI review',
       remove: 'Remove',
     },
@@ -513,7 +558,7 @@ const en = {
     eyebrow: 'AI Dataset Review',
     title: 'Did the AI understand your dataset correctly?',
     description:
-      'GrantReady AI maps each uploaded column, flags personal data, and recommends safe transformations before interpretation continues.',
+      'Impact Atlas maps each uploaded column, flags personal data, and recommends safe transformations before interpretation continues.',
     cta: {
       uploadDataset: 'Upload dataset',
       reviewRequired: 'Review required ({{count}})',
@@ -525,7 +570,7 @@ const en = {
       eyebrow: 'AI Data Interpretation',
       title: "We haven't analysed a dataset yet.",
       description:
-        'Once you upload a CSV or Excel file, GrantReady AI will read the structure, understand each field, identify personal data, and prepare it for interpretation.',
+        'Once you upload a CSV or Excel file, Impact Atlas will read the structure, understand each field, identify personal data, and prepare it for interpretation.',
       benefits: [
         'Detect every column automatically',
         'Understand what each field most likely means',
@@ -798,8 +843,8 @@ const en = {
   },
   enums: {
     roles: {
-      owner: 'Owner',
-      member: 'Member',
+      ORGANIZATION_ADMIN: 'Organization Admin',
+      PROJECT_MANAGER: 'Project Manager',
     },
     status: {
       planning: 'Planning',

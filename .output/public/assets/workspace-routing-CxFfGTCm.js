@@ -1,0 +1,1 @@
+async function e(e){return{to:`/organizations/$organizationId`,params:{organizationId:e}}}export{e as t};

@@ -5,9 +5,13 @@ import {
   apiClient,
   type ActivitySummary,
   type CreateActivityPayload,
+  type CreateOrganizationPayload,
   type CreateProjectPayload,
   type DeleteProjectPayload,
   type DeleteProjectResponse,
+  type InvitationAcceptanceSummary,
+  type InvitationSummary,
+  type OrganizationMemberSummary,
   type OrganizationSummary,
   type OrganizationWorkspace,
   type ProcessingJobRecord,
@@ -35,6 +39,11 @@ export const activityJobsQueryKey = (activityId: string) =>
 export const activityResultsQueryKey = (activityId: string) =>
   ["activity-results", activityId] as const;
 export const jobQueryKey = (jobId: string) => ["job", jobId] as const;
+export const organizationMembersQueryKey = (organizationId: string) =>
+  ["organization-members", organizationId] as const;
+export const organizationInvitationsQueryKey = (organizationId: string) =>
+  ["organization-invitations", organizationId] as const;
+export const invitationQueryKey = (token: string) => ["invitation", token] as const;
 
 export function useOrganizationWorkspaceQuery(
   organizationId: string,
@@ -43,6 +52,36 @@ export function useOrganizationWorkspaceQuery(
   return useQuery<OrganizationWorkspace, ApiError>({
     queryKey: workspaceQueryKey(organizationId),
     queryFn: () => apiClient.getWorkspace(organizationId),
+    enabled,
+  });
+}
+
+export function useOrganizationMembersQuery(
+  organizationId: string,
+  enabled = true,
+) {
+  return useQuery<OrganizationMemberSummary[], ApiError>({
+    queryKey: organizationMembersQueryKey(organizationId),
+    queryFn: () => apiClient.listOrganizationMembers(organizationId),
+    enabled,
+  });
+}
+
+export function useOrganizationInvitationsQuery(
+  organizationId: string,
+  enabled = true,
+) {
+  return useQuery<InvitationSummary[], ApiError>({
+    queryKey: organizationInvitationsQueryKey(organizationId),
+    queryFn: () => apiClient.listOrganizationInvitations(organizationId),
+    enabled,
+  });
+}
+
+export function useInvitationQuery(token: string, enabled = true) {
+  return useQuery<InvitationSummary, ApiError>({
+    queryKey: invitationQueryKey(token),
+    queryFn: () => apiClient.getInvitation(token),
     enabled,
   });
 }
@@ -129,6 +168,18 @@ export function useCreateProjectMutation(organizationId: string) {
   });
 }
 
+export function useCreateOrganizationMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: CreateOrganizationPayload) =>
+      apiClient.createOrganization(payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: sessionQueryKey });
+    },
+  });
+}
+
 export function useDeleteProjectMutation(organizationId: string) {
   const queryClient = useQueryClient();
 
@@ -208,6 +259,60 @@ export function useUpdateOrganizationMutation(organizationId: string) {
       });
       void queryClient.invalidateQueries({ queryKey: sessionQueryKey });
     },
+  });
+}
+
+export function useCreateInvitationMutation(organizationId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: { email: string; role: "PROJECT_MANAGER" }) =>
+      apiClient.createOrganizationInvitation(organizationId, payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: organizationInvitationsQueryKey(organizationId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: organizationMembersQueryKey(organizationId),
+      });
+    },
+  });
+}
+
+export function useRevokeInvitationMutation(organizationId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (invitationId: string) =>
+      apiClient.revokeOrganizationInvitation(organizationId, invitationId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: organizationInvitationsQueryKey(organizationId),
+      });
+    },
+  });
+}
+
+export function useRemoveOrganizationMemberMutation(organizationId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (membershipId: string) =>
+      apiClient.removeOrganizationMember(organizationId, membershipId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: organizationMembersQueryKey(organizationId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: sessionQueryKey,
+      });
+    },
+  });
+}
+
+export function useAcceptInvitationMutation(token: string) {
+  return useMutation<InvitationAcceptanceSummary, ApiError, { fullName: string; password: string }>({
+    mutationFn: (payload) => apiClient.acceptInvitation(token, payload),
   });
 }
 

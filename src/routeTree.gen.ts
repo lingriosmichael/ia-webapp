@@ -12,12 +12,24 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OnboardingWorkspaceRouteImport } from './routes/onboarding.workspace'
+import { Route as OnboardingWelcomeRouteImport } from './routes/onboarding.welcome'
+import { Route as OnboardingProfileRouteImport } from './routes/onboarding.profile'
+import { Route as OnboardingInviteRouteImport } from './routes/onboarding.invite'
 import { Route as ProjectsProjectIdRouteRouteImport } from './routes/projects/$projectId/route'
 import { Route as OrganizationsOrganizationIdRouteRouteImport } from './routes/organizations/$organizationId/route'
 import { Route as ProjectsProjectIdIndexRouteImport } from './routes/projects/$projectId/index'
+import { Route as OrganizationsOrganizationIdIndexRouteImport } from './routes/organizations/$organizationId/index'
 import { Route as ProjectsProjectIdSettingsRouteImport } from './routes/projects/$projectId/settings'
 import { Route as ProjectsProjectIdInsightsRouteImport } from './routes/projects/$projectId/insights'
 import { Route as ProjectsProjectIdAnalyticsRouteImport } from './routes/projects/$projectId/analytics'
+import { Route as OrganizationsOrganizationIdSettingsRouteImport } from './routes/organizations/$organizationId/settings'
+import { Route as OrganizationsOrganizationIdProjectsRouteImport } from './routes/organizations/$organizationId/projects'
+import { Route as OrganizationsOrganizationIdProfileRouteImport } from './routes/organizations/$organizationId/profile'
+import { Route as OrganizationsOrganizationIdMembersRouteImport } from './routes/organizations/$organizationId/members'
+import { Route as OrganizationsOrganizationIdBillingRouteImport } from './routes/organizations/$organizationId/billing'
+import { Route as OrganizationsOrganizationIdActivitiesRouteImport } from './routes/organizations/$organizationId/activities'
+import { Route as InvitationsTokenAcceptRouteImport } from './routes/invitations.$token.accept'
 import { Route as ProjectsProjectIdActivitiesActivityIdUploadRouteImport } from './routes/projects/$projectId/activities/$activityId/upload'
 import { Route as ProjectsProjectIdActivitiesActivityIdSettingsRouteImport } from './routes/projects/$projectId/activities/$activityId/settings'
 import { Route as ProjectsProjectIdActivitiesActivityIdSchemaRouteImport } from './routes/projects/$projectId/activities/$activityId/schema'
@@ -44,6 +56,26 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OnboardingWorkspaceRoute = OnboardingWorkspaceRouteImport.update({
+  id: '/onboarding/workspace',
+  path: '/onboarding/workspace',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingWelcomeRoute = OnboardingWelcomeRouteImport.update({
+  id: '/onboarding/welcome',
+  path: '/onboarding/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingProfileRoute = OnboardingProfileRouteImport.update({
+  id: '/onboarding/profile',
+  path: '/onboarding/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingInviteRoute = OnboardingInviteRouteImport.update({
+  id: '/onboarding/invite',
+  path: '/onboarding/invite',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectsProjectIdRouteRoute = ProjectsProjectIdRouteRouteImport.update({
   id: '/projects/$projectId',
   path: '/projects/$projectId',
@@ -60,6 +92,12 @@ const ProjectsProjectIdIndexRoute = ProjectsProjectIdIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ProjectsProjectIdRouteRoute,
 } as any)
+const OrganizationsOrganizationIdIndexRoute =
+  OrganizationsOrganizationIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => OrganizationsOrganizationIdRouteRoute,
+  } as any)
 const ProjectsProjectIdSettingsRoute =
   ProjectsProjectIdSettingsRouteImport.update({
     id: '/settings',
@@ -78,6 +116,47 @@ const ProjectsProjectIdAnalyticsRoute =
     path: '/analytics',
     getParentRoute: () => ProjectsProjectIdRouteRoute,
   } as any)
+const OrganizationsOrganizationIdSettingsRoute =
+  OrganizationsOrganizationIdSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => OrganizationsOrganizationIdRouteRoute,
+  } as any)
+const OrganizationsOrganizationIdProjectsRoute =
+  OrganizationsOrganizationIdProjectsRouteImport.update({
+    id: '/projects',
+    path: '/projects',
+    getParentRoute: () => OrganizationsOrganizationIdRouteRoute,
+  } as any)
+const OrganizationsOrganizationIdProfileRoute =
+  OrganizationsOrganizationIdProfileRouteImport.update({
+    id: '/profile',
+    path: '/profile',
+    getParentRoute: () => OrganizationsOrganizationIdRouteRoute,
+  } as any)
+const OrganizationsOrganizationIdMembersRoute =
+  OrganizationsOrganizationIdMembersRouteImport.update({
+    id: '/members',
+    path: '/members',
+    getParentRoute: () => OrganizationsOrganizationIdRouteRoute,
+  } as any)
+const OrganizationsOrganizationIdBillingRoute =
+  OrganizationsOrganizationIdBillingRouteImport.update({
+    id: '/billing',
+    path: '/billing',
+    getParentRoute: () => OrganizationsOrganizationIdRouteRoute,
+  } as any)
+const OrganizationsOrganizationIdActivitiesRoute =
+  OrganizationsOrganizationIdActivitiesRouteImport.update({
+    id: '/activities',
+    path: '/activities',
+    getParentRoute: () => OrganizationsOrganizationIdRouteRoute,
+  } as any)
+const InvitationsTokenAcceptRoute = InvitationsTokenAcceptRouteImport.update({
+  id: '/invitations/$token/accept',
+  path: '/invitations/$token/accept',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectsProjectIdActivitiesActivityIdUploadRoute =
   ProjectsProjectIdActivitiesActivityIdUploadRouteImport.update({
     id: '/activities/$activityId/upload',
@@ -143,11 +222,23 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/organizations/$organizationId': typeof OrganizationsOrganizationIdRouteRoute
+  '/organizations/$organizationId': typeof OrganizationsOrganizationIdRouteRouteWithChildren
   '/projects/$projectId': typeof ProjectsProjectIdRouteRouteWithChildren
+  '/onboarding/invite': typeof OnboardingInviteRoute
+  '/onboarding/profile': typeof OnboardingProfileRoute
+  '/onboarding/welcome': typeof OnboardingWelcomeRoute
+  '/onboarding/workspace': typeof OnboardingWorkspaceRoute
+  '/invitations/$token/accept': typeof InvitationsTokenAcceptRoute
+  '/organizations/$organizationId/activities': typeof OrganizationsOrganizationIdActivitiesRoute
+  '/organizations/$organizationId/billing': typeof OrganizationsOrganizationIdBillingRoute
+  '/organizations/$organizationId/members': typeof OrganizationsOrganizationIdMembersRoute
+  '/organizations/$organizationId/profile': typeof OrganizationsOrganizationIdProfileRoute
+  '/organizations/$organizationId/projects': typeof OrganizationsOrganizationIdProjectsRoute
+  '/organizations/$organizationId/settings': typeof OrganizationsOrganizationIdSettingsRoute
   '/projects/$projectId/analytics': typeof ProjectsProjectIdAnalyticsRoute
   '/projects/$projectId/insights': typeof ProjectsProjectIdInsightsRoute
   '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
+  '/organizations/$organizationId/': typeof OrganizationsOrganizationIdIndexRoute
   '/projects/$projectId/': typeof ProjectsProjectIdIndexRoute
   '/projects/$projectId/activities/$activityId/analysis': typeof ProjectsProjectIdActivitiesActivityIdAnalysisRoute
   '/projects/$projectId/activities/$activityId/analytics': typeof ProjectsProjectIdActivitiesActivityIdAnalyticsRoute
@@ -164,10 +255,21 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/organizations/$organizationId': typeof OrganizationsOrganizationIdRouteRoute
+  '/onboarding/invite': typeof OnboardingInviteRoute
+  '/onboarding/profile': typeof OnboardingProfileRoute
+  '/onboarding/welcome': typeof OnboardingWelcomeRoute
+  '/onboarding/workspace': typeof OnboardingWorkspaceRoute
+  '/invitations/$token/accept': typeof InvitationsTokenAcceptRoute
+  '/organizations/$organizationId/activities': typeof OrganizationsOrganizationIdActivitiesRoute
+  '/organizations/$organizationId/billing': typeof OrganizationsOrganizationIdBillingRoute
+  '/organizations/$organizationId/members': typeof OrganizationsOrganizationIdMembersRoute
+  '/organizations/$organizationId/profile': typeof OrganizationsOrganizationIdProfileRoute
+  '/organizations/$organizationId/projects': typeof OrganizationsOrganizationIdProjectsRoute
+  '/organizations/$organizationId/settings': typeof OrganizationsOrganizationIdSettingsRoute
   '/projects/$projectId/analytics': typeof ProjectsProjectIdAnalyticsRoute
   '/projects/$projectId/insights': typeof ProjectsProjectIdInsightsRoute
   '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
+  '/organizations/$organizationId': typeof OrganizationsOrganizationIdIndexRoute
   '/projects/$projectId': typeof ProjectsProjectIdIndexRoute
   '/projects/$projectId/activities/$activityId/analysis': typeof ProjectsProjectIdActivitiesActivityIdAnalysisRoute
   '/projects/$projectId/activities/$activityId/analytics': typeof ProjectsProjectIdActivitiesActivityIdAnalyticsRoute
@@ -185,11 +287,23 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/organizations/$organizationId': typeof OrganizationsOrganizationIdRouteRoute
+  '/organizations/$organizationId': typeof OrganizationsOrganizationIdRouteRouteWithChildren
   '/projects/$projectId': typeof ProjectsProjectIdRouteRouteWithChildren
+  '/onboarding/invite': typeof OnboardingInviteRoute
+  '/onboarding/profile': typeof OnboardingProfileRoute
+  '/onboarding/welcome': typeof OnboardingWelcomeRoute
+  '/onboarding/workspace': typeof OnboardingWorkspaceRoute
+  '/invitations/$token/accept': typeof InvitationsTokenAcceptRoute
+  '/organizations/$organizationId/activities': typeof OrganizationsOrganizationIdActivitiesRoute
+  '/organizations/$organizationId/billing': typeof OrganizationsOrganizationIdBillingRoute
+  '/organizations/$organizationId/members': typeof OrganizationsOrganizationIdMembersRoute
+  '/organizations/$organizationId/profile': typeof OrganizationsOrganizationIdProfileRoute
+  '/organizations/$organizationId/projects': typeof OrganizationsOrganizationIdProjectsRoute
+  '/organizations/$organizationId/settings': typeof OrganizationsOrganizationIdSettingsRoute
   '/projects/$projectId/analytics': typeof ProjectsProjectIdAnalyticsRoute
   '/projects/$projectId/insights': typeof ProjectsProjectIdInsightsRoute
   '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
+  '/organizations/$organizationId/': typeof OrganizationsOrganizationIdIndexRoute
   '/projects/$projectId/': typeof ProjectsProjectIdIndexRoute
   '/projects/$projectId/activities/$activityId/analysis': typeof ProjectsProjectIdActivitiesActivityIdAnalysisRoute
   '/projects/$projectId/activities/$activityId/analytics': typeof ProjectsProjectIdActivitiesActivityIdAnalyticsRoute
@@ -210,9 +324,21 @@ export interface FileRouteTypes {
     | '/register'
     | '/organizations/$organizationId'
     | '/projects/$projectId'
+    | '/onboarding/invite'
+    | '/onboarding/profile'
+    | '/onboarding/welcome'
+    | '/onboarding/workspace'
+    | '/invitations/$token/accept'
+    | '/organizations/$organizationId/activities'
+    | '/organizations/$organizationId/billing'
+    | '/organizations/$organizationId/members'
+    | '/organizations/$organizationId/profile'
+    | '/organizations/$organizationId/projects'
+    | '/organizations/$organizationId/settings'
     | '/projects/$projectId/analytics'
     | '/projects/$projectId/insights'
     | '/projects/$projectId/settings'
+    | '/organizations/$organizationId/'
     | '/projects/$projectId/'
     | '/projects/$projectId/activities/$activityId/analysis'
     | '/projects/$projectId/activities/$activityId/analytics'
@@ -229,10 +355,21 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
-    | '/organizations/$organizationId'
+    | '/onboarding/invite'
+    | '/onboarding/profile'
+    | '/onboarding/welcome'
+    | '/onboarding/workspace'
+    | '/invitations/$token/accept'
+    | '/organizations/$organizationId/activities'
+    | '/organizations/$organizationId/billing'
+    | '/organizations/$organizationId/members'
+    | '/organizations/$organizationId/profile'
+    | '/organizations/$organizationId/projects'
+    | '/organizations/$organizationId/settings'
     | '/projects/$projectId/analytics'
     | '/projects/$projectId/insights'
     | '/projects/$projectId/settings'
+    | '/organizations/$organizationId'
     | '/projects/$projectId'
     | '/projects/$projectId/activities/$activityId/analysis'
     | '/projects/$projectId/activities/$activityId/analytics'
@@ -251,9 +388,21 @@ export interface FileRouteTypes {
     | '/register'
     | '/organizations/$organizationId'
     | '/projects/$projectId'
+    | '/onboarding/invite'
+    | '/onboarding/profile'
+    | '/onboarding/welcome'
+    | '/onboarding/workspace'
+    | '/invitations/$token/accept'
+    | '/organizations/$organizationId/activities'
+    | '/organizations/$organizationId/billing'
+    | '/organizations/$organizationId/members'
+    | '/organizations/$organizationId/profile'
+    | '/organizations/$organizationId/projects'
+    | '/organizations/$organizationId/settings'
     | '/projects/$projectId/analytics'
     | '/projects/$projectId/insights'
     | '/projects/$projectId/settings'
+    | '/organizations/$organizationId/'
     | '/projects/$projectId/'
     | '/projects/$projectId/activities/$activityId/analysis'
     | '/projects/$projectId/activities/$activityId/analytics'
@@ -271,8 +420,13 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
-  OrganizationsOrganizationIdRouteRoute: typeof OrganizationsOrganizationIdRouteRoute
+  OrganizationsOrganizationIdRouteRoute: typeof OrganizationsOrganizationIdRouteRouteWithChildren
   ProjectsProjectIdRouteRoute: typeof ProjectsProjectIdRouteRouteWithChildren
+  OnboardingInviteRoute: typeof OnboardingInviteRoute
+  OnboardingProfileRoute: typeof OnboardingProfileRoute
+  OnboardingWelcomeRoute: typeof OnboardingWelcomeRoute
+  OnboardingWorkspaceRoute: typeof OnboardingWorkspaceRoute
+  InvitationsTokenAcceptRoute: typeof InvitationsTokenAcceptRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -298,6 +452,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/onboarding/workspace': {
+      id: '/onboarding/workspace'
+      path: '/onboarding/workspace'
+      fullPath: '/onboarding/workspace'
+      preLoaderRoute: typeof OnboardingWorkspaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding/welcome': {
+      id: '/onboarding/welcome'
+      path: '/onboarding/welcome'
+      fullPath: '/onboarding/welcome'
+      preLoaderRoute: typeof OnboardingWelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding/profile': {
+      id: '/onboarding/profile'
+      path: '/onboarding/profile'
+      fullPath: '/onboarding/profile'
+      preLoaderRoute: typeof OnboardingProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding/invite': {
+      id: '/onboarding/invite'
+      path: '/onboarding/invite'
+      fullPath: '/onboarding/invite'
+      preLoaderRoute: typeof OnboardingInviteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projects/$projectId': {
       id: '/projects/$projectId'
       path: '/projects/$projectId'
@@ -319,6 +501,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsProjectIdIndexRouteImport
       parentRoute: typeof ProjectsProjectIdRouteRoute
     }
+    '/organizations/$organizationId/': {
+      id: '/organizations/$organizationId/'
+      path: '/'
+      fullPath: '/organizations/$organizationId/'
+      preLoaderRoute: typeof OrganizationsOrganizationIdIndexRouteImport
+      parentRoute: typeof OrganizationsOrganizationIdRouteRoute
+    }
     '/projects/$projectId/settings': {
       id: '/projects/$projectId/settings'
       path: '/settings'
@@ -339,6 +528,55 @@ declare module '@tanstack/react-router' {
       fullPath: '/projects/$projectId/analytics'
       preLoaderRoute: typeof ProjectsProjectIdAnalyticsRouteImport
       parentRoute: typeof ProjectsProjectIdRouteRoute
+    }
+    '/organizations/$organizationId/settings': {
+      id: '/organizations/$organizationId/settings'
+      path: '/settings'
+      fullPath: '/organizations/$organizationId/settings'
+      preLoaderRoute: typeof OrganizationsOrganizationIdSettingsRouteImport
+      parentRoute: typeof OrganizationsOrganizationIdRouteRoute
+    }
+    '/organizations/$organizationId/projects': {
+      id: '/organizations/$organizationId/projects'
+      path: '/projects'
+      fullPath: '/organizations/$organizationId/projects'
+      preLoaderRoute: typeof OrganizationsOrganizationIdProjectsRouteImport
+      parentRoute: typeof OrganizationsOrganizationIdRouteRoute
+    }
+    '/organizations/$organizationId/profile': {
+      id: '/organizations/$organizationId/profile'
+      path: '/profile'
+      fullPath: '/organizations/$organizationId/profile'
+      preLoaderRoute: typeof OrganizationsOrganizationIdProfileRouteImport
+      parentRoute: typeof OrganizationsOrganizationIdRouteRoute
+    }
+    '/organizations/$organizationId/members': {
+      id: '/organizations/$organizationId/members'
+      path: '/members'
+      fullPath: '/organizations/$organizationId/members'
+      preLoaderRoute: typeof OrganizationsOrganizationIdMembersRouteImport
+      parentRoute: typeof OrganizationsOrganizationIdRouteRoute
+    }
+    '/organizations/$organizationId/billing': {
+      id: '/organizations/$organizationId/billing'
+      path: '/billing'
+      fullPath: '/organizations/$organizationId/billing'
+      preLoaderRoute: typeof OrganizationsOrganizationIdBillingRouteImport
+      parentRoute: typeof OrganizationsOrganizationIdRouteRoute
+    }
+    '/organizations/$organizationId/activities': {
+      id: '/organizations/$organizationId/activities'
+      path: '/activities'
+      fullPath: '/organizations/$organizationId/activities'
+      preLoaderRoute: typeof OrganizationsOrganizationIdActivitiesRouteImport
+      parentRoute: typeof OrganizationsOrganizationIdRouteRoute
+    }
+    '/invitations/$token/accept': {
+      id: '/invitations/$token/accept'
+      path: '/invitations/$token/accept'
+      fullPath: '/invitations/$token/accept'
+      preLoaderRoute: typeof InvitationsTokenAcceptRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/projects/$projectId/activities/$activityId/upload': {
       id: '/projects/$projectId/activities/$activityId/upload'
@@ -413,6 +651,39 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface OrganizationsOrganizationIdRouteRouteChildren {
+  OrganizationsOrganizationIdActivitiesRoute: typeof OrganizationsOrganizationIdActivitiesRoute
+  OrganizationsOrganizationIdBillingRoute: typeof OrganizationsOrganizationIdBillingRoute
+  OrganizationsOrganizationIdMembersRoute: typeof OrganizationsOrganizationIdMembersRoute
+  OrganizationsOrganizationIdProfileRoute: typeof OrganizationsOrganizationIdProfileRoute
+  OrganizationsOrganizationIdProjectsRoute: typeof OrganizationsOrganizationIdProjectsRoute
+  OrganizationsOrganizationIdSettingsRoute: typeof OrganizationsOrganizationIdSettingsRoute
+  OrganizationsOrganizationIdIndexRoute: typeof OrganizationsOrganizationIdIndexRoute
+}
+
+const OrganizationsOrganizationIdRouteRouteChildren: OrganizationsOrganizationIdRouteRouteChildren =
+  {
+    OrganizationsOrganizationIdActivitiesRoute:
+      OrganizationsOrganizationIdActivitiesRoute,
+    OrganizationsOrganizationIdBillingRoute:
+      OrganizationsOrganizationIdBillingRoute,
+    OrganizationsOrganizationIdMembersRoute:
+      OrganizationsOrganizationIdMembersRoute,
+    OrganizationsOrganizationIdProfileRoute:
+      OrganizationsOrganizationIdProfileRoute,
+    OrganizationsOrganizationIdProjectsRoute:
+      OrganizationsOrganizationIdProjectsRoute,
+    OrganizationsOrganizationIdSettingsRoute:
+      OrganizationsOrganizationIdSettingsRoute,
+    OrganizationsOrganizationIdIndexRoute:
+      OrganizationsOrganizationIdIndexRoute,
+  }
+
+const OrganizationsOrganizationIdRouteRouteWithChildren =
+  OrganizationsOrganizationIdRouteRoute._addFileChildren(
+    OrganizationsOrganizationIdRouteRouteChildren,
+  )
+
 interface ProjectsProjectIdRouteRouteChildren {
   ProjectsProjectIdAnalyticsRoute: typeof ProjectsProjectIdAnalyticsRoute
   ProjectsProjectIdInsightsRoute: typeof ProjectsProjectIdInsightsRoute
@@ -467,8 +738,14 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
-  OrganizationsOrganizationIdRouteRoute: OrganizationsOrganizationIdRouteRoute,
+  OrganizationsOrganizationIdRouteRoute:
+    OrganizationsOrganizationIdRouteRouteWithChildren,
   ProjectsProjectIdRouteRoute: ProjectsProjectIdRouteRouteWithChildren,
+  OnboardingInviteRoute: OnboardingInviteRoute,
+  OnboardingProfileRoute: OnboardingProfileRoute,
+  OnboardingWelcomeRoute: OnboardingWelcomeRoute,
+  OnboardingWorkspaceRoute: OnboardingWorkspaceRoute,
+  InvitationsTokenAcceptRoute: InvitationsTokenAcceptRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

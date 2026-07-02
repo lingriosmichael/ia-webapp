@@ -27,7 +27,7 @@ export function OrganizationSettingsPanel({
   const updateOrganizationMutation = useUpdateOrganizationMutation(organization.id);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState(organization.name);
-  const [description, setDescription] = useState(organization.description ?? '');
+  const [mission, setMission] = useState(organization.mission ?? '');
   const [selectedLogoFile, setSelectedLogoFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
   const [previewLogoUrl, setPreviewLogoUrl] = useState<string | null>(
@@ -36,12 +36,12 @@ export function OrganizationSettingsPanel({
 
   useEffect(() => {
     setName(organization.name);
-    setDescription(organization.description ?? '');
+    setMission(organization.mission ?? '');
 
     if (!selectedLogoFile) {
       setPreviewLogoUrl(organization.logoUrl);
     }
-  }, [organization.description, organization.logoUrl, organization.name, selectedLogoFile]);
+  }, [organization.logoUrl, organization.mission, organization.name, selectedLogoFile]);
 
   useEffect(() => {
     if (!selectedLogoFile) {
@@ -69,7 +69,7 @@ export function OrganizationSettingsPanel({
 
   const hasChanges =
     name.trim() !== organization.name ||
-    description !== (organization.description ?? '') ||
+    mission !== (organization.mission ?? '') ||
     Boolean(selectedLogoFile);
 
   function updateSelectedLogo(file: File) {
@@ -110,7 +110,7 @@ export function OrganizationSettingsPanel({
     try {
       await updateOrganizationMutation.mutateAsync({
         name: name.trim(),
-        description,
+        mission,
         logoFile: selectedLogoFile,
       });
       setSelectedLogoFile(null);
@@ -154,13 +154,13 @@ export function OrganizationSettingsPanel({
 
               <div className="grid gap-2">
                 <Label htmlFor="organization-description">
-                  {locale.organizationSettings.descriptionLabel}
+                  {locale.organizationSettings.missionLabel}
                 </Label>
                 <Textarea
                   id="organization-description"
-                  value={description}
-                  onChange={(event) => setDescription(event.target.value)}
-                  placeholder={locale.organizationSettings.descriptionPlaceholder}
+                  value={mission}
+                  onChange={(event) => setMission(event.target.value)}
+                  placeholder={locale.organizationSettings.missionPlaceholder}
                   rows={5}
                   maxLength={2000}
                 />

@@ -7,7 +7,7 @@ const de = {
     english: 'EN',
   },
   common: {
-    brand: 'GrantReady AI',
+    brand: 'Impact Atlas',
     evidenceWorkspace: 'Evidenz-Arbeitsbereich',
     logIn: 'Anmelden',
     register: 'Registrieren',
@@ -33,43 +33,42 @@ const de = {
     backToHome: 'Zur Startseite',
   },
   landing: {
-    badge: 'SaaS-Grundlage zuerst',
+    badge: 'KI-gestützte Wirkungsanalyse',
     title: 'Organisationen, Projekte und Aktivitäten vor der KI-Verarbeitung.',
     description:
-      'Starten Sie mit dem tatsächlichen Arbeitsablauf Ihres Teams: Organisation anlegen, Projekte erstellen, Aktivitäten verwalten, Nachweise hochladen und Job-Metadaten in einem echten Backend speichern.',
+      'Starten Sie mit dem tatsächlichen Arbeitsablauf Ihres Teams: Organisation anlegen, Projekte erstellen, Aktivitäten verwalten, Nachweise hochladen und Job-Metadaten in einem echten Backend speichern. ImpactPilot interpretiert Ihre Projektdaten automatisch und verwandelt Nachweise in aussagekräftige Analysen, Visualisierungen und Berichte - für fundierte Entscheidungen, eine wirkungsvolle Kommunikation und belastbare Förderberichte.',
     createWorkspace: 'Workspace erstellen',
     useExistingAccount: 'Vorhandenes Konto nutzen',
     features: {
       organizations: {
         title: 'Organisationen',
         description:
-          'Jedes Konto startet in einem Organisations-Workspace mit klaren Rollen und Zugriffsrechten.',
+          'Jedes Konto startet in einem Organisations-Workspace mit klaren Rollen und Zugriffsrechten. Die KI erkennt Inhalte und Zusammenhänge in Ihren Projektdaten.',
       },
       projects: {
         title: 'Projekte',
         description:
-          'Projekte bilden die Förder- oder Programmstruktur, in der die Evidenzarbeit organisiert wird.',
+          'Projekte bilden die Förder- oder Programmstruktur, in der die Evidenzarbeit organisiert wird. Automatisch berechnete Kennzahlen und verständliche Visualisierungen zeigen den tatsächlichen Projektfortschritt.',
       },
       activities: {
         title: 'Aktivitäten',
         description:
-          'Aktivitäten gehören zu Projekten und sind der Anker für Uploads, Jobs und Ergebnisverläufe.',
+          'Aktivitäten gehören zu Projekten und sind der Anker für Uploads, Jobs und Ergebnisverläufe. Bereiten Sie Wirkungsnachweise und Berichte effizient für Fördernde, Partner und die öffentliche Kommunikation auf.',
       },
     },
   },
   auth: {
-    foundation: 'SaaS-Grundlage',
     loginMarketingTitle: 'Bauen Sie einen Fördernachweis-Workspace vor der KI-Ebene auf.',
     loginMarketingDescription:
       'Starten Sie mit Organisationen, Projekten, Aktivitäten, Authentifizierung und einem belastbaren Backend. Die semantische Verarbeitung kommt später.',
-    registerMarketingTitle: 'Erstellen Sie zuerst den Organisations-Workspace.',
+    registerMarketingTitle: 'Ihre Projekte erzählen bereits eine Geschichte',
     registerMarketingDescription:
-      'Das erste Konto wird Eigentümer einer neuen Organisation. Danach können Sie Projekte anlegen, Aktivitäten hinzufügen und Nachweise hochladen.',
+      'In wenigen Minuten richten Sie Ihren Workspace ein und können anschließend Projektdaten hochladen, analysieren und Wirkung sichtbar machen.',
     loginTitle: 'Anmelden',
     loginDescription: 'Melden Sie sich an, um auf Ihren Organisations-Workspace zuzugreifen.',
     registerTitle: 'Konto erstellen',
     registerDescription:
-      'Registrieren Sie Ihr Eigentümerkonto und Ihre erste Organisation.',
+      'Nach der Registrierung können Sie Projekte anlegen, Nachweise hochladen und die Wirkung Ihrer Programme mit aussagekräftigen Analysen, Visualisierungen und Berichten nachvollziehbar darstellen.',
     email: 'E-Mail',
     password: 'Passwort',
     fullName: 'Vollständiger Name',
@@ -81,6 +80,7 @@ const de = {
     organizationPlaceholder: 'Beispiel Stiftung',
     loggingIn: 'Anmeldung läuft…',
     creatingAccount: 'Konto wird erstellt…',
+    creatingWorkspace: 'Workspace wird erstellt…',
     createAccount: 'Konto erstellen',
     newHere: 'Neu hier?',
     createAnAccount: 'Konto erstellen',
@@ -88,10 +88,50 @@ const de = {
     noOrganizationToast: 'Diesem Konto ist noch keine Organisation zugeordnet.',
     loginSuccessToast: 'Anmeldung erfolgreich.',
     loginFailed: 'Anmeldung fehlgeschlagen.',
-    registerNoOrganizationToast:
-      'Die Registrierung war erfolgreich, aber es wurde keine Organisation erstellt.',
     registerSuccessToast: 'Konto wurde erstellt.',
     registerFailed: 'Registrierung fehlgeschlagen.',
+    workspaceProvisioningTitle: 'Erstellen Sie zuerst den Organisations-Workspace.',
+    workspaceProvisioningDescription:
+      'Legen Sie zuerst die Organisation an, bevor Sie Projektleitungen einladen und in den Workspace führen.',
+    workspaceProvisioningCardTitle: 'Workspace erstellen',
+    workspaceProvisioningCardDescription:
+      'Verwenden Sie den Organisationsnamen genau so, wie Ihr Team ihn in Impact Atlas sehen soll.',
+    workspaceCreatedToast: 'Workspace wurde erstellt.',
+    workspaceCreateFailed: 'Workspace konnte nicht erstellt werden.',
+    welcomeTitle: 'Willkommen bei Impact Atlas.',
+    welcomeDescription:
+      'Ihr Workspace ist bereit. Konfigurieren Sie zuerst die Organisation, bevor Sie Ihr Team einladen.',
+    welcomeCardTitle: 'Ihr Workspace ist bereit.',
+    welcomeCardDescription:
+      'Konfigurieren Sie jetzt Ihre Organisation, bevor Sie Ihr Team einladen.',
+    profileTitle: 'Geben Sie dem Workspace eine klare Identität.',
+    profileDescription:
+      'Halten Sie das Organisationsprofil bewusst leichtgewichtig: Name, Mission und Logo.',
+    inviteTitle: 'Laden Sie Ihr Team ein.',
+    inviteDescription:
+      'Laden Sie Ihre Projektleitungen ein, damit sie Projekte anlegen und Nachweise hochladen können.',
+    inviteCardTitle: 'Projektleitungen einladen',
+    inviteCardDescription:
+      'Der E-Mail-Versand kann vorerst simuliert bleiben. Wichtig sind Einladungsdatensätze und ein funktionierender Annahmefluss.',
+    inviteSuccessToast: 'Einladung wurde gesendet.',
+    inviteFailedToast: 'Einladung konnte nicht erstellt werden.',
+    projectManagerOnly: 'Rolle: Projektleitung',
+    inviting: 'Einladung wird gesendet…',
+    sendInvitation: 'Einladung senden',
+    pendingInvitation: 'Wartet auf Annahme',
+    finishOnboarding: 'Onboarding abschließen',
+    invitationTitle: 'Einladung annehmen.',
+    invitationDescription:
+      'Treten Sie der Organisation bei, erstellen Sie Ihr Passwort und melden Sie sich dann an.',
+    invitationCardTitle: 'Einladung annehmen',
+    invitationCardDescription:
+      'Sie treten {{organization}} mit {{email}} bei.',
+    acceptingInvitation: 'Einladung wird angenommen…',
+    acceptInvitation: 'Einladung annehmen',
+    invitationAccepted: 'Einladung angenommen. Sie können sich jetzt anmelden.',
+    invitationAcceptedExistingAccount:
+      'Einladung angenommen. Melden Sie sich mit Ihrem bestehenden Passwort an.',
+    invitationAcceptFailed: 'Einladung konnte nicht angenommen werden.',
   },
   organization: {
     loading: 'Workspace wird geladen…',
@@ -146,6 +186,10 @@ const de = {
     viewInsights: 'Erkenntnisse anzeigen',
     eyebrow: 'Projekt',
     noDescription: 'Noch keine Projektbeschreibung vorhanden.',
+    readOnlyBannerTitle: 'Ansicht als Organisationsadministration',
+    readOnlyBannerDescription:
+      'Dieses Projekt gehört {{owner}}. Sie können es hier prüfen, Bearbeitungen bleiben aber der verantwortlichen Person vorbehalten.',
+    unknownOwner: 'einer anderen Projektleitung',
     stats: {
       activities: 'Aktivitäten',
       activitiesDelta: 'Innerhalb dieses Projekts erfasst',
@@ -339,7 +383,7 @@ const de = {
       titles: {
         empty: 'Laden Sie Ihren ersten Datensatz hoch',
         uploading: 'Ihr Datensatz wird hochgeladen',
-        processing: 'GrantReady AI bereitet Ihre Evidenz vor',
+        processing: 'Impact Atlas bereitet Ihre Evidenz vor',
         ready: 'Ihre Evidenz ist bereit für den nächsten Schritt',
         attention: 'Dieser Datensatz braucht einen zweiten Blick',
       },
@@ -395,7 +439,7 @@ const de = {
       eyebrow: 'Evidenz hinzufügen',
       title: 'Monitoring-Daten in diese Aktivität bringen',
       description:
-        'Laden Sie eine CSV- oder Excel-Datei hoch. GrantReady AI führt Sie von hier aus durch Prüfung, Analyse und Erkenntnisse.',
+        'Laden Sie eine CSV- oder Excel-Datei hoch. Impact Atlas führt Sie von hier aus durch Prüfung, Analyse und Erkenntnisse.',
       cta: 'KI-Prüfung starten',
       remove: 'Entfernen',
     },
@@ -519,7 +563,7 @@ const de = {
     eyebrow: 'KI-Datensatzprüfung',
     title: 'Hat die KI Ihren Datensatz richtig verstanden?',
     description:
-      'GrantReady AI ordnet jede hochgeladene Spalte ein, markiert personenbezogene Daten und empfiehlt sichere Transformationen, bevor die Interpretation weitergeht.',
+      'Impact Atlas ordnet jede hochgeladene Spalte ein, markiert personenbezogene Daten und empfiehlt sichere Transformationen, bevor die Interpretation weitergeht.',
     cta: {
       uploadDataset: 'Datensatz hochladen',
       reviewRequired: 'Prüfung erforderlich ({{count}})',
@@ -531,7 +575,7 @@ const de = {
       eyebrow: 'KI-Dateninterpretation',
       title: 'Es wurde noch kein Datensatz analysiert.',
       description:
-        'Sobald Sie eine CSV- oder Excel-Datei hochladen, liest GrantReady AI die Struktur, versteht die Felder, erkennt personenbezogene Daten und bereitet alles für die Interpretation vor.',
+        'Sobald Sie eine CSV- oder Excel-Datei hochladen, liest Impact Atlas die Struktur, versteht die Felder, erkennt personenbezogene Daten und bereitet alles für die Interpretation vor.',
       benefits: [
         'Jede Spalte automatisch erkennen',
         'Die wahrscheinlichste Bedeutung jedes Felds verstehen',
@@ -812,8 +856,8 @@ const de = {
   },
   enums: {
     roles: {
-      owner: 'Eigentümer',
-      member: 'Mitglied',
+      ORGANIZATION_ADMIN: 'Organisationsadministration',
+      PROJECT_MANAGER: 'Projektleitung',
     },
     status: {
       planning: 'Planung',

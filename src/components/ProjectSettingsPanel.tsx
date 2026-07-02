@@ -81,26 +81,28 @@ export function ProjectSettingsPanel({
         </div>
       </Card>
 
-      <div>
-        <Card className="border-destructive/25 bg-destructive/[0.04] p-6 shadow-none">
-          <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
-            <ShieldAlert className="h-4 w-4 text-destructive" />
-            {locale.projectSettings.dangerTitle}
-          </div>
-          <p className="mt-3 text-sm leading-6 text-muted-foreground">
-            {locale.projectSettings.dangerDescription}
-          </p>
-          <Button
-            type="button"
-            variant="destructive"
-            className="mt-6 w-full justify-center"
-            onClick={onDeleteProject}
-          >
-            <Trash2 className="h-4 w-4" />
-            {locale.projectSettings.deleteAction}
-          </Button>
-        </Card>
-      </div>
+      {project.permissions.canDelete ? (
+        <div>
+          <Card className="border-destructive/25 bg-destructive/[0.04] p-6 shadow-none">
+            <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
+              <ShieldAlert className="h-4 w-4 text-destructive" />
+              {locale.projectSettings.dangerTitle}
+            </div>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
+              {locale.projectSettings.dangerDescription}
+            </p>
+            <Button
+              type="button"
+              variant="destructive"
+              className="mt-6 w-full justify-center"
+              onClick={onDeleteProject}
+            >
+              <Trash2 className="h-4 w-4" />
+              {locale.projectSettings.deleteAction}
+            </Button>
+          </Card>
+        </div>
+      ) : null}
     </div>
   );
 }

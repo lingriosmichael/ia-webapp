@@ -2,7 +2,9 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import {
   Activity as ActivityIcon,
   BarChart3,
+  Building2,
   ChevronRight,
+  CreditCard,
   FolderKanban,
   LayoutDashboard,
   LogOut,
@@ -11,6 +13,7 @@ import {
   Settings2,
   Sparkles,
   Trash2,
+  Users2,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
@@ -25,7 +28,11 @@ import {
 import { useWorkspaceLocale } from "@/hooks/use-workspace-locale";
 import { getOrganizationBranding } from "@/lib/organization-branding";
 import { cn } from "@/lib/utils";
-import type { OrganizationRole, WorkspaceProject } from "@/services/api-client";
+import type {
+  OrganizationPermissions,
+  OrganizationRole,
+  WorkspaceProject,
+} from "@/services/api-client";
 
 function SidebarHeader({
   organizationName,
@@ -169,11 +176,13 @@ function ActionButton({
 export function AppSidebar({
   organizationName,
   organizationRole,
+  organizationPermissions,
   organizationLogoUrl,
   organizationId,
   userName,
   projects,
   currentProjectId,
+  currentProject,
   onCreateProject,
   onCreateActivity,
   onDeleteProject,
@@ -181,11 +190,13 @@ export function AppSidebar({
 }: {
   organizationName: string;
   organizationRole: OrganizationRole;
+  organizationPermissions: OrganizationPermissions;
   organizationLogoUrl: string | null;
   organizationId: string;
   userName: string;
   projects: WorkspaceProject[];
   currentProjectId?: string;
+  currentProject: WorkspaceProject | null;
   onCreateProject: () => void;
   onCreateActivity: (projectId: string) => void;
   onDeleteProject: (
@@ -209,6 +220,57 @@ export function AppSidebar({
     projects.length === 1
       ? locale.sidebar.projectSingular
       : locale.sidebar.projectPlural;
+  const isOrganizationAdmin = organizationRole === "ORGANIZATION_ADMIN";
+  const primaryNavigation = isOrganizationAdmin
+    ? [
+        {
+          to: "/organizations/$organizationId" as const,
+          label: locale.sidebar.workspace,
+          icon: <LayoutDashboard className="h-3.5 w-3.5" />,
+        },
+        {
+          to: "/organizations/$organizationId/projects" as const,
+          label: locale.sidebar.projects,
+          icon: <FolderKanban className="h-3.5 w-3.5" />,
+        },
+        {
+          to: "/organizations/$organizationId/members" as const,
+          label: locale.sidebar.members,
+          icon: <Users2 className="h-3.5 w-3.5" />,
+        },
+        {
+          to: "/organizations/$organizationId/profile" as const,
+          label: locale.sidebar.organizationProfile,
+          icon: <Building2 className="h-3.5 w-3.5" />,
+        },
+        {
+          to: "/organizations/$organizationId/billing" as const,
+          label: locale.sidebar.billing,
+          icon: <CreditCard className="h-3.5 w-3.5" />,
+        },
+        {
+          to: "/organizations/$organizationId/settings" as const,
+          label: locale.sidebar.organizationSettings,
+          icon: <Settings2 className="h-3.5 w-3.5" />,
+        },
+      ]
+    : [
+        {
+          to: "/organizations/$organizationId" as const,
+          label: locale.sidebar.workspace,
+          icon: <LayoutDashboard className="h-3.5 w-3.5" />,
+        },
+        {
+          to: "/organizations/$organizationId/projects" as const,
+          label: locale.sidebar.projects,
+          icon: <FolderKanban className="h-3.5 w-3.5" />,
+        },
+        {
+          to: "/organizations/$organizationId/activities" as const,
+          label: locale.sidebar.activities,
+          icon: <ActivityIcon className="h-3.5 w-3.5" />,
+        },
+      ];
 
   return (
     <aside className="sticky top-0 flex h-dvh w-[21rem] shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
@@ -219,13 +281,28 @@ export function AppSidebar({
       />
 
       <div className="flex-1 space-y-5 overflow-y-auto px-3 pb-4">
+        <div className="rounded-2xl border border-sidebar-border bg-card/75 p-2 shadow-[var(--shadow-soft)]">
+          {primaryNavigation.map((item) => (
+            <NavRow
+              key={item.to}
+              to={item.to}
+              params={{ organizationId }}
+              label={item.label}
+              icon={item.icon}
+              exact={item.to === "/organizations/$organizationId"}
+            />
+          ))}
+        </div>
+
         <div>
           <div className="mb-2 flex items-center justify-between px-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
             <span>{locale.sidebar.sectionTitle}</span>
-            <ActionButton
-              onClick={onCreateProject}
-              label={locale.sidebar.addProject}
-            />
+            {organizationPermissions.canCreateProject ? (
+              <ActionButton
+                onClick={onCreateProject}
+                label={locale.sidebar.addProject}
+              />
+            ) : null}
           </div>
 
           {projects.length === 0 ? (
@@ -300,10 +377,12 @@ export function AppSidebar({
                       }
                       defaultOpen={isCurrentProject}
                       actions={
-                        <ActionButton
-                          onClick={() => onCreateActivity(project.id)}
-                          label={locale.sidebar.addActivity}
-                        />
+                        project.permissions.canCreateActivity ? (
+                          <ActionButton
+                            onClick={() => onCreateActivity(project.id)}
+                            label={locale.sidebar.addActivity}
+                          />
+                        ) : undefined
                       }
                     >
                       {project.activities.map((activity) => {
@@ -351,12 +430,23 @@ export function AppSidebar({
         </div>
         <div className="mt-4 grid gap-2">
           <Link
-            to="/organizations/$organizationId"
+            to={
+              organizationPermissions.canManageProfile
+                ? "/organizations/$organizationId/profile"
+                : "/organizations/$organizationId"
+            }
             params={{ organizationId }}
             className="inline-flex items-center justify-center rounded-xl border border-border bg-background px-3 py-2 text-sm font-medium text-foreground hover:bg-secondary"
           >
-            {locale.sidebar.organizationSettings}
+            {organizationPermissions.canManageProfile
+              ? locale.sidebar.organizationProfile
+              : locale.sidebar.workspace}
           </Link>
+          {currentProject && !currentProject.permissions.canEdit ? (
+            <div className="rounded-xl border border-primary/20 bg-primary-soft px-3 py-2 text-xs leading-5 text-primary">
+              {locale.sidebar.readOnlyProject}
+            </div>
+          ) : null}
           <button
             type="button"
             onClick={onLogout}
@@ -377,7 +467,7 @@ function ProjectActionsMenu({
   deleteProjectLabel,
   actionsLabel,
 }: {
-  project: Pick<WorkspaceProject, "id" | "name" | "organizationId">;
+  project: Pick<WorkspaceProject, "id" | "name" | "organizationId" | "permissions">;
   onDeleteProject: (
     project: Pick<WorkspaceProject, "id" | "name" | "organizationId">,
   ) => void;
@@ -407,14 +497,18 @@ function ProjectActionsMenu({
             {projectSettingsLabel}
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onSelect={() => onDeleteProject(project)}
-          className="text-destructive focus:text-destructive"
-        >
-          <Trash2 className="h-4 w-4" />
-          {deleteProjectLabel}
-        </DropdownMenuItem>
+        {project.permissions.canDelete ? (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onSelect={() => onDeleteProject(project)}
+              className="text-destructive focus:text-destructive"
+            >
+              <Trash2 className="h-4 w-4" />
+              {deleteProjectLabel}
+            </DropdownMenuItem>
+          </>
+        ) : null}
       </DropdownMenuContent>
     </DropdownMenu>
   );

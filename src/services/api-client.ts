@@ -16,9 +16,29 @@ interface ApiFailureEnvelope {
   error: ApiErrorPayload;
 }
 
-export type OrganizationRole = "owner" | "member";
+export type OrganizationRole = "ORGANIZATION_ADMIN" | "PROJECT_MANAGER";
 export type ProjectStatus = "planning" | "active" | "completed";
 export type ActivityStatus = "planning" | "active" | "completed";
+
+export interface OrganizationPermissions {
+  canManageProfile: boolean;
+  canManageMembers: boolean;
+  canManageBilling: boolean;
+  canManageSettings: boolean;
+  canCreateProject: boolean;
+}
+
+export interface ProjectPermissions {
+  canEdit: boolean;
+  canDelete: boolean;
+  canCreateActivity: boolean;
+  canUploadEvidence: boolean;
+}
+
+export interface ActivityPermissions {
+  canEdit: boolean;
+  canUploadEvidence: boolean;
+}
 
 export interface UserSummary {
   id: string;
@@ -32,22 +52,29 @@ export interface OrganizationSummary {
   id: string;
   name: string;
   slug: string;
-  description: string | null;
+  mission: string | null;
   logoUrl: string | null;
   role: OrganizationRole;
+  permissions: OrganizationPermissions;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface UpdateOrganizationPayload {
   name: string;
-  description: string;
+  mission: string;
   logoFile?: File | null;
+}
+
+export interface CreateOrganizationPayload {
+  name: string;
 }
 
 export interface ProjectSummary {
   id: string;
   organizationId: string;
+  ownerId: string;
+  ownerName: string | null;
   name: string;
   slug: string;
   description: string | null;
@@ -60,6 +87,7 @@ export interface ProjectSummary {
   targetBeneficiaries: string[];
   fundingSource: string | null;
   status: ProjectStatus;
+  permissions: ProjectPermissions;
   createdAt: string;
   updatedAt: string;
 }
@@ -78,10 +106,43 @@ export interface ActivitySummary {
   expectedOutcomes: string | null;
   successIndicators: string | null;
   targetAudience: string | null;
+  additionalContext: string | null;
   beneficiaryGroup: string | null;
   status: ActivityStatus;
+  permissions: ActivityPermissions;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface OrganizationMemberSummary {
+  id: string;
+  userId: string;
+  organizationId: string;
+  fullName: string;
+  email: string;
+  role: OrganizationRole;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface InvitationSummary {
+  id: string;
+  organizationId: string;
+  organizationName: string;
+  email: string;
+  role: "PROJECT_MANAGER";
+  status: "pending" | "accepted" | "revoked";
+  token: string;
+  invitedById: string;
+  acceptedById: string | null;
+  acceptedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface InvitationAcceptanceSummary {
+  invitation: InvitationSummary;
+  hasExistingAccount: boolean;
 }
 
 export interface CreateProjectPayload {
@@ -314,7 +375,6 @@ export const apiClient = {
     fullName: string;
     email: string;
     password: string;
-    organizationName: string;
   }): Promise<AuthResponse> {
     return request("/auth/register", {
       method: "POST",
@@ -332,8 +392,66 @@ export const apiClient = {
   getSession(): Promise<SessionResponse> {
     return request("/auth/me");
   },
+  createOrganization(
+    payload: CreateOrganizationPayload,
+  ): Promise<OrganizationSummary> {
+    return request("/organizations", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  },
   getWorkspace(organizationId: string): Promise<OrganizationWorkspace> {
     return request(`/organizations/${organizationId}/workspace`);
+  },
+  listOrganizationMembers(
+    organizationId: string,
+  ): Promise<OrganizationMemberSummary[]> {
+    return request(`/organizations/${organizationId}/members`);
+  },
+  removeOrganizationMember(
+    organizationId: string,
+    membershipId: string,
+  ): Promise<{ id: string; userId: string; organizationId: string; role: OrganizationRole }> {
+    return request(`/organizations/${organizationId}/members/${membershipId}`, {
+      method: "DELETE",
+    });
+  },
+  listOrganizationInvitations(
+    organizationId: string,
+  ): Promise<InvitationSummary[]> {
+    return request(`/organizations/${organizationId}/invitations`);
+  },
+  createOrganizationInvitation(
+    organizationId: string,
+    payload: { email: string; role: "PROJECT_MANAGER" },
+  ): Promise<InvitationSummary> {
+    return request(`/organizations/${organizationId}/invitations`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  },
+  revokeOrganizationInvitation(
+    organizationId: string,
+    invitationId: string,
+  ): Promise<InvitationSummary> {
+    return request(`/organizations/${organizationId}/invitations/${invitationId}`, {
+      method: "DELETE",
+    });
+  },
+  getInvitation(token: string): Promise<InvitationSummary> {
+    return request(`/invitations/${token}`);
+  },
+  acceptInvitation(
+    token: string,
+    payload: { fullName: string; password: string },
+  ): Promise<InvitationAcceptanceSummary> {
+    return request(`/invitations/${token}/accept`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
   },
   updateOrganization(
     organizationId: string,
@@ -341,7 +459,7 @@ export const apiClient = {
   ): Promise<OrganizationSummary> {
     const formData = new FormData();
     formData.append("name", payload.name);
-    formData.append("description", payload.description);
+    formData.append("mission", payload.mission);
 
     if (payload.logoFile) {
       formData.append("logo", payload.logoFile);

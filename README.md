@@ -1,6 +1,6 @@
 # gr_webapp
 
-Frontend for GrantReady AI. This app is built with React, Vite, and TanStack Start, and it talks to `gr_backend` over REST.
+Frontend for Impact Atlas. This app is built with React, Vite, and TanStack Start, and it talks to `gr_backend` over REST.
 
 ## Prerequisites
 
