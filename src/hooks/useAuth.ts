@@ -1,15 +1,15 @@
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { resolveActiveOrganizationId } from "@/lib/organization-selection";
-import { ApiError, apiClient, type AuthResponse, type SessionResponse } from "@/services/api-client";
+import { resolveActiveOrganizationId } from "@/lib/organizationSelection";
+import { ApiError, apiClient, type AuthResponse, type SessionResponse } from "@/services/apiClient";
 import {
   clearAccessToken,
   clearActiveOrganizationId,
   getAccessToken,
   setAccessToken,
   setActiveOrganizationId,
-} from "@/services/auth-storage";
+} from "@/services/authStorage";
 
 export const sessionQueryKey = ["session"] as const;
 

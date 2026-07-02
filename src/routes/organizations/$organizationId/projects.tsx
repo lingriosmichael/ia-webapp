@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Card, PageHeader, TopBar } from "@/components/WorkspaceUI";
-import { useWorkspaceShell } from "@/components/WorkspaceShell";
-import { useWorkspaceLocale } from "@/hooks/use-workspace-locale";
+import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
+import { useWorkspaceShell } from "@/components/workspaceShell";
+import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { useOrganizationWorkspacePage } from "./route";
 
 export const Route = createFileRoute("/organizations/$organizationId/projects")({

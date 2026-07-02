@@ -1,14 +1,14 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { PublicMarketingShell } from "@/components/PublicMarketingShell";
+import { PublicMarketingShell } from "@/components/publicMarketingShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useRequireAuth } from "@/hooks/use-auth";
-import { useCreateInvitationMutation, useOrganizationInvitationsQuery } from "@/hooks/use-grantready";
-import { resolveActiveOrganizationId } from "@/lib/organization-selection";
-import { resolveWorkspaceDestination } from "@/lib/workspace-routing";
-import { ApiError } from "@/services/api-client";
+import { useRequireAuth } from "@/hooks/useAuth";
+import { useCreateInvitationMutation, useOrganizationInvitationsQuery } from "@/hooks/useGrantready";
+import { resolveActiveOrganizationId } from "@/lib/organizationSelection";
+import { resolveWorkspaceDestination } from "@/lib/workspaceRouting";
+import { ApiError } from "@/services/apiClient";
 import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/onboarding/invite")({

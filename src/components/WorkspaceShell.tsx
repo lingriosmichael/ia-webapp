@@ -5,13 +5,13 @@ import {
   useCreateActivityMutation,
   useCreateProjectMutation,
   useDeleteProjectMutation,
-} from "@/hooks/use-grantready";
-import { useWorkspaceLocale } from "@/hooks/use-workspace-locale";
-import { rememberActiveOrganizationId } from "@/lib/organization-selection";
-import { ActivityDialog } from "@/components/ActivityDialog";
-import { AppSidebar } from "@/components/AppSidebar";
-import { ProjectDeleteDialog } from "@/components/ProjectDeleteDialog";
-import { ProjectDialog } from "@/components/ProjectDialog";
+} from "@/hooks/useGrantready";
+import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
+import { rememberActiveOrganizationId } from "@/lib/organizationSelection";
+import { ActivityDialog } from "@/components/activityDialog";
+import { AppSidebar } from "@/components/appSidebar";
+import { ProjectDeleteDialog } from "@/components/projectDeleteDialog";
+import { ProjectDialog } from "@/components/projectDialog";
 import {
   ApiError,
   type CreateActivityPayload,
@@ -19,7 +19,7 @@ import {
   type OrganizationPermissions,
   type OrganizationRole,
   type WorkspaceProject,
-} from "@/services/api-client";
+} from "@/services/apiClient";
 
 interface WorkspaceShellContextValue {
   openProjectDialog: () => void;

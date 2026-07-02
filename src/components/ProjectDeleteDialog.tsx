@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { AlertTriangle, Trash2 } from "lucide-react";
-import { useWorkspaceLocale } from "@/hooks/use-workspace-locale";
+import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

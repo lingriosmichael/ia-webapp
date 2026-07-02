@@ -292,4 +292,18 @@ const workspaceEn = {
   },
 } as const;
 
+type DeepStringShape<T> = {
+  [Key in keyof T]: T[Key] extends string
+    ? string
+    : T[Key] extends readonly (infer Item)[]
+      ? Item extends string
+        ? string[]
+        : DeepStringShape<Item>[]
+    : T[Key] extends Record<string, unknown>
+      ? DeepStringShape<T[Key]>
+      : T[Key];
+};
+
+export type WorkspaceTranslationDictionary = DeepStringShape<typeof workspaceEn>;
+
 export default workspaceEn;

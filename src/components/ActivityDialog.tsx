@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useWorkspaceLocale } from '@/hooks/use-workspace-locale';
-import type { ActivityStatus, CreateActivityPayload } from '@/services/api-client';
-import { EntityDialog, DialogSection, FieldLabel } from '@/components/EntityDialog';
+import { useWorkspaceLocale } from '@/hooks/useWorkspaceLocale';
+import type { ActivityStatus, CreateActivityPayload } from '@/services/apiClient';
+import { EntityDialog, DialogSection, FieldLabel } from '@/components/entityDialog';
 import { Input } from '@/components/ui/input';
 import {
   Select,

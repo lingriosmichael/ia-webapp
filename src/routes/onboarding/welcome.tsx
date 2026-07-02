@@ -1,8 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { PublicMarketingShell } from "@/components/PublicMarketingShell";
+import { PublicMarketingShell } from "@/components/publicMarketingShell";
 import { Button } from "@/components/ui/button";
-import { useRequireAuth } from "@/hooks/use-auth";
-import { resolveActiveOrganizationId } from "@/lib/organization-selection";
+import { useRequireAuth } from "@/hooks/useAuth";
+import { resolveActiveOrganizationId } from "@/lib/organizationSelection";
 import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/onboarding/welcome")({

@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { BarChart3, FolderKanban, Sparkles, Users2 } from "lucide-react";
-import { OrganizationCard } from "@/components/OrganizationCard";
-import { Card, PageHeader, TopBar } from "@/components/WorkspaceUI";
-import { useWorkspaceShell } from "@/components/WorkspaceShell";
-import { useOrganizationMembersQuery } from "@/hooks/use-grantready";
-import { useWorkspaceLocale } from "@/hooks/use-workspace-locale";
+import { OrganizationCard } from "@/components/organizationCard";
+import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
+import { useWorkspaceShell } from "@/components/workspaceShell";
+import { useOrganizationMembersQuery } from "@/hooks/useGrantready";
+import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { useOrganizationWorkspacePage } from "./route";
 
 export const Route = createFileRoute("/organizations/$organizationId/")({

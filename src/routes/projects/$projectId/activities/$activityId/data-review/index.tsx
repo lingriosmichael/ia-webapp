@@ -13,28 +13,28 @@ import {
   UploadCloud,
   X,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityTabs } from '@/components/ActivityTabs';
-import { Card, PageHeader, TopBar } from '@/components/WorkspaceUI';
-import { useRequireAuth } from '@/hooks/use-auth';
+import { ActivityTabs } from '@/components/activityTabs';
+import { Card, PageHeader, TopBar } from '@/components/workspaceUI';
+import { useRequireAuth } from '@/hooks/useAuth';
 import {
   useActivityJobsQuery,
   useActivityQuery,
   useActivityUploadsQuery,
   useProjectQuery,
-} from '@/hooks/use-grantready';
-import { formatDateTime } from '@/lib/translation-utils';
+} from '@/hooks/useGrantready';
+import { formatDateTime } from '@/lib/translationUtils';
 import {
   datasetOverview,
   getSchema,
   type PrivacyCategory,
   type SchemaColumn,
   type Transformation,
-} from '@/lib/mock-data';
+} from '@/lib/mockData';
 import { cn } from '@/lib/utils';
 
-export const Route = createFileRoute('/projects/$projectId/activities/$activityId/data-review')({
+export const Route = createFileRoute('/projects/$projectId/activities/$activityId/data-review/')({
   component: SchemaReview,
 });
 
@@ -509,7 +509,7 @@ function SummaryMetric({
   label,
   value,
 }: {
-  icon: JSX.Element;
+  icon: ReactNode;
   label: string;
   value: string;
 }) {

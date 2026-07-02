@@ -1,5 +1,5 @@
 import type { TFunction } from 'i18next';
-import type { OrganizationRole } from '@/services/api-client';
+import type { OrganizationRole } from '@/services/apiClient';
 
 export function translateRole(t: TFunction, role: OrganizationRole) {
   return t(`enums.roles.${role}`);

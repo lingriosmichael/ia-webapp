@@ -2,14 +2,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { PublicMarketingShell } from "@/components/PublicMarketingShell";
+import { PublicMarketingShell } from "@/components/publicMarketingShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAcceptInvitationMutation, useInvitationQuery } from "@/hooks/use-grantready";
-import { sessionQueryKey, useSessionQuery } from "@/hooks/use-auth";
-import { rememberActiveOrganizationId } from "@/lib/organization-selection";
-import { resolveWorkspaceDestination } from "@/lib/workspace-routing";
-import { apiClient, ApiError } from "@/services/api-client";
+import { useAcceptInvitationMutation, useInvitationQuery } from "@/hooks/useGrantready";
+import { sessionQueryKey, useSessionQuery } from "@/hooks/useAuth";
+import { rememberActiveOrganizationId } from "@/lib/organizationSelection";
+import { resolveWorkspaceDestination } from "@/lib/workspaceRouting";
+import { apiClient, ApiError } from "@/services/apiClient";
 import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/invitations/$token/accept")({

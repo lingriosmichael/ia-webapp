@@ -3,16 +3,16 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { PublicMarketingShell } from '@/components/PublicMarketingShell';
+import { PublicMarketingShell } from '@/components/publicMarketingShell';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useLoginMutation } from '@/hooks/use-auth';
+import { useLoginMutation } from '@/hooks/useAuth';
 import {
   rememberActiveOrganizationId,
   resolveActiveOrganizationId,
-} from '@/lib/organization-selection';
-import { resolveWorkspaceDestination } from '@/lib/workspace-routing';
-import { ApiError } from '@/services/api-client';
+} from '@/lib/organizationSelection';
+import { resolveWorkspaceDestination } from '@/lib/workspaceRouting';
+import { ApiError } from '@/services/apiClient';
 
 export const Route = createFileRoute('/login')({
   validateSearch: z.object({

@@ -2,7 +2,7 @@ import { Link, useRouterState } from '@tanstack/react-router';
 import { ChevronRight, Search, Command } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { LanguageSwitcher } from '@/components/languageSwitcher';
 
 interface Crumb {
   label: string;

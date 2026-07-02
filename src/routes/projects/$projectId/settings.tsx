@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { PageHeader, TopBar } from "@/components/WorkspaceUI";
-import { ProjectSettingsPanel } from "@/components/ProjectSettingsPanel";
-import { useWorkspaceShell } from "@/components/WorkspaceShell";
-import { useRequireAuth } from "@/hooks/use-auth";
+import { PageHeader, TopBar } from "@/components/workspaceUI";
+import { ProjectSettingsPanel } from "@/components/projectSettingsPanel";
+import { useWorkspaceShell } from "@/components/workspaceShell";
+import { useRequireAuth } from "@/hooks/useAuth";
 import {
   useOrganizationWorkspaceQuery,
   useProjectQuery,
-} from "@/hooks/use-grantready";
-import { useWorkspaceLocale } from "@/hooks/use-workspace-locale";
+} from "@/hooks/useGrantready";
+import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 
 export const Route = createFileRoute("/projects/$projectId/settings")({
   component: ProjectSettingsPage,

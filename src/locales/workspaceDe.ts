@@ -1,4 +1,6 @@
-const workspaceDe = {
+import type { WorkspaceTranslationDictionary } from "./workspaceEn";
+
+const workspaceDe: WorkspaceTranslationDictionary = {
   sidebar: {
     workspace: "Workspace",
     projects: "Projekte",
@@ -300,6 +302,6 @@ const workspaceDe = {
       ],
     },
   },
-} as const;
+};
 
 export default workspaceDe;

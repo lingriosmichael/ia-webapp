@@ -1,4 +1,4 @@
-import type { OrganizationRole } from '@/services/api-client';
+import type { OrganizationRole } from '@/services/apiClient';
 
 export interface OrganizationBranding {
   displayName: string;

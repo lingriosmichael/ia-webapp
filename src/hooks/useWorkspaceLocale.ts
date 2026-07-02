@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import workspaceDe from '@/locales/workspace-de';
-import workspaceEn from '@/locales/workspace-en';
+import workspaceDe from '@/locales/workspaceDe';
+import workspaceEn from '@/locales/workspaceEn';
 
 export function useWorkspaceLocale() {
   const { i18n } = useTranslation();

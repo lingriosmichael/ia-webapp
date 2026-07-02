@@ -1,15 +1,15 @@
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Card, PageHeader, TopBar } from "@/components/WorkspaceUI";
+import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
 import {
   useCreateInvitationMutation,
   useOrganizationMembersQuery,
   useOrganizationInvitationsQuery,
   useRemoveOrganizationMemberMutation,
-} from "@/hooks/use-grantready";
-import { useWorkspaceLocale } from "@/hooks/use-workspace-locale";
-import { ApiError } from "@/services/api-client";
+} from "@/hooks/useGrantready";
+import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
+import { ApiError } from "@/services/apiClient";
 import { useOrganizationWorkspacePage } from "./route";
 
 export const Route = createFileRoute("/organizations/$organizationId/members")({

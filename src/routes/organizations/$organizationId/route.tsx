@@ -1,10 +1,10 @@
 import { Outlet, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createContext, useContext, useEffect } from "react";
-import { WorkspaceShell } from "@/components/WorkspaceShell";
-import { useLogout, useRequireAuth } from "@/hooks/use-auth";
-import { useOrganizationWorkspaceQuery } from "@/hooks/use-grantready";
-import { resolveActiveOrganizationId } from "@/lib/organization-selection";
-import { resolveWorkspaceDestination } from "@/lib/workspace-routing";
+import { WorkspaceShell } from "@/components/workspaceShell";
+import { useLogout, useRequireAuth } from "@/hooks/useAuth";
+import { useOrganizationWorkspaceQuery } from "@/hooks/useGrantready";
+import { resolveActiveOrganizationId } from "@/lib/organizationSelection";
+import { resolveWorkspaceDestination } from "@/lib/workspaceRouting";
 
 interface OrganizationWorkspacePageContextValue {
   organizationId: string;

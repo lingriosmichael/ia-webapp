@@ -1,10 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { useTranslation } from 'react-i18next';
-import { getAttendanceDistribution, getCompletionByAgeGroup, confidenceImprovement, getKeyMetrics, getMentorMatching, trendsByWeek } from '@/lib/mock-data';
-import { Card, PageHeader, Stat, TopBar } from '@/components/WorkspaceUI';
-import { useRequireAuth } from '@/hooks/use-auth';
-import { useProjectActivitiesQuery, useProjectQuery } from '@/hooks/use-grantready';
+import { getAttendanceDistribution, getCompletionByAgeGroup, confidenceImprovement, getKeyMetrics, getMentorMatching, trendsByWeek } from '@/lib/mockData';
+import { Card, PageHeader, Stat, TopBar } from '@/components/workspaceUI';
+import { useRequireAuth } from '@/hooks/useAuth';
+import { useProjectActivitiesQuery, useProjectQuery } from '@/hooks/useGrantready';
 
 export const Route = createFileRoute('/projects/$projectId/analytics')({
   component: ProjectAnalytics,

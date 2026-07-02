@@ -7,11 +7,11 @@ import {
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { Card } from "@/components/WorkspaceUI";
+import { Card } from "@/components/workspaceUI";
 import { Button } from "@/components/ui/button";
-import { useWorkspaceLocale } from "@/hooks/use-workspace-locale";
-import { formatDateTime, translateStatus } from "@/lib/translation-utils";
-import type { ProjectSummary } from "@/services/api-client";
+import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
+import { formatDateTime, translateStatus } from "@/lib/translationUtils";
+import type { ProjectSummary } from "@/services/apiClient";
 
 export function ProjectSettingsPanel({
   project,

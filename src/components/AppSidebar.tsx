@@ -17,22 +17,22 @@ import {
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { OrganizationAvatar } from "@/components/OrganizationAvatar";
+import { OrganizationAvatar } from "@/components/organizationAvatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useWorkspaceLocale } from "@/hooks/use-workspace-locale";
-import { getOrganizationBranding } from "@/lib/organization-branding";
+} from "@/components/ui/dropdownMenu";
+import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
+import { getOrganizationBranding } from "@/lib/organizationBranding";
 import { cn } from "@/lib/utils";
 import type {
   OrganizationPermissions,
   OrganizationRole,
   WorkspaceProject,
-} from "@/services/api-client";
+} from "@/services/apiClient";
 
 function SidebarHeader({
   organizationName,

@@ -1,9 +1,9 @@
 import { Outlet, createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
-import { Card } from '@/components/WorkspaceUI';
-import { WorkspaceShell } from '@/components/WorkspaceShell';
-import { useRequireAuth, useLogout } from '@/hooks/use-auth';
-import { useOrganizationWorkspaceQuery, useProjectQuery } from '@/hooks/use-grantready';
+import { Card } from '@/components/workspaceUI';
+import { WorkspaceShell } from '@/components/workspaceShell';
+import { useRequireAuth, useLogout } from '@/hooks/useAuth';
+import { useOrganizationWorkspaceQuery, useProjectQuery } from '@/hooks/useGrantready';
 
 export const Route = createFileRoute('/projects/$projectId')({
   component: ProjectLayout,

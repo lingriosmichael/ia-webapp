@@ -12,10 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as OnboardingWorkspaceRouteImport } from './routes/onboarding.workspace'
-import { Route as OnboardingWelcomeRouteImport } from './routes/onboarding.welcome'
-import { Route as OnboardingProfileRouteImport } from './routes/onboarding.profile'
-import { Route as OnboardingInviteRouteImport } from './routes/onboarding.invite'
+import { Route as OnboardingWorkspaceRouteImport } from './routes/onboarding/workspace'
+import { Route as OnboardingWelcomeRouteImport } from './routes/onboarding/welcome'
+import { Route as OnboardingProfileRouteImport } from './routes/onboarding/profile'
+import { Route as OnboardingInviteRouteImport } from './routes/onboarding/invite'
 import { Route as ProjectsProjectIdRouteRouteImport } from './routes/projects/$projectId/route'
 import { Route as OrganizationsOrganizationIdRouteRouteImport } from './routes/organizations/$organizationId/route'
 import { Route as ProjectsProjectIdIndexRouteImport } from './routes/projects/$projectId/index'
@@ -29,17 +29,17 @@ import { Route as OrganizationsOrganizationIdProfileRouteImport } from './routes
 import { Route as OrganizationsOrganizationIdMembersRouteImport } from './routes/organizations/$organizationId/members'
 import { Route as OrganizationsOrganizationIdBillingRouteImport } from './routes/organizations/$organizationId/billing'
 import { Route as OrganizationsOrganizationIdActivitiesRouteImport } from './routes/organizations/$organizationId/activities'
-import { Route as InvitationsTokenAcceptRouteImport } from './routes/invitations.$token.accept'
+import { Route as InvitationsTokenAcceptRouteImport } from './routes/invitations/$token/accept'
 import { Route as ProjectsProjectIdActivitiesActivityIdUploadRouteImport } from './routes/projects/$projectId/activities/$activityId/upload'
 import { Route as ProjectsProjectIdActivitiesActivityIdSettingsRouteImport } from './routes/projects/$projectId/activities/$activityId/settings'
 import { Route as ProjectsProjectIdActivitiesActivityIdSchemaRouteImport } from './routes/projects/$projectId/activities/$activityId/schema'
 import { Route as ProjectsProjectIdActivitiesActivityIdProcessingRouteImport } from './routes/projects/$projectId/activities/$activityId/processing'
 import { Route as ProjectsProjectIdActivitiesActivityIdOverviewRouteImport } from './routes/projects/$projectId/activities/$activityId/overview'
 import { Route as ProjectsProjectIdActivitiesActivityIdInsightsRouteImport } from './routes/projects/$projectId/activities/$activityId/insights'
-import { Route as ProjectsProjectIdActivitiesActivityIdDataReviewRouteImport } from './routes/projects/$projectId/activities/$activityId/data-review'
 import { Route as ProjectsProjectIdActivitiesActivityIdBriefRouteImport } from './routes/projects/$projectId/activities/$activityId/brief'
 import { Route as ProjectsProjectIdActivitiesActivityIdAnalyticsRouteImport } from './routes/projects/$projectId/activities/$activityId/analytics'
 import { Route as ProjectsProjectIdActivitiesActivityIdAnalysisRouteImport } from './routes/projects/$projectId/activities/$activityId/analysis'
+import { Route as ProjectsProjectIdActivitiesActivityIdDataReviewIndexRouteImport } from './routes/projects/$projectId/activities/$activityId/data-review/index'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
@@ -193,12 +193,6 @@ const ProjectsProjectIdActivitiesActivityIdInsightsRoute =
     path: '/activities/$activityId/insights',
     getParentRoute: () => ProjectsProjectIdRouteRoute,
   } as any)
-const ProjectsProjectIdActivitiesActivityIdDataReviewRoute =
-  ProjectsProjectIdActivitiesActivityIdDataReviewRouteImport.update({
-    id: '/activities/$activityId/data-review',
-    path: '/activities/$activityId/data-review',
-    getParentRoute: () => ProjectsProjectIdRouteRoute,
-  } as any)
 const ProjectsProjectIdActivitiesActivityIdBriefRoute =
   ProjectsProjectIdActivitiesActivityIdBriefRouteImport.update({
     id: '/activities/$activityId/brief',
@@ -215,6 +209,12 @@ const ProjectsProjectIdActivitiesActivityIdAnalysisRoute =
   ProjectsProjectIdActivitiesActivityIdAnalysisRouteImport.update({
     id: '/activities/$activityId/analysis',
     path: '/activities/$activityId/analysis',
+    getParentRoute: () => ProjectsProjectIdRouteRoute,
+  } as any)
+const ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute =
+  ProjectsProjectIdActivitiesActivityIdDataReviewIndexRouteImport.update({
+    id: '/activities/$activityId/data-review/',
+    path: '/activities/$activityId/data-review/',
     getParentRoute: () => ProjectsProjectIdRouteRoute,
   } as any)
 
@@ -243,13 +243,13 @@ export interface FileRoutesByFullPath {
   '/projects/$projectId/activities/$activityId/analysis': typeof ProjectsProjectIdActivitiesActivityIdAnalysisRoute
   '/projects/$projectId/activities/$activityId/analytics': typeof ProjectsProjectIdActivitiesActivityIdAnalyticsRoute
   '/projects/$projectId/activities/$activityId/brief': typeof ProjectsProjectIdActivitiesActivityIdBriefRoute
-  '/projects/$projectId/activities/$activityId/data-review': typeof ProjectsProjectIdActivitiesActivityIdDataReviewRoute
   '/projects/$projectId/activities/$activityId/insights': typeof ProjectsProjectIdActivitiesActivityIdInsightsRoute
   '/projects/$projectId/activities/$activityId/overview': typeof ProjectsProjectIdActivitiesActivityIdOverviewRoute
   '/projects/$projectId/activities/$activityId/processing': typeof ProjectsProjectIdActivitiesActivityIdProcessingRoute
   '/projects/$projectId/activities/$activityId/schema': typeof ProjectsProjectIdActivitiesActivityIdSchemaRoute
   '/projects/$projectId/activities/$activityId/settings': typeof ProjectsProjectIdActivitiesActivityIdSettingsRoute
   '/projects/$projectId/activities/$activityId/upload': typeof ProjectsProjectIdActivitiesActivityIdUploadRoute
+  '/projects/$projectId/activities/$activityId/data-review/': typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -274,13 +274,13 @@ export interface FileRoutesByTo {
   '/projects/$projectId/activities/$activityId/analysis': typeof ProjectsProjectIdActivitiesActivityIdAnalysisRoute
   '/projects/$projectId/activities/$activityId/analytics': typeof ProjectsProjectIdActivitiesActivityIdAnalyticsRoute
   '/projects/$projectId/activities/$activityId/brief': typeof ProjectsProjectIdActivitiesActivityIdBriefRoute
-  '/projects/$projectId/activities/$activityId/data-review': typeof ProjectsProjectIdActivitiesActivityIdDataReviewRoute
   '/projects/$projectId/activities/$activityId/insights': typeof ProjectsProjectIdActivitiesActivityIdInsightsRoute
   '/projects/$projectId/activities/$activityId/overview': typeof ProjectsProjectIdActivitiesActivityIdOverviewRoute
   '/projects/$projectId/activities/$activityId/processing': typeof ProjectsProjectIdActivitiesActivityIdProcessingRoute
   '/projects/$projectId/activities/$activityId/schema': typeof ProjectsProjectIdActivitiesActivityIdSchemaRoute
   '/projects/$projectId/activities/$activityId/settings': typeof ProjectsProjectIdActivitiesActivityIdSettingsRoute
   '/projects/$projectId/activities/$activityId/upload': typeof ProjectsProjectIdActivitiesActivityIdUploadRoute
+  '/projects/$projectId/activities/$activityId/data-review': typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -308,13 +308,13 @@ export interface FileRoutesById {
   '/projects/$projectId/activities/$activityId/analysis': typeof ProjectsProjectIdActivitiesActivityIdAnalysisRoute
   '/projects/$projectId/activities/$activityId/analytics': typeof ProjectsProjectIdActivitiesActivityIdAnalyticsRoute
   '/projects/$projectId/activities/$activityId/brief': typeof ProjectsProjectIdActivitiesActivityIdBriefRoute
-  '/projects/$projectId/activities/$activityId/data-review': typeof ProjectsProjectIdActivitiesActivityIdDataReviewRoute
   '/projects/$projectId/activities/$activityId/insights': typeof ProjectsProjectIdActivitiesActivityIdInsightsRoute
   '/projects/$projectId/activities/$activityId/overview': typeof ProjectsProjectIdActivitiesActivityIdOverviewRoute
   '/projects/$projectId/activities/$activityId/processing': typeof ProjectsProjectIdActivitiesActivityIdProcessingRoute
   '/projects/$projectId/activities/$activityId/schema': typeof ProjectsProjectIdActivitiesActivityIdSchemaRoute
   '/projects/$projectId/activities/$activityId/settings': typeof ProjectsProjectIdActivitiesActivityIdSettingsRoute
   '/projects/$projectId/activities/$activityId/upload': typeof ProjectsProjectIdActivitiesActivityIdUploadRoute
+  '/projects/$projectId/activities/$activityId/data-review/': typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -343,13 +343,13 @@ export interface FileRouteTypes {
     | '/projects/$projectId/activities/$activityId/analysis'
     | '/projects/$projectId/activities/$activityId/analytics'
     | '/projects/$projectId/activities/$activityId/brief'
-    | '/projects/$projectId/activities/$activityId/data-review'
     | '/projects/$projectId/activities/$activityId/insights'
     | '/projects/$projectId/activities/$activityId/overview'
     | '/projects/$projectId/activities/$activityId/processing'
     | '/projects/$projectId/activities/$activityId/schema'
     | '/projects/$projectId/activities/$activityId/settings'
     | '/projects/$projectId/activities/$activityId/upload'
+    | '/projects/$projectId/activities/$activityId/data-review/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -374,13 +374,13 @@ export interface FileRouteTypes {
     | '/projects/$projectId/activities/$activityId/analysis'
     | '/projects/$projectId/activities/$activityId/analytics'
     | '/projects/$projectId/activities/$activityId/brief'
-    | '/projects/$projectId/activities/$activityId/data-review'
     | '/projects/$projectId/activities/$activityId/insights'
     | '/projects/$projectId/activities/$activityId/overview'
     | '/projects/$projectId/activities/$activityId/processing'
     | '/projects/$projectId/activities/$activityId/schema'
     | '/projects/$projectId/activities/$activityId/settings'
     | '/projects/$projectId/activities/$activityId/upload'
+    | '/projects/$projectId/activities/$activityId/data-review'
   id:
     | '__root__'
     | '/'
@@ -407,13 +407,13 @@ export interface FileRouteTypes {
     | '/projects/$projectId/activities/$activityId/analysis'
     | '/projects/$projectId/activities/$activityId/analytics'
     | '/projects/$projectId/activities/$activityId/brief'
-    | '/projects/$projectId/activities/$activityId/data-review'
     | '/projects/$projectId/activities/$activityId/insights'
     | '/projects/$projectId/activities/$activityId/overview'
     | '/projects/$projectId/activities/$activityId/processing'
     | '/projects/$projectId/activities/$activityId/schema'
     | '/projects/$projectId/activities/$activityId/settings'
     | '/projects/$projectId/activities/$activityId/upload'
+    | '/projects/$projectId/activities/$activityId/data-review/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -620,13 +620,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdInsightsRouteImport
       parentRoute: typeof ProjectsProjectIdRouteRoute
     }
-    '/projects/$projectId/activities/$activityId/data-review': {
-      id: '/projects/$projectId/activities/$activityId/data-review'
-      path: '/activities/$activityId/data-review'
-      fullPath: '/projects/$projectId/activities/$activityId/data-review'
-      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdDataReviewRouteImport
-      parentRoute: typeof ProjectsProjectIdRouteRoute
-    }
     '/projects/$projectId/activities/$activityId/brief': {
       id: '/projects/$projectId/activities/$activityId/brief'
       path: '/activities/$activityId/brief'
@@ -646,6 +639,13 @@ declare module '@tanstack/react-router' {
       path: '/activities/$activityId/analysis'
       fullPath: '/projects/$projectId/activities/$activityId/analysis'
       preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdAnalysisRouteImport
+      parentRoute: typeof ProjectsProjectIdRouteRoute
+    }
+    '/projects/$projectId/activities/$activityId/data-review/': {
+      id: '/projects/$projectId/activities/$activityId/data-review/'
+      path: '/activities/$activityId/data-review'
+      fullPath: '/projects/$projectId/activities/$activityId/data-review/'
+      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRouteImport
       parentRoute: typeof ProjectsProjectIdRouteRoute
     }
   }
@@ -692,13 +692,13 @@ interface ProjectsProjectIdRouteRouteChildren {
   ProjectsProjectIdActivitiesActivityIdAnalysisRoute: typeof ProjectsProjectIdActivitiesActivityIdAnalysisRoute
   ProjectsProjectIdActivitiesActivityIdAnalyticsRoute: typeof ProjectsProjectIdActivitiesActivityIdAnalyticsRoute
   ProjectsProjectIdActivitiesActivityIdBriefRoute: typeof ProjectsProjectIdActivitiesActivityIdBriefRoute
-  ProjectsProjectIdActivitiesActivityIdDataReviewRoute: typeof ProjectsProjectIdActivitiesActivityIdDataReviewRoute
   ProjectsProjectIdActivitiesActivityIdInsightsRoute: typeof ProjectsProjectIdActivitiesActivityIdInsightsRoute
   ProjectsProjectIdActivitiesActivityIdOverviewRoute: typeof ProjectsProjectIdActivitiesActivityIdOverviewRoute
   ProjectsProjectIdActivitiesActivityIdProcessingRoute: typeof ProjectsProjectIdActivitiesActivityIdProcessingRoute
   ProjectsProjectIdActivitiesActivityIdSchemaRoute: typeof ProjectsProjectIdActivitiesActivityIdSchemaRoute
   ProjectsProjectIdActivitiesActivityIdSettingsRoute: typeof ProjectsProjectIdActivitiesActivityIdSettingsRoute
   ProjectsProjectIdActivitiesActivityIdUploadRoute: typeof ProjectsProjectIdActivitiesActivityIdUploadRoute
+  ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute: typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute
 }
 
 const ProjectsProjectIdRouteRouteChildren: ProjectsProjectIdRouteRouteChildren =
@@ -713,8 +713,6 @@ const ProjectsProjectIdRouteRouteChildren: ProjectsProjectIdRouteRouteChildren =
       ProjectsProjectIdActivitiesActivityIdAnalyticsRoute,
     ProjectsProjectIdActivitiesActivityIdBriefRoute:
       ProjectsProjectIdActivitiesActivityIdBriefRoute,
-    ProjectsProjectIdActivitiesActivityIdDataReviewRoute:
-      ProjectsProjectIdActivitiesActivityIdDataReviewRoute,
     ProjectsProjectIdActivitiesActivityIdInsightsRoute:
       ProjectsProjectIdActivitiesActivityIdInsightsRoute,
     ProjectsProjectIdActivitiesActivityIdOverviewRoute:
@@ -727,6 +725,8 @@ const ProjectsProjectIdRouteRouteChildren: ProjectsProjectIdRouteRouteChildren =
       ProjectsProjectIdActivitiesActivityIdSettingsRoute,
     ProjectsProjectIdActivitiesActivityIdUploadRoute:
       ProjectsProjectIdActivitiesActivityIdUploadRoute,
+    ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute:
+      ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute,
   }
 
 const ProjectsProjectIdRouteRouteWithChildren =

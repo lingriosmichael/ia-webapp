@@ -2,11 +2,11 @@ import { Link, createFileRoute, useNavigate } from '@tanstack/react-router';
 import { ArrowRight, Building2, FolderKanban, Layers } from 'lucide-react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PublicSiteHeader } from '@/components/PublicSiteHeader';
-import { useSessionQuery } from '@/hooks/use-auth';
-import { resolveActiveOrganizationId } from '@/lib/organization-selection';
-import { resolveWorkspaceDestination } from '@/lib/workspace-routing';
-import { getAccessToken } from '@/services/auth-storage';
+import { PublicSiteHeader } from '@/components/publicSiteHeader';
+import { useSessionQuery } from '@/hooks/useAuth';
+import { resolveActiveOrganizationId } from '@/lib/organizationSelection';
+import { resolveWorkspaceDestination } from '@/lib/workspaceRouting';
+import { getAccessToken } from '@/services/authStorage';
 
 export const Route = createFileRoute('/')({
   component: LandingPage,
@@ -35,14 +35,16 @@ function LandingPage() {
       return;
     }
 
-    if (!activeOrganizationId) {
+  if (!activeOrganizationId) {
       return;
     }
+
+    const organizationId = activeOrganizationId;
 
     let cancelled = false;
 
     async function redirectToWorkspace() {
-      const destination = await resolveWorkspaceDestination(activeOrganizationId);
+      const destination = await resolveWorkspaceDestination(organizationId);
       if (!cancelled) {
         void navigate(destination);
       }

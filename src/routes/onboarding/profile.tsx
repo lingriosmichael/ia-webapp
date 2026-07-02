@@ -1,10 +1,10 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { PublicMarketingShell } from "@/components/PublicMarketingShell";
-import { OrganizationSettingsPanel } from "@/components/OrganizationSettingsPanel";
+import { PublicMarketingShell } from "@/components/publicMarketingShell";
+import { OrganizationSettingsPanel } from "@/components/organizationSettingsPanel";
 import { Button } from "@/components/ui/button";
-import { useRequireAuth } from "@/hooks/use-auth";
-import { useOrganizationWorkspaceQuery } from "@/hooks/use-grantready";
-import { resolveActiveOrganizationId } from "@/lib/organization-selection";
+import { useRequireAuth } from "@/hooks/useAuth";
+import { useOrganizationWorkspaceQuery } from "@/hooks/useGrantready";
+import { resolveActiveOrganizationId } from "@/lib/organizationSelection";
 import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/onboarding/profile")({

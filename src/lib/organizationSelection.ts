@@ -1,8 +1,8 @@
-import type { OrganizationSummary } from "@/services/api-client";
+import type { OrganizationSummary } from "@/services/apiClient";
 import {
   getActiveOrganizationId,
   setActiveOrganizationId,
-} from "@/services/auth-storage";
+} from "@/services/authStorage";
 
 export function resolveActiveOrganizationId(
   organizations: OrganizationSummary[],

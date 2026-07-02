@@ -14,9 +14,9 @@ import type { ChangeEvent, DragEvent, ReactNode, RefObject } from 'react';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { ActivityTabs } from '@/components/ActivityTabs';
-import { Card, PageHeader, TopBar } from '@/components/WorkspaceUI';
-import { useRequireAuth } from '@/hooks/use-auth';
+import { ActivityTabs } from '@/components/activityTabs';
+import { Card, PageHeader, TopBar } from '@/components/workspaceUI';
+import { useRequireAuth } from '@/hooks/useAuth';
 import {
   useActivityJobsQuery,
   useActivityQuery,
@@ -25,11 +25,11 @@ import {
   useJobQuery,
   useProjectQuery,
   useUploadActivityFileMutation,
-} from '@/hooks/use-grantready';
-import { datasetOverview, getSchema } from '@/lib/mock-data';
+} from '@/hooks/useGrantready';
+import { datasetOverview, getSchema } from '@/lib/mockData';
 import { cn } from '@/lib/utils';
-import { formatDateTime, translateStatus } from '@/lib/translation-utils';
-import { ApiError } from '@/services/api-client';
+import { formatDateTime, translateStatus } from '@/lib/translationUtils';
+import { ApiError } from '@/services/apiClient';
 
 export const Route = createFileRoute('/projects/$projectId/activities/$activityId/overview')({
   component: ActivityBriefPage,

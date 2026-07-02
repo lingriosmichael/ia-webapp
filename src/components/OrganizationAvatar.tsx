@@ -1,4 +1,4 @@
-import { resolveApiUrl } from '@/services/api-client';
+import { resolveApiUrl } from '@/services/apiClient';
 import { cn } from '@/lib/utils';
 
 export function OrganizationAvatar({

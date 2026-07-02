@@ -13,12 +13,12 @@ import {
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, PageHeader, TopBar } from '@/components/WorkspaceUI';
-import { useWorkspaceShell } from '@/components/WorkspaceShell';
-import { useRequireAuth } from '@/hooks/use-auth';
-import { useProjectOverviewQuery } from '@/hooks/use-grantready';
-import { formatDateTime, translateStatus } from '@/lib/translation-utils';
-import type { ProjectOverviewMetrics, ProjectRecentActivityItem, WorkspaceActivity } from '@/services/api-client';
+import { Card, PageHeader, TopBar } from '@/components/workspaceUI';
+import { useWorkspaceShell } from '@/components/workspaceShell';
+import { useRequireAuth } from '@/hooks/useAuth';
+import { useProjectOverviewQuery } from '@/hooks/useGrantready';
+import { formatDateTime, translateStatus } from '@/lib/translationUtils';
+import type { ProjectOverviewMetrics, ProjectRecentActivityItem, WorkspaceActivity } from '@/services/apiClient';
 
 export const Route = createFileRoute('/projects/$projectId/')({
   component: ProjectOverview,

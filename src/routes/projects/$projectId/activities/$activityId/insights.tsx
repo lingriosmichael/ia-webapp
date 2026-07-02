@@ -2,11 +2,11 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { Lightbulb, ShieldCheck, Sparkles } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityTabs } from '@/components/ActivityTabs';
-import { Card, PageHeader, TopBar } from '@/components/WorkspaceUI';
-import { useRequireAuth } from '@/hooks/use-auth';
-import { useActivityResultsQuery, useActivityQuery, useProjectQuery } from '@/hooks/use-grantready';
-import { getProjectInsights } from '@/lib/mock-data';
+import { ActivityTabs } from '@/components/activityTabs';
+import { Card, PageHeader, TopBar } from '@/components/workspaceUI';
+import { useRequireAuth } from '@/hooks/useAuth';
+import { useActivityResultsQuery, useActivityQuery, useProjectQuery } from '@/hooks/useGrantready';
+import { getProjectInsights } from '@/lib/mockData';
 
 export const Route = createFileRoute('/projects/$projectId/activities/$activityId/insights')({
   component: ActivityInsightsPage,

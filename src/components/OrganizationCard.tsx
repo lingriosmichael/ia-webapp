@@ -1,10 +1,10 @@
 import { Building2, FolderKanban, Users2 } from "lucide-react";
 import type { ReactNode } from "react";
-import { OrganizationAvatar } from "@/components/OrganizationAvatar";
-import { Card } from "@/components/WorkspaceUI";
-import { useWorkspaceLocale } from "@/hooks/use-workspace-locale";
-import { getOrganizationBranding } from "@/lib/organization-branding";
-import type { OrganizationSummary } from "@/services/api-client";
+import { OrganizationAvatar } from "@/components/organizationAvatar";
+import { Card } from "@/components/workspaceUI";
+import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
+import { getOrganizationBranding } from "@/lib/organizationBranding";
+import type { OrganizationSummary } from "@/services/apiClient";
 import { useTranslation } from "react-i18next";
 
 export function OrganizationCard({

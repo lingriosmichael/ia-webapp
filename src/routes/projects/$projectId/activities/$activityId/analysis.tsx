@@ -2,17 +2,17 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { BarChart3, CheckCircle2, Database, FileSpreadsheet, Sparkles } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityTabs } from '@/components/ActivityTabs';
-import { Card, PageHeader, TopBar } from '@/components/WorkspaceUI';
-import { useRequireAuth } from '@/hooks/use-auth';
+import { ActivityTabs } from '@/components/activityTabs';
+import { Card, PageHeader, TopBar } from '@/components/workspaceUI';
+import { useRequireAuth } from '@/hooks/useAuth';
 import {
   useActivityJobsQuery,
   useActivityQuery,
   useActivityResultsQuery,
   useActivityUploadsQuery,
   useProjectQuery,
-} from '@/hooks/use-grantready';
-import { datasetOverview, getKeyMetrics, getSchema } from '@/lib/mock-data';
+} from '@/hooks/useGrantready';
+import { datasetOverview, getKeyMetrics, getSchema } from '@/lib/mockData';
 
 export const Route = createFileRoute('/projects/$projectId/activities/$activityId/analysis')({
   component: ActivityAnalyticsPage,

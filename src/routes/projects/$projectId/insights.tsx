@@ -2,10 +2,10 @@ import { createFileRoute } from '@tanstack/react-router';
 import { AlertCircle, Lightbulb, ShieldCheck, Sparkles, TrendingUp, Zap } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, PageHeader, TopBar } from '@/components/WorkspaceUI';
-import { useRequireAuth } from '@/hooks/use-auth';
-import { useProjectActivitiesQuery, useProjectQuery } from '@/hooks/use-grantready';
-import { getProjectInsights } from '@/lib/mock-data';
+import { Card, PageHeader, TopBar } from '@/components/workspaceUI';
+import { useRequireAuth } from '@/hooks/useAuth';
+import { useProjectActivitiesQuery, useProjectQuery } from '@/hooks/useGrantready';
+import { getProjectInsights } from '@/lib/mockData';
 
 export const Route = createFileRoute('/projects/$projectId/insights')({
   component: ProjectInsights,

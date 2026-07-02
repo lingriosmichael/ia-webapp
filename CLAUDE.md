@@ -4,17 +4,33 @@ Stack: React, Vite, TanStack Start (file-based routing). TanStack Query is
 the recommended way to handle server state against gr_backend.
 
 ## Structure
-app/routes/ — TanStack Start file-based routes
-app/components/ — shared UI components
-app/lib/ — API client, shared utilities
-app/hooks/ — custom hooks
+- `src/routes/` — TanStack Start routes
+- `src/components/` — shared UI and page components
+- `src/components/ui/` — reusable primitive UI components
+- `src/hooks/` — custom hooks
+- `src/lib/` — framework-agnostic frontend utilities
+- `src/services/` — backend-facing API and storage services
+- `src/locales/` — translation dictionaries
+
+## Naming standard
+
+- Use `camelCase` for all multi-word frontend source filenames outside the route system.
+- This applies to components, hooks, services, lib files, and locale files.
+- Keep React component symbols in `PascalCase`, but keep the file name itself in `camelCase`, for example `workspaceShell.tsx`.
+- TanStack route files are the only exception:
+  - use `__root.tsx` for the root route,
+  - use `route.tsx` for layout routes,
+  - use `index.tsx` for index routes,
+  - prefer route folders over dotted flat filenames for nested routes,
+  - keep URL segment folders lower-case and use `$param` for dynamic segments.
+- Do not introduce kebab-case frontend source filenames unless a third-party generator requires it and that exception is documented.
 
 ## Data fetching
 Use TanStack Query for anything that hits gr_backend. Don't hand-roll
 useEffect + fetch + manual loading state — Query gives you caching,
 retries, and loading/error states for free, and keeps that logic
 consistent across the app.
-Centralize the actual HTTP client (e.g. app/lib/api.ts) so auth headers,
+Centralize the actual HTTP client (e.g. `src/services/apiClient.ts`) so auth headers,
 base URL, and error handling live in one place instead of being repeated
 per call site.
 
@@ -22,6 +38,7 @@ per call site.
 Follow TanStack Start's file-based convention. Keep route files thin —
 data loading via loaders/Query, rendering via components — push real
 logic into components/ and hooks/ so routes stay easy to scan.
+Prefer folder-based nesting such as `routes/onboarding/invite.tsx` over dotted filenames such as `onboarding.invite.tsx`.
 
 ## Components
 Function components only, typed props (no implicit any).

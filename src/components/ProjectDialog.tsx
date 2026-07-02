@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useWorkspaceLocale } from '@/hooks/use-workspace-locale';
-import type { CreateProjectPayload, ProjectStatus } from '@/services/api-client';
+import { useWorkspaceLocale } from '@/hooks/useWorkspaceLocale';
+import type { CreateProjectPayload, ProjectStatus } from '@/services/apiClient';
 import { Checkbox } from '@/components/ui/checkbox';
-import { EntityDialog, DialogSection, FieldLabel } from '@/components/EntityDialog';
+import { EntityDialog, DialogSection, FieldLabel } from '@/components/entityDialog';
 import { Input } from '@/components/ui/input';
 import {
   Select,

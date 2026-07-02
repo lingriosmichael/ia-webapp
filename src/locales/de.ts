@@ -1,6 +1,6 @@
-import en from './en';
+import type { TranslationDictionary } from './en';
 
-const de = {
+const de: TranslationDictionary = {
   language: {
     switcherLabel: 'Sprache',
     german: 'DE',
@@ -896,6 +896,6 @@ const de = {
     description:
       'Auf unserer Seite ist ein Fehler aufgetreten. Versuchen Sie es erneut oder gehen Sie zurück zur Startseite.',
   },
-} satisfies typeof en;
+};
 
 export default de;

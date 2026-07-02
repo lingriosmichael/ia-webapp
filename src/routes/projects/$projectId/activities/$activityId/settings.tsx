@@ -1,11 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { FileText, Settings2, ShieldCheck, UserRound } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { ActivityTabs } from '@/components/ActivityTabs';
-import { Card, PageHeader, TopBar } from '@/components/WorkspaceUI';
-import { useRequireAuth } from '@/hooks/use-auth';
-import { useActivityQuery, useProjectQuery } from '@/hooks/use-grantready';
-import { formatDateTime, translateStatus } from '@/lib/translation-utils';
+import { ActivityTabs } from '@/components/activityTabs';
+import { Card, PageHeader, TopBar } from '@/components/workspaceUI';
+import { useRequireAuth } from '@/hooks/useAuth';
+import { useActivityQuery, useProjectQuery } from '@/hooks/useGrantready';
+import { formatDateTime, translateStatus } from '@/lib/translationUtils';
 
 export const Route = createFileRoute('/projects/$projectId/activities/$activityId/settings')({
   component: ActivitySettingsPage,

@@ -1,4 +1,4 @@
-import { getAccessToken } from "./auth-storage";
+import { getAccessToken } from "./authStorage";
 
 export interface ApiErrorPayload {
   code: string;

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { sessionQueryKey } from "@/hooks/use-auth";
+import { sessionQueryKey } from "@/hooks/useAuth";
 import {
   ApiError,
   apiClient,
@@ -20,7 +20,7 @@ import {
   type ResultRecord,
   type SessionResponse,
   type UploadMetadataRecord,
-} from "@/services/api-client";
+} from "@/services/apiClient";
 
 export const workspaceQueryKey = (organizationId: string) =>
   ["workspace", organizationId] as const;

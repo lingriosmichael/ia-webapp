@@ -2,11 +2,11 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { PublicMarketingShell } from '@/components/PublicMarketingShell';
+import { PublicMarketingShell } from '@/components/publicMarketingShell';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useRegisterMutation } from '@/hooks/use-auth';
-import { ApiError } from '@/services/api-client';
+import { useRegisterMutation } from '@/hooks/useAuth';
+import { ApiError } from '@/services/apiClient';
 
 export const Route = createFileRoute('/register')({
   component: RegisterPage,
