@@ -1,13 +1,15 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { FileText, Settings2, ShieldCheck, UserRound } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { ActivityTabs } from '@/components/activityTabs';
-import { Card, PageHeader, TopBar } from '@/components/workspaceUI';
-import { useRequireAuth } from '@/hooks/useAuth';
-import { useActivityQuery, useProjectQuery } from '@/hooks/useGrantready';
-import { formatDateTime, translateStatus } from '@/lib/translationUtils';
+import { createFileRoute } from "@tanstack/react-router";
+import { FileText, Settings2, ShieldCheck, UserRound } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { ActivityTabs } from "@/components/activityTabs";
+import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
+import { useRequireAuth } from "@/hooks/useAuth";
+import { useActivityQuery, useProjectQuery } from "@/hooks/useGrantready";
+import { formatDateTime, translateStatus } from "@/lib/translationUtils";
 
-export const Route = createFileRoute('/projects/$projectId/activities/$activityId/settings')({
+export const Route = createFileRoute(
+  "/projects/$projectId/activities/$activityId/settings",
+)({
   component: ActivitySettingsPage,
 });
 
@@ -19,16 +21,16 @@ function ActivitySettingsPage() {
   const { t, i18n } = useTranslation();
 
   if (!auth.token || projectQuery.isLoading || activityQuery.isLoading) {
-    return <CenteredState label={t('activitySettings.loading')} />;
+    return <CenteredState label={t("activitySettings.loading")} />;
   }
 
   if (!projectQuery.data || !activityQuery.data) {
-    return <CenteredState label={t('activitySettings.loadFailed')} />;
+    return <CenteredState label={t("activitySettings.loadFailed")} />;
   }
 
   const project = projectQuery.data;
   const activity = activityQuery.data;
-  const workflowGuardrailsValue = t('activitySettings.workflowGuardrails', {
+  const workflowGuardrailsValue = t("activitySettings.workflowGuardrails", {
     returnObjects: true,
   });
   const workflowGuardrails = Array.isArray(workflowGuardrailsValue)
@@ -39,53 +41,64 @@ function ActivitySettingsPage() {
     <>
       <TopBar
         crumbs={[
-          { label: project.name, to: '/projects/$projectId', params: { projectId } },
+          {
+            label: project.name,
+            to: "/projects/$projectId",
+            params: { projectId },
+          },
           { label: activity.name },
-          { label: t('activitySettings.crumb') },
+          { label: t("activitySettings.crumb") },
         ]}
       />
       <div className="mx-auto w-full max-w-5xl px-8 py-10">
         <PageHeader
-          eyebrow={t('activitySettings.eyebrow')}
-          title={t('activitySettings.title')}
-          description={t('activitySettings.description')}
+          eyebrow={t("activitySettings.eyebrow")}
+          title={t("activitySettings.title")}
+          description={t("activitySettings.description")}
         />
-        <ActivityTabs projectId={projectId} activityId={activityId} className="mt-6" />
+        <ActivityTabs
+          projectId={projectId}
+          activityId={activityId}
+          className="mt-6"
+        />
 
         <div className="mt-6 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
           <Card className="p-6">
             <div className="flex items-center gap-2 text-sm font-semibold tracking-tight">
               <Settings2 className="h-4 w-4 text-primary" />
-              {t('activitySettings.activityDetailsTitle')}
+              {t("activitySettings.activityDetailsTitle")}
             </div>
             <dl className="mt-5 grid gap-4 md:grid-cols-2">
-              <DetailRow label={t('activitySettings.fields.name')} value={activity.name} />
               <DetailRow
-                label={t('activitySettings.fields.status')}
+                label={t("activitySettings.fields.name")}
+                value={activity.name}
+              />
+              <DetailRow
+                label={t("activitySettings.fields.status")}
                 value={translateStatus(t, activity.status)}
               />
               <DetailRow
-                label={t('activitySettings.fields.project')}
+                label={t("activitySettings.fields.project")}
                 value={project.name}
               />
               <DetailRow
-                label={t('activitySettings.fields.owner')}
-                value={activity.owner ?? t('activitySettings.noOwner')}
+                label={t("activitySettings.fields.owner")}
+                value={activity.owner ?? t("activitySettings.noOwner")}
               />
               <DetailRow
-                label={t('activitySettings.fields.created')}
+                label={t("activitySettings.fields.created")}
                 value={formatDateTime(activity.createdAt, i18n.language)}
               />
               <DetailRow
-                label={t('activitySettings.fields.updated')}
+                label={t("activitySettings.fields.updated")}
                 value={formatDateTime(activity.updatedAt, i18n.language)}
               />
               <div className="md:col-span-2">
                 <div className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
-                  {t('activitySettings.fields.description')}
+                  {t("activitySettings.fields.description")}
                 </div>
                 <p className="mt-2 text-sm leading-6 text-foreground">
-                  {activity.description ?? t('activitySettings.noDescription')}
+                  {activity.description ?? t("activitySettings.noDescription")}
                 </p>
               </div>
             </dl>
@@ -95,7 +108,7 @@ function ActivitySettingsPage() {
             <Card className="p-6">
               <div className="flex items-center gap-2 text-sm font-semibold tracking-tight">
                 <ShieldCheck className="h-4 w-4 text-primary" />
-                {t('activitySettings.workflowGuardrailsTitle')}
+                {t("activitySettings.workflowGuardrailsTitle")}
               </div>
               <ul className="mt-4 space-y-3 text-sm leading-6 text-muted-foreground">
                 {workflowGuardrails.map((item) => (
@@ -107,21 +120,25 @@ function ActivitySettingsPage() {
             <Card className="p-6">
               <div className="flex items-center gap-2 text-sm font-semibold tracking-tight">
                 <FileText className="h-4 w-4 text-primary" />
-                {t('activitySettings.contextTitle')}
+                {t("activitySettings.contextTitle")}
               </div>
               <ul className="mt-4 space-y-3 text-sm leading-6 text-muted-foreground">
-                <li>{project.programGoal ?? t('activitySettings.noProjectGoal')}</li>
-                <li>{activity.description ?? t('activitySettings.noDescription')}</li>
+                <li>
+                  {project.programGoal ?? t("activitySettings.noProjectGoal")}
+                </li>
+                <li>
+                  {activity.description ?? t("activitySettings.noDescription")}
+                </li>
               </ul>
             </Card>
 
             <Card className="p-6">
               <div className="flex items-center gap-2 text-sm font-semibold tracking-tight">
                 <UserRound className="h-4 w-4 text-primary" />
-                {t('activitySettings.supportTitle')}
+                {t("activitySettings.supportTitle")}
               </div>
               <p className="mt-4 text-sm leading-6 text-muted-foreground">
-                {t('activitySettings.supportDescription')}
+                {t("activitySettings.supportDescription")}
               </p>
             </Card>
           </div>
@@ -143,5 +160,9 @@ function DetailRow({ label, value }: { label: string; value: string }) {
 }
 
 function CenteredState({ label }: { label: string }) {
-  return <div className="flex min-h-screen items-center justify-center text-sm text-muted-foreground">{label}</div>;
+  return (
+    <div className="flex min-h-screen items-center justify-center text-sm text-muted-foreground">
+      {label}
+    </div>
+  );
 }

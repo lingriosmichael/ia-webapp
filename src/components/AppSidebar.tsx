@@ -467,7 +467,10 @@ function ProjectActionsMenu({
   deleteProjectLabel,
   actionsLabel,
 }: {
-  project: Pick<WorkspaceProject, "id" | "name" | "organizationId" | "permissions">;
+  project: Pick<
+    WorkspaceProject,
+    "id" | "name" | "organizationId" | "permissions"
+  >;
   onDeleteProject: (
     project: Pick<WorkspaceProject, "id" | "name" | "organizationId">,
   ) => void;

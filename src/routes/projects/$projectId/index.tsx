@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   AlertCircle,
   ArrowUpRight,
@@ -10,17 +10,21 @@ import {
   LayoutGrid,
   Sparkles,
   Upload as UploadIcon,
-} from 'lucide-react';
-import type { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Card, PageHeader, TopBar } from '@/components/workspaceUI';
-import { useWorkspaceShell } from '@/components/workspaceShell';
-import { useRequireAuth } from '@/hooks/useAuth';
-import { useProjectOverviewQuery } from '@/hooks/useGrantready';
-import { formatDateTime, translateStatus } from '@/lib/translationUtils';
-import type { ProjectOverviewMetrics, ProjectRecentActivityItem, WorkspaceActivity } from '@/services/apiClient';
+} from "lucide-react";
+import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
+import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
+import { useWorkspaceShell } from "@/components/workspaceShell";
+import { useRequireAuth } from "@/hooks/useAuth";
+import { useProjectOverviewQuery } from "@/hooks/useGrantready";
+import { formatDateTime, translateStatus } from "@/lib/translationUtils";
+import type {
+  ProjectOverviewMetrics,
+  ProjectRecentActivityItem,
+  WorkspaceActivity,
+} from "@/services/apiClient";
 
-export const Route = createFileRoute('/projects/$projectId/')({
+export const Route = createFileRoute("/projects/$projectId/")({
   component: ProjectOverview,
 });
 
@@ -32,11 +36,11 @@ function ProjectOverview() {
   const { openActivityDialog } = useWorkspaceShell();
 
   if (!auth.token || auth.isLoading || overviewQuery.isLoading) {
-    return <CenteredState label={t('project.loading')} />;
+    return <CenteredState label={t("project.loading")} />;
   }
 
   if (!overviewQuery.data) {
-    return <CenteredState label={t('project.loadFailed')} />;
+    return <CenteredState label={t("project.loadFailed")} />;
   }
 
   const { project, activities, metrics, recentActivity } = overviewQuery.data;
@@ -44,11 +48,15 @@ function ProjectOverview() {
   const evidenceCompletenessPercent =
     metrics.activityCount === 0
       ? 0
-      : Math.round((metrics.activitiesWithDatasetsCount / metrics.activityCount) * 100);
+      : Math.round(
+          (metrics.activitiesWithDatasetsCount / metrics.activityCount) * 100,
+        );
 
   const healthState = deriveHealthState(metrics);
   const healthLabel = t(`project.dashboard.healthStates.${healthState.key}`);
-  const healthDescription = t(`project.dashboard.healthDescriptions.${healthState.key}`);
+  const healthDescription = t(
+    `project.dashboard.healthDescriptions.${healthState.key}`,
+  );
   const attentionItems = buildAttentionItems(metrics, t);
 
   function renderHeaderActions() {
@@ -64,7 +72,7 @@ function ProjectOverview() {
             onClick={() => openActivityDialog(projectId)}
             className="inline-flex h-10 items-center rounded-md border border-border bg-card px-4 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
           >
-            {t('project.addActivity')}
+            {t("project.addActivity")}
           </button>
         ) : null}
         <Link
@@ -73,7 +81,7 @@ function ProjectOverview() {
           className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
         >
           <Sparkles className="h-4 w-4" />
-          {t('project.viewInsights')}
+          {t("project.viewInsights")}
         </Link>
       </>
     );
@@ -84,8 +92,8 @@ function ProjectOverview() {
       <TopBar
         crumbs={[
           {
-            label: t('project.crumbsOrganization'),
-            to: '/organizations/$organizationId',
+            label: t("project.crumbsOrganization"),
+            to: "/organizations/$organizationId",
             params: { organizationId: project.organizationId },
           },
           { label: project.name },
@@ -94,9 +102,9 @@ function ProjectOverview() {
 
       <div className="mx-auto w-full max-w-6xl px-8 py-10">
         <PageHeader
-          eyebrow={t('project.eyebrow')}
+          eyebrow={t("project.eyebrow")}
           title={project.name}
-          description={project.description ?? t('project.noDescription')}
+          description={project.description ?? t("project.noDescription")}
           actions={renderHeaderActions()}
         />
 
@@ -107,13 +115,13 @@ function ProjectOverview() {
                 <Layers className="h-5 w-5" />
               </div>
               <h2 className="mt-6 text-3xl font-semibold tracking-tight text-foreground">
-                {t('project.emptyStateTitle', { name: project.name })}
+                {t("project.emptyStateTitle", { name: project.name })}
               </h2>
               <p className="mt-4 text-base leading-7 text-foreground/85">
-                {t('project.emptyStateDescription')}
+                {t("project.emptyStateDescription")}
               </p>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-                {t('project.emptyStateSupporting')}
+                {t("project.emptyStateSupporting")}
               </p>
               {project.permissions.canCreateActivity ? (
                 <button
@@ -121,7 +129,7 @@ function ProjectOverview() {
                   onClick={() => openActivityDialog(projectId)}
                   className="mt-8 inline-flex h-11 items-center rounded-md bg-primary px-5 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
                 >
-                  {t('project.emptyStateAction')}
+                  {t("project.emptyStateAction")}
                 </button>
               ) : null}
             </div>
@@ -131,56 +139,56 @@ function ProjectOverview() {
             <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               <OverviewMetricCard
                 icon={
-                  healthState.key === 'strong' ? (
+                  healthState.key === "strong" ? (
                     <CheckCircle2 className="h-4 w-4 text-primary" />
-                  ) : healthState.key === 'progress' ? (
+                  ) : healthState.key === "progress" ? (
                     <Clock3 className="h-4 w-4 text-primary" />
                   ) : (
                     <AlertCircle className="h-4 w-4 text-primary" />
                   )
                 }
-                label={t('project.dashboard.health')}
+                label={t("project.dashboard.health")}
                 value={healthLabel}
                 description={healthDescription}
                 accent
               />
               <OverviewMetricCard
                 icon={<Layers className="h-4 w-4 text-primary" />}
-                label={t('project.dashboard.evidenceCompleteness')}
-                value={t('project.dashboard.completenessValue', {
+                label={t("project.dashboard.evidenceCompleteness")}
+                value={t("project.dashboard.completenessValue", {
                   withEvidence: metrics.activitiesWithDatasetsCount,
                   total: metrics.activityCount,
                 })}
-                description={t('project.dashboard.completenessDelta', {
+                description={t("project.dashboard.completenessDelta", {
                   percent: evidenceCompletenessPercent,
                 })}
               />
               <OverviewMetricCard
                 icon={<Sparkles className="h-4 w-4 text-primary" />}
-                label={t('project.dashboard.insightsGenerated')}
+                label={t("project.dashboard.insightsGenerated")}
                 value={String(metrics.insightCount)}
                 description={
                   metrics.pendingInsightCount > 0
-                    ? t('project.dashboard.insightsDelta', {
+                    ? t("project.dashboard.insightsDelta", {
                         count: metrics.pendingInsightCount,
                       })
                     : metrics.insightCount > 0
-                      ? t('project.dashboard.insightsReadyDelta')
-                      : t('project.dashboard.noInsightsDelta')
+                      ? t("project.dashboard.insightsReadyDelta")
+                      : t("project.dashboard.noInsightsDelta")
                 }
               />
               <OverviewMetricCard
                 icon={<UploadIcon className="h-4 w-4 text-primary" />}
-                label={t('project.dashboard.lastEvidenceUpload')}
+                label={t("project.dashboard.lastEvidenceUpload")}
                 value={
                   metrics.lastUploadAt
                     ? formatDateTime(metrics.lastUploadAt, i18n.language)
-                    : t('project.dashboard.noUploadValue')
+                    : t("project.dashboard.noUploadValue")
                 }
                 description={
                   metrics.lastUploadAt
-                    ? t('project.stats.lastUpdatedDelta')
-                    : t('project.dashboard.noUploadDelta')
+                    ? t("project.stats.lastUpdatedDelta")
+                    : t("project.dashboard.noUploadDelta")
                 }
               />
             </div>
@@ -192,7 +200,7 @@ function ProjectOverview() {
                 </div>
                 <div className="min-w-0">
                   <h2 className="text-[15px] font-semibold tracking-tight">
-                    {t('project.dashboard.whatNeedsAttention')}
+                    {t("project.dashboard.whatNeedsAttention")}
                   </h2>
                   <div className="mt-4 grid gap-3">
                     {attentionItems.map((item) => (
@@ -211,10 +219,10 @@ function ProjectOverview() {
             <div className="mt-10 flex flex-wrap items-baseline justify-between gap-4">
               <div>
                 <h2 className="text-[15px] font-semibold tracking-tight">
-                  {t('project.activitiesHeading')}
+                  {t("project.activitiesHeading")}
                 </h2>
                 <p className="mt-1 text-[13px] text-muted-foreground">
-                  {t('project.activitiesDescription')}
+                  {t("project.activitiesDescription")}
                 </p>
               </div>
               {project.permissions.canCreateActivity ? (
@@ -223,7 +231,7 @@ function ProjectOverview() {
                   onClick={() => openActivityDialog(projectId)}
                   className="inline-flex h-9 items-center rounded-md border border-border bg-card px-3.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
                 >
-                  {t('project.addAnotherActivity')}
+                  {t("project.addAnotherActivity")}
                 </button>
               ) : null}
             </div>
@@ -241,11 +249,11 @@ function ProjectOverview() {
             <Card className="mt-10 p-6">
               <div className="flex items-center gap-2 text-[15px] font-semibold tracking-tight">
                 <Clock3 className="h-4 w-4 text-primary" />
-                {t('project.dashboard.recentActivity')}
+                {t("project.dashboard.recentActivity")}
               </div>
               {recentActivity.length === 0 ? (
                 <p className="mt-4 text-sm text-muted-foreground">
-                  {t('project.dashboard.noRecentActivity')}
+                  {t("project.dashboard.noRecentActivity")}
                 </p>
               ) : (
                 <div className="mt-5 grid gap-4">
@@ -286,11 +294,13 @@ function OverviewMetricCard({
         {label}
       </div>
       <div
-        className={`mt-3 text-xl font-semibold tracking-tight ${accent ? 'text-primary' : 'text-foreground'}`}
+        className={`mt-3 text-xl font-semibold tracking-tight ${accent ? "text-primary" : "text-foreground"}`}
       >
         {value}
       </div>
-      <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+        {description}
+      </p>
     </Card>
   );
 }
@@ -314,16 +324,20 @@ function ProjectActivityCard({
           {translateStatus(t, activity.status)}
         </span>
       </div>
-      <h3 className="mt-4 text-[15px] font-semibold tracking-tight">{activity.name}</h3>
+      <h3 className="mt-4 text-[15px] font-semibold tracking-tight">
+        {activity.name}
+      </h3>
       <p className="mt-1.5 line-clamp-3 text-[13px] leading-relaxed text-muted-foreground">
-        {activity.description ?? t('project.noActivityDescription')}
+        {activity.description ?? t("project.noActivityDescription")}
       </p>
       <div className="mt-4 flex flex-wrap gap-2">
         <span className="rounded-full border border-border bg-background px-2.5 py-1 text-[11px] text-muted-foreground">
-          {activity.uploadMetadataCount} {t('project.stats.uploads').toLowerCase()}
+          {activity.uploadMetadataCount}{" "}
+          {t("project.stats.uploads").toLowerCase()}
         </span>
         <span className="rounded-full border border-border bg-background px-2.5 py-1 text-[11px] text-muted-foreground">
-          {activity.resultCount} {t('project.dashboard.insightsGenerated').toLowerCase()}
+          {activity.resultCount}{" "}
+          {t("project.dashboard.insightsGenerated").toLowerCase()}
         </span>
       </div>
       <div className="mt-5 flex items-center gap-2 border-t border-border pt-4 text-[12px]">
@@ -332,21 +346,21 @@ function ProjectActivityCard({
           params={{ projectId, activityId: activity.id }}
           className="inline-flex items-center gap-1 rounded-md px-2 py-1 font-medium text-foreground hover:bg-secondary"
         >
-          <FileText className="h-3.5 w-3.5" /> {t('project.brief')}
+          <FileText className="h-3.5 w-3.5" /> {t("project.brief")}
         </Link>
         <Link
           to="/projects/$projectId/activities/$activityId/data-review"
           params={{ projectId, activityId: activity.id }}
           className="inline-flex items-center gap-1 rounded-md px-2 py-1 font-medium text-foreground hover:bg-secondary"
         >
-          <LayoutGrid className="h-3.5 w-3.5" /> {t('activityTabs.schema')}
+          <LayoutGrid className="h-3.5 w-3.5" /> {t("activityTabs.schema")}
         </Link>
         <Link
           to="/projects/$projectId/activities/$activityId/analysis"
           params={{ projectId, activityId: activity.id }}
           className="ml-auto inline-flex items-center gap-1 text-primary hover:underline"
         >
-          {t('project.open')} <ArrowUpRight className="h-3.5 w-3.5" />
+          {t("project.open")} <ArrowUpRight className="h-3.5 w-3.5" />
         </Link>
       </div>
     </Card>
@@ -362,10 +376,10 @@ function RecentActivityRow({
 }) {
   const { t } = useTranslation();
   const activitySuffix = item.activityName
-    ? ` ${t('project.dashboard.recentActivityActivitySuffix', {
+    ? ` ${t("project.dashboard.recentActivityActivitySuffix", {
         name: item.activityName,
       })}`
-    : '';
+    : "";
 
   return (
     <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border/70 pb-4 last:border-b-0 last:pb-0">
@@ -388,34 +402,34 @@ function deriveHealthState(metrics: ProjectOverviewMetrics) {
     metrics.failedJobCount === 0 &&
     metrics.insightCount > 0
   ) {
-    return { key: 'strong' as const };
+    return { key: "strong" as const };
   }
 
   if (
     metrics.uploadedDatasetCount > 0 &&
     (metrics.pendingInsightCount > 0 || metrics.activitiesWithDatasetsCount > 0)
   ) {
-    return { key: 'progress' as const };
+    return { key: "progress" as const };
   }
 
-  return { key: 'attention' as const };
+  return { key: "attention" as const };
 }
 
 function buildAttentionItems(
   metrics: ProjectOverviewMetrics,
-  t: ReturnType<typeof useTranslation>['t'],
+  t: ReturnType<typeof useTranslation>["t"],
 ) {
   const items: string[] = [];
 
   if (metrics.uploadedDatasetCount === 0) {
-    items.push(t('project.dashboard.attentionItems.noEvidence'));
+    items.push(t("project.dashboard.attentionItems.noEvidence"));
   }
 
   const activitiesWithoutEvidence =
     metrics.activityCount - metrics.activitiesWithDatasetsCount;
   if (activitiesWithoutEvidence > 0) {
     items.push(
-      t('project.dashboard.attentionItems.partialEvidence', {
+      t("project.dashboard.attentionItems.partialEvidence", {
         count: activitiesWithoutEvidence,
       }),
     );
@@ -423,7 +437,7 @@ function buildAttentionItems(
 
   if (metrics.pendingInsightCount > 0) {
     items.push(
-      t('project.dashboard.attentionItems.pendingInsights', {
+      t("project.dashboard.attentionItems.pendingInsights", {
         count: metrics.pendingInsightCount,
       }),
     );
@@ -431,14 +445,14 @@ function buildAttentionItems(
 
   if (metrics.failedJobCount > 0) {
     items.push(
-      t('project.dashboard.attentionItems.failedJobs', {
+      t("project.dashboard.attentionItems.failedJobs", {
         count: metrics.failedJobCount,
       }),
     );
   }
 
   if (items.length === 0) {
-    items.push(t('project.dashboard.attentionItems.healthy'));
+    items.push(t("project.dashboard.attentionItems.healthy"));
   }
 
   return items;

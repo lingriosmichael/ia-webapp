@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
-import { useOrganizationWorkspacePage } from "./route";
+import { useOrganizationWorkspacePage } from "./-organizationWorkspaceContext";
 
-export const Route = createFileRoute("/organizations/$organizationId/activities")({
+export const Route = createFileRoute(
+  "/organizations/$organizationId/activities",
+)({
   component: OrganizationActivitiesPage,
 });
 
@@ -22,7 +24,11 @@ function OrganizationActivitiesPage() {
     <>
       <TopBar
         crumbs={[
-          { label: workspace.organization.name, to: "/organizations/$organizationId", params: { organizationId } },
+          {
+            label: workspace.organization.name,
+            to: "/organizations/$organizationId",
+            params: { organizationId },
+          },
           { label: locale.sidebar.activities },
         ]}
       />
@@ -42,9 +48,12 @@ function OrganizationActivitiesPage() {
                     {activity.name}
                   </div>
                   <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    {activity.description || locale.organizationActivities.noDescription}
+                    {activity.description ||
+                      locale.organizationActivities.noDescription}
                   </p>
-                  <div className="mt-3 text-xs text-muted-foreground">{projectName}</div>
+                  <div className="mt-3 text-xs text-muted-foreground">
+                    {projectName}
+                  </div>
                 </div>
                 <Link
                   to="/projects/$projectId/activities/$activityId/overview"

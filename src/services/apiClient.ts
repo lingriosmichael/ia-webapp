@@ -413,7 +413,12 @@ export const apiClient = {
   removeOrganizationMember(
     organizationId: string,
     membershipId: string,
-  ): Promise<{ id: string; userId: string; organizationId: string; role: OrganizationRole }> {
+  ): Promise<{
+    id: string;
+    userId: string;
+    organizationId: string;
+    role: OrganizationRole;
+  }> {
     return request(`/organizations/${organizationId}/members/${membershipId}`, {
       method: "DELETE",
     });
@@ -437,9 +442,12 @@ export const apiClient = {
     organizationId: string,
     invitationId: string,
   ): Promise<InvitationSummary> {
-    return request(`/organizations/${organizationId}/invitations/${invitationId}`, {
-      method: "DELETE",
-    });
+    return request(
+      `/organizations/${organizationId}/invitations/${invitationId}`,
+      {
+        method: "DELETE",
+      },
+    );
   },
   getInvitation(token: string): Promise<InvitationSummary> {
     return request(`/invitations/${token}`);

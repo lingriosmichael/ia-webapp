@@ -2,11 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
 import { useWorkspaceShell } from "@/components/workspaceShell";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
-import { useOrganizationWorkspacePage } from "./route";
+import { useOrganizationWorkspacePage } from "./-organizationWorkspaceContext";
 
-export const Route = createFileRoute("/organizations/$organizationId/projects")({
-  component: OrganizationProjectsPage,
-});
+export const Route = createFileRoute("/organizations/$organizationId/projects")(
+  {
+    component: OrganizationProjectsPage,
+  },
+);
 
 function OrganizationProjectsPage() {
   const { workspace, organizationId } = useOrganizationWorkspacePage();
@@ -17,7 +19,11 @@ function OrganizationProjectsPage() {
     <>
       <TopBar
         crumbs={[
-          { label: workspace.organization.name, to: "/organizations/$organizationId", params: { organizationId } },
+          {
+            label: workspace.organization.name,
+            to: "/organizations/$organizationId",
+            params: { organizationId },
+          },
           { label: locale.sidebar.projects },
         ]}
       />
@@ -47,12 +53,16 @@ function OrganizationProjectsPage() {
               params={{ projectId: project.id }}
               className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] transition-transform hover:-translate-y-0.5"
             >
-              <div className="text-lg font-semibold tracking-tight text-foreground">{project.name}</div>
+              <div className="text-lg font-semibold tracking-tight text-foreground">
+                {project.name}
+              </div>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                {project.description || locale.organizationProjects.noDescription}
+                {project.description ||
+                  locale.organizationProjects.noDescription}
               </p>
               <div className="mt-4 text-xs text-muted-foreground">
-                {project.activities.length} {locale.organizationProjects.activities}
+                {project.activities.length}{" "}
+                {locale.organizationProjects.activities}
               </div>
             </Link>
           ))}

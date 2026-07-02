@@ -38,7 +38,8 @@ const workspaceEn = {
   },
   organizationCard: {
     eyebrow: "Organization",
-    noMission: "Add a short mission statement to make this workspace easier to recognize.",
+    noMission:
+      "Add a short mission statement to make this workspace easier to recognize.",
     members: "Members",
     projects: "Projects",
     workspace: "Workspace",
@@ -110,7 +111,8 @@ const workspaceEn = {
   organizationProjects: {
     eyebrow: "Projects",
     title: "Projects in this workspace",
-    description: "Open an existing project or create the next one you want to manage.",
+    description:
+      "Open an existing project or create the next one you want to manage.",
     primaryAction: "Create project",
     noDescription: "No project description yet.",
     activities: "activities",
@@ -118,14 +120,16 @@ const workspaceEn = {
   organizationActivities: {
     eyebrow: "Activities",
     title: "Activities across my projects",
-    description: "Open any activity you own to continue uploading evidence or reviewing insights.",
+    description:
+      "Open any activity you own to continue uploading evidence or reviewing insights.",
     noDescription: "No activity description yet.",
     openActivity: "Open activity",
   },
   members: {
     eyebrow: "Members",
     title: "Invite and manage your project managers",
-    description: "Invite project managers, review the current member list, and keep ownership clear.",
+    description:
+      "Invite project managers, review the current member list, and keep ownership clear.",
     inviteTitle: "Invite your team",
     inviteDescription:
       "Create invitation records for project managers so they can join and start creating projects.",
@@ -146,7 +150,8 @@ const workspaceEn = {
   organizationBilling: {
     eyebrow: "Billing",
     title: "Subscription and billing",
-    description: "Billing remains organization-level so project ownership rules stay simple.",
+    description:
+      "Billing remains organization-level so project ownership rules stay simple.",
     placeholder:
       "Subscription management can be added here later without changing the project and activity model.",
   },
@@ -299,11 +304,13 @@ type DeepStringShape<T> = {
       ? Item extends string
         ? string[]
         : DeepStringShape<Item>[]
-    : T[Key] extends Record<string, unknown>
-      ? DeepStringShape<T[Key]>
-      : T[Key];
+      : T[Key] extends Record<string, unknown>
+        ? DeepStringShape<T[Key]>
+        : T[Key];
 };
 
-export type WorkspaceTranslationDictionary = DeepStringShape<typeof workspaceEn>;
+export type WorkspaceTranslationDictionary = DeepStringShape<
+  typeof workspaceEn
+>;
 
 export default workspaceEn;

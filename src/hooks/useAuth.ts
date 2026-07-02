@@ -2,7 +2,12 @@ import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { resolveActiveOrganizationId } from "@/lib/organizationSelection";
-import { ApiError, apiClient, type AuthResponse, type SessionResponse } from "@/services/apiClient";
+import {
+  ApiError,
+  apiClient,
+  type AuthResponse,
+  type SessionResponse,
+} from "@/services/apiClient";
 import {
   clearAccessToken,
   clearActiveOrganizationId,
@@ -15,7 +20,9 @@ export const sessionQueryKey = ["session"] as const;
 
 function persistAuth(response: AuthResponse) {
   setAccessToken(response.accessToken);
-  const activeOrganizationId = resolveActiveOrganizationId(response.organizations);
+  const activeOrganizationId = resolveActiveOrganizationId(
+    response.organizations,
+  );
 
   if (activeOrganizationId) {
     setActiveOrganizationId(activeOrganizationId);
@@ -46,7 +53,10 @@ export function useRequireAuth() {
   }, [navigate, token]);
 
   useEffect(() => {
-    if (sessionQuery.error instanceof ApiError && sessionQuery.error.statusCode === 401) {
+    if (
+      sessionQuery.error instanceof ApiError &&
+      sessionQuery.error.statusCode === 401
+    ) {
       clearAccessToken();
       void navigate({ to: "/login" });
     }

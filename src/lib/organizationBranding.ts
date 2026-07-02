@@ -1,4 +1,4 @@
-import type { OrganizationRole } from '@/services/apiClient';
+import type { OrganizationRole } from "@/services/apiClient";
 
 export interface OrganizationBranding {
   displayName: string;
@@ -18,16 +18,16 @@ export function getOrganizationBranding({
   logoUrl?: string | null;
   language: string;
 }): OrganizationBranding {
-  const isGerman = language.startsWith('de');
+  const isGerman = language.startsWith("de");
   const displayName = organizationName;
   const roleLabel =
-    organizationRole === 'ORGANIZATION_ADMIN'
+    organizationRole === "ORGANIZATION_ADMIN"
       ? isGerman
-        ? 'Organisationsadministration'
-        : 'Organization Admin'
+        ? "Organisationsadministration"
+        : "Organization Admin"
       : isGerman
-        ? 'Projektleitung'
-        : 'Project Manager';
+        ? "Projektleitung"
+        : "Project Manager";
 
   return {
     displayName,
@@ -44,11 +44,11 @@ function getInitials(value: string) {
     .filter(Boolean);
 
   if (words.length === 0) {
-    return 'GR';
+    return "GR";
   }
 
   return words
     .slice(0, 2)
-    .map((word) => word[0]?.toUpperCase() ?? '')
-    .join('');
+    .map((word) => word[0]?.toUpperCase() ?? "")
+    .join("");
 }

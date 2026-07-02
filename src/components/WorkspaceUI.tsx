@@ -1,8 +1,8 @@
-import { Link, useRouterState } from '@tanstack/react-router';
-import { ChevronRight, Search, Command } from 'lucide-react';
-import type { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
-import { LanguageSwitcher } from '@/components/languageSwitcher';
+import { Link, useRouterState } from "@tanstack/react-router";
+import { ChevronRight, Search, Command } from "lucide-react";
+import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
+import { LanguageSwitcher } from "@/components/languageSwitcher";
 
 interface Crumb {
   label: string;
@@ -38,7 +38,9 @@ export function TopBar({
                 {c.label}
               </Link>
             ) : (
-              <span className="px-1.5 py-0.5 font-medium text-foreground">{c.label}</span>
+              <span className="px-1.5 py-0.5 font-medium text-foreground">
+                {c.label}
+              </span>
             )}
           </span>
         ))}
@@ -47,10 +49,10 @@ export function TopBar({
       <div className="flex items-center gap-2">
         <button
           className="hidden h-8 items-center gap-2 rounded-md border border-border bg-card px-2.5 text-[12px] text-muted-foreground transition-colors hover:bg-secondary md:inline-flex"
-          aria-label={t('common.searchAria')}
+          aria-label={t("common.searchAria")}
         >
           <Search className="h-3.5 w-3.5" />
-          <span>{t('common.search')}</span>
+          <span>{t("common.search")}</span>
           <span className="ml-2 inline-flex items-center gap-0.5 rounded border border-border bg-secondary px-1 py-0.5 text-[10px]">
             <Command className="h-2.5 w-2.5" />K
           </span>
@@ -85,7 +87,9 @@ export function PageHeader({
           {title}
         </h1>
         {description && (
-          <p className="mt-2 text-[14px] leading-relaxed text-muted-foreground">{description}</p>
+          <p className="mt-2 text-[14px] leading-relaxed text-muted-foreground">
+            {description}
+          </p>
         )}
       </div>
       {actions && <div className="flex items-center gap-2">{actions}</div>}
@@ -95,7 +99,7 @@ export function PageHeader({
 
 export function Card({
   children,
-  className = '',
+  className = "",
 }: {
   children: ReactNode;
   className?: string;
@@ -122,13 +126,17 @@ export function Stat({
 }) {
   return (
     <Card className="p-5">
-      <div className="text-[12px] font-medium text-muted-foreground">{label}</div>
+      <div className="text-[12px] font-medium text-muted-foreground">
+        {label}
+      </div>
       <div
-        className={`mt-2 text-[26px] font-semibold tracking-tight ${accent ? 'text-primary' : 'text-foreground'}`}
+        className={`mt-2 text-[26px] font-semibold tracking-tight ${accent ? "text-primary" : "text-foreground"}`}
       >
         {value}
       </div>
-      {delta && <div className="mt-1 text-[12px] text-muted-foreground">{delta}</div>}
+      {delta && (
+        <div className="mt-1 text-[12px] text-muted-foreground">{delta}</div>
+      )}
     </Card>
   );
 }

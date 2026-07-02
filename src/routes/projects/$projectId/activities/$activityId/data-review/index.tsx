@@ -1,4 +1,4 @@
-import { Link, createFileRoute } from '@tanstack/react-router';
+import { Link, createFileRoute } from "@tanstack/react-router";
 import {
   AlertTriangle,
   ArrowRight,
@@ -12,48 +12,50 @@ import {
   Sparkles,
   UploadCloud,
   X,
-} from 'lucide-react';
-import { useState, type ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
-import { ActivityTabs } from '@/components/activityTabs';
-import { Card, PageHeader, TopBar } from '@/components/workspaceUI';
-import { useRequireAuth } from '@/hooks/useAuth';
+} from "lucide-react";
+import { useState, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
+import { ActivityTabs } from "@/components/activityTabs";
+import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
+import { useRequireAuth } from "@/hooks/useAuth";
 import {
   useActivityJobsQuery,
   useActivityQuery,
   useActivityUploadsQuery,
   useProjectQuery,
-} from '@/hooks/useGrantready';
-import { formatDateTime } from '@/lib/translationUtils';
+} from "@/hooks/useGrantready";
+import { formatDateTime } from "@/lib/translationUtils";
 import {
   datasetOverview,
   getSchema,
   type PrivacyCategory,
   type SchemaColumn,
   type Transformation,
-} from '@/lib/mockData';
-import { cn } from '@/lib/utils';
+} from "@/lib/mockData";
+import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute('/projects/$projectId/activities/$activityId/data-review/')({
+export const Route = createFileRoute(
+  "/projects/$projectId/activities/$activityId/data-review/",
+)({
   component: SchemaReview,
 });
 
 const privacyTone: Record<PrivacyCategory, string> = {
-  'Direct Identifier': 'bg-[oklch(0.96_0.05_25)] text-[oklch(0.45_0.18_25)]',
-  'Quasi Identifier': 'bg-[oklch(0.96_0.05_75)] text-[oklch(0.45_0.16_75)]',
-  'High Risk': 'bg-[oklch(0.94_0.08_25)] text-[oklch(0.4_0.2_25)]',
-  Operational: 'bg-secondary text-foreground',
-  Outcome: 'bg-primary-soft text-primary',
+  "Direct Identifier": "bg-[oklch(0.96_0.05_25)] text-[oklch(0.45_0.18_25)]",
+  "Quasi Identifier": "bg-[oklch(0.96_0.05_75)] text-[oklch(0.45_0.16_75)]",
+  "High Risk": "bg-[oklch(0.94_0.08_25)] text-[oklch(0.4_0.2_25)]",
+  Operational: "bg-secondary text-foreground",
+  Outcome: "bg-primary-soft text-primary",
 };
 
 const transformationTone: Record<Transformation, string> = {
-  Hashed: 'bg-primary-soft text-primary',
-  Removed: 'bg-[oklch(0.94_0.08_25)] text-[oklch(0.4_0.2_25)]',
-  Generalised: 'bg-[oklch(0.96_0.05_75)] text-[oklch(0.45_0.16_75)]',
-  Kept: 'bg-[oklch(0.95_0.04_155)] text-[oklch(0.4_0.12_155)]',
+  Hashed: "bg-primary-soft text-primary",
+  Removed: "bg-[oklch(0.94_0.08_25)] text-[oklch(0.4_0.2_25)]",
+  Generalised: "bg-[oklch(0.96_0.05_75)] text-[oklch(0.45_0.16_75)]",
+  Kept: "bg-[oklch(0.95_0.04_155)] text-[oklch(0.4_0.12_155)]",
 };
 
-type ColumnStatus = 'confirmed' | 'review' | 'high' | 'unsure';
+type ColumnStatus = "confirmed" | "review" | "high" | "unsure";
 
 function SchemaReview() {
   const { projectId, activityId } = Route.useParams();
@@ -64,10 +66,16 @@ function SchemaReview() {
   const jobsQuery = useActivityJobsQuery(activityId, Boolean(auth.token));
   const { t, i18n } = useTranslation();
 
-  const [selectedColumnKey, setSelectedColumnKey] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [pendingSelections, setPendingSelections] = useState<Record<string, string>>({});
-  const [confirmedSelections, setConfirmedSelections] = useState<Record<string, string>>({});
+  const [selectedColumnKey, setSelectedColumnKey] = useState<string | null>(
+    null,
+  );
+  const [searchTerm, setSearchTerm] = useState("");
+  const [pendingSelections, setPendingSelections] = useState<
+    Record<string, string>
+  >({});
+  const [confirmedSelections, setConfirmedSelections] = useState<
+    Record<string, string>
+  >({});
 
   if (
     !auth.token ||
@@ -76,11 +84,11 @@ function SchemaReview() {
     uploadsQuery.isLoading ||
     jobsQuery.isLoading
   ) {
-    return <CenteredState label={t('schemaReview.loading')} />;
+    return <CenteredState label={t("schemaReview.loading")} />;
   }
 
   if (!projectQuery.data || !activityQuery.data) {
-    return <CenteredState label={t('schemaReview.loadFailed')} />;
+    return <CenteredState label={t("schemaReview.loadFailed")} />;
   }
 
   const project = projectQuery.data;
@@ -91,7 +99,9 @@ function SchemaReview() {
   const reviewColumns = schema.filter(
     (column) => Boolean(column.clarifyingQuestion) || column.confidence < 0.8,
   );
-  const unresolvedColumns = reviewColumns.filter((column) => !confirmedSelections[column.original]);
+  const unresolvedColumns = reviewColumns.filter(
+    (column) => !confirmedSelections[column.original],
+  );
   const unresolvedCount = unresolvedColumns.length;
   const autoClassifiedCount = schema.length - reviewColumns.length;
   const reviewedCount = reviewColumns.length - unresolvedCount;
@@ -102,7 +112,9 @@ function SchemaReview() {
     return (
       column.original.toLowerCase().includes(term) ||
       column.semantic.toLowerCase().includes(term) ||
-      translateSchemaPrivacyLabel(t, column.privacy).toLowerCase().includes(term)
+      translateSchemaPrivacyLabel(t, column.privacy)
+        .toLowerCase()
+        .includes(term)
     );
   });
 
@@ -118,12 +130,12 @@ function SchemaReview() {
       className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
     >
       <UploadCloud className="h-4 w-4" />
-      {t('schemaReview.cta.uploadDataset')}
+      {t("schemaReview.cta.uploadDataset")}
     </Link>
   ) : unresolvedCount > 0 ? (
     <div className="inline-flex h-10 items-center gap-2 rounded-md border border-warning/25 bg-[oklch(0.98_0.03_75)] px-4 text-sm font-medium text-[oklch(0.42_0.14_75)]">
       <AlertTriangle className="h-4 w-4" />
-      {t('schemaReview.cta.reviewRequired', { count: unresolvedCount })}
+      {t("schemaReview.cta.reviewRequired", { count: unresolvedCount })}
     </div>
   ) : (
     <Link
@@ -131,7 +143,7 @@ function SchemaReview() {
       params={{ projectId, activityId }}
       className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
     >
-      {t('schemaReview.cta.continueToAnalysis')}
+      {t("schemaReview.cta.continueToAnalysis")}
       <ArrowRight className="h-4 w-4" />
     </Link>
   );
@@ -163,19 +175,27 @@ function SchemaReview() {
     <>
       <TopBar
         crumbs={[
-          { label: project.name, to: '/projects/$projectId', params: { projectId } },
+          {
+            label: project.name,
+            to: "/projects/$projectId",
+            params: { projectId },
+          },
           { label: activityQuery.data.name },
-          { label: t('schemaReview.crumb') },
+          { label: t("schemaReview.crumb") },
         ]}
       />
       <div className="mx-auto w-full max-w-7xl px-6 py-10 sm:px-8">
         <PageHeader
-          eyebrow={t('schemaReview.eyebrow')}
-          title={t('schemaReview.title')}
-          description={t('schemaReview.description')}
+          eyebrow={t("schemaReview.eyebrow")}
+          title={t("schemaReview.title")}
+          description={t("schemaReview.description")}
           actions={pageAction}
         />
-        <ActivityTabs projectId={projectId} activityId={activityId} className="mt-6" />
+        <ActivityTabs
+          projectId={projectId}
+          activityId={activityId}
+          className="mt-6"
+        />
 
         {!hasDataset ? (
           <EmptyDatasetState projectId={projectId} activityId={activityId} />
@@ -184,39 +204,45 @@ function SchemaReview() {
             <DatasetStatusCard
               title={
                 unresolvedCount > 0
-                  ? t('schemaReview.datasetStatus.reviewTitle')
-                  : t('schemaReview.datasetStatus.readyTitle')
+                  ? t("schemaReview.datasetStatus.reviewTitle")
+                  : t("schemaReview.datasetStatus.readyTitle")
               }
               description={
                 unresolvedCount > 0
-                  ? t('schemaReview.datasetStatus.reviewDescription', {
+                  ? t("schemaReview.datasetStatus.reviewDescription", {
                       count: unresolvedCount,
                     })
-                  : t('schemaReview.datasetStatus.readyDescription', {
+                  : t("schemaReview.datasetStatus.readyDescription", {
                       count: schema.length,
                     })
               }
               meta={
                 latestUpload
-                  ? t('schemaReview.datasetStatus.lastUpload', {
-                      date: formatDateTime(latestUpload.createdAt, i18n.language),
+                  ? t("schemaReview.datasetStatus.lastUpload", {
+                      date: formatDateTime(
+                        latestUpload.createdAt,
+                        i18n.language,
+                      ),
                     })
                   : undefined
               }
-              tone={unresolvedCount > 0 ? 'review' : 'ready'}
+              tone={unresolvedCount > 0 ? "review" : "ready"}
             />
 
             <WorkflowProgress
               steps={[
-                { label: t('schemaReview.workflow.upload'), state: 'complete' },
-                { label: t('schemaReview.workflow.understanding'), state: 'complete' },
+                { label: t("schemaReview.workflow.upload"), state: "complete" },
                 {
-                  label: t('schemaReview.workflow.review'),
-                  state: unresolvedCount > 0 ? 'current' : 'complete',
+                  label: t("schemaReview.workflow.understanding"),
+                  state: "complete",
                 },
                 {
-                  label: t('schemaReview.workflow.analysis'),
-                  state: unresolvedCount > 0 ? 'upcoming' : 'current',
+                  label: t("schemaReview.workflow.review"),
+                  state: unresolvedCount > 0 ? "current" : "complete",
+                },
+                {
+                  label: t("schemaReview.workflow.analysis"),
+                  state: unresolvedCount > 0 ? "upcoming" : "current",
                 },
               ]}
             />
@@ -224,42 +250,42 @@ function SchemaReview() {
             <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               <SummaryMetric
                 icon={<FileSpreadsheet className="h-4 w-4 text-primary" />}
-                label={t('schemaReview.summary.columnsDetected')}
+                label={t("schemaReview.summary.columnsDetected")}
                 value={String(schema.length)}
               />
               <SummaryMetric
                 icon={<CheckCircle2 className="h-4 w-4 text-primary" />}
-                label={t('schemaReview.summary.autoClassified')}
+                label={t("schemaReview.summary.autoClassified")}
                 value={String(autoClassifiedCount)}
               />
               <SummaryMetric
                 icon={<Sparkles className="h-4 w-4 text-primary" />}
-                label={t('schemaReview.summary.reviewedByYou')}
+                label={t("schemaReview.summary.reviewedByYou")}
                 value={String(reviewedCount)}
               />
               <SummaryMetric
                 icon={<AlertTriangle className="h-4 w-4 text-primary" />}
-                label={t('schemaReview.summary.needsReview')}
+                label={t("schemaReview.summary.needsReview")}
                 value={String(unresolvedCount)}
               />
             </div>
 
             <Card className="mt-6 p-6">
               <div className="text-sm font-semibold tracking-tight text-foreground">
-                {t('schemaReview.quality.title')}
+                {t("schemaReview.quality.title")}
               </div>
               <div className="mt-5 grid gap-4 md:grid-cols-3">
                 <InfoTile
-                  label={t('schemaReview.quality.missingValues')}
+                  label={t("schemaReview.quality.missingValues")}
                   value={String(datasetOverview.missingValues)}
                 />
                 <InfoTile
-                  label={t('schemaReview.quality.duplicateRows')}
+                  label={t("schemaReview.quality.duplicateRows")}
                   value={String(datasetOverview.duplicateRows)}
                 />
                 <InfoTile
-                  label={t('schemaReview.quality.sensitiveText')}
-                  value={t('schemaReview.quality.sensitiveTextValue')}
+                  label={t("schemaReview.quality.sensitiveText")}
+                  value={t("schemaReview.quality.sensitiveTextValue")}
                 />
               </div>
             </Card>
@@ -270,10 +296,10 @@ function SchemaReview() {
                   <div className="flex flex-col gap-4 border-b border-border px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <div className="text-sm font-semibold tracking-tight text-foreground">
-                        {t('schemaReview.mapping.title')}
+                        {t("schemaReview.mapping.title")}
                       </div>
                       <p className="mt-1 text-sm text-muted-foreground">
-                        {t('schemaReview.mapping.description', {
+                        {t("schemaReview.mapping.description", {
                           count: filteredSchema.length,
                         })}
                       </p>
@@ -284,7 +310,7 @@ function SchemaReview() {
                       <input
                         value={searchTerm}
                         onChange={(event) => setSearchTerm(event.target.value)}
-                        placeholder={t('schemaReview.searchPlaceholder')}
+                        placeholder={t("schemaReview.searchPlaceholder")}
                         className="h-10 w-full rounded-md border border-border bg-background pl-9 pr-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary"
                       />
                     </label>
@@ -293,25 +319,38 @@ function SchemaReview() {
                   <div className="overflow-x-auto">
                     <div className="min-w-[760px]">
                       <div className="grid grid-cols-[1.5fr_1.8fr_1.4fr_1.1fr_1.1fr] gap-4 border-b border-border bg-secondary/50 px-5 py-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                        <div>{t('schemaReview.headers.originalName')}</div>
-                        <div>{t('schemaReview.headers.semanticMeaning')}</div>
-                        <div>{t('schemaReview.headers.privacyCategory')}</div>
-                        <div>{t('schemaReview.headers.transformation')}</div>
-                        <div>{t('schemaReview.headers.confidence')}</div>
+                        <div>{t("schemaReview.headers.originalName")}</div>
+                        <div>{t("schemaReview.headers.semanticMeaning")}</div>
+                        <div>{t("schemaReview.headers.privacyCategory")}</div>
+                        <div>{t("schemaReview.headers.transformation")}</div>
+                        <div>{t("schemaReview.headers.confidence")}</div>
                       </div>
                       <ul>
                         {filteredSchema.map((column) => {
-                          const isSelected = selectedColumn.original === column.original;
-                          const isConfirmed = Boolean(confirmedSelections[column.original]);
-                          const columnStatus = getColumnStatus(column, isConfirmed);
+                          const isSelected =
+                            selectedColumn.original === column.original;
+                          const isConfirmed = Boolean(
+                            confirmedSelections[column.original],
+                          );
+                          const columnStatus = getColumnStatus(
+                            column,
+                            isConfirmed,
+                          );
 
                           return (
-                            <li key={column.original} className="border-b border-border/70 last:border-0">
+                            <li
+                              key={column.original}
+                              className="border-b border-border/70 last:border-0"
+                            >
                               <button
-                                onClick={() => setSelectedColumnKey(column.original)}
+                                onClick={() =>
+                                  setSelectedColumnKey(column.original)
+                                }
                                 className={cn(
-                                  'grid w-full grid-cols-[1.5fr_1.8fr_1.4fr_1.1fr_1.1fr] items-center gap-4 px-5 py-4 text-left text-[13px] transition-colors',
-                                  isSelected ? 'bg-primary-soft/35' : 'hover:bg-secondary/30',
+                                  "grid w-full grid-cols-[1.5fr_1.8fr_1.4fr_1.1fr_1.1fr] items-center gap-4 px-5 py-4 text-left text-[13px] transition-colors",
+                                  isSelected
+                                    ? "bg-primary-soft/35"
+                                    : "hover:bg-secondary/30",
                                 )}
                               >
                                 <div>
@@ -320,21 +359,27 @@ function SchemaReview() {
                                   </div>
                                   {confirmedSelections[column.original] ? (
                                     <div className="mt-1 text-xs text-primary">
-                                      {t('schemaReview.row.confirmedAs', {
-                                        value: confirmedSelections[column.original],
+                                      {t("schemaReview.row.confirmedAs", {
+                                        value:
+                                          confirmedSelections[column.original],
                                       })}
                                     </div>
                                   ) : null}
                                 </div>
-                                <div className="text-foreground">{column.semantic}</div>
+                                <div className="text-foreground">
+                                  {column.semantic}
+                                </div>
                                 <div>
                                   <span
                                     className={cn(
-                                      'inline-flex rounded-full px-2.5 py-1 text-[11px] font-medium',
+                                      "inline-flex rounded-full px-2.5 py-1 text-[11px] font-medium",
                                       privacyTone[column.privacy],
                                     )}
                                   >
-                                    {translateSchemaPrivacyLabel(t, column.privacy)}
+                                    {translateSchemaPrivacyLabel(
+                                      t,
+                                      column.privacy,
+                                    )}
                                   </span>
                                 </div>
                                 <div>
@@ -347,7 +392,10 @@ function SchemaReview() {
                                   />
                                 </div>
                                 <div className="flex justify-start">
-                                  <ConfidenceBadge status={columnStatus} value={column.confidence} />
+                                  <ConfidenceBadge
+                                    status={columnStatus}
+                                    value={column.confidence}
+                                  />
                                 </div>
                               </button>
                             </li>
@@ -361,8 +409,12 @@ function SchemaReview() {
 
               <ColumnDetailPanel
                 column={selectedColumn}
-                draftSelection={pendingSelections[selectedColumn.original] ?? null}
-                confirmedSelection={confirmedSelections[selectedColumn.original] ?? null}
+                draftSelection={
+                  pendingSelections[selectedColumn.original] ?? null
+                }
+                confirmedSelection={
+                  confirmedSelections[selectedColumn.original] ?? null
+                }
                 unresolvedCount={unresolvedCount}
                 onDraftSelect={(value) =>
                   setPendingSelections((current) => ({
@@ -388,7 +440,7 @@ function EmptyDatasetState({
   activityId: string;
 }) {
   const { t } = useTranslation();
-  const benefitsValue = t('schemaReview.empty.benefits', {
+  const benefitsValue = t("schemaReview.empty.benefits", {
     returnObjects: true,
   });
   const benefits = Array.isArray(benefitsValue) ? benefitsValue : [];
@@ -398,13 +450,13 @@ function EmptyDatasetState({
       <div className="max-w-3xl">
         <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card px-3 py-1 text-xs font-medium text-primary">
           <Sparkles className="h-3.5 w-3.5" />
-          {t('schemaReview.empty.eyebrow')}
+          {t("schemaReview.empty.eyebrow")}
         </div>
         <h2 className="mt-4 text-2xl font-semibold tracking-tight text-foreground">
-          {t('schemaReview.empty.title')}
+          {t("schemaReview.empty.title")}
         </h2>
         <p className="mt-3 max-w-2xl text-sm leading-7 text-foreground/85">
-          {t('schemaReview.empty.description')}
+          {t("schemaReview.empty.description")}
         </p>
         <ul className="mt-6 grid gap-3">
           {benefits.map((benefit) => (
@@ -424,7 +476,7 @@ function EmptyDatasetState({
             className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
           >
             <UploadCloud className="h-4 w-4" />
-            {t('schemaReview.empty.cta')}
+            {t("schemaReview.empty.cta")}
           </Link>
         </div>
       </div>
@@ -441,26 +493,30 @@ function DatasetStatusCard({
   title: string;
   description: string;
   meta?: string;
-  tone: 'ready' | 'review';
+  tone: "ready" | "review";
 }) {
   return (
     <Card
       className={cn(
-        'mt-6 flex items-start gap-3 p-4',
-        tone === 'ready'
-          ? 'border-primary/15 bg-primary-soft/35'
-          : 'border-warning/25 bg-[oklch(0.98_0.03_75)]',
+        "mt-6 flex items-start gap-3 p-4",
+        tone === "ready"
+          ? "border-primary/15 bg-primary-soft/35"
+          : "border-warning/25 bg-[oklch(0.98_0.03_75)]",
       )}
     >
-      {tone === 'ready' ? (
+      {tone === "ready" ? (
         <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
       ) : (
         <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[oklch(0.45_0.16_75)]" />
       )}
       <div>
         <div className="text-sm font-semibold text-foreground">{title}</div>
-        <p className="mt-1 text-sm leading-6 text-muted-foreground">{description}</p>
-        {meta ? <p className="mt-2 text-xs text-muted-foreground">{meta}</p> : null}
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+          {description}
+        </p>
+        {meta ? (
+          <p className="mt-2 text-xs text-muted-foreground">{meta}</p>
+        ) : null}
       </div>
     </Card>
   );
@@ -469,7 +525,7 @@ function DatasetStatusCard({
 function WorkflowProgress({
   steps,
 }: {
-  steps: Array<{ label: string; state: 'complete' | 'current' | 'upcoming' }>;
+  steps: Array<{ label: string; state: "complete" | "current" | "upcoming" }>;
 }) {
   return (
     <Card className="mt-6 p-5">
@@ -478,24 +534,35 @@ function WorkflowProgress({
           <div
             key={step.label}
             className={cn(
-              'rounded-xl border px-4 py-3',
-              step.state === 'complete' && 'border-primary/20 bg-primary-soft/25',
-              step.state === 'current' && 'border-warning/25 bg-[oklch(0.98_0.03_75)]',
-              step.state === 'upcoming' && 'border-border bg-card',
+              "rounded-xl border px-4 py-3",
+              step.state === "complete" &&
+                "border-primary/20 bg-primary-soft/25",
+              step.state === "current" &&
+                "border-warning/25 bg-[oklch(0.98_0.03_75)]",
+              step.state === "upcoming" && "border-border bg-card",
             )}
           >
             <div className="flex items-center gap-2">
               <span
                 className={cn(
-                  'grid h-6 w-6 place-items-center rounded-full text-xs font-semibold',
-                  step.state === 'complete' && 'bg-primary text-primary-foreground',
-                  step.state === 'current' && 'bg-warning/15 text-[oklch(0.45_0.16_75)]',
-                  step.state === 'upcoming' && 'bg-secondary text-muted-foreground',
+                  "grid h-6 w-6 place-items-center rounded-full text-xs font-semibold",
+                  step.state === "complete" &&
+                    "bg-primary text-primary-foreground",
+                  step.state === "current" &&
+                    "bg-warning/15 text-[oklch(0.45_0.16_75)]",
+                  step.state === "upcoming" &&
+                    "bg-secondary text-muted-foreground",
                 )}
               >
-                {step.state === 'complete' ? <Check className="h-3.5 w-3.5" /> : index + 1}
+                {step.state === "complete" ? (
+                  <Check className="h-3.5 w-3.5" />
+                ) : (
+                  index + 1
+                )}
               </span>
-              <span className="text-sm font-medium text-foreground">{step.label}</span>
+              <span className="text-sm font-medium text-foreground">
+                {step.label}
+              </span>
             </div>
           </div>
         ))}
@@ -519,7 +586,9 @@ function SummaryMetric({
         {icon}
         {label}
       </div>
-      <div className="mt-3 text-[28px] font-semibold tracking-tight text-foreground">{value}</div>
+      <div className="mt-3 text-[28px] font-semibold tracking-tight text-foreground">
+        {value}
+      </div>
     </Card>
   );
 }
@@ -533,20 +602,20 @@ function ConfidenceBadge({
 }) {
   const { t } = useTranslation();
   const tone =
-    status === 'confirmed'
-      ? 'bg-primary-soft text-primary'
-      : status === 'high'
-        ? 'bg-[oklch(0.95_0.04_155)] text-[oklch(0.4_0.12_155)]'
-        : status === 'review'
-          ? 'bg-[oklch(0.98_0.03_75)] text-[oklch(0.45_0.16_75)]'
-          : 'bg-[oklch(0.95_0.05_25)] text-[oklch(0.45_0.18_25)]';
+    status === "confirmed"
+      ? "bg-primary-soft text-primary"
+      : status === "high"
+        ? "bg-[oklch(0.95_0.04_155)] text-[oklch(0.4_0.12_155)]"
+        : status === "review"
+          ? "bg-[oklch(0.98_0.03_75)] text-[oklch(0.45_0.16_75)]"
+          : "bg-[oklch(0.95_0.05_25)] text-[oklch(0.45_0.18_25)]";
 
   const icon =
-    status === 'confirmed' ? (
+    status === "confirmed" ? (
       <Check className="h-3.5 w-3.5" />
-    ) : status === 'high' ? (
+    ) : status === "high" ? (
       <CheckCircle2 className="h-3.5 w-3.5" />
-    ) : status === 'review' ? (
+    ) : status === "review" ? (
       <CircleHelp className="h-3.5 w-3.5" />
     ) : (
       <AlertTriangle className="h-3.5 w-3.5" />
@@ -556,7 +625,7 @@ function ConfidenceBadge({
     <span
       title={`${Math.round(value * 100)}%`}
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium',
+        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium",
         tone,
       )}
     >
@@ -574,11 +643,11 @@ function TransformationBadge({
   label: string;
 }) {
   const icon =
-    transformation === 'Hashed' ? (
+    transformation === "Hashed" ? (
       <ShieldCheck className="h-3.5 w-3.5" />
-    ) : transformation === 'Generalised' ? (
+    ) : transformation === "Generalised" ? (
       <MapPinned className="h-3.5 w-3.5" />
-    ) : transformation === 'Removed' ? (
+    ) : transformation === "Removed" ? (
       <X className="h-3.5 w-3.5" />
     ) : (
       <Check className="h-3.5 w-3.5" />
@@ -587,7 +656,7 @@ function TransformationBadge({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium',
+        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium",
         transformationTone[transformation],
       )}
     >
@@ -613,10 +682,13 @@ function ColumnDetailPanel({
   onConfirm: () => void;
 }) {
   const { t } = useTranslation();
-  const reasoning = Array.isArray(column.reasoning) && column.reasoning.length > 0
-    ? column.reasoning
-    : buildFallbackReasoning(t, column);
-  const sampleValues = Array.isArray(column.sampleValues) ? column.sampleValues : [];
+  const reasoning =
+    Array.isArray(column.reasoning) && column.reasoning.length > 0
+      ? column.reasoning
+      : buildFallbackReasoning(t, column);
+  const sampleValues = Array.isArray(column.sampleValues)
+    ? column.sampleValues
+    : [];
   const columnStatus = getColumnStatus(column, Boolean(confirmedSelection));
   const canConfirm = Boolean(draftSelection) && !confirmedSelection;
 
@@ -625,13 +697,15 @@ function ColumnDetailPanel({
       <Card className="sticky top-20 overflow-hidden">
         <div className="border-b border-border px-5 py-4">
           <div className="text-xs font-semibold uppercase tracking-[0.08em] text-primary">
-            {t('schemaReview.detail.eyebrow')}
+            {t("schemaReview.detail.eyebrow")}
           </div>
           <h2 className="mt-2 text-xl font-semibold tracking-tight text-foreground">
             {column.semantic}
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            {t('schemaReview.detail.originalColumn', { column: column.original })}
+            {t("schemaReview.detail.originalColumn", {
+              column: column.original,
+            })}
           </p>
         </div>
 
@@ -639,7 +713,7 @@ function ColumnDetailPanel({
           <div className="flex flex-wrap gap-2">
             <ConfidenceBadge status={columnStatus} value={column.confidence} />
             <span className="inline-flex items-center rounded-full border border-border px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
-              {t('schemaReview.detail.confidenceScore', {
+              {t("schemaReview.detail.confidenceScore", {
                 value: Math.round(column.confidence * 100),
               })}
             </span>
@@ -647,19 +721,22 @@ function ColumnDetailPanel({
 
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
             <InfoTile
-              label={t('schemaReview.detail.privacy')}
+              label={t("schemaReview.detail.privacy")}
               value={translateSchemaPrivacyLabel(t, column.privacy)}
             />
             <InfoTile
-              label={t('schemaReview.detail.transformation')}
-              value={translateSchemaTransformationLabel(t, column.transformation)}
+              label={t("schemaReview.detail.transformation")}
+              value={translateSchemaTransformationLabel(
+                t,
+                column.transformation,
+              )}
             />
           </div>
 
           {sampleValues.length > 0 ? (
             <div>
               <div className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
-                {t('schemaReview.detail.sampleValues')}
+                {t("schemaReview.detail.sampleValues")}
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
                 {sampleValues.map((value) => (
@@ -677,7 +754,7 @@ function ColumnDetailPanel({
           <div>
             <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
               <Sparkles className="h-4 w-4 text-primary" />
-              {t('schemaReview.detail.reasoningTitle')}
+              {t("schemaReview.detail.reasoningTitle")}
             </div>
             <ul className="mt-3 grid gap-2">
               {reasoning.map((item) => (
@@ -695,17 +772,23 @@ function ColumnDetailPanel({
             <div className="rounded-2xl border border-warning/25 bg-[oklch(0.98_0.03_75)] p-4">
               <div className="inline-flex items-center gap-2 rounded-full bg-card px-3 py-1 text-[11px] font-medium text-[oklch(0.45_0.16_75)]">
                 <Sparkles className="h-3.5 w-3.5" />
-                {t('schemaReview.reviewCard.badge')}
+                {t("schemaReview.reviewCard.badge")}
               </div>
-              <p className="mt-3 text-sm leading-6 text-foreground">{column.clarifyingQuestion}</p>
+              <p className="mt-3 text-sm leading-6 text-foreground">
+                {column.clarifyingQuestion}
+              </p>
               <div className="mt-4 flex flex-wrap gap-2">
-                {(Array.isArray(column.clarifyingOptions) ? column.clarifyingOptions : []).map((option) => (
+                {(Array.isArray(column.clarifyingOptions)
+                  ? column.clarifyingOptions
+                  : []
+                ).map((option) => (
                   <button
                     key={option}
                     onClick={() => onDraftSelect(option)}
                     className={cn(
-                      'rounded-full border border-border bg-card px-4 py-2 text-sm font-medium transition-colors hover:bg-secondary',
-                      draftSelection === option && 'border-primary bg-primary-soft text-primary',
+                      "rounded-full border border-border bg-card px-4 py-2 text-sm font-medium transition-colors hover:bg-secondary",
+                      draftSelection === option &&
+                        "border-primary bg-primary-soft text-primary",
                     )}
                   >
                     {option}
@@ -715,10 +798,10 @@ function ColumnDetailPanel({
               <div className="mt-4 flex items-center justify-between gap-3">
                 <div className="text-sm text-muted-foreground">
                   {confirmedSelection
-                    ? t('schemaReview.reviewCard.confirmedSelection', {
+                    ? t("schemaReview.reviewCard.confirmedSelection", {
                         value: confirmedSelection,
                       })
-                    : t('schemaReview.reviewCard.remainingQuestions', {
+                    : t("schemaReview.reviewCard.remainingQuestions", {
                         count: unresolvedCount,
                       })}
                 </div>
@@ -726,25 +809,25 @@ function ColumnDetailPanel({
                   onClick={onConfirm}
                   disabled={!canConfirm}
                   className={cn(
-                    'inline-flex h-10 items-center rounded-md px-4 text-sm font-medium transition-colors',
+                    "inline-flex h-10 items-center rounded-md px-4 text-sm font-medium transition-colors",
                     canConfirm
-                      ? 'bg-primary text-primary-foreground shadow hover:bg-primary/90'
-                      : 'cursor-not-allowed bg-card text-muted-foreground',
+                      ? "bg-primary text-primary-foreground shadow hover:bg-primary/90"
+                      : "cursor-not-allowed bg-card text-muted-foreground",
                   )}
                 >
                   {confirmedSelection
-                    ? t('schemaReview.reviewCard.confirmed')
-                    : t('schemaReview.reviewCard.confirm')}
+                    ? t("schemaReview.reviewCard.confirmed")
+                    : t("schemaReview.reviewCard.confirm")}
                 </button>
               </div>
             </div>
           ) : (
             <Card className="border-primary/10 bg-primary-soft/20 p-4 shadow-none">
               <div className="text-sm font-semibold text-foreground">
-                {t('schemaReview.detail.noReviewNeededTitle')}
+                {t("schemaReview.detail.noReviewNeededTitle")}
               </div>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                {t('schemaReview.detail.noReviewNeededDescription')}
+                {t("schemaReview.detail.noReviewNeededDescription")}
               </p>
             </Card>
           )}
@@ -765,61 +848,67 @@ function InfoTile({ label, value }: { label: string; value: string }) {
   );
 }
 
-function getColumnStatus(column: SchemaColumn, isConfirmed: boolean): ColumnStatus {
+function getColumnStatus(
+  column: SchemaColumn,
+  isConfirmed: boolean,
+): ColumnStatus {
   if (isConfirmed) {
-    return 'confirmed';
+    return "confirmed";
   }
 
   if (column.clarifyingQuestion) {
-    return 'review';
+    return "review";
   }
 
   if (column.confidence < 0.8) {
-    return 'unsure';
+    return "unsure";
   }
 
-  return 'high';
+  return "high";
 }
 
 function buildFallbackReasoning(
-  t: ReturnType<typeof useTranslation>['t'],
+  t: ReturnType<typeof useTranslation>["t"],
   column: SchemaColumn,
 ) {
   return [
-    t('schemaReview.detail.defaultReasoning.pattern'),
-    t('schemaReview.detail.defaultReasoning.privacy', {
+    t("schemaReview.detail.defaultReasoning.pattern"),
+    t("schemaReview.detail.defaultReasoning.privacy", {
       privacy: translateSchemaPrivacyLabel(t, column.privacy),
     }),
-    t('schemaReview.detail.defaultReasoning.transformation', {
-      transformation: translateSchemaTransformationLabel(t, column.transformation),
+    t("schemaReview.detail.defaultReasoning.transformation", {
+      transformation: translateSchemaTransformationLabel(
+        t,
+        column.transformation,
+      ),
     }),
   ];
 }
 
 function translateSchemaPrivacyLabel(
-  t: ReturnType<typeof useTranslation>['t'],
+  t: ReturnType<typeof useTranslation>["t"],
   category: PrivacyCategory,
 ) {
   const keyMap = {
-    'Direct Identifier': 'directIdentifier',
-    'Quasi Identifier': 'quasiIdentifier',
-    'High Risk': 'highRisk',
-    Operational: 'operational',
-    Outcome: 'outcome',
+    "Direct Identifier": "directIdentifier",
+    "Quasi Identifier": "quasiIdentifier",
+    "High Risk": "highRisk",
+    Operational: "operational",
+    Outcome: "outcome",
   } as const;
 
   return t(`schemaReview.privacyLabels.${keyMap[category]}`);
 }
 
 function translateSchemaTransformationLabel(
-  t: ReturnType<typeof useTranslation>['t'],
+  t: ReturnType<typeof useTranslation>["t"],
   transformation: Transformation,
 ) {
   const keyMap = {
-    Hashed: 'hashed',
-    Removed: 'removed',
-    Generalised: 'generalised',
-    Kept: 'kept',
+    Hashed: "hashed",
+    Removed: "removed",
+    Generalised: "generalised",
+    Kept: "kept",
   } as const;
 
   return t(`schemaReview.transformationLabels.${keyMap[transformation]}`);

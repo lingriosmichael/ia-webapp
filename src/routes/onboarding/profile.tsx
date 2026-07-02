@@ -15,7 +15,9 @@ function OnboardingProfilePage() {
   const navigate = useNavigate();
   const auth = useRequireAuth();
   const { t } = useTranslation();
-  const organizationId = resolveActiveOrganizationId(auth.data?.organizations ?? []);
+  const organizationId = resolveActiveOrganizationId(
+    auth.data?.organizations ?? [],
+  );
   const workspaceQuery = useOrganizationWorkspaceQuery(
     organizationId ?? "",
     Boolean(auth.token && organizationId),
@@ -32,8 +34,13 @@ function OnboardingProfilePage() {
       description={t("auth.profileDescription")}
     >
       <div className="space-y-6">
-        <OrganizationSettingsPanel organization={workspaceQuery.data.organization} />
-        <Button className="w-full" onClick={() => void navigate({ to: "/onboarding/invite" })}>
+        <OrganizationSettingsPanel
+          organization={workspaceQuery.data.organization}
+        />
+        <Button
+          className="w-full"
+          onClick={() => void navigate({ to: "/onboarding/invite" })}
+        >
           {t("common.continue")}
         </Button>
       </div>

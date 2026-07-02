@@ -13,7 +13,9 @@ function OnboardingWelcomePage() {
   const navigate = useNavigate();
   const auth = useRequireAuth();
   const { t } = useTranslation();
-  const organizationId = resolveActiveOrganizationId(auth.data?.organizations ?? []);
+  const organizationId = resolveActiveOrganizationId(
+    auth.data?.organizations ?? [],
+  );
 
   return (
     <PublicMarketingShell
@@ -23,8 +25,12 @@ function OnboardingWelcomePage() {
     >
       <div className="space-y-6">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight">{t("auth.welcomeCardTitle")}</h2>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">{t("auth.welcomeCardDescription")}</p>
+          <h2 className="text-2xl font-semibold tracking-tight">
+            {t("auth.welcomeCardTitle")}
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            {t("auth.welcomeCardDescription")}
+          </p>
         </div>
         <Button
           className="w-full"

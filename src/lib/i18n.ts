@@ -1,12 +1,12 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import de from '@/locales/de';
-import en from '@/locales/en';
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+import de from "@/locales/de";
+import en from "@/locales/en";
 
-export const LANGUAGE_STORAGE_KEY = 'grantready-language';
-export const SUPPORTED_LANGUAGES = ['de', 'en'] as const;
+export const LANGUAGE_STORAGE_KEY = "grantready-language";
+export const SUPPORTED_LANGUAGES = ["de", "en"] as const;
 export type AppLanguage = (typeof SUPPORTED_LANGUAGES)[number];
-export const DEFAULT_LANGUAGE: AppLanguage = 'de';
+export const DEFAULT_LANGUAGE: AppLanguage = "de";
 
 function normalizeLanguage(language: string | null | undefined): AppLanguage {
   if (!language) return DEFAULT_LANGUAGE;
@@ -17,7 +17,7 @@ function normalizeLanguage(language: string | null | undefined): AppLanguage {
 }
 
 function getStoredLanguage(): AppLanguage {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return DEFAULT_LANGUAGE;
   }
 
@@ -25,13 +25,13 @@ function getStoredLanguage(): AppLanguage {
 }
 
 export function persistLanguage(language: AppLanguage) {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
   }
 }
 
 export function setDocumentLanguage(language: string) {
-  if (typeof document !== 'undefined') {
+  if (typeof document !== "undefined") {
     document.documentElement.lang = normalizeLanguage(language);
   }
 }
@@ -50,7 +50,7 @@ if (!i18n.isInitialized) {
       en: { translation: en },
     },
     lng: DEFAULT_LANGUAGE,
-    fallbackLng: 'en',
+    fallbackLng: "en",
     interpolation: {
       escapeValue: false,
     },
@@ -58,7 +58,7 @@ if (!i18n.isInitialized) {
   });
 
   setDocumentLanguage(DEFAULT_LANGUAGE);
-  i18n.on('languageChanged', (language) => {
+  i18n.on("languageChanged", (language) => {
     persistLanguage(normalizeLanguage(language));
     setDocumentLanguage(language);
   });

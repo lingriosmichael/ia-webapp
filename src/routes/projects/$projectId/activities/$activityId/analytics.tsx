@@ -1,8 +1,10 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
-export const Route = createFileRoute('/projects/$projectId/activities/$activityId/analytics')({
+export const Route = createFileRoute(
+  "/projects/$projectId/activities/$activityId/analytics",
+)({
   component: LegacyAnalyticsRedirect,
 });
 
@@ -13,7 +15,7 @@ function LegacyAnalyticsRedirect() {
 
   useEffect(() => {
     void navigate({
-      to: '/projects/$projectId/activities/$activityId/analysis',
+      to: "/projects/$projectId/activities/$activityId/analysis",
       params: { projectId, activityId },
       replace: true,
     });
@@ -21,7 +23,7 @@ function LegacyAnalyticsRedirect() {
 
   return (
     <div className="flex min-h-screen items-center justify-center text-sm text-muted-foreground">
-      {t('activityBrief.redirectingToOverview')}
+      {t("activityBrief.redirectingToOverview")}
     </div>
   );
 }

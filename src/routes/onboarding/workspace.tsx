@@ -6,7 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useCreateOrganizationMutation } from "@/hooks/useGrantready";
-import { rememberActiveOrganizationId, resolveActiveOrganizationId } from "@/lib/organizationSelection";
+import {
+  rememberActiveOrganizationId,
+  resolveActiveOrganizationId,
+} from "@/lib/organizationSelection";
 import { resolveWorkspaceDestination } from "@/lib/workspaceRouting";
 import { ApiError } from "@/services/apiClient";
 import { useTranslation } from "react-i18next";
@@ -23,9 +26,13 @@ function OnboardingWorkspacePage() {
   const [organizationName, setOrganizationName] = useState("");
 
   useEffect(() => {
-    const organizationId = resolveActiveOrganizationId(auth.data?.organizations ?? []);
+    const organizationId = resolveActiveOrganizationId(
+      auth.data?.organizations ?? [],
+    );
     if (organizationId) {
-      void resolveWorkspaceDestination(organizationId).then((destination) => navigate(destination));
+      void resolveWorkspaceDestination(organizationId).then((destination) =>
+        navigate(destination),
+      );
     }
   }, [auth.data?.organizations, navigate]);
 
@@ -40,7 +47,11 @@ function OnboardingWorkspacePage() {
       toast.success(t("auth.workspaceCreatedToast"));
       void navigate({ to: "/onboarding/welcome" });
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : t("auth.workspaceCreateFailed"));
+      toast.error(
+        error instanceof ApiError
+          ? error.message
+          : t("auth.workspaceCreateFailed"),
+      );
     }
   }
 
@@ -51,12 +62,18 @@ function OnboardingWorkspacePage() {
       description={t("auth.workspaceProvisioningDescription")}
     >
       <div className="mb-6">
-        <h2 className="text-2xl font-semibold tracking-tight">{t("auth.workspaceProvisioningCardTitle")}</h2>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">{t("auth.workspaceProvisioningCardDescription")}</p>
+        <h2 className="text-2xl font-semibold tracking-tight">
+          {t("auth.workspaceProvisioningCardTitle")}
+        </h2>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          {t("auth.workspaceProvisioningCardDescription")}
+        </p>
       </div>
       <form className="space-y-4" onSubmit={onSubmit}>
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">{t("auth.organizationName")}</label>
+          <label className="text-sm font-medium text-foreground">
+            {t("auth.organizationName")}
+          </label>
           <Input
             value={organizationName}
             onChange={(event) => setOrganizationName(event.target.value)}
@@ -64,8 +81,14 @@ function OnboardingWorkspacePage() {
             required
           />
         </div>
-        <Button type="submit" className="w-full" disabled={createOrganizationMutation.isPending}>
-          {createOrganizationMutation.isPending ? t("auth.creatingWorkspace") : t("landing.createWorkspace")}
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={createOrganizationMutation.isPending}
+        >
+          {createOrganizationMutation.isPending
+            ? t("auth.creatingWorkspace")
+            : t("landing.createWorkspace")}
         </Button>
       </form>
     </PublicMarketingShell>

@@ -14,7 +14,7 @@ This service is the frontend for Impact Atlas. It is a React application built w
 Before you start, install the following:
 
 - Git
-- Node.js v24.18.0 
+- Node.js v24.18.0
 - npm (this comes with Node.js)
 - A running backend service on port 4000
 - Docker Desktop is only required if you also need the backend MongoDB container
@@ -115,4 +115,3 @@ npm run typecheck # run TypeScript type checking
 2. Start the frontend in a separate terminal.
 3. Open http://localhost:8080 in your browser.
 4. If you need to stop the local servers, press Ctrl+C in each terminal.
-

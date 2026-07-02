@@ -1,8 +1,10 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
-export const Route = createFileRoute('/projects/$projectId/activities/$activityId/schema')({
+export const Route = createFileRoute(
+  "/projects/$projectId/activities/$activityId/schema",
+)({
   component: LegacySchemaRedirect,
 });
 
@@ -13,7 +15,7 @@ function LegacySchemaRedirect() {
 
   useEffect(() => {
     void navigate({
-      to: '/projects/$projectId/activities/$activityId/data-review',
+      to: "/projects/$projectId/activities/$activityId/data-review",
       params: { projectId, activityId },
       replace: true,
     });
@@ -21,7 +23,7 @@ function LegacySchemaRedirect() {
 
   return (
     <div className="flex min-h-screen items-center justify-center text-sm text-muted-foreground">
-      {t('activityBrief.redirectingToOverview')}
+      {t("activityBrief.redirectingToOverview")}
     </div>
   );
 }

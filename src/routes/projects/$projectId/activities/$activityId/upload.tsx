@@ -1,8 +1,10 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
-export const Route = createFileRoute('/projects/$projectId/activities/$activityId/upload')({
+export const Route = createFileRoute(
+  "/projects/$projectId/activities/$activityId/upload",
+)({
   component: LegacyUploadRedirect,
 });
 
@@ -13,7 +15,7 @@ function LegacyUploadRedirect() {
 
   useEffect(() => {
     void navigate({
-      to: '/projects/$projectId/activities/$activityId/overview',
+      to: "/projects/$projectId/activities/$activityId/overview",
       params: { projectId, activityId },
       replace: true,
     });
@@ -21,7 +23,7 @@ function LegacyUploadRedirect() {
 
   return (
     <div className="flex min-h-screen items-center justify-center text-sm text-muted-foreground">
-      {t('activityBrief.redirectingToOverview')}
+      {t("activityBrief.redirectingToOverview")}
     </div>
   );
 }

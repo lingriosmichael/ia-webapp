@@ -24,17 +24,18 @@ export function resolveActiveOrganizationId(
 
   const storedOrganizationId = getActiveOrganizationId();
 
-  if (storedOrganizationId && availableOrganizationIds.has(storedOrganizationId)) {
+  if (
+    storedOrganizationId &&
+    availableOrganizationIds.has(storedOrganizationId)
+  ) {
     return storedOrganizationId;
   }
 
-  const mostRecentOrganization = organizations
-    .slice()
-    .sort((left, right) => {
-      const leftTimestamp = Date.parse(left.updatedAt || left.createdAt);
-      const rightTimestamp = Date.parse(right.updatedAt || right.createdAt);
-      return rightTimestamp - leftTimestamp;
-    })[0];
+  const mostRecentOrganization = organizations.slice().sort((left, right) => {
+    const leftTimestamp = Date.parse(left.updatedAt || left.createdAt);
+    const rightTimestamp = Date.parse(right.updatedAt || right.createdAt);
+    return rightTimestamp - leftTimestamp;
+  })[0];
 
   return mostRecentOrganization?.id ?? organizations[0]?.id ?? null;
 }

@@ -1,5 +1,5 @@
-import { resolveApiUrl } from '@/services/apiClient';
-import { cn } from '@/lib/utils';
+import { resolveApiUrl } from "@/services/apiClient";
+import { cn } from "@/lib/utils";
 
 export function OrganizationAvatar({
   name,
@@ -17,7 +17,7 @@ export function OrganizationAvatar({
   return (
     <div
       className={cn(
-        'flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-sidebar-border bg-[linear-gradient(135deg,oklch(0.97_0.02_300),oklch(0.93_0.02_260))] text-sm font-semibold tracking-[0.08em] text-primary shadow-[var(--shadow-soft)]',
+        "flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-sidebar-border bg-[linear-gradient(135deg,oklch(0.97_0.02_300),oklch(0.93_0.02_260))] text-sm font-semibold tracking-[0.08em] text-primary shadow-[var(--shadow-soft)]",
         className,
       )}
       aria-hidden="true"

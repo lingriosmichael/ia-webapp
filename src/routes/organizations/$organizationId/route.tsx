@@ -1,33 +1,15 @@
 import { Outlet, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { createContext, useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { WorkspaceShell } from "@/components/workspaceShell";
 import { useLogout, useRequireAuth } from "@/hooks/useAuth";
 import { useOrganizationWorkspaceQuery } from "@/hooks/useGrantready";
 import { resolveActiveOrganizationId } from "@/lib/organizationSelection";
 import { resolveWorkspaceDestination } from "@/lib/workspaceRouting";
-
-interface OrganizationWorkspacePageContextValue {
-  organizationId: string;
-  userName: string;
-  workspace: NonNullable<ReturnType<typeof useOrganizationWorkspaceQuery>["data"]>;
-}
-
-const OrganizationWorkspacePageContext =
-  createContext<OrganizationWorkspacePageContextValue | null>(null);
+import { OrganizationWorkspacePageContext } from "./-organizationWorkspaceContext";
 
 export const Route = createFileRoute("/organizations/$organizationId")({
   component: OrganizationLayout,
 });
-
-export function useOrganizationWorkspacePage() {
-  const context = useContext(OrganizationWorkspacePageContext);
-
-  if (!context) {
-    throw new Error("useOrganizationWorkspacePage must be used within the organization layout.");
-  }
-
-  return context;
-}
 
 function OrganizationLayout() {
   const { organizationId } = Route.useParams();
@@ -74,7 +56,8 @@ function OrganizationLayout() {
     );
   }
 
-  const userName = auth.data?.user.fullName ?? auth.data?.user.email ?? "Account";
+  const userName =
+    auth.data?.user.fullName ?? auth.data?.user.email ?? "Account";
 
   return (
     <OrganizationWorkspacePageContext.Provider

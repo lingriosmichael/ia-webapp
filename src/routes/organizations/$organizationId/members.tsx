@@ -4,13 +4,13 @@ import { toast } from "sonner";
 import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
 import {
   useCreateInvitationMutation,
-  useOrganizationMembersQuery,
   useOrganizationInvitationsQuery,
+  useOrganizationMembersQuery,
   useRemoveOrganizationMemberMutation,
 } from "@/hooks/useGrantready";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { ApiError } from "@/services/apiClient";
-import { useOrganizationWorkspacePage } from "./route";
+import { useOrganizationWorkspacePage } from "./-organizationWorkspaceContext";
 
 export const Route = createFileRoute("/organizations/$organizationId/members")({
   component: OrganizationMembersPage,
@@ -29,10 +29,16 @@ function OrganizationMembersPage() {
     workspace.organization.permissions.canManageMembers,
   );
   const createInvitationMutation = useCreateInvitationMutation(organizationId);
-  const removeMemberMutation = useRemoveOrganizationMemberMutation(organizationId);
+  const removeMemberMutation =
+    useRemoveOrganizationMemberMutation(organizationId);
 
   if (!workspace.organization.permissions.canManageMembers) {
-    return <Navigate to="/organizations/$organizationId" params={{ organizationId }} />;
+    return (
+      <Navigate
+        to="/organizations/$organizationId"
+        params={{ organizationId }}
+      />
+    );
   }
 
   if (membersQuery.isLoading) {
@@ -56,7 +62,11 @@ function OrganizationMembersPage() {
       setEmail("");
       toast.success(locale.members.inviteSuccess);
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : locale.members.inviteFailure);
+      toast.error(
+        error instanceof ApiError
+          ? error.message
+          : locale.members.inviteFailure,
+      );
     }
   }
 
@@ -65,7 +75,11 @@ function OrganizationMembersPage() {
       await removeMemberMutation.mutateAsync(membershipId);
       toast.success(locale.members.removeSuccess);
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : locale.members.removeFailure);
+      toast.error(
+        error instanceof ApiError
+          ? error.message
+          : locale.members.removeFailure,
+      );
     }
   }
 
@@ -73,7 +87,11 @@ function OrganizationMembersPage() {
     <>
       <TopBar
         crumbs={[
-          { label: workspace.organization.name, to: "/organizations/$organizationId", params: { organizationId } },
+          {
+            label: workspace.organization.name,
+            to: "/organizations/$organizationId",
+            params: { organizationId },
+          },
           { label: locale.sidebar.members },
         ]}
       />
@@ -120,15 +138,21 @@ function OrganizationMembersPage() {
                 {locale.members.pendingInvitations}
               </div>
               <div className="mt-4 space-y-3">
-                {(invitationsQuery.data ?? []).filter((invitation) => invitation.status === "pending").map((invitation) => (
-                  <div
-                    key={invitation.id}
-                    className="rounded-2xl border border-border bg-secondary/20 px-4 py-3 text-sm"
-                  >
-                    <div className="font-medium text-foreground">{invitation.email}</div>
-                    <div className="mt-1 text-muted-foreground">{locale.members.pendingStatus}</div>
-                  </div>
-                ))}
+                {(invitationsQuery.data ?? [])
+                  .filter((invitation) => invitation.status === "pending")
+                  .map((invitation) => (
+                    <div
+                      key={invitation.id}
+                      className="rounded-2xl border border-border bg-secondary/20 px-4 py-3 text-sm"
+                    >
+                      <div className="font-medium text-foreground">
+                        {invitation.email}
+                      </div>
+                      <div className="mt-1 text-muted-foreground">
+                        {locale.members.pendingStatus}
+                      </div>
+                    </div>
+                  ))}
               </div>
             </div>
           </Card>
@@ -144,8 +168,12 @@ function OrganizationMembersPage() {
                   className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-secondary/20 px-4 py-4"
                 >
                   <div>
-                    <div className="text-sm font-medium text-foreground">{member.fullName}</div>
-                    <div className="text-xs text-muted-foreground">{member.email}</div>
+                    <div className="text-sm font-medium text-foreground">
+                      {member.fullName}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {member.email}
+                    </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-muted-foreground">

@@ -5,7 +5,7 @@ import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
 import { useWorkspaceShell } from "@/components/workspaceShell";
 import { useOrganizationMembersQuery } from "@/hooks/useGrantready";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
-import { useOrganizationWorkspacePage } from "./route";
+import { useOrganizationWorkspacePage } from "./-organizationWorkspaceContext";
 
 export const Route = createFileRoute("/organizations/$organizationId/")({
   component: OrganizationWorkspacePage,
@@ -15,19 +15,29 @@ function OrganizationWorkspacePage() {
   const { workspace, organizationId } = useOrganizationWorkspacePage();
   const { openProjectDialog } = useWorkspaceShell();
   const locale = useWorkspaceLocale();
-  const isOrganizationAdmin = workspace.organization.role === "ORGANIZATION_ADMIN";
-  const membersQuery = useOrganizationMembersQuery(organizationId, isOrganizationAdmin);
+  const isOrganizationAdmin =
+    workspace.organization.role === "ORGANIZATION_ADMIN";
+  const membersQuery = useOrganizationMembersQuery(
+    organizationId,
+    isOrganizationAdmin,
+  );
   const members = membersQuery.data ?? [];
   const recentProjects = [...workspace.projects]
     .sort(
       (left, right) =>
-        new Date(right.updatedAt).getTime() - new Date(left.updatedAt).getTime(),
+        new Date(right.updatedAt).getTime() -
+        new Date(left.updatedAt).getTime(),
     )
     .slice(0, 4);
 
   return (
     <>
-      <TopBar crumbs={[{ label: workspace.organization.name }, { label: locale.sidebar.workspace }]} />
+      <TopBar
+        crumbs={[
+          { label: workspace.organization.name },
+          { label: locale.sidebar.workspace },
+        ]}
+      />
 
       <div className="mx-auto w-full max-w-6xl px-8 py-10">
         <PageHeader
@@ -58,7 +68,9 @@ function OrganizationWorkspacePage() {
         <div className="mt-8 space-y-6">
           <OrganizationCard
             organization={workspace.organization}
-            memberCount={isOrganizationAdmin ? (membersQuery.data?.length ?? null) : null}
+            memberCount={
+              isOrganizationAdmin ? (membersQuery.data?.length ?? null) : null
+            }
             projectCount={workspace.projects.length}
             readOnly={!workspace.organization.permissions.canManageProfile}
           />
@@ -101,9 +113,12 @@ function OrganizationWorkspacePage() {
                         params={{ projectId: project.id }}
                         className="rounded-2xl border border-border bg-secondary/20 px-4 py-4 transition-colors hover:bg-secondary/40"
                       >
-                        <div className="text-sm font-semibold text-foreground">{project.name}</div>
+                        <div className="text-sm font-semibold text-foreground">
+                          {project.name}
+                        </div>
                         <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                          {project.description || locale.organizationPage.noProjectDescription}
+                          {project.description ||
+                            locale.organizationPage.noProjectDescription}
                         </p>
                       </Link>
                     ))}
@@ -118,7 +133,8 @@ function OrganizationWorkspacePage() {
                   <ul className="mt-4 space-y-3 text-sm leading-6 text-muted-foreground">
                     {recentProjects.map((project) => (
                       <li key={project.id}>
-                        {project.name}: {project.activities.length} {locale.organizationPage.activitiesLabel}
+                        {project.name}: {project.activities.length}{" "}
+                        {locale.organizationPage.activitiesLabel}
                       </li>
                     ))}
                   </ul>
@@ -138,8 +154,12 @@ function OrganizationWorkspacePage() {
                           key={member.id}
                           className="rounded-2xl border border-border bg-secondary/20 px-4 py-3"
                         >
-                          <div className="text-sm font-medium text-foreground">{member.fullName}</div>
-                          <div className="text-xs text-muted-foreground">{member.email}</div>
+                          <div className="text-sm font-medium text-foreground">
+                            {member.fullName}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {member.email}
+                          </div>
                         </div>
                       ))}
                     </div>

@@ -5,7 +5,10 @@ import { toast } from "sonner";
 import { PublicMarketingShell } from "@/components/publicMarketingShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAcceptInvitationMutation, useInvitationQuery } from "@/hooks/useGrantready";
+import {
+  useAcceptInvitationMutation,
+  useInvitationQuery,
+} from "@/hooks/useGrantready";
 import { sessionQueryKey, useSessionQuery } from "@/hooks/useAuth";
 import { rememberActiveOrganizationId } from "@/lib/organizationSelection";
 import { resolveWorkspaceDestination } from "@/lib/workspaceRouting";
@@ -63,7 +66,11 @@ function InvitationAcceptancePage() {
       toast.success(t("auth.invitationAccepted"));
       void navigate({ to: "/login" });
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : t("auth.invitationAcceptFailed"));
+      toast.error(
+        error instanceof ApiError
+          ? error.message
+          : t("auth.invitationAcceptFailed"),
+      );
     }
   }
 
@@ -91,14 +98,22 @@ function InvitationAcceptancePage() {
       description={t("auth.invitationDescription")}
     >
       <div className="mb-6">
-        <h2 className="text-2xl font-semibold tracking-tight">{t("auth.invitationCardTitle")}</h2>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">{invitationDescription}</p>
+        <h2 className="text-2xl font-semibold tracking-tight">
+          {t("auth.invitationCardTitle")}
+        </h2>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          {invitationDescription}
+        </p>
       </div>
 
       {requiresExistingAccountSignIn ? (
         isSignedInAsInvitedUser ? (
           <form className="space-y-4" onSubmit={onSubmit}>
-            <Button type="submit" className="w-full" disabled={acceptMutation.isPending}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={acceptMutation.isPending}
+            >
               {acceptMutation.isPending
                 ? t("auth.acceptingInvitation")
                 : t("auth.acceptInvitation")}
@@ -121,7 +136,9 @@ function InvitationAcceptancePage() {
       ) : (
         <form className="space-y-4" onSubmit={onSubmit}>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">{t("auth.fullName")}</label>
+            <label className="text-sm font-medium text-foreground">
+              {t("auth.fullName")}
+            </label>
             <Input
               value={fullName}
               onChange={(event) => setFullName(event.target.value)}
@@ -130,7 +147,9 @@ function InvitationAcceptancePage() {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">{t("auth.password")}</label>
+            <label className="text-sm font-medium text-foreground">
+              {t("auth.password")}
+            </label>
             <Input
               type="password"
               value={password}
@@ -139,7 +158,11 @@ function InvitationAcceptancePage() {
               required
             />
           </div>
-          <Button type="submit" className="w-full" disabled={acceptMutation.isPending}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={acceptMutation.isPending}
+          >
             {acceptMutation.isPending
               ? t("auth.acceptingInvitation")
               : t("auth.acceptInvitation")}
@@ -148,7 +171,10 @@ function InvitationAcceptancePage() {
       )}
 
       <div className="mt-6 border-t border-border pt-6 text-sm text-muted-foreground">
-        <Link to="/login" className="font-medium text-primary underline-offset-4 hover:underline">
+        <Link
+          to="/login"
+          className="font-medium text-primary underline-offset-4 hover:underline"
+        >
           {t("common.logIn")}
         </Link>
       </div>

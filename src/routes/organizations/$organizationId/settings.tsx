@@ -1,25 +1,36 @@
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
-import { useOrganizationWorkspacePage } from "./route";
+import { useOrganizationWorkspacePage } from "./-organizationWorkspaceContext";
 
-export const Route = createFileRoute("/organizations/$organizationId/settings")({
-  component: OrganizationSettingsPage,
-});
+export const Route = createFileRoute("/organizations/$organizationId/settings")(
+  {
+    component: OrganizationSettingsPage,
+  },
+);
 
 function OrganizationSettingsPage() {
   const { workspace } = useOrganizationWorkspacePage();
   const locale = useWorkspaceLocale();
 
   if (!workspace.organization.permissions.canManageSettings) {
-    return <Navigate to="/organizations/$organizationId" params={{ organizationId: workspace.organization.id }} />;
+    return (
+      <Navigate
+        to="/organizations/$organizationId"
+        params={{ organizationId: workspace.organization.id }}
+      />
+    );
   }
 
   return (
     <>
       <TopBar
         crumbs={[
-          { label: workspace.organization.name, to: "/organizations/$organizationId", params: { organizationId: workspace.organization.id } },
+          {
+            label: workspace.organization.name,
+            to: "/organizations/$organizationId",
+            params: { organizationId: workspace.organization.id },
+          },
           { label: locale.sidebar.organizationSettings },
         ]}
       />

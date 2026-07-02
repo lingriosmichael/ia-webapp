@@ -48,9 +48,13 @@
   --color-sidebar-active: var(--sidebar-active);
   --color-sidebar-border: var(--sidebar-border);
 
-  --shadow-soft: 0 1px 2px 0 oklch(0 0 0 / 0.04), 0 1px 3px 0 oklch(0 0 0 / 0.05);
-  --shadow-elevated: 0 4px 12px -2px oklch(0 0 0 / 0.06), 0 2px 6px -1px oklch(0 0 0 / 0.04);
-  --shadow-glow: 0 0 0 1px oklch(0.55 0.22 295 / 0.18), 0 8px 24px -8px oklch(0.55 0.22 295 / 0.25);
+  --shadow-soft:
+    0 1px 2px 0 oklch(0 0 0 / 0.04), 0 1px 3px 0 oklch(0 0 0 / 0.05);
+  --shadow-elevated:
+    0 4px 12px -2px oklch(0 0 0 / 0.06), 0 2px 6px -1px oklch(0 0 0 / 0.04);
+  --shadow-glow:
+    0 0 0 1px oklch(0.55 0.22 295 / 0.18),
+    0 8px 24px -8px oklch(0.55 0.22 295 / 0.25);
 }
 
 :root {
@@ -105,7 +109,8 @@
   * {
     border-color: var(--color-border);
   }
-  html, body {
+  html,
+  body {
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -115,7 +120,10 @@
     color: var(--color-foreground);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     letter-spacing: -0.02em;
     font-weight: 600;
   }

@@ -32,8 +32,26 @@ export default tseslint.config(
           ],
         },
       ],
-      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+      "react-refresh/only-export-components": [
+        "warn",
+        { allowConstantExport: true },
+      ],
       "@typescript-eslint/no-unused-vars": "off",
+    },
+  },
+  {
+    files: [
+      "src/components/ui/badge.tsx",
+      "src/components/ui/button.tsx",
+      "src/components/ui/form.tsx",
+      "src/components/ui/navigationMenu.tsx",
+      "src/components/ui/sidebar.tsx",
+      "src/components/ui/toggle.tsx",
+      "src/components/workspaceShell.tsx",
+      "src/routes/organizations/$organizationId/route.tsx",
+    ],
+    rules: {
+      "react-refresh/only-export-components": "off",
     },
   },
   eslintPluginPrettier,

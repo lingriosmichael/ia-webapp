@@ -43,7 +43,8 @@ export const organizationMembersQueryKey = (organizationId: string) =>
   ["organization-members", organizationId] as const;
 export const organizationInvitationsQueryKey = (organizationId: string) =>
   ["organization-invitations", organizationId] as const;
-export const invitationQueryKey = (token: string) => ["invitation", token] as const;
+export const invitationQueryKey = (token: string) =>
+  ["invitation", token] as const;
 
 export function useOrganizationWorkspaceQuery(
   organizationId: string,

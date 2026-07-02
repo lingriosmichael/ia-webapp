@@ -1,21 +1,21 @@
-import { ImagePlus, UploadCloud } from 'lucide-react';
-import type { ChangeEvent, DragEvent, FormEvent } from 'react';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
-import { OrganizationAvatar } from '@/components/organizationAvatar';
-import { Card } from '@/components/workspaceUI';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { useUpdateOrganizationMutation } from '@/hooks/useGrantready';
-import { useWorkspaceLocale } from '@/hooks/useWorkspaceLocale';
-import { getOrganizationBranding } from '@/lib/organizationBranding';
-import { cn } from '@/lib/utils';
-import { ApiError, type OrganizationSummary } from '@/services/apiClient';
+import { ImagePlus, UploadCloud } from "lucide-react";
+import type { ChangeEvent, DragEvent, FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import { OrganizationAvatar } from "@/components/organizationAvatar";
+import { Card } from "@/components/workspaceUI";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useUpdateOrganizationMutation } from "@/hooks/useGrantready";
+import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
+import { getOrganizationBranding } from "@/lib/organizationBranding";
+import { cn } from "@/lib/utils";
+import { ApiError, type OrganizationSummary } from "@/services/apiClient";
 
-const acceptedLogoTypes = new Set(['image/png', 'image/jpeg', 'image/webp']);
-const acceptedLogoExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
+const acceptedLogoTypes = new Set(["image/png", "image/jpeg", "image/webp"]);
+const acceptedLogoExtensions = [".png", ".jpg", ".jpeg", ".webp"];
 
 export function OrganizationSettingsPanel({
   organization,
@@ -24,10 +24,12 @@ export function OrganizationSettingsPanel({
 }) {
   const locale = useWorkspaceLocale();
   const { i18n } = useTranslation();
-  const updateOrganizationMutation = useUpdateOrganizationMutation(organization.id);
+  const updateOrganizationMutation = useUpdateOrganizationMutation(
+    organization.id,
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState(organization.name);
-  const [mission, setMission] = useState(organization.mission ?? '');
+  const [mission, setMission] = useState(organization.mission ?? "");
   const [selectedLogoFile, setSelectedLogoFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
   const [previewLogoUrl, setPreviewLogoUrl] = useState<string | null>(
@@ -36,12 +38,17 @@ export function OrganizationSettingsPanel({
 
   useEffect(() => {
     setName(organization.name);
-    setMission(organization.mission ?? '');
+    setMission(organization.mission ?? "");
 
     if (!selectedLogoFile) {
       setPreviewLogoUrl(organization.logoUrl);
     }
-  }, [organization.logoUrl, organization.mission, organization.name, selectedLogoFile]);
+  }, [
+    organization.logoUrl,
+    organization.mission,
+    organization.name,
+    selectedLogoFile,
+  ]);
 
   useEffect(() => {
     if (!selectedLogoFile) {
@@ -64,12 +71,19 @@ export function OrganizationSettingsPanel({
         logoUrl: previewLogoUrl,
         language: i18n.resolvedLanguage ?? i18n.language,
       }),
-    [i18n.language, i18n.resolvedLanguage, name, organization.name, organization.role, previewLogoUrl],
+    [
+      i18n.language,
+      i18n.resolvedLanguage,
+      name,
+      organization.name,
+      organization.role,
+      previewLogoUrl,
+    ],
   );
 
   const hasChanges =
     name.trim() !== organization.name ||
-    mission !== (organization.mission ?? '') ||
+    mission !== (organization.mission ?? "") ||
     Boolean(selectedLogoFile);
 
   function updateSelectedLogo(file: File) {
@@ -115,12 +129,14 @@ export function OrganizationSettingsPanel({
       });
       setSelectedLogoFile(null);
       if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+        fileInputRef.current.value = "";
       }
       toast.success(locale.organizationSettings.success);
     } catch (error) {
       const message =
-        error instanceof ApiError ? error.message : locale.organizationSettings.failure;
+        error instanceof ApiError
+          ? error.message
+          : locale.organizationSettings.failure;
       toast.error(message);
     }
   }
@@ -179,10 +195,10 @@ export function OrganizationSettingsPanel({
                   onDragLeave={() => setDragActive(false)}
                   onDrop={handleDrop}
                   className={cn(
-                    'flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-10 text-center transition-colors',
+                    "flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-10 text-center transition-colors",
                     dragActive
-                      ? 'border-primary bg-primary-soft'
-                      : 'border-border bg-secondary/40 hover:border-primary/40 hover:bg-primary-soft/40',
+                      ? "border-primary bg-primary-soft"
+                      : "border-border bg-secondary/40 hover:border-primary/40 hover:bg-primary-soft/40",
                   )}
                 >
                   <input
@@ -213,7 +229,7 @@ export function OrganizationSettingsPanel({
                   <div className="rounded-xl border border-border bg-secondary/30 px-4 py-3 text-sm text-foreground">
                     <span className="font-medium">
                       {locale.organizationSettings.selectedLogo}:
-                    </span>{' '}
+                    </span>{" "}
                     {selectedLogoFile.name}
                   </div>
                 ) : null}

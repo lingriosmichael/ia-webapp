@@ -1,9 +1,11 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { z } from "zod";
 
-export const Route = createFileRoute('/projects/$projectId/activities/$activityId/processing')({
+export const Route = createFileRoute(
+  "/projects/$projectId/activities/$activityId/processing",
+)({
   validateSearch: z.object({
     jobId: z.string().optional(),
   }),
@@ -17,7 +19,7 @@ function LegacyProcessingRedirect() {
 
   useEffect(() => {
     void navigate({
-      to: '/projects/$projectId/activities/$activityId/overview',
+      to: "/projects/$projectId/activities/$activityId/overview",
       params: { projectId, activityId },
       replace: true,
     });
@@ -25,7 +27,7 @@ function LegacyProcessingRedirect() {
 
   return (
     <div className="flex min-h-screen items-center justify-center text-sm text-muted-foreground">
-      {t('activityBrief.redirectingToOverview')}
+      {t("activityBrief.redirectingToOverview")}
     </div>
   );
 }
