@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.output/
+.tanstack/
+.vite/
+node_modules/.vite/
