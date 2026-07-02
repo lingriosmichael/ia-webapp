@@ -1,1 +1,0 @@
-import{i as e,l as t}from"./useTranslation-OeIRYpPg.js";import{x as n}from"./index-DJeg1JMu.js";import{r}from"./utils-BO4J1lnh.js";function i(r){let i=t({warn:r?.router===void 0}),a=r?.router||i;return e(a.stores.__store,n(r,a))}var a=r(`chevron-right`,[[`path`,{d:`m9 18 6-6-6-6`,key:`mthhwq`}]]);export{i as n,a as t};
