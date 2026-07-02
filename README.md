@@ -70,8 +70,8 @@ The web app depends on the backend being available locally. If you have not star
 In short:
 
 ```bash
-cd ../ia_backend
-npm install
+cd (go to where the file is located)
+npm  install
 cp .env.example .env
 docker compose up -d mongo
 npm run dev
