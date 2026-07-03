@@ -26,7 +26,7 @@ function OrganizationSettingsPage() {
           { label: locale.sidebar.organizationSettings },
         ]}
       />
-      <div className="mx-auto w-full max-w-5xl px-8 py-10">
+      <div className="mx-auto w-full max-w-6xl px-8 py-10">
         <PageHeader
           eyebrow={locale.organizationSettings.eyebrow}
           title={locale.organizationSettings.title}

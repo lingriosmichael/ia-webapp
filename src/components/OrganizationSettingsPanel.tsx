@@ -502,14 +502,6 @@ export function OrganizationSettingsPanel({
           </div>
 
           <Card className="h-fit p-6 shadow-none">
-            <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
-              <ImagePlus className="h-4 w-4 text-primary" />
-              {locale.organizationSettings.summaryLabel}
-            </div>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              {locale.organizationSettings.summaryDescription}
-            </p>
-
             <div className="mt-6 rounded-2xl border border-border bg-secondary/25 p-5">
               <div className="flex items-center gap-4">
                 <OrganizationAvatar
