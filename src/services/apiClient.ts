@@ -51,13 +51,11 @@ export interface UserSummary {
 export interface OrganizationSummary {
   id: string;
   name: string;
-  slug: string;
   mission: string | null;
   logoUrl: string | null;
   role: OrganizationRole;
   permissions: OrganizationPermissions;
   createdAt: string;
-  updatedAt: string;
 }
 
 export interface UpdateOrganizationPayload {

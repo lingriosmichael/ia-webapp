@@ -32,8 +32,8 @@ export function resolveActiveOrganizationId(
   }
 
   const mostRecentOrganization = organizations.slice().sort((left, right) => {
-    const leftTimestamp = Date.parse(left.updatedAt || left.createdAt);
-    const rightTimestamp = Date.parse(right.updatedAt || right.createdAt);
+    const leftTimestamp = Date.parse(left.createdAt);
+    const rightTimestamp = Date.parse(right.createdAt);
     return rightTimestamp - leftTimestamp;
   })[0];
 
