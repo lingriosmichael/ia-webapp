@@ -76,33 +76,62 @@ const workspaceDe: WorkspaceTranslationDictionary = {
     noProjectDescription: "Noch keine Projektbeschreibung vorhanden.",
   },
   organizationSettings: {
-    eyebrow: "Organisationseinstellungen",
-    title: "Organisationsprofil",
+    eyebrow: "Workspace-Einstellungen",
+    title: "Organisationseinstellungen",
     description:
-      "Aktualisieren Sie Namen, Mission und Logo Ihrer Organisation. Nach dem Speichern erscheint die Änderung sofort in der Workspace-Karte.",
-    settingsEyebrow: "Workspace-Einstellungen",
-    settingsTitle: "Organisationseinstellungen",
-    settingsDescription:
-      "Halten Sie das Organisationsprofil getrennt von künftigen workspaceweiten Einstellungen.",
-    settingsPlaceholder:
-      "Weitere workspaceweite Einstellungen können später hier ergänzt werden, ohne das Organisationsprofil zu überladen.",
-    general: "Allgemein",
+      "Pflegen Sie hier die Stammdaten Ihrer Organisation. Projektdaten bleiben davon getrennt, die Angaben sind aber sofort im Workspace sichtbar.",
+    readOnlyNotice:
+      "Sie können diese Angaben einsehen, aber nur die Organisationsadministration kann sie bearbeiten.",
+    generalSection: "Allgemeine Informationen",
     generalDescription:
-      "Pflegen Sie hier die sichtbare Identität Ihrer Organisation im Workspace.",
-    nameLabel: "Organisationsname",
-    namePlaceholder: "PHINEO",
+      "Erfassen Sie die grundlegenden Organisationsangaben, die Ihren Workspace eindeutig beschreiben.",
+    organizationNameLabel: "Organisationsname",
+    organizationNamePlaceholder: "PHINEO",
+    legalFormLabel: "Rechtsform",
+    legalFormPlaceholder: "Gemeinnützige Stiftung",
+    foundingYearLabel: "Gründungsjahr",
+    foundingYearPlaceholder: "2010",
+    countryLabel: "Land",
+    countryPlaceholder: "Deutschland",
+    employeeCountLabel: "Mitarbeitendenanzahl",
+    employeeCountPlaceholder: "25",
+    missionSection: "Mission & Tätigkeitsbereich",
+    missionDescription:
+      "Beschreiben Sie wofür Ihre Organisation steht, in welchen Feldern sie arbeitet und wen sie erreicht.",
     missionLabel: "Mission",
     missionPlaceholder:
       "Beschreiben Sie kurz, wofür Ihre Organisation steht und wie Sie mit Evidenz arbeiten.",
+    activityAreasLabel: "Tätigkeitsfelder",
+    activityAreasPlaceholder: "Bildung\nDemokratie",
+    targetGroupsLabel: "Zielgruppen",
+    targetGroupsPlaceholder: "Jugendliche\nFamilien",
+    operatingRegionsLabel: "Einsatzregionen",
+    operatingRegionsPlaceholder: "Berlin\nBrandenburg",
+    listFieldHint:
+      "Mehrere Werte können zeilenweise oder kommagetrennt eingegeben werden.",
+    nonProfitSection: "Gemeinnützigkeit",
+    nonProfitDescription:
+      "Hinterlegen Sie den aktuellen Gemeinnützigkeitsstatus Ihrer Organisation.",
+    isRecognizedNonProfitLabel: "Gemeinnützig anerkannt?",
+    nonProfitYes: "Ja",
+    nonProfitNo: "Nein",
+    nonProfitUnknown: "Nicht festgelegt",
+    taxExemptionValidFromLabel: "Freistellungsbescheid gültig seit",
     logoLabel: "Organisationslogo",
     logoDescription:
       "PNG, JPG, JPEG oder WebP. Ziehen Sie eine Datei hierher oder wählen Sie sie vom Computer aus.",
-    previewLabel: "Vorschau",
-    previewDescription:
-      "Wenn noch kein Logo vorhanden ist, wird automatisch ein Avatar mit Initialen angezeigt.",
-    chooseLogo: "Logo auswählen",
     replaceLogo: "Anderes Logo wählen",
     selectedLogo: "Ausgewähltes Logo",
+    summaryLabel: "Organisationszusammenfassung",
+    summaryDescription:
+      "Die Karte fasst die wichtigsten Organisationsangaben kompakt zusammen.",
+    summaryMissionLabel: "Mission",
+    summaryActivityAreasLabel: "Tätigkeitsbereiche",
+    summaryNonProfitLabel: "Gemeinnützigkeit",
+    summaryNonProfitYes: "Gemeinnützig anerkannt",
+    summaryNonProfitNo: "Nicht gemeinnützig",
+    summaryNotProvided: "Noch nicht hinterlegt",
+    optionalLabel: "optional",
     save: "Änderungen speichern",
     saving: "Speichert…",
     success: "Organisation wurde aktualisiert.",
@@ -110,6 +139,12 @@ const workspaceDe: WorkspaceTranslationDictionary = {
     invalidFile: "Bitte laden Sie ein PNG-, JPG-, JPEG- oder WebP-Bild hoch.",
     dropzoneTitle: "Logo hierher ziehen",
     dropzoneAction: "Datei vom Computer auswählen",
+    validationOrganizationName: "Bitte geben Sie einen Organisationsnamen ein.",
+    validationFoundingYear:
+      "Bitte geben Sie ein vierstelliges Gründungsjahr ein.",
+    validationEmployeeCount:
+      "Bitte geben Sie eine gültige Mitarbeitendenanzahl ein.",
+    validationTaxExemptionValidFrom: "Bitte verwenden Sie ein gültiges Datum.",
   },
   organizationProjects: {
     eyebrow: "Projekte",

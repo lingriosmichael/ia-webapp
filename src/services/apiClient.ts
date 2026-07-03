@@ -28,6 +28,20 @@ export interface OrganizationPermissions {
   canCreateProject: boolean;
 }
 
+export interface OrganizationSettings {
+  organizationName: string;
+  legalForm: string | null;
+  foundingYear: number | null;
+  country: string | null;
+  employeeCount: number | null;
+  mission: string | null;
+  activityAreas: string[];
+  targetGroups: string[];
+  operatingRegions: string[];
+  isRecognizedNonProfit: boolean | null;
+  taxExemptionValidFrom: string | null;
+}
+
 export interface ProjectPermissions {
   canEdit: boolean;
   canDelete: boolean;
@@ -53,14 +67,14 @@ export interface OrganizationSummary {
   name: string;
   mission: string | null;
   logoUrl: string | null;
+  settings: OrganizationSettings;
   role: OrganizationRole;
   permissions: OrganizationPermissions;
   createdAt: string;
 }
 
 export interface UpdateOrganizationPayload {
-  name: string;
-  mission: string;
+  settings: OrganizationSettings;
   logoFile?: File | null;
 }
 
@@ -465,8 +479,45 @@ export const apiClient = {
     payload: UpdateOrganizationPayload,
   ): Promise<OrganizationSummary> {
     const formData = new FormData();
-    formData.append("name", payload.name);
-    formData.append("mission", payload.mission);
+    formData.append("name", payload.settings.organizationName);
+    formData.append("mission", payload.settings.mission ?? "");
+    formData.append("organizationName", payload.settings.organizationName);
+    formData.append("legalForm", payload.settings.legalForm ?? "");
+    formData.append(
+      "foundingYear",
+      payload.settings.foundingYear === null
+        ? ""
+        : String(payload.settings.foundingYear),
+    );
+    formData.append("country", payload.settings.country ?? "");
+    formData.append(
+      "employeeCount",
+      payload.settings.employeeCount === null
+        ? ""
+        : String(payload.settings.employeeCount),
+    );
+    formData.append(
+      "activityAreas",
+      JSON.stringify(payload.settings.activityAreas),
+    );
+    formData.append(
+      "targetGroups",
+      JSON.stringify(payload.settings.targetGroups),
+    );
+    formData.append(
+      "operatingRegions",
+      JSON.stringify(payload.settings.operatingRegions),
+    );
+    formData.append(
+      "isRecognizedNonProfit",
+      payload.settings.isRecognizedNonProfit === null
+        ? ""
+        : String(payload.settings.isRecognizedNonProfit),
+    );
+    formData.append(
+      "taxExemptionValidFrom",
+      payload.settings.taxExemptionValidFrom ?? "",
+    );
 
     if (payload.logoFile) {
       formData.append("logo", payload.logoFile);

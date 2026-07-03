@@ -2,7 +2,6 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import {
   Activity as ActivityIcon,
   BarChart3,
-  Building2,
   ChevronRight,
   CreditCard,
   FolderKanban,
@@ -239,11 +238,6 @@ export function AppSidebar({
           icon: <Users2 className="h-3.5 w-3.5" />,
         },
         {
-          to: "/organizations/$organizationId/profile" as const,
-          label: locale.sidebar.organizationProfile,
-          icon: <Building2 className="h-3.5 w-3.5" />,
-        },
-        {
           to: "/organizations/$organizationId/billing" as const,
           label: locale.sidebar.billing,
           icon: <CreditCard className="h-3.5 w-3.5" />,
@@ -430,17 +424,11 @@ export function AppSidebar({
         </div>
         <div className="mt-4 grid gap-2">
           <Link
-            to={
-              organizationPermissions.canManageProfile
-                ? "/organizations/$organizationId/profile"
-                : "/organizations/$organizationId"
-            }
+            to="/organizations/$organizationId/settings"
             params={{ organizationId }}
             className="inline-flex items-center justify-center rounded-xl border border-border bg-background px-3 py-2 text-sm font-medium text-foreground hover:bg-secondary"
           >
-            {organizationPermissions.canManageProfile
-              ? locale.sidebar.organizationProfile
-              : locale.sidebar.workspace}
+            {locale.sidebar.organizationSettings}
           </Link>
           {currentProject && !currentProject.permissions.canEdit ? (
             <div className="rounded-xl border border-primary/20 bg-primary-soft px-3 py-2 text-xs leading-5 text-primary">
