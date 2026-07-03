@@ -21,7 +21,7 @@ export function OrganizationCard({
   const locale = useWorkspaceLocale();
   const { i18n } = useTranslation();
   const branding = getOrganizationBranding({
-    organizationName: organization.name,
+    organizationName: organization.settings.organizationName,
     organizationRole: organization.role,
     logoUrl: organization.logoUrl,
     language: i18n.resolvedLanguage ?? i18n.language,
@@ -42,10 +42,11 @@ export function OrganizationCard({
               {locale.organizationCard.eyebrow}
             </div>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
-              {organization.name}
+              {organization.settings.organizationName}
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-              {organization.mission || locale.organizationCard.noMission}
+              {organization.settings.mission ||
+                locale.organizationCard.noMission}
             </p>
           </div>
         </div>

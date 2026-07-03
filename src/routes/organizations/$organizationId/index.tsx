@@ -72,7 +72,7 @@ function OrganizationWorkspacePage() {
               isOrganizationAdmin ? (membersQuery.data?.length ?? null) : null
             }
             projectCount={workspace.projects.length}
-            readOnly={!workspace.organization.permissions.canManageProfile}
+            readOnly={!workspace.organization.permissions.canManageSettings}
           />
 
           {workspace.projects.length === 0 ? (

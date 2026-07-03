@@ -4,7 +4,6 @@ const workspaceEn = {
     projects: "Projects",
     members: "Members",
     billing: "Billing",
-    organizationProfile: "Organization Profile",
     sectionTitle: "Projects",
     projectSingular: "Project",
     projectPlural: "Projects",

@@ -21,7 +21,6 @@ export type ProjectStatus = "planning" | "active" | "completed";
 export type ActivityStatus = "planning" | "active" | "completed";
 
 export interface OrganizationPermissions {
-  canManageProfile: boolean;
   canManageMembers: boolean;
   canManageBilling: boolean;
   canManageSettings: boolean;
@@ -88,7 +87,6 @@ export interface ProjectSummary {
   ownerId: string;
   ownerName: string | null;
   name: string;
-  slug: string;
   description: string | null;
   programGoal: string | null;
   startMonth: string | null;
@@ -108,7 +106,6 @@ export interface ActivitySummary {
   id: string;
   projectId: string;
   name: string;
-  slug: string;
   description: string | null;
   activityType: string | null;
   owner: string | null;

@@ -6,7 +6,6 @@ const workspaceDe: WorkspaceTranslationDictionary = {
     projects: "Projekte",
     members: "Mitglieder",
     billing: "Abrechnung",
-    organizationProfile: "Organisationsprofil",
     sectionTitle: "Projekte",
     projectSingular: "Projekt",
     projectPlural: "Projekte",
