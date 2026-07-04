@@ -1,5 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Pencil } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
 import { PageHeader, TopBar } from "@/components/workspaceUI";
 import { ProjectSettingsPanel } from "@/components/projectSettingsPanel";
 import { useWorkspaceShell } from "@/components/workspaceShell";
@@ -20,11 +23,16 @@ function ProjectSettingsPage() {
   const locale = useWorkspaceLocale();
   const { t } = useTranslation();
   const { openProjectDeleteDialog } = useWorkspaceShell();
+  const [isEditing, setIsEditing] = useState(false);
   const projectQuery = useProjectQuery(projectId, Boolean(auth.token));
   const workspaceQuery = useOrganizationWorkspaceQuery(
     projectQuery.data?.organizationId ?? "",
     Boolean(auth.token && projectQuery.data?.organizationId),
   );
+
+  useEffect(() => {
+    setIsEditing(false);
+  }, [projectQuery.data?.id, projectQuery.data?.updatedAt]);
 
   if (
     !auth.token ||
@@ -65,11 +73,30 @@ function ProjectSettingsPage() {
           eyebrow={locale.projectSettings.eyebrow}
           title={locale.projectSettings.title}
           description={locale.projectSettings.description}
+          actions={
+            project.permissions.canEdit ? (
+              isEditing ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsEditing(false)}
+                >
+                  {locale.projectSettings.cancelEditAction}
+                </Button>
+              ) : (
+                <Button type="button" onClick={() => setIsEditing(true)}>
+                  <Pencil className="h-4 w-4" />
+                  {locale.projectSettings.editAction}
+                </Button>
+              )
+            ) : null
+          }
         />
 
         <ProjectSettingsPanel
           project={project}
-          organizationName={workspace.organization.name}
+          isEditing={isEditing}
+          onCancelEditing={() => setIsEditing(false)}
           onDeleteProject={() =>
             openProjectDeleteDialog({
               id: project.id,

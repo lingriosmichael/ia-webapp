@@ -17,6 +17,7 @@ import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
 import { useWorkspaceShell } from "@/components/workspaceShell";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useProjectOverviewQuery } from "@/hooks/useGrantready";
+import { resolveProjectSummaryText } from "@/lib/projectSummary";
 import { formatDateTime, translateStatus } from "@/lib/translationUtils";
 import type {
   ProjectOverviewMetrics,
@@ -104,7 +105,7 @@ function ProjectOverview() {
         <PageHeader
           eyebrow={t("project.eyebrow")}
           title={project.name}
-          description={project.description ?? t("project.noDescription")}
+          description={resolveProjectSummaryText(project) ?? t("project.noDescription")}
           actions={renderHeaderActions()}
         />
 

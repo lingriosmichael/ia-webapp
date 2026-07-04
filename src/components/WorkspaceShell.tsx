@@ -208,7 +208,6 @@ export function WorkspaceShell({
         <ProjectDialog
           open={projectDialogOpen}
           onOpenChange={setProjectDialogOpen}
-          organizationName={organizationName}
           isSubmitting={createProjectMutation.isPending}
           onSubmit={handleCreateProject}
         />

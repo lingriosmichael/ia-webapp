@@ -259,11 +259,6 @@ export function AppSidebar({
           label: locale.sidebar.projects,
           icon: <FolderKanban className="h-3.5 w-3.5" />,
         },
-        {
-          to: "/organizations/$organizationId/activities" as const,
-          label: locale.sidebar.activities,
-          icon: <ActivityIcon className="h-3.5 w-3.5" />,
-        },
       ];
 
   return (
@@ -379,30 +374,32 @@ export function AppSidebar({
                         ) : undefined
                       }
                     >
-                      {project.activities.map((activity) => {
-                        const isActiveActivity =
-                          currentActivityId === activity.id;
-                        return (
-                          <NavRow
-                            key={activity.id}
-                            to="/projects/$projectId/activities/$activityId/overview"
-                            params={{
-                              projectId: project.id,
-                              activityId: activity.id,
-                            }}
-                            label={activity.name}
-                            icon={
-                              <ActivityIcon
-                                className={cn(
-                                  "h-3.5 w-3.5",
-                                  isActiveActivity && "text-primary",
-                                )}
-                              />
-                            }
-                            depth={1}
-                          />
-                        );
-                      })}
+                      <div className="space-y-1 pl-3">
+                        {project.activities.map((activity) => {
+                          const isActiveActivity =
+                            currentActivityId === activity.id;
+                          return (
+                            <NavRow
+                              key={activity.id}
+                              to="/projects/$projectId/activities/$activityId/overview"
+                              params={{
+                                projectId: project.id,
+                                activityId: activity.id,
+                              }}
+                              label={activity.name}
+                              icon={
+                                <ActivityIcon
+                                  className={cn(
+                                    "h-3.5 w-3.5",
+                                    isActiveActivity && "text-primary",
+                                  )}
+                                />
+                              }
+                              depth={2}
+                            />
+                          );
+                        })}
+                      </div>
                     </Group>
                   </Group>
                 );

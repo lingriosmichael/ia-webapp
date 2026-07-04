@@ -27,6 +27,7 @@ import {
   useUploadActivityFileMutation,
 } from "@/hooks/useGrantready";
 import { datasetOverview, getSchema } from "@/lib/mockData";
+import { resolveProjectSummaryText } from "@/lib/projectSummary";
 import { cn } from "@/lib/utils";
 import { formatDateTime, translateStatus } from "@/lib/translationUtils";
 import { ApiError } from "@/services/apiClient";
@@ -229,7 +230,8 @@ function ActivityBriefPage() {
             label={t("activityBrief.metrics.project")}
             value={project.name}
             description={
-              project.programGoal ?? t("activityBrief.detail.noProjectGoal")
+              resolveProjectSummaryText(project) ??
+              t("activityBrief.detail.noProjectGoal")
             }
           />
           <ActivityMetricCard

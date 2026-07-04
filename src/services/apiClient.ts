@@ -81,21 +81,30 @@ export interface CreateOrganizationPayload {
   name: string;
 }
 
+export interface ProjectImpactModel {
+  inputs: string | null;
+  activities: string | null;
+  outputs: string | null;
+  impact: string | null;
+  outcomes: string | null;
+}
+
 export interface ProjectSummary {
   id: string;
   organizationId: string;
   ownerId: string;
   ownerName: string | null;
   name: string;
-  description: string | null;
-  programGoal: string | null;
   startMonth: string | null;
   endMonth: string | null;
-  country: string | null;
-  regionCity: string | null;
+  fundingProgram: string | null;
+  fundingOrganization: string | null;
+  targetGroups: string[];
+  areaOfOperation: string | null;
+  partnerships: string | null;
   sdgs: string[];
-  targetBeneficiaries: string[];
-  fundingSource: string | null;
+  impactModel: ProjectImpactModel;
+  successIndicators: string | null;
   status: ProjectStatus;
   permissions: ProjectPermissions;
   createdAt: string;
@@ -157,15 +166,42 @@ export interface InvitationAcceptanceSummary {
 
 export interface CreateProjectPayload {
   name: string;
-  description?: string;
-  programGoal?: string;
-  startMonth?: string;
-  endMonth?: string;
-  country?: string;
-  regionCity?: string;
+  startMonth: string;
+  endMonth: string;
+  fundingProgram: string;
+  fundingOrganization: string;
+  targetGroups: string[];
+  areaOfOperation: string;
+  partnerships?: string;
   sdgs?: string[];
-  targetBeneficiaries?: string[];
-  fundingSource?: string;
+  impactModel: {
+    inputs: string;
+    activities: string;
+    outputs: string;
+    impact: string;
+    outcomes: string;
+  };
+  successIndicators: string;
+}
+
+export interface UpdateProjectPayload {
+  name?: string;
+  startMonth?: string | null;
+  endMonth?: string | null;
+  fundingProgram?: string | null;
+  fundingOrganization?: string | null;
+  targetGroups?: string[];
+  areaOfOperation?: string | null;
+  partnerships?: string | null;
+  sdgs?: string[];
+  impactModel?: {
+    inputs?: string | null;
+    activities?: string | null;
+    outputs?: string | null;
+    impact?: string | null;
+    outcomes?: string | null;
+  };
+  successIndicators?: string | null;
   status?: ProjectStatus;
 }
 
@@ -447,6 +483,17 @@ export const apiClient = {
       body: JSON.stringify(payload),
     });
   },
+  resendOrganizationInvitation(
+    organizationId: string,
+    invitationId: string,
+  ): Promise<InvitationSummary> {
+    return request(
+      `/organizations/${organizationId}/invitations/${invitationId}/resend`,
+      {
+        method: "POST",
+      },
+    );
+  },
   revokeOrganizationInvitation(
     organizationId: string,
     invitationId: string,
@@ -537,6 +584,16 @@ export const apiClient = {
   },
   getProject(projectId: string): Promise<ProjectSummary> {
     return request(`/projects/${projectId}`);
+  },
+  updateProject(
+    projectId: string,
+    payload: UpdateProjectPayload,
+  ): Promise<ProjectSummary> {
+    return request(`/projects/${projectId}`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
   },
   deleteProject(
     projectId: string,

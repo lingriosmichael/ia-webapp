@@ -5,6 +5,7 @@ import { ActivityTabs } from "@/components/activityTabs";
 import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useActivityQuery, useProjectQuery } from "@/hooks/useGrantready";
+import { resolveProjectSummaryText } from "@/lib/projectSummary";
 import { formatDateTime, translateStatus } from "@/lib/translationUtils";
 
 export const Route = createFileRoute(
@@ -124,7 +125,8 @@ function ActivitySettingsPage() {
               </div>
               <ul className="mt-4 space-y-3 text-sm leading-6 text-muted-foreground">
                 <li>
-                  {project.programGoal ?? t("activitySettings.noProjectGoal")}
+                  {resolveProjectSummaryText(project) ??
+                    t("activitySettings.noProjectGoal")}
                 </li>
                 <li>
                   {activity.description ?? t("activitySettings.noDescription")}

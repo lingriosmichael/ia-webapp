@@ -163,7 +163,7 @@ const en = {
     noProjectsDescription:
       "Create the first project for this organization to unlock the workspace routes.",
     projectEyebrow: "Project",
-    noProjectDescription: "No description added yet.",
+    noProjectDescription: "No project goal captured yet.",
     openProject: "Open project",
     noActivityDescription: "No activity description yet.",
     uploads: "uploads",
@@ -189,7 +189,7 @@ const en = {
     sidebarUpload: "Upload",
     viewInsights: "View insights",
     eyebrow: "Project",
-    noDescription: "No project description yet.",
+    noDescription: "No project goal captured yet.",
     readOnlyBannerTitle: "Viewing as Organization Admin",
     readOnlyBannerDescription:
       "This project is owned by {{owner}}. You can review it here, but edits remain restricted to the owner.",
@@ -454,8 +454,8 @@ const en = {
       remove: "Remove",
     },
     detail: {
-      projectGoal: "Project goal",
-      noProjectGoal: "No project goal has been recorded yet.",
+      projectGoal: "Project context",
+      noProjectGoal: "No project impact or outcomes have been recorded yet.",
     },
     pipeline: {
       title: "AI evidence workflow",
@@ -854,7 +854,7 @@ const en = {
       "This page will grow into the place for activity metadata, evidence rules, and future workflow preferences.",
     noOwner: "No owner has been assigned yet.",
     noDescription: "No activity description has been added yet.",
-    noProjectGoal: "No project goal has been recorded yet.",
+    noProjectGoal: "No project impact or outcomes have been recorded yet.",
     fields: {
       name: "Name",
       status: "Status",
@@ -967,7 +967,7 @@ const en = {
     analyticsManagerDescription:
       "Use your projects to build evidence. Organization-wide analytics remain visible to admins.",
     activitiesLabel: "activities",
-    noProjectDescription: "No project description yet.",
+    noProjectDescription: "No project goal captured yet.",
   },
   organizationSettings: {
     eyebrow: "Workspace Settings",
@@ -1041,7 +1041,7 @@ const en = {
     description:
       "Open an existing project or create the next one you want to manage.",
     primaryAction: "Create project",
-    noDescription: "No project description yet.",
+    noDescription: "No project goal captured yet.",
     activities: "activities",
   },
   organizationActivities: {
@@ -1069,6 +1069,12 @@ const en = {
     inviteFailure: "Invitation could not be created.",
     pendingInvitations: "Pending invitations",
     pendingStatus: "Pending acceptance",
+    copyInviteLink: "Copy invitation link",
+    copyInviteLinkSuccess: "Invitation link copied.",
+    copyInviteLinkFailure: "Invitation link could not be copied.",
+    resendInvitation: "Resend",
+    resendInvitationSuccess: "Invitation resent.",
+    resendInvitationFailure: "Invitation could not be resent.",
     currentMembers: "Current members",
     removeAction: "Remove",
     removeSuccess: "Member removed.",
@@ -1105,18 +1111,36 @@ const en = {
     general: "Project details",
     generalDescription:
       "These values reflect the live project metadata stored in the backend.",
+    readOnlyNotice:
+      "You can review these values, but only the responsible project lead can edit them.",
+    editAction: "Edit",
+    cancelEditAction: "Cancel editing",
+    saveAction: "Save changes",
+    savingAction: "Saving…",
+    success: "Project updated.",
+    failure: "Project update failed.",
+    optionalLabel: "optional",
+    requiredField: "Please complete this required field.",
+    requiredMonth: "Please select a month.",
     dangerTitle: "Delete project",
     dangerDescription:
       "Deleting a project permanently removes all activities, uploads, jobs, review outputs, analyses, and insights linked to it.",
     deleteAction: "Delete project",
     notSet: "Not set",
     fields: {
-      status: "Status",
-      organization: "Organization",
       timeline: "Timeline",
-      location: "Location",
-      funding: "Funding source",
-      goal: "Programme goal",
+      fundingProgram: "Funding programme",
+      fundingOrganization: "Funding organization",
+      targetGroups: "Target groups",
+      areaOfOperation: "Area of operation",
+      partnerships: "Partnerships",
+      sdgs: "SDGs",
+      successIndicators: "Success indicators",
+      inputs: "Inputs",
+      activities: "Activities",
+      outputs: "Outputs",
+      impact: "Impact",
+      outcomes: "Outcomes",
       created: "Created",
       updated: "Updated",
     },
@@ -1144,7 +1168,7 @@ const en = {
     create: "Create",
     createProjectTitle: "Create project",
     createProjectDescription:
-      "Add the core programme information for this project.",
+      "Capture the project profile, target groups, and logic model for this project.",
     createActivityTitle: "Add activity",
     createActivityDescription:
       "Capture the delivery details for a project activity.",
@@ -1153,26 +1177,63 @@ const en = {
       creating: "Creating project…",
       success: "Project created.",
       failure: "Project creation failed.",
+      projectProfile: "Project profile",
       name: "Project name",
       namePlaceholder: "Mentoring Programme 2026",
-      description: "Description",
-      descriptionPlaceholder:
-        "A six-month mentoring programme matching senior volunteers with young adults to improve confidence, employability and social inclusion.",
-      programGoal: "Programme goal",
-      programGoalPlaceholder:
-        "Increase youth employability through long-term mentoring relationships.",
       startMonth: "Start month / year",
       endMonth: "End month / year",
-      country: "Country",
-      countryPlaceholder: "Germany",
-      regionCity: "Region / City",
-      regionCityPlaceholder: "Berlin",
-      organization: "Organization",
+      fundingProgram: "Funding programme",
+      fundingProgramPlaceholder: "Erasmus+",
+      fundingOrganization: "Funding organization",
+      fundingOrganizationPlaceholder: "European Commission",
       sdgs: "SDGs",
-      targetBeneficiaries: "Target beneficiaries",
-      fundingSource: "Funding source",
-      fundingSourcePlaceholder: "Erasmus+",
-      status: "Status",
+      sdgsPlaceholder: "SDG 4, SDG 10",
+      sdgsHint: "Optional. Separate multiple entries with commas or new lines.",
+      targetGroups: "Target groups",
+      targetGroupsPlaceholder: "Select one or more target groups",
+      targetGroupsValidation: "Please select at least one target group.",
+      customTargetGroupValidation:
+        "Please add a custom target group for Other.",
+      targetGroupsSelectedSingle: "1 target group selected",
+      targetGroupsSelectedMultiple: "{{count}} target groups selected",
+      customTargetGroupPlaceholder: "Add a custom target group",
+      areaOfOperation: "Area of operation",
+      areaOfOperationPlaceholder: "Where is the project being delivered?",
+      partnerships: "Cooperations / Partnerships",
+      partnershipsPlaceholder:
+        "Optional. Add important cooperation partners or delivery partnerships.",
+      impactModel: "Impact model (I-O-O-I model)",
+      impactModelDescription:
+        "Capture the core building blocks of your project logic.",
+      impactModelTooltipLabel: "Explain logic model fields",
+      impactModelTooltip: {
+        inputs: "Inputs: Which resources do you use for the project?",
+        activities: "Activities: Which measures do you carry out?",
+        outputs: "Outputs: Which direct results are created?",
+        impact:
+          "Impact: Which longer-term or higher-level change should the project contribute to?",
+        outcomes:
+          "Outcomes: Which changes do you want to achieve for your target group?",
+      },
+      inputs: "Inputs",
+      inputsPlaceholder:
+        "Which resources, staff, budget, or infrastructure do you use?",
+      activities: "Activities",
+      activitiesPlaceholder:
+        "Which concrete measures, formats, or interventions will you run?",
+      outputs: "Outputs",
+      outputsPlaceholder:
+        "Which direct and countable results will the project produce?",
+      impact: "Impact",
+      impactPlaceholder:
+        "Which broader or longer-term impact should the project support?",
+      outcomes: "Outcomes",
+      outcomesPlaceholder:
+        "Which changes should happen for the target groups through the project?",
+      successIndicatorsSection: "Success indicators",
+      successIndicators: "Success indicators",
+      successIndicatorsPlaceholder:
+        "How will you know that the project was successful?",
     },
     activity: {
       submit: "Create activity",
@@ -1204,14 +1265,22 @@ const en = {
       status: "Status",
     },
     options: {
-      sdgs: ["SDG 3", "SDG 4", "SDG 5", "SDG 10"],
-      targetBeneficiaries: [
+      targetGroups: [
+        "Children",
         "Youth",
+        "Adults",
         "Seniors",
+        "Families",
+        "People with disabilities",
         "Refugees",
-        "Women",
-        "Teachers",
+        "Migrants",
+        "Unemployed people",
+        "Volunteers",
+        "Companies",
+        "Political actors",
+        "Other",
       ],
+      customTargetGroupOption: "Other",
       activityTypes: [
         "Mentoring Session",
         "Workshop",

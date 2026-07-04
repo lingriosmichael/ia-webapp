@@ -7,6 +7,7 @@ import {
   useOrganizationInvitationsQuery,
   useOrganizationMembersQuery,
   useRemoveOrganizationMemberMutation,
+  useResendInvitationMutation,
 } from "@/hooks/useGrantready";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { ApiError } from "@/services/apiClient";
@@ -29,6 +30,7 @@ function OrganizationMembersPage() {
     workspace.organization.permissions.canManageMembers,
   );
   const createInvitationMutation = useCreateInvitationMutation(organizationId);
+  const resendInvitationMutation = useResendInvitationMutation(organizationId);
   const removeMemberMutation =
     useRemoveOrganizationMemberMutation(organizationId);
 
@@ -79,6 +81,30 @@ function OrganizationMembersPage() {
         error instanceof ApiError
           ? error.message
           : locale.members.removeFailure,
+      );
+    }
+  }
+
+  async function copyInvitationLink(token: string) {
+    try {
+      await navigator.clipboard.writeText(
+        `${window.location.origin}/invitations/${token}/accept`,
+      );
+      toast.success(locale.members.copyInviteLinkSuccess);
+    } catch {
+      toast.error(locale.members.copyInviteLinkFailure);
+    }
+  }
+
+  async function resendInvitation(invitationId: string) {
+    try {
+      await resendInvitationMutation.mutateAsync(invitationId);
+      toast.success(locale.members.resendInvitationSuccess);
+    } catch (error) {
+      toast.error(
+        error instanceof ApiError
+          ? error.message
+          : locale.members.resendInvitationFailure,
       );
     }
   }
@@ -150,6 +176,23 @@ function OrganizationMembersPage() {
                       </div>
                       <div className="mt-1 text-muted-foreground">
                         {locale.members.pendingStatus}
+                      </div>
+                      <div className="mt-3 flex flex-wrap gap-3">
+                        <button
+                          type="button"
+                          onClick={() => copyInvitationLink(invitation.token)}
+                          className="text-sm font-medium text-primary"
+                        >
+                          {locale.members.copyInviteLink}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => resendInvitation(invitation.id)}
+                          disabled={resendInvitationMutation.isPending}
+                          className="text-sm font-medium text-muted-foreground disabled:opacity-60"
+                        >
+                          {locale.members.resendInvitation}
+                        </button>
                       </div>
                     </div>
                   ))}

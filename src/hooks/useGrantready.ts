@@ -19,6 +19,7 @@ import {
   type ProjectSummary,
   type ResultRecord,
   type SessionResponse,
+  type UpdateProjectPayload,
   type UploadMetadataRecord,
 } from "@/services/apiClient";
 
@@ -169,6 +170,46 @@ export function useCreateProjectMutation(organizationId: string) {
   });
 }
 
+export function useUpdateProjectMutation(
+  projectId: string,
+  organizationId: string,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: UpdateProjectPayload) =>
+      apiClient.updateProject(projectId, payload),
+    onSuccess: (project) => {
+      queryClient.setQueryData<ProjectSummary>(projectQueryKey(projectId), project);
+      queryClient.setQueryData<ProjectOverview | undefined>(
+        projectOverviewQueryKey(projectId),
+        (current) => (current ? { ...current, project } : current),
+      );
+      queryClient.setQueryData<OrganizationWorkspace | undefined>(
+        workspaceQueryKey(organizationId),
+        (current) =>
+          current
+            ? {
+                ...current,
+                projects: current.projects.map((item) =>
+                  item.id === project.id ? { ...item, ...project } : item,
+                ),
+              }
+            : current,
+      );
+      void queryClient.invalidateQueries({
+        queryKey: projectQueryKey(projectId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: projectOverviewQueryKey(projectId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: workspaceQueryKey(organizationId),
+      });
+    },
+  });
+}
+
 export function useCreateOrganizationMutation() {
   const queryClient = useQueryClient();
 
@@ -286,6 +327,20 @@ export function useRevokeInvitationMutation(organizationId: string) {
   return useMutation({
     mutationFn: (invitationId: string) =>
       apiClient.revokeOrganizationInvitation(organizationId, invitationId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: organizationInvitationsQueryKey(organizationId),
+      });
+    },
+  });
+}
+
+export function useResendInvitationMutation(organizationId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (invitationId: string) =>
+      apiClient.resendOrganizationInvitation(organizationId, invitationId),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: organizationInvitationsQueryKey(organizationId),

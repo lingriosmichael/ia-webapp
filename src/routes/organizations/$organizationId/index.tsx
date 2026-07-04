@@ -4,6 +4,7 @@ import { OrganizationCard } from "@/components/organizationCard";
 import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
 import { useWorkspaceShell } from "@/components/workspaceShell";
 import { useOrganizationMembersQuery } from "@/hooks/useGrantready";
+import { resolveProjectSummaryText } from "@/lib/projectSummary";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { useOrganizationWorkspacePage } from "./-organizationWorkspaceContext";
 
@@ -117,7 +118,7 @@ function OrganizationWorkspacePage() {
                           {project.name}
                         </div>
                         <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                          {project.description ||
+                          {resolveProjectSummaryText(project) ||
                             locale.organizationPage.noProjectDescription}
                         </p>
                       </Link>

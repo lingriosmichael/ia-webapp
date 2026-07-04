@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
 import { useWorkspaceShell } from "@/components/workspaceShell";
+import { resolveProjectSummaryText } from "@/lib/projectSummary";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { useOrganizationWorkspacePage } from "./-organizationWorkspaceContext";
 
@@ -57,7 +58,7 @@ function OrganizationProjectsPage() {
                 {project.name}
               </div>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                {project.description ||
+                {resolveProjectSummaryText(project) ||
                   locale.organizationProjects.noDescription}
               </p>
               <div className="mt-4 text-xs text-muted-foreground">

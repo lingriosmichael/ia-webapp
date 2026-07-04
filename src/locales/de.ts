@@ -166,7 +166,7 @@ const de: TranslationDictionary = {
     noProjectsDescription:
       "Erstellen Sie das erste Projekt für diese Organisation, um die Workspace-Routen freizuschalten.",
     projectEyebrow: "Projekt",
-    noProjectDescription: "Es wurde noch keine Beschreibung hinzugefügt.",
+    noProjectDescription: "Es wurde noch kein Projektziel hinterlegt.",
     openProject: "Projekt öffnen",
     noActivityDescription: "Noch keine Aktivitätsbeschreibung vorhanden.",
     uploads: "Uploads",
@@ -192,7 +192,7 @@ const de: TranslationDictionary = {
     sidebarUpload: "Hochladen",
     viewInsights: "Erkenntnisse anzeigen",
     eyebrow: "Projekt",
-    noDescription: "Noch keine Projektbeschreibung vorhanden.",
+    noDescription: "Noch kein Projektziel hinterlegt.",
     readOnlyBannerTitle: "Ansicht als Organisationsadministration",
     readOnlyBannerDescription:
       "Dieses Projekt gehört {{owner}}. Sie können es hier prüfen, Bearbeitungen bleiben aber der verantwortlichen Person vorbehalten.",
@@ -471,8 +471,9 @@ const de: TranslationDictionary = {
       remove: "Entfernen",
     },
     detail: {
-      projectGoal: "Projektziel",
-      noProjectGoal: "Es wurde noch kein Projektziel erfasst.",
+      projectGoal: "Projektkontext",
+      noProjectGoal:
+        "Es wurden noch keine Projektwirkung oder Outcomes erfasst.",
     },
     pipeline: {
       title: "KI-Evidenz-Workflow",
@@ -875,7 +876,8 @@ const de: TranslationDictionary = {
       "Diese Seite wird zum Ort für Aktivitätsmetadaten, Evidenzregeln und spätere Workflow-Einstellungen ausgebaut.",
     noOwner: "Es wurde noch keine verantwortliche Person zugewiesen.",
     noDescription: "Es wurde noch keine Aktivitätsbeschreibung ergänzt.",
-    noProjectGoal: "Es wurde noch kein Projektziel erfasst.",
+    noProjectGoal:
+      "Es wurden noch keine Projektwirkung oder Outcomes erfasst.",
     fields: {
       name: "Name",
       status: "Status",
@@ -989,7 +991,7 @@ const de: TranslationDictionary = {
     analyticsManagerDescription:
       "Nutzen Sie Ihre Projekte, um Evidenz aufzubauen. Organisationsweite Analysen bleiben für Admins sichtbar.",
     activitiesLabel: "Aktivitäten",
-    noProjectDescription: "Noch keine Projektbeschreibung vorhanden.",
+    noProjectDescription: "Noch kein Projektziel hinterlegt.",
   },
   organizationSettings: {
     eyebrow: "Workspace-Einstellungen",
@@ -1065,7 +1067,7 @@ const de: TranslationDictionary = {
     description:
       "Öffnen Sie ein bestehendes Projekt oder erstellen Sie das nächste Projekt, das Sie betreuen möchten.",
     primaryAction: "Projekt erstellen",
-    noDescription: "Noch keine Projektbeschreibung vorhanden.",
+    noDescription: "Noch kein Projektziel hinterlegt.",
     activities: "Aktivitäten",
   },
   organizationActivities: {
@@ -1093,6 +1095,12 @@ const de: TranslationDictionary = {
     inviteFailure: "Einladung konnte nicht erstellt werden.",
     pendingInvitations: "Ausstehende Einladungen",
     pendingStatus: "Wartet auf Annahme",
+    copyInviteLink: "Einladungslink kopieren",
+    copyInviteLinkSuccess: "Einladungslink wurde kopiert.",
+    copyInviteLinkFailure: "Einladungslink konnte nicht kopiert werden.",
+    resendInvitation: "Erneut senden",
+    resendInvitationSuccess: "Einladung wurde erneut gesendet.",
+    resendInvitationFailure: "Einladung konnte nicht erneut gesendet werden.",
     currentMembers: "Aktuelle Mitglieder",
     removeAction: "Entfernen",
     removeSuccess: "Mitglied wurde entfernt.",
@@ -1130,18 +1138,36 @@ const de: TranslationDictionary = {
     general: "Projektdetails",
     generalDescription:
       "Diese Werte spiegeln die aktuell im Backend gespeicherten Projektmetadaten wider.",
+    readOnlyNotice:
+      "Sie können diese Angaben einsehen, aber nur die zuständige Projektleitung kann sie bearbeiten.",
+    editAction: "Bearbeiten",
+    cancelEditAction: "Bearbeitung abbrechen",
+    saveAction: "Änderungen speichern",
+    savingAction: "Speichert…",
+    success: "Projekt wurde aktualisiert.",
+    failure: "Projekt konnte nicht aktualisiert werden.",
+    optionalLabel: "optional",
+    requiredField: "Bitte füllen Sie dieses Pflichtfeld aus.",
+    requiredMonth: "Bitte wählen Sie einen Monat aus.",
     dangerTitle: "Projekt löschen",
     dangerDescription:
       "Beim Löschen eines Projekts werden alle verknüpften Aktivitäten, Uploads, Jobs, Prüfergebnisse, Analysen und Erkenntnisse dauerhaft entfernt.",
     deleteAction: "Projekt löschen",
     notSet: "Nicht gesetzt",
     fields: {
-      status: "Status",
-      organization: "Organisation",
       timeline: "Zeitraum",
-      location: "Ort",
-      funding: "Finanzierungsquelle",
-      goal: "Programmziel",
+      fundingProgram: "Förderprogramm",
+      fundingOrganization: "Fördernde Organisation",
+      targetGroups: "Zielgruppen",
+      areaOfOperation: "Einsatzgebiet",
+      partnerships: "Kooperationen / Partnerschaften",
+      sdgs: "SDGs",
+      successIndicators: "Erfolgsindikatoren",
+      inputs: "Inputs",
+      activities: "Aktivitäten",
+      outputs: "Outputs",
+      impact: "Impact",
+      outcomes: "Outcomes",
       created: "Erstellt",
       updated: "Aktualisiert",
     },
@@ -1170,7 +1196,7 @@ const de: TranslationDictionary = {
     create: "Erstellen",
     createProjectTitle: "Projekt erstellen",
     createProjectDescription:
-      "Erfassen Sie die zentralen Programminformationen für dieses Projekt.",
+      "Erfassen Sie Projektprofil, Zielgruppen und Wirkungsmodell für dieses Projekt.",
     createActivityTitle: "Aktivität hinzufügen",
     createActivityDescription:
       "Erfassen Sie die Umsetzungsdetails für eine Projektaktivität.",
@@ -1179,26 +1205,64 @@ const de: TranslationDictionary = {
       creating: "Projekt wird erstellt…",
       success: "Projekt wurde erstellt.",
       failure: "Projekt konnte nicht erstellt werden.",
+      projectProfile: "Projektprofil",
       name: "Projektname",
       namePlaceholder: "Mentoring-Programm 2026",
-      description: "Beschreibung",
-      descriptionPlaceholder:
-        "Ein sechsmonatiges Mentoring-Programm, das erfahrene Freiwillige mit jungen Erwachsenen zusammenbringt, um Selbstvertrauen, Beschäftigungsfähigkeit und soziale Teilhabe zu stärken.",
-      programGoal: "Programmziel",
-      programGoalPlaceholder:
-        "Jugendliche durch langfristige Mentoring-Beziehungen besser in Arbeit bringen.",
       startMonth: "Startmonat / Jahr",
       endMonth: "Endmonat / Jahr",
-      country: "Land",
-      countryPlaceholder: "Deutschland",
-      regionCity: "Region / Stadt",
-      regionCityPlaceholder: "Berlin",
-      organization: "Organisation",
+      fundingProgram: "Förderprogramm",
+      fundingProgramPlaceholder: "Erasmus+",
+      fundingOrganization: "Fördernde Organisation",
+      fundingOrganizationPlaceholder: "Europäische Kommission",
       sdgs: "SDGs",
-      targetBeneficiaries: "Zielgruppen",
-      fundingSource: "Finanzierungsquelle",
-      fundingSourcePlaceholder: "Erasmus+",
-      status: "Status",
+      sdgsPlaceholder: "SDG 4, SDG 10",
+      sdgsHint:
+        "Optional. Mehrere Einträge können kommagetrennt oder zeilenweise eingegeben werden.",
+      targetGroups: "Zielgruppen",
+      targetGroupsPlaceholder: "Eine oder mehrere Zielgruppen auswählen",
+      targetGroupsValidation: "Bitte wählen Sie mindestens eine Zielgruppe aus.",
+      customTargetGroupValidation:
+        "Bitte ergänzen Sie eine eigene Zielgruppe für Sonstige.",
+      targetGroupsSelectedSingle: "1 Zielgruppe ausgewählt",
+      targetGroupsSelectedMultiple: "{{count}} Zielgruppen ausgewählt",
+      customTargetGroupPlaceholder: "Eigene Zielgruppe hinzufügen",
+      areaOfOperation: "Einsatzgebiet",
+      areaOfOperationPlaceholder: "Wo wird das Projekt umgesetzt?",
+      partnerships: "Kooperationen / Partnerschaften",
+      partnershipsPlaceholder:
+        "Optional. Wichtige Kooperations- oder Umsetzungspartner ergänzen.",
+      impactModel: "Wirkungsmodell (I-O-O-I Modell)",
+      impactModelDescription:
+        "Erfassen Sie die zentralen Bausteine Ihrer Projektlogik.",
+      impactModelTooltipLabel: "Wirkungsmodell erklären",
+      impactModelTooltip: {
+        inputs: "Inputs: Welche Ressourcen setzen Sie für das Projekt ein?",
+        activities: "Aktivitäten: Welche Maßnahmen führen Sie durch?",
+        outputs: "Outputs: Welche direkten Ergebnisse entstehen?",
+        impact:
+          "Impact: Welche langfristige oder übergeordnete Wirkung soll das Projekt unterstützen?",
+        outcomes:
+          "Outcomes: Welche Veränderungen möchten Sie bei Ihrer Zielgruppe erreichen?",
+      },
+      inputs: "Inputs",
+      inputsPlaceholder:
+        "Welche Ressourcen, welches Personal, Budget oder welche Infrastruktur setzen Sie ein?",
+      activities: "Aktivitäten",
+      activitiesPlaceholder:
+        "Welche konkreten Maßnahmen, Formate oder Interventionen führen Sie durch?",
+      outputs: "Outputs",
+      outputsPlaceholder:
+        "Welche direkten und messbaren Ergebnisse erzeugt das Projekt?",
+      impact: "Impact",
+      impactPlaceholder:
+        "Welche übergeordnete oder langfristige Wirkung soll das Projekt unterstützen?",
+      outcomes: "Outcomes",
+      outcomesPlaceholder:
+        "Welche Veränderungen sollen bei den Zielgruppen erreicht werden?",
+      successIndicatorsSection: "Erfolgsindikatoren",
+      successIndicators: "Erfolgsindikatoren",
+      successIndicatorsPlaceholder:
+        "Woran erkennen Sie, dass Ihr Projekt erfolgreich war?",
     },
     activity: {
       submit: "Aktivität erstellen",
@@ -1232,14 +1296,22 @@ const de: TranslationDictionary = {
       status: "Status",
     },
     options: {
-      sdgs: ["SDG 3", "SDG 4", "SDG 5", "SDG 10"],
-      targetBeneficiaries: [
+      targetGroups: [
+        "Kinder",
         "Jugendliche",
-        "Senioren",
+        "Erwachsene",
+        "Senior:innen",
+        "Familien",
+        "Menschen mit Behinderung",
         "Geflüchtete",
-        "Frauen",
-        "Lehrkräfte",
+        "Migrant:innen",
+        "Arbeitslose",
+        "Ehrenamtliche",
+        "Unternehmen",
+        "Politische Akteure",
+        "Sonstige",
       ],
+      customTargetGroupOption: "Sonstige",
       activityTypes: [
         "Mentoring-Sitzung",
         "Workshop",

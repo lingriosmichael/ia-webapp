@@ -85,6 +85,7 @@ Open a second terminal and run:
 
 ```bash
 cd Impact_Atlas/ia_webapp
+nvm use 'lts/*'
 npm run dev
 ```
 
