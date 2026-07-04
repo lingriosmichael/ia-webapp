@@ -11,7 +11,11 @@ import {
   FieldLabel,
 } from "@/components/entityDialog";
 import { Input } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Tooltip,
@@ -232,7 +236,9 @@ export function ProjectDialog({
             />
           </div>
           <div className="space-y-2">
-            <FieldLabel>{locale.dialogs.project.fundingOrganization}</FieldLabel>
+            <FieldLabel>
+              {locale.dialogs.project.fundingOrganization}
+            </FieldLabel>
             <Input
               value={form.fundingOrganization}
               onChange={(event) =>
@@ -502,7 +508,10 @@ function TargetGroupMultiSelect({
             <ChevronDown className="h-4 w-4 shrink-0 opacity-70" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent align="start" className="w-[var(--radix-popover-trigger-width)] space-y-4 p-3">
+        <PopoverContent
+          align="start"
+          className="w-[var(--radix-popover-trigger-width)] space-y-4 p-3"
+        >
           <div className="max-h-64 space-y-1 overflow-y-auto pr-1">
             {options.map((option) =>
               option === customOption ? (

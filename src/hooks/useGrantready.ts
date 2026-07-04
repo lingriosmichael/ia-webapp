@@ -180,7 +180,10 @@ export function useUpdateProjectMutation(
     mutationFn: (payload: UpdateProjectPayload) =>
       apiClient.updateProject(projectId, payload),
     onSuccess: (project) => {
-      queryClient.setQueryData<ProjectSummary>(projectQueryKey(projectId), project);
+      queryClient.setQueryData<ProjectSummary>(
+        projectQueryKey(projectId),
+        project,
+      );
       queryClient.setQueryData<ProjectOverview | undefined>(
         projectOverviewQueryKey(projectId),
         (current) => (current ? { ...current, project } : current),

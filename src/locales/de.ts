@@ -876,8 +876,7 @@ const de: TranslationDictionary = {
       "Diese Seite wird zum Ort für Aktivitätsmetadaten, Evidenzregeln und spätere Workflow-Einstellungen ausgebaut.",
     noOwner: "Es wurde noch keine verantwortliche Person zugewiesen.",
     noDescription: "Es wurde noch keine Aktivitätsbeschreibung ergänzt.",
-    noProjectGoal:
-      "Es wurden noch keine Projektwirkung oder Outcomes erfasst.",
+    noProjectGoal: "Es wurden noch keine Projektwirkung oder Outcomes erfasst.",
     fields: {
       name: "Name",
       status: "Status",
@@ -1220,7 +1219,8 @@ const de: TranslationDictionary = {
         "Optional. Mehrere Einträge können kommagetrennt oder zeilenweise eingegeben werden.",
       targetGroups: "Zielgruppen",
       targetGroupsPlaceholder: "Eine oder mehrere Zielgruppen auswählen",
-      targetGroupsValidation: "Bitte wählen Sie mindestens eine Zielgruppe aus.",
+      targetGroupsValidation:
+        "Bitte wählen Sie mindestens eine Zielgruppe aus.",
       customTargetGroupValidation:
         "Bitte ergänzen Sie eine eigene Zielgruppe für Sonstige.",
       targetGroupsSelectedSingle: "1 Zielgruppe ausgewählt",

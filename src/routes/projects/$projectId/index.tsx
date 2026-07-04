@@ -105,7 +105,9 @@ function ProjectOverview() {
         <PageHeader
           eyebrow={t("project.eyebrow")}
           title={project.name}
-          description={resolveProjectSummaryText(project) ?? t("project.noDescription")}
+          description={
+            resolveProjectSummaryText(project) ?? t("project.noDescription")
+          }
           actions={renderHeaderActions()}
         />
 
