@@ -17,6 +17,7 @@ import { useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityTabs } from "@/components/activityTabs";
 import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
+import { useProjectHierarchy } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
 import {
   useActivityJobsQuery,
@@ -65,6 +66,7 @@ function SchemaReview() {
   const uploadsQuery = useActivityUploadsQuery(activityId, Boolean(auth.token));
   const jobsQuery = useActivityJobsQuery(activityId, Boolean(auth.token));
   const { t, i18n } = useTranslation();
+  const hierarchy = useProjectHierarchy();
 
   const [selectedColumnKey, setSelectedColumnKey] = useState<string | null>(
     null,
@@ -175,16 +177,19 @@ function SchemaReview() {
     <>
       <TopBar
         crumbs={[
+          hierarchy.organizationCrumb,
+          hierarchy.projectsCrumb,
+          hierarchy.projectCrumb,
+          { label: hierarchy.activitiesLabel },
           {
-            label: project.name,
-            to: "/projects/$projectId",
-            params: { projectId },
+            label: activityQuery.data.name,
+            to: "/projects/$projectId/activities/$activityId/overview",
+            params: { projectId, activityId },
           },
-          { label: activityQuery.data.name },
           { label: t("schemaReview.crumb") },
         ]}
       />
-      <div className="mx-auto w-full max-w-7xl px-6 py-10 sm:px-8">
+      <div className="mx-auto w-full max-w-7xl px-6 py-8 sm:px-8">
         <PageHeader
           eyebrow={t("schemaReview.eyebrow")}
           title={t("schemaReview.title")}

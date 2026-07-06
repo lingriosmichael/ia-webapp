@@ -21,8 +21,11 @@ import { Route as OrganizationsOrganizationIdRouteRouteImport } from './routes/o
 import { Route as ProjectsProjectIdIndexRouteImport } from './routes/projects/$projectId/index'
 import { Route as OrganizationsOrganizationIdIndexRouteImport } from './routes/organizations/$organizationId/index'
 import { Route as ProjectsProjectIdSettingsRouteImport } from './routes/projects/$projectId/settings'
+import { Route as ProjectsProjectIdInterpretationRouteImport } from './routes/projects/$projectId/interpretation'
 import { Route as ProjectsProjectIdInsightsRouteImport } from './routes/projects/$projectId/insights'
+import { Route as ProjectsProjectIdEvidenceRouteImport } from './routes/projects/$projectId/evidence'
 import { Route as ProjectsProjectIdAnalyticsRouteImport } from './routes/projects/$projectId/analytics'
+import { Route as ProjectsProjectIdActivitiesRouteImport } from './routes/projects/$projectId/activities'
 import { Route as OrganizationsOrganizationIdSettingsRouteImport } from './routes/organizations/$organizationId/settings'
 import { Route as OrganizationsOrganizationIdProjectsRouteImport } from './routes/organizations/$organizationId/projects'
 import { Route as OrganizationsOrganizationIdProfileRouteImport } from './routes/organizations/$organizationId/profile'
@@ -104,16 +107,34 @@ const ProjectsProjectIdSettingsRoute =
     path: '/settings',
     getParentRoute: () => ProjectsProjectIdRouteRoute,
   } as any)
+const ProjectsProjectIdInterpretationRoute =
+  ProjectsProjectIdInterpretationRouteImport.update({
+    id: '/interpretation',
+    path: '/interpretation',
+    getParentRoute: () => ProjectsProjectIdRouteRoute,
+  } as any)
 const ProjectsProjectIdInsightsRoute =
   ProjectsProjectIdInsightsRouteImport.update({
     id: '/insights',
     path: '/insights',
     getParentRoute: () => ProjectsProjectIdRouteRoute,
   } as any)
+const ProjectsProjectIdEvidenceRoute =
+  ProjectsProjectIdEvidenceRouteImport.update({
+    id: '/evidence',
+    path: '/evidence',
+    getParentRoute: () => ProjectsProjectIdRouteRoute,
+  } as any)
 const ProjectsProjectIdAnalyticsRoute =
   ProjectsProjectIdAnalyticsRouteImport.update({
     id: '/analytics',
     path: '/analytics',
+    getParentRoute: () => ProjectsProjectIdRouteRoute,
+  } as any)
+const ProjectsProjectIdActivitiesRoute =
+  ProjectsProjectIdActivitiesRouteImport.update({
+    id: '/activities',
+    path: '/activities',
     getParentRoute: () => ProjectsProjectIdRouteRoute,
   } as any)
 const OrganizationsOrganizationIdSettingsRoute =
@@ -159,63 +180,63 @@ const InvitationsTokenAcceptRoute = InvitationsTokenAcceptRouteImport.update({
 } as any)
 const ProjectsProjectIdActivitiesActivityIdUploadRoute =
   ProjectsProjectIdActivitiesActivityIdUploadRouteImport.update({
-    id: '/activities/$activityId/upload',
-    path: '/activities/$activityId/upload',
-    getParentRoute: () => ProjectsProjectIdRouteRoute,
+    id: '/$activityId/upload',
+    path: '/$activityId/upload',
+    getParentRoute: () => ProjectsProjectIdActivitiesRoute,
   } as any)
 const ProjectsProjectIdActivitiesActivityIdSettingsRoute =
   ProjectsProjectIdActivitiesActivityIdSettingsRouteImport.update({
-    id: '/activities/$activityId/settings',
-    path: '/activities/$activityId/settings',
-    getParentRoute: () => ProjectsProjectIdRouteRoute,
+    id: '/$activityId/settings',
+    path: '/$activityId/settings',
+    getParentRoute: () => ProjectsProjectIdActivitiesRoute,
   } as any)
 const ProjectsProjectIdActivitiesActivityIdSchemaRoute =
   ProjectsProjectIdActivitiesActivityIdSchemaRouteImport.update({
-    id: '/activities/$activityId/schema',
-    path: '/activities/$activityId/schema',
-    getParentRoute: () => ProjectsProjectIdRouteRoute,
+    id: '/$activityId/schema',
+    path: '/$activityId/schema',
+    getParentRoute: () => ProjectsProjectIdActivitiesRoute,
   } as any)
 const ProjectsProjectIdActivitiesActivityIdProcessingRoute =
   ProjectsProjectIdActivitiesActivityIdProcessingRouteImport.update({
-    id: '/activities/$activityId/processing',
-    path: '/activities/$activityId/processing',
-    getParentRoute: () => ProjectsProjectIdRouteRoute,
+    id: '/$activityId/processing',
+    path: '/$activityId/processing',
+    getParentRoute: () => ProjectsProjectIdActivitiesRoute,
   } as any)
 const ProjectsProjectIdActivitiesActivityIdOverviewRoute =
   ProjectsProjectIdActivitiesActivityIdOverviewRouteImport.update({
-    id: '/activities/$activityId/overview',
-    path: '/activities/$activityId/overview',
-    getParentRoute: () => ProjectsProjectIdRouteRoute,
+    id: '/$activityId/overview',
+    path: '/$activityId/overview',
+    getParentRoute: () => ProjectsProjectIdActivitiesRoute,
   } as any)
 const ProjectsProjectIdActivitiesActivityIdInsightsRoute =
   ProjectsProjectIdActivitiesActivityIdInsightsRouteImport.update({
-    id: '/activities/$activityId/insights',
-    path: '/activities/$activityId/insights',
-    getParentRoute: () => ProjectsProjectIdRouteRoute,
+    id: '/$activityId/insights',
+    path: '/$activityId/insights',
+    getParentRoute: () => ProjectsProjectIdActivitiesRoute,
   } as any)
 const ProjectsProjectIdActivitiesActivityIdBriefRoute =
   ProjectsProjectIdActivitiesActivityIdBriefRouteImport.update({
-    id: '/activities/$activityId/brief',
-    path: '/activities/$activityId/brief',
-    getParentRoute: () => ProjectsProjectIdRouteRoute,
+    id: '/$activityId/brief',
+    path: '/$activityId/brief',
+    getParentRoute: () => ProjectsProjectIdActivitiesRoute,
   } as any)
 const ProjectsProjectIdActivitiesActivityIdAnalyticsRoute =
   ProjectsProjectIdActivitiesActivityIdAnalyticsRouteImport.update({
-    id: '/activities/$activityId/analytics',
-    path: '/activities/$activityId/analytics',
-    getParentRoute: () => ProjectsProjectIdRouteRoute,
+    id: '/$activityId/analytics',
+    path: '/$activityId/analytics',
+    getParentRoute: () => ProjectsProjectIdActivitiesRoute,
   } as any)
 const ProjectsProjectIdActivitiesActivityIdAnalysisRoute =
   ProjectsProjectIdActivitiesActivityIdAnalysisRouteImport.update({
-    id: '/activities/$activityId/analysis',
-    path: '/activities/$activityId/analysis',
-    getParentRoute: () => ProjectsProjectIdRouteRoute,
+    id: '/$activityId/analysis',
+    path: '/$activityId/analysis',
+    getParentRoute: () => ProjectsProjectIdActivitiesRoute,
   } as any)
 const ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute =
   ProjectsProjectIdActivitiesActivityIdDataReviewIndexRouteImport.update({
-    id: '/activities/$activityId/data-review/',
-    path: '/activities/$activityId/data-review/',
-    getParentRoute: () => ProjectsProjectIdRouteRoute,
+    id: '/$activityId/data-review/',
+    path: '/$activityId/data-review/',
+    getParentRoute: () => ProjectsProjectIdActivitiesRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -235,8 +256,11 @@ export interface FileRoutesByFullPath {
   '/organizations/$organizationId/profile': typeof OrganizationsOrganizationIdProfileRoute
   '/organizations/$organizationId/projects': typeof OrganizationsOrganizationIdProjectsRoute
   '/organizations/$organizationId/settings': typeof OrganizationsOrganizationIdSettingsRoute
+  '/projects/$projectId/activities': typeof ProjectsProjectIdActivitiesRouteWithChildren
   '/projects/$projectId/analytics': typeof ProjectsProjectIdAnalyticsRoute
+  '/projects/$projectId/evidence': typeof ProjectsProjectIdEvidenceRoute
   '/projects/$projectId/insights': typeof ProjectsProjectIdInsightsRoute
+  '/projects/$projectId/interpretation': typeof ProjectsProjectIdInterpretationRoute
   '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
   '/organizations/$organizationId/': typeof OrganizationsOrganizationIdIndexRoute
   '/projects/$projectId/': typeof ProjectsProjectIdIndexRoute
@@ -266,8 +290,11 @@ export interface FileRoutesByTo {
   '/organizations/$organizationId/profile': typeof OrganizationsOrganizationIdProfileRoute
   '/organizations/$organizationId/projects': typeof OrganizationsOrganizationIdProjectsRoute
   '/organizations/$organizationId/settings': typeof OrganizationsOrganizationIdSettingsRoute
+  '/projects/$projectId/activities': typeof ProjectsProjectIdActivitiesRouteWithChildren
   '/projects/$projectId/analytics': typeof ProjectsProjectIdAnalyticsRoute
+  '/projects/$projectId/evidence': typeof ProjectsProjectIdEvidenceRoute
   '/projects/$projectId/insights': typeof ProjectsProjectIdInsightsRoute
+  '/projects/$projectId/interpretation': typeof ProjectsProjectIdInterpretationRoute
   '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
   '/organizations/$organizationId': typeof OrganizationsOrganizationIdIndexRoute
   '/projects/$projectId': typeof ProjectsProjectIdIndexRoute
@@ -300,8 +327,11 @@ export interface FileRoutesById {
   '/organizations/$organizationId/profile': typeof OrganizationsOrganizationIdProfileRoute
   '/organizations/$organizationId/projects': typeof OrganizationsOrganizationIdProjectsRoute
   '/organizations/$organizationId/settings': typeof OrganizationsOrganizationIdSettingsRoute
+  '/projects/$projectId/activities': typeof ProjectsProjectIdActivitiesRouteWithChildren
   '/projects/$projectId/analytics': typeof ProjectsProjectIdAnalyticsRoute
+  '/projects/$projectId/evidence': typeof ProjectsProjectIdEvidenceRoute
   '/projects/$projectId/insights': typeof ProjectsProjectIdInsightsRoute
+  '/projects/$projectId/interpretation': typeof ProjectsProjectIdInterpretationRoute
   '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
   '/organizations/$organizationId/': typeof OrganizationsOrganizationIdIndexRoute
   '/projects/$projectId/': typeof ProjectsProjectIdIndexRoute
@@ -335,8 +365,11 @@ export interface FileRouteTypes {
     | '/organizations/$organizationId/profile'
     | '/organizations/$organizationId/projects'
     | '/organizations/$organizationId/settings'
+    | '/projects/$projectId/activities'
     | '/projects/$projectId/analytics'
+    | '/projects/$projectId/evidence'
     | '/projects/$projectId/insights'
+    | '/projects/$projectId/interpretation'
     | '/projects/$projectId/settings'
     | '/organizations/$organizationId/'
     | '/projects/$projectId/'
@@ -366,8 +399,11 @@ export interface FileRouteTypes {
     | '/organizations/$organizationId/profile'
     | '/organizations/$organizationId/projects'
     | '/organizations/$organizationId/settings'
+    | '/projects/$projectId/activities'
     | '/projects/$projectId/analytics'
+    | '/projects/$projectId/evidence'
     | '/projects/$projectId/insights'
+    | '/projects/$projectId/interpretation'
     | '/projects/$projectId/settings'
     | '/organizations/$organizationId'
     | '/projects/$projectId'
@@ -399,8 +435,11 @@ export interface FileRouteTypes {
     | '/organizations/$organizationId/profile'
     | '/organizations/$organizationId/projects'
     | '/organizations/$organizationId/settings'
+    | '/projects/$projectId/activities'
     | '/projects/$projectId/analytics'
+    | '/projects/$projectId/evidence'
     | '/projects/$projectId/insights'
+    | '/projects/$projectId/interpretation'
     | '/projects/$projectId/settings'
     | '/organizations/$organizationId/'
     | '/projects/$projectId/'
@@ -515,6 +554,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsProjectIdSettingsRouteImport
       parentRoute: typeof ProjectsProjectIdRouteRoute
     }
+    '/projects/$projectId/interpretation': {
+      id: '/projects/$projectId/interpretation'
+      path: '/interpretation'
+      fullPath: '/projects/$projectId/interpretation'
+      preLoaderRoute: typeof ProjectsProjectIdInterpretationRouteImport
+      parentRoute: typeof ProjectsProjectIdRouteRoute
+    }
     '/projects/$projectId/insights': {
       id: '/projects/$projectId/insights'
       path: '/insights'
@@ -522,11 +568,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsProjectIdInsightsRouteImport
       parentRoute: typeof ProjectsProjectIdRouteRoute
     }
+    '/projects/$projectId/evidence': {
+      id: '/projects/$projectId/evidence'
+      path: '/evidence'
+      fullPath: '/projects/$projectId/evidence'
+      preLoaderRoute: typeof ProjectsProjectIdEvidenceRouteImport
+      parentRoute: typeof ProjectsProjectIdRouteRoute
+    }
     '/projects/$projectId/analytics': {
       id: '/projects/$projectId/analytics'
       path: '/analytics'
       fullPath: '/projects/$projectId/analytics'
       preLoaderRoute: typeof ProjectsProjectIdAnalyticsRouteImport
+      parentRoute: typeof ProjectsProjectIdRouteRoute
+    }
+    '/projects/$projectId/activities': {
+      id: '/projects/$projectId/activities'
+      path: '/activities'
+      fullPath: '/projects/$projectId/activities'
+      preLoaderRoute: typeof ProjectsProjectIdActivitiesRouteImport
       parentRoute: typeof ProjectsProjectIdRouteRoute
     }
     '/organizations/$organizationId/settings': {
@@ -580,73 +640,73 @@ declare module '@tanstack/react-router' {
     }
     '/projects/$projectId/activities/$activityId/upload': {
       id: '/projects/$projectId/activities/$activityId/upload'
-      path: '/activities/$activityId/upload'
+      path: '/$activityId/upload'
       fullPath: '/projects/$projectId/activities/$activityId/upload'
       preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdUploadRouteImport
-      parentRoute: typeof ProjectsProjectIdRouteRoute
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute
     }
     '/projects/$projectId/activities/$activityId/settings': {
       id: '/projects/$projectId/activities/$activityId/settings'
-      path: '/activities/$activityId/settings'
+      path: '/$activityId/settings'
       fullPath: '/projects/$projectId/activities/$activityId/settings'
       preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdSettingsRouteImport
-      parentRoute: typeof ProjectsProjectIdRouteRoute
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute
     }
     '/projects/$projectId/activities/$activityId/schema': {
       id: '/projects/$projectId/activities/$activityId/schema'
-      path: '/activities/$activityId/schema'
+      path: '/$activityId/schema'
       fullPath: '/projects/$projectId/activities/$activityId/schema'
       preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdSchemaRouteImport
-      parentRoute: typeof ProjectsProjectIdRouteRoute
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute
     }
     '/projects/$projectId/activities/$activityId/processing': {
       id: '/projects/$projectId/activities/$activityId/processing'
-      path: '/activities/$activityId/processing'
+      path: '/$activityId/processing'
       fullPath: '/projects/$projectId/activities/$activityId/processing'
       preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdProcessingRouteImport
-      parentRoute: typeof ProjectsProjectIdRouteRoute
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute
     }
     '/projects/$projectId/activities/$activityId/overview': {
       id: '/projects/$projectId/activities/$activityId/overview'
-      path: '/activities/$activityId/overview'
+      path: '/$activityId/overview'
       fullPath: '/projects/$projectId/activities/$activityId/overview'
       preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdOverviewRouteImport
-      parentRoute: typeof ProjectsProjectIdRouteRoute
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute
     }
     '/projects/$projectId/activities/$activityId/insights': {
       id: '/projects/$projectId/activities/$activityId/insights'
-      path: '/activities/$activityId/insights'
+      path: '/$activityId/insights'
       fullPath: '/projects/$projectId/activities/$activityId/insights'
       preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdInsightsRouteImport
-      parentRoute: typeof ProjectsProjectIdRouteRoute
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute
     }
     '/projects/$projectId/activities/$activityId/brief': {
       id: '/projects/$projectId/activities/$activityId/brief'
-      path: '/activities/$activityId/brief'
+      path: '/$activityId/brief'
       fullPath: '/projects/$projectId/activities/$activityId/brief'
       preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdBriefRouteImport
-      parentRoute: typeof ProjectsProjectIdRouteRoute
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute
     }
     '/projects/$projectId/activities/$activityId/analytics': {
       id: '/projects/$projectId/activities/$activityId/analytics'
-      path: '/activities/$activityId/analytics'
+      path: '/$activityId/analytics'
       fullPath: '/projects/$projectId/activities/$activityId/analytics'
       preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdAnalyticsRouteImport
-      parentRoute: typeof ProjectsProjectIdRouteRoute
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute
     }
     '/projects/$projectId/activities/$activityId/analysis': {
       id: '/projects/$projectId/activities/$activityId/analysis'
-      path: '/activities/$activityId/analysis'
+      path: '/$activityId/analysis'
       fullPath: '/projects/$projectId/activities/$activityId/analysis'
       preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdAnalysisRouteImport
-      parentRoute: typeof ProjectsProjectIdRouteRoute
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute
     }
     '/projects/$projectId/activities/$activityId/data-review/': {
       id: '/projects/$projectId/activities/$activityId/data-review/'
-      path: '/activities/$activityId/data-review'
+      path: '/$activityId/data-review'
       fullPath: '/projects/$projectId/activities/$activityId/data-review/'
       preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRouteImport
-      parentRoute: typeof ProjectsProjectIdRouteRoute
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute
     }
   }
 }
@@ -684,11 +744,7 @@ const OrganizationsOrganizationIdRouteRouteWithChildren =
     OrganizationsOrganizationIdRouteRouteChildren,
   )
 
-interface ProjectsProjectIdRouteRouteChildren {
-  ProjectsProjectIdAnalyticsRoute: typeof ProjectsProjectIdAnalyticsRoute
-  ProjectsProjectIdInsightsRoute: typeof ProjectsProjectIdInsightsRoute
-  ProjectsProjectIdSettingsRoute: typeof ProjectsProjectIdSettingsRoute
-  ProjectsProjectIdIndexRoute: typeof ProjectsProjectIdIndexRoute
+interface ProjectsProjectIdActivitiesRouteChildren {
   ProjectsProjectIdActivitiesActivityIdAnalysisRoute: typeof ProjectsProjectIdActivitiesActivityIdAnalysisRoute
   ProjectsProjectIdActivitiesActivityIdAnalyticsRoute: typeof ProjectsProjectIdActivitiesActivityIdAnalyticsRoute
   ProjectsProjectIdActivitiesActivityIdBriefRoute: typeof ProjectsProjectIdActivitiesActivityIdBriefRoute
@@ -701,12 +757,8 @@ interface ProjectsProjectIdRouteRouteChildren {
   ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute: typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute
 }
 
-const ProjectsProjectIdRouteRouteChildren: ProjectsProjectIdRouteRouteChildren =
+const ProjectsProjectIdActivitiesRouteChildren: ProjectsProjectIdActivitiesRouteChildren =
   {
-    ProjectsProjectIdAnalyticsRoute: ProjectsProjectIdAnalyticsRoute,
-    ProjectsProjectIdInsightsRoute: ProjectsProjectIdInsightsRoute,
-    ProjectsProjectIdSettingsRoute: ProjectsProjectIdSettingsRoute,
-    ProjectsProjectIdIndexRoute: ProjectsProjectIdIndexRoute,
     ProjectsProjectIdActivitiesActivityIdAnalysisRoute:
       ProjectsProjectIdActivitiesActivityIdAnalysisRoute,
     ProjectsProjectIdActivitiesActivityIdAnalyticsRoute:
@@ -727,6 +779,33 @@ const ProjectsProjectIdRouteRouteChildren: ProjectsProjectIdRouteRouteChildren =
       ProjectsProjectIdActivitiesActivityIdUploadRoute,
     ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute:
       ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute,
+  }
+
+const ProjectsProjectIdActivitiesRouteWithChildren =
+  ProjectsProjectIdActivitiesRoute._addFileChildren(
+    ProjectsProjectIdActivitiesRouteChildren,
+  )
+
+interface ProjectsProjectIdRouteRouteChildren {
+  ProjectsProjectIdActivitiesRoute: typeof ProjectsProjectIdActivitiesRouteWithChildren
+  ProjectsProjectIdAnalyticsRoute: typeof ProjectsProjectIdAnalyticsRoute
+  ProjectsProjectIdEvidenceRoute: typeof ProjectsProjectIdEvidenceRoute
+  ProjectsProjectIdInsightsRoute: typeof ProjectsProjectIdInsightsRoute
+  ProjectsProjectIdInterpretationRoute: typeof ProjectsProjectIdInterpretationRoute
+  ProjectsProjectIdSettingsRoute: typeof ProjectsProjectIdSettingsRoute
+  ProjectsProjectIdIndexRoute: typeof ProjectsProjectIdIndexRoute
+}
+
+const ProjectsProjectIdRouteRouteChildren: ProjectsProjectIdRouteRouteChildren =
+  {
+    ProjectsProjectIdActivitiesRoute:
+      ProjectsProjectIdActivitiesRouteWithChildren,
+    ProjectsProjectIdAnalyticsRoute: ProjectsProjectIdAnalyticsRoute,
+    ProjectsProjectIdEvidenceRoute: ProjectsProjectIdEvidenceRoute,
+    ProjectsProjectIdInsightsRoute: ProjectsProjectIdInsightsRoute,
+    ProjectsProjectIdInterpretationRoute: ProjectsProjectIdInterpretationRoute,
+    ProjectsProjectIdSettingsRoute: ProjectsProjectIdSettingsRoute,
+    ProjectsProjectIdIndexRoute: ProjectsProjectIdIndexRoute,
   }
 
 const ProjectsProjectIdRouteRouteWithChildren =

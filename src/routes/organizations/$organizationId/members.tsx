@@ -2,6 +2,7 @@ import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
+import { useOrganizationWorkspacePage } from "@/contexts/organizationWorkspaceContext";
 import {
   useCreateInvitationMutation,
   useOrganizationInvitationsQuery,
@@ -11,7 +12,6 @@ import {
 } from "@/hooks/useGrantready";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { ApiError } from "@/services/apiClient";
-import { useOrganizationWorkspacePage } from "./-organizationWorkspaceContext";
 
 export const Route = createFileRoute("/organizations/$organizationId/members")({
   component: OrganizationMembersPage,
@@ -21,20 +21,22 @@ function OrganizationMembersPage() {
   const { workspace, organizationId } = useOrganizationWorkspacePage();
   const locale = useWorkspaceLocale();
   const [email, setEmail] = useState("");
+  const canManageMembers =
+    workspace.organization.permissions?.canManageMembers ?? false;
   const membersQuery = useOrganizationMembersQuery(
     organizationId,
-    workspace.organization.permissions.canManageMembers,
+    canManageMembers,
   );
   const invitationsQuery = useOrganizationInvitationsQuery(
     organizationId,
-    workspace.organization.permissions.canManageMembers,
+    canManageMembers,
   );
   const createInvitationMutation = useCreateInvitationMutation(organizationId);
   const resendInvitationMutation = useResendInvitationMutation(organizationId);
   const removeMemberMutation =
     useRemoveOrganizationMemberMutation(organizationId);
 
-  if (!workspace.organization.permissions.canManageMembers) {
+  if (!canManageMembers) {
     return (
       <Navigate
         to="/organizations/$organizationId"

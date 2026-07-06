@@ -36,7 +36,7 @@ const de: TranslationDictionary = {
     badge: "KI-gestützte Wirkungsanalyse",
     title: "Organisationen, Projekte und Aktivitäten vor der KI-Verarbeitung.",
     description:
-      "Starten Sie mit dem tatsächlichen Arbeitsablauf Ihres Teams: Organisation anlegen, Projekte erstellen, Aktivitäten verwalten, Nachweise hochladen und Job-Metadaten in einem echten Backend speichern. ImpactPilot interpretiert Ihre Projektdaten automatisch und verwandelt Nachweise in aussagekräftige Analysen, Visualisierungen und Berichte - für fundierte Entscheidungen, eine wirkungsvolle Kommunikation und belastbare Förderberichte.",
+      "Starten Sie mit dem tatsächlichen Arbeitsablauf Ihres Teams: Organisation anlegen, Projekte erstellen, Aktivitäten verwalten, Nachweise hochladen und Job-Metadaten in einem echten Backend speichern. Impact Atlas interpretiert Ihre Projektdaten automatisch und verwandelt Nachweise in aussagekräftige Analysen, Visualisierungen und Berichte - für fundierte Entscheidungen, eine wirkungsvolle Kommunikation und belastbare Förderberichte.",
     createWorkspace: "Workspace erstellen",
     useExistingAccount: "Vorhandenes Konto nutzen",
     features: {
@@ -253,10 +253,11 @@ const de: TranslationDictionary = {
       },
       recentActivityActivitySuffix: "für {{name}}",
     },
-    emptyStateTitle: "Willkommen bei {{name}}",
-    emptyStateDescription: "Jedes Projekt besteht aus Aktivitäten.",
+    emptyStateTitle: "Noch keine Aktivitäten",
+    emptyStateDescription:
+      "Aktivitäten sind Workshops, Trainings, Mentoring-Sessions oder andere Maßnahmen, zu denen Sie Evidenz hochladen.",
     emptyStateSupporting:
-      "In Aktivitäten laden Sie Monitoring-Daten hoch, interpretieren Evidenz und erzeugen Erkenntnisse.",
+      "Legen Sie die erste Aktivität an, um Uploads, Analysen und Erkenntnisse pro Maßnahme getrennt zu verwalten.",
     emptyStateAction: "Erste Aktivität erstellen",
     addAnotherActivity: "Weitere Aktivität hinzufügen",
     activityNamePlaceholder: "Aktivitätsname",
@@ -274,6 +275,130 @@ const de: TranslationDictionary = {
     privacyDescription:
       "Personenbezogene Merkmale bleiben außerhalb der KI-Ebene. Das Backend speichert bereits Uploads und simulierte Job-Fortschritte; die semantische Interpretation folgt später.",
     programmeAnalytics: "Programm-Analysen",
+  },
+  projectWorkspace: {
+    noDescription: "Es wurde noch keine Projektzusammenfassung hinterlegt.",
+    tabs: {
+      overview: "Übersicht",
+      activities: "Aktivitäten",
+      evidence: "Evidenz",
+      interpretation: "Interpretation",
+      analytics: "Analysen",
+      insights: "Erkenntnisse",
+    },
+    overview: {
+      title: "Übersicht",
+      description:
+        "Prüfen Sie das vollständige Projektprofil, das Wirkungsmodell und den Berichtskontext. Bearbeiten Sie hier bei Bedarf die Programmdetails.",
+    },
+    activities: {
+      title: "Aktivitäten",
+      description:
+        "Planen und verwalten Sie die Maßnahmen, an die Evidenz, Auswertung und Berichterstattung in diesem Projekt gebunden sind.",
+      emptyTitle: "Noch keine Aktivitäten",
+      emptyDescription:
+        "Aktivitäten sind Workshops, Mentoring-Sessions, Trainings oder andere Maßnahmen, zu denen Evidenz gesammelt wird.",
+      emptyAction: "Erste Aktivität erstellen",
+      defaultType: "Aktivität",
+      noDescription: "Noch keine Aktivitätsbeschreibung vorhanden.",
+      noDate: "Noch kein Datum festgelegt",
+      evidenceCount: "{{count}} Evidenzdateien",
+      uploadCount: "{{count}} Uploads",
+      insightCount: "{{count}} Erkenntnisse",
+      openActivity: "Aktivität öffnen",
+      editActivity: "Bearbeiten",
+    },
+    evidence: {
+      title: "Evidenz",
+      description:
+        "Verwalten Sie hochgeladene Dateien nach Aktivität. Evidenz bleibt immer der Maßnahme zugeordnet, zu der sie gehört.",
+      emptyTitle: "Noch keine Aktivitäten für Evidenz vorhanden",
+      emptyDescription:
+        "Legen Sie zuerst eine Aktivität an. Jeder Evidenz-Upload in Impact Atlas gehört zu einer konkreten Aktivität.",
+      openActivity: "Aktivität öffnen",
+      uploadAction: "Evidenz hochladen",
+      uploading: "{{name}} wird hochgeladen…",
+      loading: "Evidenz wird geladen…",
+      noFiles: "Für diese Aktivität wurde noch keine Evidenz hochgeladen.",
+      openFile: "Datei öffnen",
+      analyzeFile: "Analysieren",
+      removeFile: "Entfernen",
+      removeSuccess: "Evidenz entfernt.",
+      removeFailed: "Evidenz konnte nicht entfernt werden.",
+      openFailed: "{{name}} konnte nicht geöffnet werden.",
+    },
+    interpretation: {
+      title: "Interpretation",
+      description:
+        "Prüfen Sie, wie Impact Atlas hochgeladene Evidenz versteht, wo die Zuordnung belastbar ist und wo noch Klärung nötig bleibt.",
+      metrics: {
+        understanding: "Evidenzverständnis",
+        uploads: "Interpretierte Uploads",
+        indicators: "Erkannte Indikatoren",
+        questions: "Offene Fragen",
+      },
+      progress: {
+        title: "Fortschritt",
+        read: "Dateien eingelesen",
+        detect: "Schema und Entitäten erkannt",
+        link: "Aktivitäten und Outputs verknüpft",
+        ready: "Bereit für Analysen",
+      },
+      datasetSummaryTitle: "Datensatzübersicht",
+      datasetSummaryFiles: "{{count}} Dateien verknüpft",
+      datasetSummaryActivities: "{{count}} Aktivitäten verknüpft",
+      ready: "Bereit für Analysen",
+      notReady: "Wartet noch auf Bestätigung",
+      understoodTitle: "Was Impact Atlas bereits versteht",
+      empty:
+        "Es sind noch keine Aktivitäten vorhanden. Legen Sie eine Aktivität an und laden Sie Evidenz hoch, um die Interpretation zu starten.",
+      questionsTitle: "Wobei Impact Atlas noch Hilfe braucht",
+      defaultQuestion:
+        "Für diese Aktivität gibt es noch Evidenz, die nicht vollständig interpretiert wurde. Prüfen Sie, wie die hochgeladenen Daten eingeordnet werden sollen.",
+      noQuestions: "Derzeit gibt es keine offenen Interpretationsfragen.",
+      askPanelTitle: "Impact Atlas fragen",
+      askPanelDescription:
+        "Nutzen Sie dieses Feld, um Zuordnungen zu hinterfragen, Indikatoren umzubenennen oder eine andere Interpretation anzufordern.",
+      askPanelPlaceholder:
+        "Warum wurde das als Teilnahme klassifiziert? Diese Spalte ignorieren. Das als Teilnehmenden-ID behandeln.",
+      askPanelNote:
+        "Diese Gesprächsebene ist aktuell ein leichter Platzhalter für den späteren Analysten-Workflow.",
+      prompts: {
+        attendance: "Warum wurde das als Teilnahme klassifiziert?",
+        ignoreColumn: "Diese Spalte ignorieren.",
+        renameIndicator: "Diesen Indikator umbenennen.",
+        excludeCancelled: "Abgesagte Termine ausschließen.",
+      },
+      cardMeaning: "Erkannte Bedeutung",
+      cardMeaningResolved: "Bedeutung geklärt",
+      cardMeaningPending: "Wartet auf Prüfung",
+      cardConfidence: "Vertrauen",
+      cardReason: "Begründung",
+      cardReasonResolved: "Durch interpretierte Evidenz gestützt",
+      cardReasonPending: "Benötigt Bestätigung vor Analysen",
+      confidenceHigh: "Hoch",
+      confidenceMedium: "Mittel",
+      confidenceLow: "Niedrig",
+      noEvidenceYet: "Noch keine Evidenz hochgeladen.",
+    },
+    analytics: {
+      title: "Analysen",
+      description:
+        "Prüfen Sie deterministische Kennzahlen und Diagramme, die aus interpretierter Evidenz berechnet wurden.",
+      notReadyTitle: "Analysen sind noch nicht bereit",
+      notReadyDescription:
+        "Analysen werden verfügbar, sobald genügend Evidenz erfolgreich hochgeladen und interpretiert wurde.",
+    },
+    insights: {
+      title: "Erkenntnisse",
+      description:
+        "Übersetzen Sie Analysen in narrative Erkenntnisse, Risiken und Empfehlungen für Berichte und Entscheidungen.",
+      notReadyTitle: "Erkenntnisse sind noch nicht bereit",
+      notReadyDescription:
+        "Erkenntnisse erscheinen, sobald Evidenz interpretiert wurde und mindestens eine Erkenntnis für dieses Projekt vorliegt.",
+      executiveSummary: "Kurzfassung",
+      nextSteps: "Empfohlene nächste Schritte",
+    },
   },
   projectAnalytics: {
     loading: "Analysen werden geladen…",
@@ -925,6 +1050,8 @@ const de: TranslationDictionary = {
     members: "Mitglieder",
     billing: "Abrechnung",
     sectionTitle: "Projekte",
+    myProjectsSection: "Meine Projekte",
+    allProjectsSection: "Alle Projekte",
     projectSingular: "Projekt",
     projectPlural: "Projekte",
     addProject: "Projekt hinzufügen",
@@ -932,7 +1059,7 @@ const de: TranslationDictionary = {
     addActivity: "Aktivität hinzufügen",
     noProjects: "Noch keine Projekte",
     createFirstProject:
-      "Erstellen Sie Ihr erstes Projekt, um den Workspace zu starten.",
+      "Öffnen Sie die Projektseite, um Ihr erstes Projekt anzulegen.",
     overview: "Übersicht",
     analytics: "Analysen",
     insights: "Erkenntnisse",
@@ -959,7 +1086,7 @@ const de: TranslationDictionary = {
   organizationCard: {
     eyebrow: "Organisation",
     noMission:
-      "Fügen Sie eine kurze Mission hinzu, damit der Workspace leichter erkennbar ist.",
+      "Fügen Sie in den Organisationseinstellungen eine Mission hinzu.",
     members: "Mitglieder",
     projects: "Projekte",
     workspace: "Workspace",
@@ -971,26 +1098,42 @@ const de: TranslationDictionary = {
     adminTitle: "Organisations-Workspace",
     managerTitle: "Mein Workspace",
     adminDescription:
-      "Behalten Sie die gesamte Organisation im Blick, respektieren Sie Projektverantwortung und führen Sie Ihr Team in den Evidenz-Workflow.",
+      "Öffnen Sie zuletzt bearbeitete Projekte, verfolgen Sie aktuelle Aktivität und sehen Sie, wo im Workspace noch Evidenz fehlt.",
     managerDescription:
-      "Sie sind Teil dieser Organisation. Öffnen Sie Ihre Projekte oder erstellen Sie das nächste Projekt, das Sie betreuen möchten.",
+      "Setzen Sie die Arbeit in Ihren Projekten fort, prüfen Sie letzte Änderungen und erkennen Sie früh, wo Nachweise noch fehlen.",
     primaryAction: "Projekt erstellen",
     emptyTitle: "Noch keine Projekte",
     emptyDescription:
-      "Projekte organisieren Nachweise über Aktivitäten, Uploads, Analysen und Erkenntnisse hinweg.",
+      "Projekte werden auf der Projektseite angelegt. Dort verwalten Sie die vollständige Projektliste Ihres Workspaces.",
+    emptyManagerTitle: "Willkommen bei {{organization}}",
+    emptyManagerDescription:
+      "Starten Sie mit Ihrem ersten Projekt. Projekte strukturieren Evidenz über Aktivitäten, Uploads, Analysen und Erkenntnisse hinweg.",
     emptyAction: "Erstes Projekt erstellen",
-    projectOverview: "Projektüberblick",
     myProjects: "Meine Projekte",
+    continueWorking: "Weiterarbeiten",
+    continueWorkingDescription:
+      "Setzen Sie dort an, wo zuletzt Evidenz, Aktivitäten oder Berichte gepflegt wurden.",
+    viewAllProjects: "Alle Projekte ansehen",
     recentActivity: "Letzte Aktivität",
-    membersSummary: "Mitgliederübersicht",
-    manageMembers: "Mitglieder verwalten",
-    analyticsPlaceholder: "Organisationsanalysen",
-    analyticsAdminDescription:
-      "Hier werden organisationsweite Analysen und Erkenntnisse sichtbar, sobald mehr Evidenz vorliegt.",
-    analyticsManagerDescription:
-      "Nutzen Sie Ihre Projekte, um Evidenz aufzubauen. Organisationsweite Analysen bleiben für Admins sichtbar.",
+    recentActivityDescription:
+      "Diese Aktivitäten wurden im Workspace zuletzt bearbeitet.",
+    noRecentActivity: "Noch keine Aktivität im Workspace.",
+    recentActivityUploads: "{{count}} Uploads",
+    projectsNeedingAttention: "Projekte mit Handlungsbedarf",
+    projectsNeedingAttentionDescription:
+      "Hier sehen Sie Projekte, in denen Aktivitäten oder Evidenz noch fehlen.",
+    allProjectsOnTrack:
+      "Derzeit benötigt kein Projekt im Workspace unmittelbare Aufmerksamkeit.",
+    openProjectsPage: "Zur Projektseite",
+    attentionReasons: {
+      noActivities: "Diesem Projekt fehlt noch die erste Aktivität.",
+      noEvidence:
+        "Für dieses Projekt wurde in den vorhandenen Aktivitäten noch keine Evidenz hochgeladen.",
+      partialEvidence:
+        "{{missing}} von {{total}} Aktivitäten haben noch keine Evidenz.",
+    },
     activitiesLabel: "Aktivitäten",
-    noProjectDescription: "Noch kein Projektziel hinterlegt.",
+    noProjectDescription: "Noch kein Projektprofil hinterlegt.",
   },
   organizationSettings: {
     eyebrow: "Workspace-Einstellungen",
@@ -1066,8 +1209,15 @@ const de: TranslationDictionary = {
     description:
       "Öffnen Sie ein bestehendes Projekt oder erstellen Sie das nächste Projekt, das Sie betreuen möchten.",
     primaryAction: "Projekt erstellen",
+    emptyTitle: "Noch keine Projekte in diesem Workspace",
+    emptyDescription:
+      "Sobald Projekte angelegt sind, werden sie hier als zentrale Einstiegspunkte für Aktivitäten, Uploads, Analysen und Erkenntnisse angezeigt.",
     noDescription: "Noch kein Projektziel hinterlegt.",
     activities: "Aktivitäten",
+  },
+  projectCard: {
+    activities: "Aktivitäten",
+    updated: "Aktualisiert",
   },
   organizationActivities: {
     eyebrow: "Aktivitäten",
@@ -1199,6 +1349,9 @@ const de: TranslationDictionary = {
     createActivityTitle: "Aktivität hinzufügen",
     createActivityDescription:
       "Erfassen Sie die Umsetzungsdetails für eine Projektaktivität.",
+    editActivityTitle: "Aktivität bearbeiten",
+    editActivityDescription:
+      "Aktualisieren Sie die Umsetzungsdetails dieser Projektaktivität.",
     project: {
       submit: "Projekt erstellen",
       creating: "Projekt wird erstellt…",
@@ -1266,9 +1419,13 @@ const de: TranslationDictionary = {
     },
     activity: {
       submit: "Aktivität erstellen",
+      updateSubmit: "Änderungen speichern",
       creating: "Aktivität wird erstellt…",
+      updating: "Aktivität wird gespeichert…",
       success: "Aktivität wurde erstellt.",
       failure: "Aktivität konnte nicht erstellt werden.",
+      updateSuccess: "Aktivität wurde aktualisiert.",
+      updateFailure: "Aktivität konnte nicht aktualisiert werden.",
       name: "Aktivitätsname",
       namePlaceholder: "Schulung für Senior-Mentorinnen und -Mentoren",
       description: "Beschreibung",

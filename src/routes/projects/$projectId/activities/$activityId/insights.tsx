@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityTabs } from "@/components/activityTabs";
 import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
+import { useProjectHierarchy } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
 import {
   useActivityResultsQuery,
@@ -25,6 +26,7 @@ function ActivityInsightsPage() {
   const activityQuery = useActivityQuery(activityId, Boolean(auth.token));
   const resultsQuery = useActivityResultsQuery(activityId, Boolean(auth.token));
   const { t } = useTranslation();
+  const hierarchy = useProjectHierarchy();
 
   if (
     !auth.token ||
@@ -58,16 +60,19 @@ function ActivityInsightsPage() {
     <>
       <TopBar
         crumbs={[
+          hierarchy.organizationCrumb,
+          hierarchy.projectsCrumb,
+          hierarchy.projectCrumb,
+          { label: hierarchy.activitiesLabel },
           {
-            label: project.name,
-            to: "/projects/$projectId",
-            params: { projectId },
+            label: activity.name,
+            to: "/projects/$projectId/activities/$activityId/overview",
+            params: { projectId, activityId },
           },
-          { label: activity.name },
           { label: t("activityInsights.crumb") },
         ]}
       />
-      <div className="mx-auto w-full max-w-6xl px-8 py-10">
+      <div className="mx-auto w-full max-w-6xl px-8 py-8">
         <PageHeader
           eyebrow={t("activityInsights.eyebrow")}
           title={t("activityInsights.title")}

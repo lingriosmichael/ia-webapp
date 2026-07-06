@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ActivityTabs } from "@/components/activityTabs";
 import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
+import { useProjectHierarchy } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
 import {
   useActivityJobsQuery,
@@ -56,6 +57,7 @@ function ActivityBriefPage() {
     Boolean(auth.token) && Boolean(latestJobId),
   );
   const { t, i18n } = useTranslation();
+  const hierarchy = useProjectHierarchy();
 
   const [file, setFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
@@ -180,16 +182,14 @@ function ActivityBriefPage() {
     <>
       <TopBar
         crumbs={[
-          {
-            label: project.name,
-            to: "/projects/$projectId",
-            params: { projectId },
-          },
+          hierarchy.organizationCrumb,
+          hierarchy.projectsCrumb,
+          hierarchy.projectCrumb,
+          { label: hierarchy.activitiesLabel },
           { label: activity.name },
-          { label: t("activityBrief.crumb") },
         ]}
       />
-      <div className="mx-auto w-full max-w-6xl px-8 py-10">
+      <div className="mx-auto w-full max-w-6xl px-8 py-8">
         <PageHeader
           eyebrow={t("activityBrief.eyebrow")}
           title={activity.name}

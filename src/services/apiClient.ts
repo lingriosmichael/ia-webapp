@@ -66,6 +66,7 @@ export interface OrganizationSummary {
   name: string;
   mission: string | null;
   logoUrl: string | null;
+  memberCount: number | null;
   settings: OrganizationSettings;
   role: OrganizationRole;
   permissions: OrganizationPermissions;
@@ -229,6 +230,22 @@ export interface CreateActivityPayload {
   status?: ActivityStatus;
 }
 
+export interface UpdateActivityPayload {
+  name?: string;
+  description?: string | null;
+  activityType?: string | null;
+  owner?: string | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  objectives?: string | null;
+  expectedOutcomes?: string | null;
+  successIndicators?: string | null;
+  targetAudience?: string | null;
+  additionalContext?: string | null;
+  beneficiaryGroup?: string | null;
+  status?: ActivityStatus;
+}
+
 export interface WorkspaceActivity extends ActivitySummary {
   uploadMetadataCount: number;
   processingJobCount: number;
@@ -341,6 +358,13 @@ export interface ActivityUploadResponse {
   job: ProcessingJobRecord;
 }
 
+export interface UpdateUploadMetadataPayload {
+  contentType?: string | null;
+  sizeBytes?: number | null;
+  storageKey?: string | null;
+  status?: UploadMetadataRecord["status"];
+}
+
 export class ApiError extends Error {
   constructor(
     message: string,
@@ -414,6 +438,23 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   }
 
   return payload.data;
+}
+
+async function requestBlob(path: string, init?: RequestInit): Promise<Blob> {
+  const token = getAccessToken();
+  const response = await fetch(`${apiBaseUrl}${path}`, {
+    ...init,
+    headers: {
+      ...(token ? { authorization: `Bearer ${token}` } : {}),
+      ...(init?.headers ?? {}),
+    },
+  });
+
+  if (!response.ok) {
+    throw new ApiError("Request failed.", response.status);
+  }
+
+  return response.blob();
 }
 
 export const apiClient = {
@@ -624,8 +665,31 @@ export const apiClient = {
   getActivity(activityId: string): Promise<ActivitySummary> {
     return request(`/activities/${activityId}`);
   },
+  updateActivity(
+    activityId: string,
+    payload: UpdateActivityPayload,
+  ): Promise<ActivitySummary> {
+    return request(`/activities/${activityId}`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  },
   listActivityUploads(activityId: string): Promise<UploadMetadataRecord[]> {
     return request(`/activities/${activityId}/upload-metadata`);
+  },
+  updateUploadMetadata(
+    uploadMetadataId: string,
+    payload: UpdateUploadMetadataPayload,
+  ): Promise<UploadMetadataRecord> {
+    return request(`/upload-metadata/${uploadMetadataId}`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  },
+  downloadUploadMetadataFile(uploadMetadataId: string): Promise<Blob> {
+    return requestBlob(`/upload-metadata/${uploadMetadataId}/file`);
   },
   listActivityJobs(activityId: string): Promise<ProcessingJobRecord[]> {
     return request(`/activities/${activityId}/jobs`);

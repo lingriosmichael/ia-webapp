@@ -1,6 +1,7 @@
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Card } from "@/components/workspaceUI";
+import { ProjectWorkspacePageContext } from "@/contexts/projectWorkspaceContext";
 import { WorkspaceShell } from "@/components/workspaceShell";
 import { useRequireAuth, useLogout } from "@/hooks/useAuth";
 import {
@@ -37,33 +38,43 @@ function ProjectLayout() {
   }
 
   return (
-    <WorkspaceShell
-      organizationId={workspaceQuery.data.organization.id}
-      organizationName={workspaceQuery.data.organization.name}
-      organizationRole={workspaceQuery.data.organization.role}
-      organizationPermissions={workspaceQuery.data.organization.permissions}
-      organizationLogoUrl={workspaceQuery.data.organization.logoUrl}
-      userName={auth.data?.user.fullName ?? auth.data?.user.email ?? "Account"}
-      projects={workspaceQuery.data.projects}
-      currentProjectId={projectId}
-      onLogout={logout}
+    <ProjectWorkspacePageContext.Provider
+      value={{
+        projectId,
+        project: projectQuery.data,
+        workspace: workspaceQuery.data,
+      }}
     >
-      {projectQuery.data.permissions.canEdit ? null : (
-        <div className="px-8 pt-8">
-          <Card className="border-primary/20 bg-primary-soft/40 px-5 py-4 shadow-none">
-            <div className="text-sm font-semibold text-primary">
-              {t("project.readOnlyBannerTitle")}
-            </div>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {t("project.readOnlyBannerDescription", {
-                owner: projectQuery.data.ownerName ?? t("project.unknownOwner"),
-              })}
-            </p>
-          </Card>
-        </div>
-      )}
-      <Outlet />
-    </WorkspaceShell>
+      <WorkspaceShell
+        organizationId={workspaceQuery.data.organization.id}
+        organizationName={workspaceQuery.data.organization.name}
+        organizationRole={workspaceQuery.data.organization.role}
+        organizationLogoUrl={workspaceQuery.data.organization.logoUrl}
+        userName={
+          auth.data?.user.fullName ?? auth.data?.user.email ?? "Account"
+        }
+        projects={workspaceQuery.data.projects}
+        currentProjectId={projectId}
+        onLogout={logout}
+      >
+        {projectQuery.data.permissions.canEdit ? null : (
+          <div className="px-8 pt-8">
+            <Card className="border-primary/20 bg-primary-soft/40 px-5 py-4 shadow-none">
+              <div className="text-sm font-semibold text-primary">
+                {t("project.readOnlyBannerTitle")}
+              </div>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {t("project.readOnlyBannerDescription", {
+                  owner:
+                    projectQuery.data.ownerName ?? t("project.unknownOwner"),
+                })}
+              </p>
+            </Card>
+          </div>
+        )}
+        <Outlet />
+      </WorkspaceShell>
+    </ProjectWorkspacePageContext.Provider>
   );
 }
 

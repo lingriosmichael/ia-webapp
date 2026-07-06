@@ -643,9 +643,6 @@ export function ProjectSettingsPanel({
         {isEditing ? (
           <Card className="p-6 sm:p-8">
             <div className="flex flex-wrap items-center justify-end gap-3">
-              <Button type="button" variant="outline" onClick={onCancelEditing}>
-                {locale.projectSettings.cancelEditAction}
-              </Button>
               <Button
                 type="submit"
                 disabled={updateProjectMutation.isPending || !hasChanges}

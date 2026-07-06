@@ -1,7 +1,7 @@
 import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { useOrganizationWorkspacePage } from "@/contexts/organizationWorkspaceContext";
 import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
-import { useOrganizationWorkspacePage } from "./-organizationWorkspaceContext";
 
 export const Route = createFileRoute("/organizations/$organizationId/billing")({
   component: OrganizationBillingPage,
@@ -10,8 +10,10 @@ export const Route = createFileRoute("/organizations/$organizationId/billing")({
 function OrganizationBillingPage() {
   const { workspace } = useOrganizationWorkspacePage();
   const locale = useWorkspaceLocale();
+  const canManageBilling =
+    workspace.organization.permissions?.canManageBilling ?? false;
 
-  if (!workspace.organization.permissions.canManageBilling) {
+  if (!canManageBilling) {
     return (
       <Navigate
         to="/organizations/$organizationId"

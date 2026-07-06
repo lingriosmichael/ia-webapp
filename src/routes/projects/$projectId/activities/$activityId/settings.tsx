@@ -3,6 +3,7 @@ import { FileText, Settings2, ShieldCheck, UserRound } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { ActivityTabs } from "@/components/activityTabs";
 import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
+import { useProjectHierarchy } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useActivityQuery, useProjectQuery } from "@/hooks/useGrantready";
 import { resolveProjectSummaryText } from "@/lib/projectSummary";
@@ -20,6 +21,7 @@ function ActivitySettingsPage() {
   const projectQuery = useProjectQuery(projectId, Boolean(auth.token));
   const activityQuery = useActivityQuery(activityId, Boolean(auth.token));
   const { t, i18n } = useTranslation();
+  const hierarchy = useProjectHierarchy();
 
   if (!auth.token || projectQuery.isLoading || activityQuery.isLoading) {
     return <CenteredState label={t("activitySettings.loading")} />;
@@ -42,16 +44,19 @@ function ActivitySettingsPage() {
     <>
       <TopBar
         crumbs={[
+          hierarchy.organizationCrumb,
+          hierarchy.projectsCrumb,
+          hierarchy.projectCrumb,
+          { label: hierarchy.activitiesLabel },
           {
-            label: project.name,
-            to: "/projects/$projectId",
-            params: { projectId },
+            label: activity.name,
+            to: "/projects/$projectId/activities/$activityId/overview",
+            params: { projectId, activityId },
           },
-          { label: activity.name },
           { label: t("activitySettings.crumb") },
         ]}
       />
-      <div className="mx-auto w-full max-w-5xl px-8 py-10">
+      <div className="mx-auto w-full max-w-5xl px-8 py-8">
         <PageHeader
           eyebrow={t("activitySettings.eyebrow")}
           title={t("activitySettings.title")}

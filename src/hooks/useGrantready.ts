@@ -20,6 +20,7 @@ import {
   type ResultRecord,
   type SessionResponse,
   type UpdateProjectPayload,
+  type UpdateActivityPayload,
   type UploadMetadataRecord,
 } from "@/services/apiClient";
 
@@ -417,6 +418,39 @@ export function useCreateActivityMutation(
   });
 }
 
+export function useUpdateActivityMutation(
+  activityId: string,
+  projectId: string,
+  organizationId?: string,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: UpdateActivityPayload) =>
+      apiClient.updateActivity(activityId, payload),
+    onSuccess: (activity) => {
+      queryClient.setQueryData<ActivitySummary>(activityQueryKey(activityId), activity);
+      void queryClient.invalidateQueries({
+        queryKey: activityQueryKey(activityId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: projectActivitiesQueryKey(projectId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: projectQueryKey(projectId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: projectOverviewQueryKey(projectId),
+      });
+      if (organizationId) {
+        void queryClient.invalidateQueries({
+          queryKey: workspaceQueryKey(organizationId),
+        });
+      }
+    },
+  });
+}
+
 export function useUploadActivityFileMutation(
   activityId: string,
   projectId?: string,
@@ -444,6 +478,42 @@ export function useUploadActivityFileMutation(
         });
         void queryClient.invalidateQueries({
           queryKey: projectQueryKey(projectId),
+        });
+      }
+    },
+  });
+}
+
+export function useArchiveUploadMetadataMutation(
+  activityId: string,
+  projectId?: string,
+  organizationId?: string,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (uploadMetadataId: string) =>
+      apiClient.updateUploadMetadata(uploadMetadataId, {
+        status: "archived",
+      }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: activityUploadsQueryKey(activityId),
+      });
+      if (projectId) {
+        void queryClient.invalidateQueries({
+          queryKey: projectOverviewQueryKey(projectId),
+        });
+        void queryClient.invalidateQueries({
+          queryKey: projectActivitiesQueryKey(projectId),
+        });
+        void queryClient.invalidateQueries({
+          queryKey: projectQueryKey(projectId),
+        });
+      }
+      if (organizationId) {
+        void queryClient.invalidateQueries({
+          queryKey: workspaceQueryKey(organizationId),
         });
       }
     },

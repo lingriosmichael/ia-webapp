@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import type {
   ActivityStatus,
+  ActivitySummary,
   CreateActivityPayload,
+  WorkspaceActivity,
 } from "@/services/apiClient";
 import {
   EntityDialog,
@@ -55,11 +57,15 @@ export function ActivityDialog({
   open,
   onOpenChange,
   isSubmitting,
+  mode = "create",
+  initialActivity,
   onSubmit,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   isSubmitting?: boolean;
+  mode?: "create" | "edit";
+  initialActivity?: ActivitySummary | WorkspaceActivity | null;
   onSubmit: (payload: CreateActivityPayload) => Promise<void> | void;
 }) {
   const locale = useWorkspaceLocale();
@@ -68,8 +74,29 @@ export function ActivityDialog({
   useEffect(() => {
     if (!open) {
       setForm(initialState);
+      return;
     }
-  }, [open]);
+
+    if (initialActivity) {
+      setForm({
+        name: initialActivity.name,
+        description: initialActivity.description ?? "",
+        activityType: initialActivity.activityType ?? "",
+        owner: initialActivity.owner ?? "",
+        startDate: toDateInputValue(initialActivity.startDate),
+        endDate: toDateInputValue(initialActivity.endDate),
+        objectives: initialActivity.objectives ?? "",
+        expectedOutcomes: initialActivity.expectedOutcomes ?? "",
+        successIndicators: initialActivity.successIndicators ?? "",
+        targetAudience: initialActivity.targetAudience ?? "",
+        beneficiaryGroup: initialActivity.beneficiaryGroup ?? "",
+        status: initialActivity.status,
+      });
+      return;
+    }
+
+    setForm(initialState);
+  }, [initialActivity, open]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -95,15 +122,27 @@ export function ActivityDialog({
   }
 
   return (
-    <EntityDialog
+      <EntityDialog
       open={open}
       onOpenChange={onOpenChange}
-      title={locale.dialogs.createActivityTitle}
-      description={locale.dialogs.createActivityDescription}
+      title={
+        mode === "edit"
+          ? locale.dialogs.editActivityTitle
+          : locale.dialogs.createActivityTitle
+      }
+      description={
+        mode === "edit"
+          ? locale.dialogs.editActivityDescription
+          : locale.dialogs.createActivityDescription
+      }
       submitLabel={
         isSubmitting
-          ? locale.dialogs.activity.creating
-          : locale.dialogs.activity.submit
+          ? mode === "edit"
+            ? locale.dialogs.activity.updating
+            : locale.dialogs.activity.creating
+          : mode === "edit"
+            ? locale.dialogs.activity.updateSubmit
+            : locale.dialogs.activity.submit
       }
       cancelLabel={locale.dialogs.cancel}
       isSubmitting={isSubmitting}
@@ -304,4 +343,8 @@ export function ActivityDialog({
       </DialogSection>
     </EntityDialog>
   );
+}
+
+function toDateInputValue(value: string | null) {
+  return value ? value.slice(0, 10) : "";
 }

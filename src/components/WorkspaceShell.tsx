@@ -5,6 +5,7 @@ import {
   useCreateActivityMutation,
   useCreateProjectMutation,
   useDeleteProjectMutation,
+  useUpdateActivityMutation,
 } from "@/hooks/useGrantready";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { rememberActiveOrganizationId } from "@/lib/organizationSelection";
@@ -16,14 +17,19 @@ import {
   ApiError,
   type CreateActivityPayload,
   type CreateProjectPayload,
-  type OrganizationPermissions,
   type OrganizationRole,
+  type UpdateActivityPayload,
+  type ActivitySummary,
   type WorkspaceProject,
+  type WorkspaceActivity,
 } from "@/services/apiClient";
 
 interface WorkspaceShellContextValue {
   openProjectDialog: () => void;
-  openActivityDialog: (projectId: string) => void;
+  openActivityDialog: (
+    projectId: string,
+    activity?: ActivitySummary | WorkspaceActivity | null,
+  ) => void;
   openProjectDeleteDialog: (project: {
     id: string;
     name: string;
@@ -49,7 +55,6 @@ export function WorkspaceShell({
   organizationId,
   organizationName,
   organizationRole,
-  organizationPermissions,
   organizationLogoUrl,
   userName,
   projects,
@@ -60,7 +65,6 @@ export function WorkspaceShell({
   organizationId: string;
   organizationName: string;
   organizationRole: OrganizationRole;
-  organizationPermissions: OrganizationPermissions;
   organizationLogoUrl: string | null;
   userName: string;
   projects: WorkspaceProject[];
@@ -71,9 +75,10 @@ export function WorkspaceShell({
   const navigate = useNavigate();
   const locale = useWorkspaceLocale();
   const [projectDialogOpen, setProjectDialogOpen] = useState(false);
-  const [activityDialogProjectId, setActivityDialogProjectId] = useState<
-    string | null
-  >(null);
+  const [activityDialogTarget, setActivityDialogTarget] = useState<{
+    projectId: string;
+    activity: ActivitySummary | WorkspaceActivity | null;
+  } | null>(null);
   const [projectDeleteTarget, setProjectDeleteTarget] = useState<{
     id: string;
     name: string;
@@ -83,14 +88,23 @@ export function WorkspaceShell({
   const createProjectMutation = useCreateProjectMutation(organizationId);
   const deleteProjectMutation = useDeleteProjectMutation(organizationId);
   const activeActivityProjectId = useMemo(
-    () => activityDialogProjectId ?? currentProjectId ?? "",
-    [activityDialogProjectId, currentProjectId],
+    () => activityDialogTarget?.projectId ?? currentProjectId ?? "",
+    [activityDialogTarget?.projectId, currentProjectId],
+  );
+  const editingActivity = useMemo(
+    () => activityDialogTarget?.activity ?? null,
+    [activityDialogTarget],
   );
   const currentProject = useMemo(
     () => projects.find((project) => project.id === currentProjectId) ?? null,
     [currentProjectId, projects],
   );
   const createActivityMutation = useCreateActivityMutation(
+    activeActivityProjectId,
+    organizationId,
+  );
+  const updateActivityMutation = useUpdateActivityMutation(
+    editingActivity?.id ?? "",
     activeActivityProjectId,
     organizationId,
   );
@@ -102,8 +116,8 @@ export function WorkspaceShell({
   const workspaceShellActions = useMemo<WorkspaceShellContextValue>(
     () => ({
       openProjectDialog: () => setProjectDialogOpen(true),
-      openActivityDialog: (projectId: string) =>
-        setActivityDialogProjectId(projectId),
+      openActivityDialog: (projectId: string, activity = null) =>
+        setActivityDialogTarget({ projectId, activity }),
       openProjectDeleteDialog: (project) => setProjectDeleteTarget(project),
     }),
     [],
@@ -133,10 +147,42 @@ export function WorkspaceShell({
       throw new Error("No project selected for activity creation.");
     }
 
+    if (editingActivity) {
+      const updatePayload: UpdateActivityPayload = {
+        name: payload.name,
+        description: payload.description ?? null,
+        activityType: payload.activityType ?? null,
+        owner: payload.owner ?? null,
+        startDate: payload.startDate ?? null,
+        endDate: payload.endDate ?? null,
+        objectives: payload.objectives ?? null,
+        expectedOutcomes: payload.expectedOutcomes ?? null,
+        successIndicators: payload.successIndicators ?? null,
+        targetAudience: payload.targetAudience ?? null,
+        beneficiaryGroup: payload.beneficiaryGroup ?? null,
+        status: payload.status,
+      };
+
+      try {
+        await updateActivityMutation.mutateAsync(updatePayload);
+        toast.success(locale.dialogs.activity.updateSuccess);
+        setActivityDialogTarget(null);
+      } catch (error) {
+        const message =
+          error instanceof ApiError
+            ? error.message
+            : locale.dialogs.activity.updateFailure;
+        toast.error(message);
+        throw error;
+      }
+
+      return;
+    }
+
     try {
       const activity = await createActivityMutation.mutateAsync(payload);
       toast.success(locale.dialogs.activity.success);
-      setActivityDialogProjectId(null);
+      setActivityDialogTarget(null);
       void navigate({
         to: "/projects/$projectId/activities/$activityId/overview",
         params: {
@@ -190,16 +236,12 @@ export function WorkspaceShell({
         <AppSidebar
           organizationName={organizationName}
           organizationRole={organizationRole}
-          organizationPermissions={organizationPermissions}
           organizationLogoUrl={organizationLogoUrl}
           organizationId={organizationId}
           userName={userName}
           projects={projects}
           currentProjectId={currentProjectId}
           currentProject={currentProject}
-          onCreateProject={workspaceShellActions.openProjectDialog}
-          onCreateActivity={workspaceShellActions.openActivityDialog}
-          onDeleteProject={workspaceShellActions.openProjectDeleteDialog}
           onLogout={onLogout}
         />
 
@@ -213,13 +255,19 @@ export function WorkspaceShell({
         />
 
         <ActivityDialog
-          open={Boolean(activityDialogProjectId)}
+          open={Boolean(activityDialogTarget)}
           onOpenChange={(open) => {
             if (!open) {
-              setActivityDialogProjectId(null);
+              setActivityDialogTarget(null);
             }
           }}
-          isSubmitting={createActivityMutation.isPending}
+          isSubmitting={
+            editingActivity
+              ? updateActivityMutation.isPending
+              : createActivityMutation.isPending
+          }
+          mode={editingActivity ? "edit" : "create"}
+          initialActivity={editingActivity}
           onSubmit={handleCreateActivity}
         />
 

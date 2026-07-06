@@ -1,11 +1,11 @@
 import { Outlet, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { WorkspaceShell } from "@/components/workspaceShell";
+import { OrganizationWorkspacePageContext } from "@/contexts/organizationWorkspaceContext";
 import { useLogout, useRequireAuth } from "@/hooks/useAuth";
 import { useOrganizationWorkspaceQuery } from "@/hooks/useGrantready";
 import { resolveActiveOrganizationId } from "@/lib/organizationSelection";
 import { resolveWorkspaceDestination } from "@/lib/workspaceRouting";
-import { OrganizationWorkspacePageContext } from "./-organizationWorkspaceContext";
 
 export const Route = createFileRoute("/organizations/$organizationId")({
   component: OrganizationLayout,
@@ -71,7 +71,6 @@ function OrganizationLayout() {
         organizationId={workspaceQuery.data.organization.id}
         organizationName={workspaceQuery.data.organization.name}
         organizationRole={workspaceQuery.data.organization.role}
-        organizationPermissions={workspaceQuery.data.organization.permissions}
         organizationLogoUrl={workspaceQuery.data.organization.logoUrl}
         userName={userName}
         projects={workspaceQuery.data.projects}

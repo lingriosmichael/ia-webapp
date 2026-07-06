@@ -53,7 +53,7 @@ export function OrganizationSettingsPanel({
 }) {
   const locale = useWorkspaceLocale();
   const { i18n } = useTranslation();
-  const canEdit = organization.permissions.canManageSettings;
+  const canEdit = organization.permissions?.canManageSettings ?? false;
   const updateOrganizationMutation = useUpdateOrganizationMutation(
     organization.id,
   );

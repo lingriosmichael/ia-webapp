@@ -34,7 +34,7 @@ const en = {
     badge: "AI-supported impact analysis",
     title: "Organizations, projects, and activities before AI processing.",
     description:
-      "Start with the workflow your team will actually use: onboard an organization, create projects, track activities, upload evidence, and store job metadata on a real backend. ImpactPilot automatically interprets your project data and turns evidence into meaningful analyses, visualizations, and reports for sound decisions, effective communication, and reliable funder reporting.",
+      "Start with the workflow your team will actually use: onboard an organization, create projects, track activities, upload evidence, and store job metadata on a real backend. Impact Atlas automatically interprets your project data and turns evidence into meaningful analyses, visualizations, and reports for sound decisions, effective communication, and reliable funder reporting.",
     createWorkspace: "Create workspace",
     useExistingAccount: "Use existing account",
     features: {
@@ -248,10 +248,11 @@ const en = {
       },
       recentActivityActivitySuffix: "for {{name}}",
     },
-    emptyStateTitle: "Welcome to {{name}}",
-    emptyStateDescription: "Every project is made up of activities.",
+    emptyStateTitle: "No activities yet",
+    emptyStateDescription:
+      "Activities are workshops, trainings, mentoring sessions, or other interventions where you upload evidence.",
     emptyStateSupporting:
-      "Activities are where you upload monitoring data, interpret evidence, and generate insights.",
+      "Create the first activity to keep uploads, analytics, and insights separate for each intervention.",
     emptyStateAction: "Create your first activity",
     addAnotherActivity: "Add another activity",
     activityNamePlaceholder: "Activity name",
@@ -268,6 +269,129 @@ const en = {
     privacyDescription:
       "Personal identifiers stay out of the AI layer. The backend already stores uploads and mocked job progression; semantic interpretation comes later.",
     programmeAnalytics: "Programme analytics",
+  },
+  projectWorkspace: {
+    noDescription: "No project summary has been added yet.",
+    tabs: {
+      overview: "Overview",
+      activities: "Activities",
+      evidence: "Evidence",
+      interpretation: "Interpretation",
+      analytics: "Analytics",
+      insights: "Insights",
+    },
+    overview: {
+      title: "Overview",
+      description:
+        "Review the full project profile, logic model, and reporting context. Edit the programme details here when needed.",
+    },
+    activities: {
+      title: "Activities",
+      description:
+        "Plan and manage the interventions that structure evidence collection and reporting for this project.",
+      emptyTitle: "No activities yet",
+      emptyDescription:
+        "Activities are workshops, mentoring sessions, trainings, or other interventions where evidence is collected.",
+      emptyAction: "Create first activity",
+      defaultType: "Activity",
+      noDescription: "No activity description yet.",
+      noDate: "No date set yet",
+      evidenceCount: "{{count}} evidence files",
+      uploadCount: "{{count}} uploads",
+      insightCount: "{{count}} insights",
+      openActivity: "Open activity",
+      editActivity: "Edit",
+    },
+    evidence: {
+      title: "Evidence",
+      description:
+        "Manage uploaded files by activity. Evidence stays grouped by the work it belongs to.",
+      emptyTitle: "No activities available for evidence yet",
+      emptyDescription:
+        "Create an activity first. Every evidence upload in Impact Atlas belongs to a specific activity.",
+      openActivity: "Open activity",
+      uploadAction: "Upload evidence",
+      uploading: "{{name}} is being uploaded…",
+      loading: "Loading evidence…",
+      noFiles: "No evidence uploaded yet for this activity.",
+      openFile: "Open file",
+      analyzeFile: "Analyze",
+      removeFile: "Remove",
+      removeSuccess: "Evidence removed.",
+      removeFailed: "Evidence could not be removed.",
+      openFailed: "{{name}} could not be opened.",
+    },
+    interpretation: {
+      title: "Interpretation",
+      description:
+        "Review how Impact Atlas understands uploaded evidence, where confidence is strong, and where clarification is still needed.",
+      metrics: {
+        understanding: "Evidence understanding",
+        uploads: "Uploads interpreted",
+        indicators: "Indicators detected",
+        questions: "Questions remaining",
+      },
+      progress: {
+        title: "Progress",
+        read: "Read files",
+        detect: "Detect schema and entities",
+        link: "Link activities and outputs",
+        ready: "Ready for analytics",
+      },
+      datasetSummaryTitle: "Dataset summary",
+      datasetSummaryFiles: "{{count}} files linked",
+      datasetSummaryActivities: "{{count}} activities linked",
+      ready: "Ready for analytics",
+      notReady: "Still waiting for confirmation",
+      understoodTitle: "Things Impact Atlas understands",
+      empty: "No activities are available yet. Add an activity and upload evidence to begin interpretation.",
+      questionsTitle: "Things Impact Atlas still needs help with",
+      defaultQuestion:
+        "This activity still has evidence that has not been fully interpreted. Review how the uploaded data should be classified.",
+      noQuestions: "No open interpretation questions right now.",
+      askPanelTitle: "Ask Impact Atlas",
+      askPanelDescription:
+        "Use this panel to challenge classifications, rename indicators, or request a different interpretation.",
+      askPanelPlaceholder:
+        "Why was this classified as attendance? Ignore this column. Treat this as a participant identifier.",
+      askPanelNote:
+        "This conversational layer is currently a lightweight placeholder for the future analyst workflow.",
+      prompts: {
+        attendance: "Why was this classified as attendance?",
+        ignoreColumn: "Ignore this column.",
+        renameIndicator: "Rename this indicator.",
+        excludeCancelled: "Exclude cancelled sessions.",
+      },
+      cardMeaning: "Detected meaning",
+      cardMeaningResolved: "Meaning resolved",
+      cardMeaningPending: "Waiting for review",
+      cardConfidence: "Confidence",
+      cardReason: "Reason",
+      cardReasonResolved: "Backed by interpreted evidence",
+      cardReasonPending: "Needs confirmation before analytics",
+      confidenceHigh: "High",
+      confidenceMedium: "Medium",
+      confidenceLow: "Low",
+      noEvidenceYet: "No evidence uploaded yet.",
+    },
+    analytics: {
+      title: "Analytics",
+      description:
+        "Review deterministic metrics and charts generated from interpreted evidence.",
+      notReadyTitle: "Analytics are not ready yet",
+      notReadyDescription:
+        "Analytics become available once enough evidence has been uploaded and interpreted successfully.",
+    },
+    insights: {
+      title: "Insights",
+      description:
+        "Translate analytics into narrative findings, risks, and recommendations for reporting and decision-making.",
+      notReadyTitle: "Insights are not ready yet",
+      notReadyDescription:
+        "Insights appear after evidence has been interpreted and at least one insight has been generated for this project.",
+      executiveSummary: "Executive summary",
+      nextSteps: "Suggested next steps",
+    },
   },
   projectAnalytics: {
     loading: "Loading analytics…",
@@ -903,13 +1027,15 @@ const en = {
     members: "Members",
     billing: "Billing",
     sectionTitle: "Projects",
+    myProjectsSection: "My Projects",
+    allProjectsSection: "All Projects",
     projectSingular: "Project",
     projectPlural: "Projects",
     addProject: "Add project",
     activities: "Activities",
     addActivity: "Add activity",
     noProjects: "No projects yet",
-    createFirstProject: "Create your first project to start the workspace.",
+    createFirstProject: "Open the projects page to create your first project.",
     overview: "Overview",
     analytics: "Analytics",
     insights: "Insights",
@@ -935,8 +1061,7 @@ const en = {
   },
   organizationCard: {
     eyebrow: "Organization",
-    noMission:
-      "Add a short mission statement to make this workspace easier to recognize.",
+    noMission: "Add a mission in organization settings.",
     members: "Members",
     projects: "Projects",
     workspace: "Workspace",
@@ -948,26 +1073,42 @@ const en = {
     adminTitle: "Organization workspace",
     managerTitle: "My workspace",
     adminDescription:
-      "View the full organization, monitor project ownership, and guide the team into the evidence workflow.",
+      "Open recently updated projects, review current activity, and see where evidence is still missing across the workspace.",
     managerDescription:
-      "You are part of this organization. Open your projects or create the next one you want to manage.",
+      "Continue work in your projects, review recent changes, and catch missing evidence early.",
     primaryAction: "Create project",
     emptyTitle: "No projects yet",
     emptyDescription:
-      "Projects help organize evidence across activities, uploads, analytics, and insights.",
+      "Projects are created from the projects page. That page holds the full project list for this workspace.",
+    emptyManagerTitle: "Welcome to {{organization}}",
+    emptyManagerDescription:
+      "Start by creating your first project. Projects help you organize evidence across activities, uploads, analytics, and insights.",
     emptyAction: "Create your first project",
-    projectOverview: "Project overview",
     myProjects: "My projects",
+    continueWorking: "Continue working",
+    continueWorkingDescription:
+      "Pick up where evidence, activities, or reporting work last moved forward.",
+    viewAllProjects: "View all projects",
     recentActivity: "Recent activity",
-    membersSummary: "Members summary",
-    manageMembers: "Manage members",
-    analyticsPlaceholder: "Organization analytics",
-    analyticsAdminDescription:
-      "Organization-wide analytics and insights will expand here as more evidence flows in.",
-    analyticsManagerDescription:
-      "Use your projects to build evidence. Organization-wide analytics remain visible to admins.",
+    recentActivityDescription:
+      "These activities were updated most recently across the workspace.",
+    noRecentActivity: "No activity yet in this workspace.",
+    recentActivityUploads: "{{count}} uploads",
+    projectsNeedingAttention: "Projects needing attention",
+    projectsNeedingAttentionDescription:
+      "These projects are still missing activities or evidence.",
+    allProjectsOnTrack:
+      "No project currently needs immediate attention in this workspace.",
+    openProjectsPage: "Open projects page",
+    attentionReasons: {
+      noActivities: "This project still needs its first activity.",
+      noEvidence:
+        "No evidence has been uploaded yet for the activities in this project.",
+      partialEvidence:
+        "{{missing}} of {{total}} activities are still missing evidence.",
+    },
     activitiesLabel: "activities",
-    noProjectDescription: "No project goal captured yet.",
+    noProjectDescription: "No project profile captured yet.",
   },
   organizationSettings: {
     eyebrow: "Workspace Settings",
@@ -1041,8 +1182,15 @@ const en = {
     description:
       "Open an existing project or create the next one you want to manage.",
     primaryAction: "Create project",
+    emptyTitle: "No projects in this workspace yet",
+    emptyDescription:
+      "Once projects are created, this page becomes the main place to open them and move into activities, uploads, analytics, and insights.",
     noDescription: "No project goal captured yet.",
     activities: "activities",
+  },
+  projectCard: {
+    activities: "activities",
+    updated: "Updated",
   },
   organizationActivities: {
     eyebrow: "Activities",
@@ -1172,6 +1320,9 @@ const en = {
     createActivityTitle: "Add activity",
     createActivityDescription:
       "Capture the delivery details for a project activity.",
+    editActivityTitle: "Edit activity",
+    editActivityDescription:
+      "Update the delivery details for this project activity.",
     project: {
       submit: "Create project",
       creating: "Creating project…",
@@ -1237,9 +1388,13 @@ const en = {
     },
     activity: {
       submit: "Create activity",
+      updateSubmit: "Save changes",
       creating: "Creating activity…",
+      updating: "Saving activity…",
       success: "Activity created.",
       failure: "Activity creation failed.",
+      updateSuccess: "Activity updated.",
+      updateFailure: "Activity update failed.",
       name: "Activity name",
       namePlaceholder: "Senior Mentor Training",
       description: "Description",
