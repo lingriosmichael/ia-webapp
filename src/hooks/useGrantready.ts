@@ -7,6 +7,8 @@ import {
   type CreateActivityPayload,
   type CreateOrganizationPayload,
   type CreateProjectPayload,
+  type DeleteActivityResponse,
+  type DeleteEvidenceResponse,
   type DeleteProjectPayload,
   type DeleteProjectResponse,
   type InvitationAcceptanceSummary,
@@ -454,6 +456,7 @@ export function useUpdateActivityMutation(
 export function useUploadActivityFileMutation(
   activityId: string,
   projectId?: string,
+  organizationId?: string,
 ) {
   const queryClient = useQueryClient();
 
@@ -463,12 +466,6 @@ export function useUploadActivityFileMutation(
       void queryClient.invalidateQueries({
         queryKey: activityUploadsQueryKey(activityId),
       });
-      void queryClient.invalidateQueries({
-        queryKey: activityJobsQueryKey(activityId),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: activityResultsQueryKey(activityId),
-      });
       if (projectId) {
         void queryClient.invalidateQueries({
           queryKey: projectOverviewQueryKey(projectId),
@@ -480,22 +477,25 @@ export function useUploadActivityFileMutation(
           queryKey: projectQueryKey(projectId),
         });
       }
+      if (organizationId) {
+        void queryClient.invalidateQueries({
+          queryKey: workspaceQueryKey(organizationId),
+        });
+      }
     },
   });
 }
 
-export function useArchiveUploadMetadataMutation(
+export function useDeleteEvidenceMutation(
   activityId: string,
   projectId?: string,
   organizationId?: string,
 ) {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<DeleteEvidenceResponse, ApiError>({
     mutationFn: (uploadMetadataId: string) =>
-      apiClient.updateUploadMetadata(uploadMetadataId, {
-        status: "archived",
-      }),
+      apiClient.deleteEvidence(uploadMetadataId),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: activityUploadsQueryKey(activityId),
@@ -511,6 +511,46 @@ export function useArchiveUploadMetadataMutation(
           queryKey: projectQueryKey(projectId),
         });
       }
+      if (organizationId) {
+        void queryClient.invalidateQueries({
+          queryKey: workspaceQueryKey(organizationId),
+        });
+      }
+    },
+  });
+}
+
+export function useDeleteActivityMutation(
+  activityId: string,
+  projectId: string,
+  organizationId?: string,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation<DeleteActivityResponse, ApiError>({
+    mutationFn: () => apiClient.deleteActivity(activityId),
+    onSuccess: () => {
+      queryClient.removeQueries({
+        queryKey: activityQueryKey(activityId),
+      });
+      queryClient.removeQueries({
+        queryKey: activityUploadsQueryKey(activityId),
+      });
+      queryClient.removeQueries({
+        queryKey: activityJobsQueryKey(activityId),
+      });
+      queryClient.removeQueries({
+        queryKey: activityResultsQueryKey(activityId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: projectActivitiesQueryKey(projectId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: projectOverviewQueryKey(projectId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: projectQueryKey(projectId),
+      });
       if (organizationId) {
         void queryClient.invalidateQueries({
           queryKey: workspaceQueryKey(organizationId),

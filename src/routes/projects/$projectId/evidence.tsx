@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Database, Sparkles, Trash2, UploadCloud } from "lucide-react";
 import type { ChangeEvent } from "react";
 import { useRef, useState } from "react";
@@ -12,7 +12,7 @@ import {
 } from "@/contexts/projectWorkspaceContext";
 import {
   useActivityUploadsQuery,
-  useArchiveUploadMetadataMutation,
+  useDeleteEvidenceMutation,
   useUploadActivityFileMutation,
 } from "@/hooks/useGrantready";
 import { translateStatus } from "@/lib/translationUtils";
@@ -75,20 +75,21 @@ function EvidenceActivityGroup({
   projectId: string;
   organizationId: string;
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const uploadsQuery = useActivityUploadsQuery(activity.id, true);
-  const uploadMutation = useUploadActivityFileMutation(activity.id, projectId);
-  const archiveMutation = useArchiveUploadMetadataMutation(
+  const uploadMutation = useUploadActivityFileMutation(
+    activity.id,
+    projectId,
+    organizationId,
+  );
+  const deleteEvidenceMutation = useDeleteEvidenceMutation(
     activity.id,
     projectId,
     organizationId,
   );
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploadingName, setUploadingName] = useState<string | null>(null);
-
-  const uploads = (uploadsQuery.data ?? []).filter(
-    (upload) => upload.status !== "archived",
-  );
+  const uploads = uploadsQuery.data ?? [];
 
   async function onPickFile(event: ChangeEvent<HTMLInputElement>) {
     const nextFile = event.target.files?.[0];
@@ -118,7 +119,7 @@ function EvidenceActivityGroup({
 
   async function removeFile(uploadMetadataId: string) {
     try {
-      await archiveMutation.mutateAsync(uploadMetadataId);
+      await deleteEvidenceMutation.mutateAsync(uploadMetadataId);
       toast.success(t("projectWorkspace.evidence.removeSuccess"));
     } catch (error) {
       toast.error(
@@ -127,6 +128,41 @@ function EvidenceActivityGroup({
           : t("projectWorkspace.evidence.removeFailed"),
       );
     }
+  }
+
+  function formatFileSize(sizeBytes: number | null) {
+    if (sizeBytes === null) {
+      return t("projectWorkspace.evidence.unknownSize");
+    }
+
+    if (sizeBytes < 1024) {
+      return `${sizeBytes} B`;
+    }
+
+    if (sizeBytes < 1024 * 1024) {
+      return `${(sizeBytes / 1024).toFixed(1)} KB`;
+    }
+
+    return `${(sizeBytes / (1024 * 1024)).toFixed(1)} MB`;
+  }
+
+  function formatEvidenceType(
+    contentType: string | null,
+    originalFileName: string,
+  ) {
+    if (contentType) {
+      return contentType;
+    }
+
+    const extension = originalFileName.split(".").pop()?.toUpperCase();
+    return extension ?? t("projectWorkspace.evidence.unknownType");
+  }
+
+  function formatUploadedAt(createdAt: string) {
+    return new Intl.DateTimeFormat(i18n.language, {
+      dateStyle: "medium",
+      timeStyle: "short",
+    }).format(new Date(createdAt));
   }
 
   return (
@@ -186,29 +222,54 @@ function EvidenceActivityGroup({
           {uploads.map((upload) => (
             <div
               key={upload.id}
-              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-secondary/20 px-4 py-3"
+              className="flex flex-wrap items-start justify-between gap-4 rounded-xl border border-border bg-secondary/20 px-4 py-3"
             >
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <div className="truncate text-sm font-medium text-foreground">
                   {upload.originalFileName}
                 </div>
-                <div className="mt-1 text-xs text-muted-foreground">
-                  {translateStatus(t, upload.status)}
+                <div className="mt-2 grid gap-1 text-xs text-muted-foreground sm:grid-cols-2">
+                  <div>
+                    {t("projectWorkspace.evidence.metadataType")}:{" "}
+                    {formatEvidenceType(
+                      upload.contentType,
+                      upload.originalFileName,
+                    )}
+                  </div>
+                  <div>
+                    {t("projectWorkspace.evidence.metadataSize")}:{" "}
+                    {formatFileSize(upload.sizeBytes)}
+                  </div>
+                  <div>
+                    {t("projectWorkspace.evidence.metadataUploadedAt")}:{" "}
+                    {formatUploadedAt(upload.createdAt)}
+                  </div>
+                  <div>
+                    {t("projectWorkspace.evidence.metadataUploadedBy")}:{" "}
+                    {upload.uploadedByName ??
+                      t("projectWorkspace.evidence.unknownUploader")}
+                  </div>
+                  <div className="sm:col-span-2">
+                    {t("projectWorkspace.evidence.metadataStatus")}:{" "}
+                    {translateStatus(t, upload.status)}
+                  </div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Link
-                  to="/projects/$projectId/activities/$activityId/analysis"
-                  params={{ projectId, activityId: activity.id }}
-                  className="inline-flex h-8 items-center gap-1 rounded-md border border-border bg-background px-3 text-sm font-medium text-foreground hover:bg-secondary"
+                <button
+                  type="button"
+                  disabled
+                  title={t("projectWorkspace.evidence.analyzeDisabledHint")}
+                  className="inline-flex h-8 cursor-not-allowed items-center gap-1 rounded-md border border-border bg-background px-3 text-sm font-medium text-foreground/50 opacity-70"
                 >
                   <Sparkles className="h-4 w-4" />
                   {t("projectWorkspace.evidence.analyzeFile")}
-                </Link>
+                </button>
                 {activity.permissions.canUploadEvidence ? (
                   <button
                     type="button"
                     onClick={() => removeFile(upload.id)}
+                    disabled={deleteEvidenceMutation.isPending}
                     className="inline-flex h-8 items-center gap-1 rounded-md border border-destructive/25 bg-background px-3 text-sm font-medium text-destructive hover:bg-destructive/5"
                   >
                     <Trash2 className="h-4 w-4" />

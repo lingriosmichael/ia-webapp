@@ -50,7 +50,6 @@ function ActivityBriefPage() {
   const uploadsQuery = useActivityUploadsQuery(activityId, Boolean(auth.token));
   const jobsQuery = useActivityJobsQuery(activityId, Boolean(auth.token));
   const resultsQuery = useActivityResultsQuery(activityId, Boolean(auth.token));
-  const uploadMutation = useUploadActivityFileMutation(activityId, projectId);
   const latestJobId = jobsQuery.data?.[0]?.id;
   const latestJobQuery = useJobQuery(
     latestJobId,
@@ -58,6 +57,11 @@ function ActivityBriefPage() {
   );
   const { t, i18n } = useTranslation();
   const hierarchy = useProjectHierarchy();
+  const uploadMutation = useUploadActivityFileMutation(
+    activityId,
+    projectId,
+    hierarchy.organizationCrumb.params.organizationId,
+  );
 
   const [file, setFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);

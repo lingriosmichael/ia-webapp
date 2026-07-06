@@ -22,7 +22,7 @@ function ProjectActivitiesPage() {
   const auth = useRequireAuth();
   const locale = useWorkspaceLocale();
   const { openActivityDialog } = useWorkspaceShell();
-  const { project } = useProjectWorkspacePage();
+  const { project, workspace } = useProjectWorkspacePage();
   const workspaceProject = useCurrentWorkspaceProject();
   const activitiesQuery = useProjectActivitiesQuery(projectId, Boolean(auth.token));
 
@@ -98,6 +98,7 @@ function ProjectActivitiesPage() {
                 key={activity.id}
                 activity={activity}
                 projectId={projectId}
+                organizationId={workspace.organization.id}
               />
             ))}
           </div>

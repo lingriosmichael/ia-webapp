@@ -304,6 +304,7 @@ export interface UploadMetadataRecord {
   storageKey: string | null;
   status: "pending" | "uploaded" | "archived";
   uploadedById: string;
+  uploadedByName: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -355,14 +356,17 @@ export interface SessionResponse {
 
 export interface ActivityUploadResponse {
   upload: UploadMetadataRecord;
-  job: ProcessingJobRecord;
 }
 
-export interface UpdateUploadMetadataPayload {
-  contentType?: string | null;
-  sizeBytes?: number | null;
-  storageKey?: string | null;
-  status?: UploadMetadataRecord["status"];
+export interface DeleteEvidenceResponse {
+  id: string;
+  activityId: string | null;
+  projectId: string;
+}
+
+export interface DeleteActivityResponse {
+  id: string;
+  projectId: string;
 }
 
 export class ApiError extends Error {
@@ -675,21 +679,21 @@ export const apiClient = {
       body: JSON.stringify(payload),
     });
   },
-  listActivityUploads(activityId: string): Promise<UploadMetadataRecord[]> {
-    return request(`/activities/${activityId}/upload-metadata`);
+  deleteActivity(activityId: string): Promise<DeleteActivityResponse> {
+    return request(`/activities/${activityId}`, {
+      method: "DELETE",
+    });
   },
-  updateUploadMetadata(
-    uploadMetadataId: string,
-    payload: UpdateUploadMetadataPayload,
-  ): Promise<UploadMetadataRecord> {
-    return request(`/upload-metadata/${uploadMetadataId}`, {
-      method: "PATCH",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(payload),
+  listActivityUploads(activityId: string): Promise<UploadMetadataRecord[]> {
+    return request(`/activities/${activityId}/evidence`);
+  },
+  deleteEvidence(evidenceId: string): Promise<DeleteEvidenceResponse> {
+    return request(`/evidence/${evidenceId}`, {
+      method: "DELETE",
     });
   },
   downloadUploadMetadataFile(uploadMetadataId: string): Promise<Blob> {
-    return requestBlob(`/upload-metadata/${uploadMetadataId}/file`);
+    return requestBlob(`/evidence/${uploadMetadataId}/file`);
   },
   listActivityJobs(activityId: string): Promise<ProcessingJobRecord[]> {
     return request(`/activities/${activityId}/jobs`);
@@ -704,7 +708,7 @@ export const apiClient = {
     const formData = new FormData();
     formData.append("file", file);
 
-    return request(`/activities/${activityId}/uploads`, {
+    return request(`/activities/${activityId}/evidence`, {
       method: "POST",
       body: formData,
     });
