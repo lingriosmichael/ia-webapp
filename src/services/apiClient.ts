@@ -298,10 +298,15 @@ export interface UploadMetadataRecord {
   organizationId: string;
   projectId: string;
   activityId: string | null;
+  logicalEvidenceId: string;
+  versionNumber: number;
+  replacesUploadMetadataId: string | null;
+  supersededAt: string | null;
   originalFileName: string;
   contentType: string | null;
   sizeBytes: number | null;
   storageKey: string | null;
+  originalFileDeletedAt: string | null;
   status: "pending" | "uploaded" | "archived";
   uploadedById: string;
   uploadedByName: string | null;
@@ -315,8 +320,24 @@ export interface ProcessingJobRecord {
   projectId: string;
   activityId: string | null;
   uploadMetadataId: string | null;
-  jobType: "semantic_ingestion" | "manual_review" | "export" | "other";
-  status: "queued" | "processing" | "completed" | "failed";
+  jobType:
+    | "evidence_processing"
+    | "dataset_interpretation"
+    | "dataset_review"
+    | "metrics_generation"
+    | "dashboard_generation"
+    | "insight_generation"
+    | "report_generation"
+    | "chat"
+    | "other";
+  status:
+    | "queued"
+    | "processing"
+    | "awaiting_privacy_review"
+    | "transforming"
+    | "completed"
+    | "failed"
+    | "cancelled";
   triggeredById: string;
   payload: Record<string, unknown> | null;
   errorMessage: string | null;
@@ -324,6 +345,10 @@ export interface ProcessingJobRecord {
   updatedAt: string;
   startedAt: string | null;
   completedAt: string | null;
+}
+
+export interface StartEvidenceAnalysisResponse {
+  job: ProcessingJobRecord;
 }
 
 export interface ResultRecord {
@@ -692,6 +717,13 @@ export const apiClient = {
       method: "DELETE",
     });
   },
+  startEvidenceAnalysis(
+    evidenceId: string,
+  ): Promise<StartEvidenceAnalysisResponse> {
+    return request(`/evidence/${evidenceId}/analyse`, {
+      method: "POST",
+    });
+  },
   downloadUploadMetadataFile(uploadMetadataId: string): Promise<Blob> {
     return requestBlob(`/evidence/${uploadMetadataId}/file`);
   },
@@ -715,5 +747,10 @@ export const apiClient = {
   },
   getJob(jobId: string): Promise<ProcessingJobRecord> {
     return request(`/jobs/${jobId}`);
+  },
+  syncJob(jobId: string): Promise<ProcessingJobRecord> {
+    return request(`/jobs/${jobId}/sync`, {
+      method: "POST",
+    });
   },
 };

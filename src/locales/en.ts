@@ -587,8 +587,8 @@ const en = {
       eyebrow: "Add evidence",
       title: "Bring monitoring data into this activity",
       description:
-        "Upload one CSV or Excel file and Impact Atlas will guide you through review, analysis, and insights from here.",
-      cta: "Start AI review",
+        "Upload one CSV, Excel, PDF, DOC, or DOCX file and Impact Atlas will guide you through review, analysis, and insights from here.",
+      cta: "Upload evidence",
       remove: "Remove",
     },
     detail: {
@@ -626,8 +626,8 @@ const en = {
       },
       items: {
         empty: [
-          "Upload a CSV or Excel file from your monitoring process.",
-          "Keep one clean dataset per activity for the clearest AI review.",
+          "Upload a CSV, Excel, PDF, DOC, or DOCX file from your monitoring process.",
+          "Keep one clear evidence file per activity for the cleanest review flow.",
         ],
         uploading: [
           "Keep this page open while the upload completes.",
@@ -670,20 +670,20 @@ const en = {
     eyebrow: "Upload Evidence",
     title: "Upload evidence for {{name}}",
     description:
-      "Drop your CSV or Excel file to start the activity evidence workflow.",
-    dropzoneTitle: "Drag & drop your CSV or Excel file",
+      "Drop your CSV, Excel, PDF, DOC, or DOCX file to attach evidence to this activity.",
+    dropzoneTitle: "Drag & drop your evidence file",
     dropzoneBrowsePrefix: "or",
     dropzoneBrowseAction: "browse from your computer",
-    accepts: "Accepts .csv, .xlsx, .xls",
+    accepts: "Accepts .csv, .xlsx, .xls, .pdf, .doc, .docx",
     storageNote:
-      "Uploaded evidence is prepared for AI review and stays connected to this activity.",
-    existingCounts: "Existing datasets: {{uploads}} · AI runs: {{jobs}}",
+      "Uploaded evidence stays connected to this activity and can be analysed in a later step.",
+    existingCounts: "Existing files: {{uploads}} · jobs: {{jobs}}",
     readyToUpload: "Ready to upload",
     ready: "Ready",
     removeFileAria: "Remove file",
     uploading: "Uploading…",
-    createProcessingJob: "Start AI review",
-    successToast: "Dataset uploaded. AI review has started.",
+    createProcessingJob: "Analyse evidence",
+    successToast: "Evidence uploaded.",
     failedToast: "Upload failed.",
   },
   processing: {
@@ -978,7 +978,7 @@ const en = {
     eyebrow: "Activity Settings",
     title: "Keep this activity aligned",
     description:
-      "Review the core details that guide evidence collection, AI review, and reporting for this activity.",
+      "Review the core details that guide evidence collection, analysis, and reporting for this activity.",
     activityDetailsTitle: "Activity details",
     workflowGuardrailsTitle: "Workflow guardrails",
     workflowGuardrails: [

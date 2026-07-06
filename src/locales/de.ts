@@ -605,8 +605,8 @@ const de: TranslationDictionary = {
       eyebrow: "Evidenz hinzufügen",
       title: "Monitoring-Daten in diese Aktivität bringen",
       description:
-        "Laden Sie eine CSV- oder Excel-Datei hoch. Impact Atlas führt Sie von hier aus durch Prüfung, Analyse und Erkenntnisse.",
-      cta: "KI-Prüfung starten",
+        "Laden Sie eine CSV-, Excel-, PDF-, DOC- oder DOCX-Datei hoch. Impact Atlas führt Sie von hier aus durch Prüfung, Analyse und Erkenntnisse.",
+      cta: "Evidenz hochladen",
       remove: "Entfernen",
     },
     detail: {
@@ -689,20 +689,20 @@ const de: TranslationDictionary = {
     eyebrow: "Nachweise hochladen",
     title: "Nachweise für {{name}} hochladen",
     description:
-      "Legen Sie Ihre CSV- oder Excel-Datei ab, um den Evidenz-Workflow dieser Aktivität zu starten.",
-    dropzoneTitle: "CSV- oder Excel-Datei hierher ziehen",
+      "Legen Sie Ihre CSV-, Excel-, PDF-, DOC- oder DOCX-Datei ab, um Evidenz mit dieser Aktivität zu verknüpfen.",
+    dropzoneTitle: "Evidenzdatei hierher ziehen",
     dropzoneBrowsePrefix: "oder",
     dropzoneBrowseAction: "Datei vom Computer auswählen",
-    accepts: "Akzeptiert .csv, .xlsx, .xls",
+    accepts: "Akzeptiert .csv, .xlsx, .xls, .pdf, .doc, .docx",
     storageNote:
-      "Hochgeladene Evidenz wird für die KI-Prüfung vorbereitet und bleibt mit dieser Aktivität verknüpft.",
-    existingCounts: "Vorhandene Datensätze: {{uploads}} · KI-Läufe: {{jobs}}",
+      "Hochgeladene Evidenz bleibt mit dieser Aktivität verknüpft und kann in einem späteren Schritt analysiert werden.",
+    existingCounts: "Vorhandene Dateien: {{uploads}} · Jobs: {{jobs}}",
     readyToUpload: "Bereit zum Hochladen",
     ready: "Bereit",
     removeFileAria: "Datei entfernen",
     uploading: "Wird hochgeladen…",
-    createProcessingJob: "KI-Prüfung starten",
-    successToast: "Datensatz hochgeladen. Die KI-Prüfung hat begonnen.",
+    createProcessingJob: "Evidenz analysieren",
+    successToast: "Evidenz hochgeladen.",
     failedToast: "Upload fehlgeschlagen.",
   },
   processing: {
@@ -1001,7 +1001,7 @@ const de: TranslationDictionary = {
     eyebrow: "Aktivitätseinstellungen",
     title: "Diese Aktivität sauber ausrichten",
     description:
-      "Prüfen Sie die Kerndaten, die Evidenzsammlung, KI-Prüfung und Reporting für diese Aktivität steuern.",
+      "Prüfen Sie die Kerndaten, die Evidenzsammlung, Analyse und Reporting für diese Aktivität steuern.",
     activityDetailsTitle: "Aktivitätsdetails",
     workflowGuardrailsTitle: "Workflow-Leitplanken",
     workflowGuardrails: [

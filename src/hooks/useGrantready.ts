@@ -150,11 +150,13 @@ export function useActivityResultsQuery(activityId: string, enabled = true) {
 export function useJobQuery(jobId: string | undefined, enabled = true) {
   return useQuery<ProcessingJobRecord, ApiError>({
     queryKey: jobQueryKey(jobId ?? "missing"),
-    queryFn: () => apiClient.getJob(jobId!),
+    queryFn: () => apiClient.syncJob(jobId!),
     enabled: enabled && Boolean(jobId),
     refetchInterval: (query) => {
       const status = query.state.data?.status;
-      return status && ["completed", "failed"].includes(status) ? false : 1000;
+      return status && ["completed", "failed", "cancelled"].includes(status)
+        ? false
+        : 1000;
     },
   });
 }
