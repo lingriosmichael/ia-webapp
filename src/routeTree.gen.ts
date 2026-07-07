@@ -33,6 +33,7 @@ import { Route as OrganizationsOrganizationIdMembersRouteImport } from './routes
 import { Route as OrganizationsOrganizationIdBillingRouteImport } from './routes/organizations/$organizationId/billing'
 import { Route as OrganizationsOrganizationIdActivitiesRouteImport } from './routes/organizations/$organizationId/activities'
 import { Route as InvitationsTokenAcceptRouteImport } from './routes/invitations/$token/accept'
+import { Route as ProjectsProjectIdEvidenceProcessingJobIdReviewRouteImport } from './routes/projects/$projectId/evidence/$processingJobId/review'
 import { Route as ProjectsProjectIdActivitiesActivityIdUploadRouteImport } from './routes/projects/$projectId/activities/$activityId/upload'
 import { Route as ProjectsProjectIdActivitiesActivityIdSettingsRouteImport } from './routes/projects/$projectId/activities/$activityId/settings'
 import { Route as ProjectsProjectIdActivitiesActivityIdSchemaRouteImport } from './routes/projects/$projectId/activities/$activityId/schema'
@@ -178,6 +179,12 @@ const InvitationsTokenAcceptRoute = InvitationsTokenAcceptRouteImport.update({
   path: '/invitations/$token/accept',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectsProjectIdEvidenceProcessingJobIdReviewRoute =
+  ProjectsProjectIdEvidenceProcessingJobIdReviewRouteImport.update({
+    id: '/$processingJobId/review',
+    path: '/$processingJobId/review',
+    getParentRoute: () => ProjectsProjectIdEvidenceRoute,
+  } as any)
 const ProjectsProjectIdActivitiesActivityIdUploadRoute =
   ProjectsProjectIdActivitiesActivityIdUploadRouteImport.update({
     id: '/$activityId/upload',
@@ -258,7 +265,7 @@ export interface FileRoutesByFullPath {
   '/organizations/$organizationId/settings': typeof OrganizationsOrganizationIdSettingsRoute
   '/projects/$projectId/activities': typeof ProjectsProjectIdActivitiesRouteWithChildren
   '/projects/$projectId/analytics': typeof ProjectsProjectIdAnalyticsRoute
-  '/projects/$projectId/evidence': typeof ProjectsProjectIdEvidenceRoute
+  '/projects/$projectId/evidence': typeof ProjectsProjectIdEvidenceRouteWithChildren
   '/projects/$projectId/insights': typeof ProjectsProjectIdInsightsRoute
   '/projects/$projectId/interpretation': typeof ProjectsProjectIdInterpretationRoute
   '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
@@ -273,6 +280,7 @@ export interface FileRoutesByFullPath {
   '/projects/$projectId/activities/$activityId/schema': typeof ProjectsProjectIdActivitiesActivityIdSchemaRoute
   '/projects/$projectId/activities/$activityId/settings': typeof ProjectsProjectIdActivitiesActivityIdSettingsRoute
   '/projects/$projectId/activities/$activityId/upload': typeof ProjectsProjectIdActivitiesActivityIdUploadRoute
+  '/projects/$projectId/evidence/$processingJobId/review': typeof ProjectsProjectIdEvidenceProcessingJobIdReviewRoute
   '/projects/$projectId/activities/$activityId/data-review/': typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute
 }
 export interface FileRoutesByTo {
@@ -292,7 +300,7 @@ export interface FileRoutesByTo {
   '/organizations/$organizationId/settings': typeof OrganizationsOrganizationIdSettingsRoute
   '/projects/$projectId/activities': typeof ProjectsProjectIdActivitiesRouteWithChildren
   '/projects/$projectId/analytics': typeof ProjectsProjectIdAnalyticsRoute
-  '/projects/$projectId/evidence': typeof ProjectsProjectIdEvidenceRoute
+  '/projects/$projectId/evidence': typeof ProjectsProjectIdEvidenceRouteWithChildren
   '/projects/$projectId/insights': typeof ProjectsProjectIdInsightsRoute
   '/projects/$projectId/interpretation': typeof ProjectsProjectIdInterpretationRoute
   '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
@@ -307,6 +315,7 @@ export interface FileRoutesByTo {
   '/projects/$projectId/activities/$activityId/schema': typeof ProjectsProjectIdActivitiesActivityIdSchemaRoute
   '/projects/$projectId/activities/$activityId/settings': typeof ProjectsProjectIdActivitiesActivityIdSettingsRoute
   '/projects/$projectId/activities/$activityId/upload': typeof ProjectsProjectIdActivitiesActivityIdUploadRoute
+  '/projects/$projectId/evidence/$processingJobId/review': typeof ProjectsProjectIdEvidenceProcessingJobIdReviewRoute
   '/projects/$projectId/activities/$activityId/data-review': typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute
 }
 export interface FileRoutesById {
@@ -329,7 +338,7 @@ export interface FileRoutesById {
   '/organizations/$organizationId/settings': typeof OrganizationsOrganizationIdSettingsRoute
   '/projects/$projectId/activities': typeof ProjectsProjectIdActivitiesRouteWithChildren
   '/projects/$projectId/analytics': typeof ProjectsProjectIdAnalyticsRoute
-  '/projects/$projectId/evidence': typeof ProjectsProjectIdEvidenceRoute
+  '/projects/$projectId/evidence': typeof ProjectsProjectIdEvidenceRouteWithChildren
   '/projects/$projectId/insights': typeof ProjectsProjectIdInsightsRoute
   '/projects/$projectId/interpretation': typeof ProjectsProjectIdInterpretationRoute
   '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
@@ -344,6 +353,7 @@ export interface FileRoutesById {
   '/projects/$projectId/activities/$activityId/schema': typeof ProjectsProjectIdActivitiesActivityIdSchemaRoute
   '/projects/$projectId/activities/$activityId/settings': typeof ProjectsProjectIdActivitiesActivityIdSettingsRoute
   '/projects/$projectId/activities/$activityId/upload': typeof ProjectsProjectIdActivitiesActivityIdUploadRoute
+  '/projects/$projectId/evidence/$processingJobId/review': typeof ProjectsProjectIdEvidenceProcessingJobIdReviewRoute
   '/projects/$projectId/activities/$activityId/data-review/': typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute
 }
 export interface FileRouteTypes {
@@ -382,6 +392,7 @@ export interface FileRouteTypes {
     | '/projects/$projectId/activities/$activityId/schema'
     | '/projects/$projectId/activities/$activityId/settings'
     | '/projects/$projectId/activities/$activityId/upload'
+    | '/projects/$projectId/evidence/$processingJobId/review'
     | '/projects/$projectId/activities/$activityId/data-review/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -416,6 +427,7 @@ export interface FileRouteTypes {
     | '/projects/$projectId/activities/$activityId/schema'
     | '/projects/$projectId/activities/$activityId/settings'
     | '/projects/$projectId/activities/$activityId/upload'
+    | '/projects/$projectId/evidence/$processingJobId/review'
     | '/projects/$projectId/activities/$activityId/data-review'
   id:
     | '__root__'
@@ -452,6 +464,7 @@ export interface FileRouteTypes {
     | '/projects/$projectId/activities/$activityId/schema'
     | '/projects/$projectId/activities/$activityId/settings'
     | '/projects/$projectId/activities/$activityId/upload'
+    | '/projects/$projectId/evidence/$processingJobId/review'
     | '/projects/$projectId/activities/$activityId/data-review/'
   fileRoutesById: FileRoutesById
 }
@@ -638,6 +651,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InvitationsTokenAcceptRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/projects/$projectId/evidence/$processingJobId/review': {
+      id: '/projects/$projectId/evidence/$processingJobId/review'
+      path: '/$processingJobId/review'
+      fullPath: '/projects/$projectId/evidence/$processingJobId/review'
+      preLoaderRoute: typeof ProjectsProjectIdEvidenceProcessingJobIdReviewRouteImport
+      parentRoute: typeof ProjectsProjectIdEvidenceRoute
+    }
     '/projects/$projectId/activities/$activityId/upload': {
       id: '/projects/$projectId/activities/$activityId/upload'
       path: '/$activityId/upload'
@@ -786,10 +806,25 @@ const ProjectsProjectIdActivitiesRouteWithChildren =
     ProjectsProjectIdActivitiesRouteChildren,
   )
 
+interface ProjectsProjectIdEvidenceRouteChildren {
+  ProjectsProjectIdEvidenceProcessingJobIdReviewRoute: typeof ProjectsProjectIdEvidenceProcessingJobIdReviewRoute
+}
+
+const ProjectsProjectIdEvidenceRouteChildren: ProjectsProjectIdEvidenceRouteChildren =
+  {
+    ProjectsProjectIdEvidenceProcessingJobIdReviewRoute:
+      ProjectsProjectIdEvidenceProcessingJobIdReviewRoute,
+  }
+
+const ProjectsProjectIdEvidenceRouteWithChildren =
+  ProjectsProjectIdEvidenceRoute._addFileChildren(
+    ProjectsProjectIdEvidenceRouteChildren,
+  )
+
 interface ProjectsProjectIdRouteRouteChildren {
   ProjectsProjectIdActivitiesRoute: typeof ProjectsProjectIdActivitiesRouteWithChildren
   ProjectsProjectIdAnalyticsRoute: typeof ProjectsProjectIdAnalyticsRoute
-  ProjectsProjectIdEvidenceRoute: typeof ProjectsProjectIdEvidenceRoute
+  ProjectsProjectIdEvidenceRoute: typeof ProjectsProjectIdEvidenceRouteWithChildren
   ProjectsProjectIdInsightsRoute: typeof ProjectsProjectIdInsightsRoute
   ProjectsProjectIdInterpretationRoute: typeof ProjectsProjectIdInterpretationRoute
   ProjectsProjectIdSettingsRoute: typeof ProjectsProjectIdSettingsRoute
@@ -801,7 +836,7 @@ const ProjectsProjectIdRouteRouteChildren: ProjectsProjectIdRouteRouteChildren =
     ProjectsProjectIdActivitiesRoute:
       ProjectsProjectIdActivitiesRouteWithChildren,
     ProjectsProjectIdAnalyticsRoute: ProjectsProjectIdAnalyticsRoute,
-    ProjectsProjectIdEvidenceRoute: ProjectsProjectIdEvidenceRoute,
+    ProjectsProjectIdEvidenceRoute: ProjectsProjectIdEvidenceRouteWithChildren,
     ProjectsProjectIdInsightsRoute: ProjectsProjectIdInsightsRoute,
     ProjectsProjectIdInterpretationRoute: ProjectsProjectIdInterpretationRoute,
     ProjectsProjectIdSettingsRoute: ProjectsProjectIdSettingsRoute,

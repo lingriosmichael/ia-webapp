@@ -351,6 +351,87 @@ export interface StartEvidenceAnalysisResponse {
   job: ProcessingJobRecord;
 }
 
+export interface ParsedRepresentationRecord {
+  id: string;
+  organizationId: string;
+  projectId: string;
+  activityId: string | null;
+  uploadMetadataId: string;
+  processingJobId: string;
+  fileType: "spreadsheet" | "document" | "unknown";
+  payload: Record<string, unknown>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type PrivacyReviewDecisionValue =
+  | "exclude"
+  | "continue_with_restriction";
+
+export interface ParsedRepresentationPreviewTable {
+  name: string;
+  rowCount: number;
+  columnCount: number;
+  columns: string[];
+}
+
+export interface ParsedRepresentationPreviewParagraph {
+  index: number;
+  page: number | null;
+  sourceIndex: number | null;
+  characterCount: number;
+}
+
+export interface ParsedRepresentationPreviewRecord {
+  fileType: "spreadsheet" | "document" | "unknown";
+  sourceFileName: string | null;
+  extension: string | null;
+  contentType: string | null;
+  fileSizeBytes: number | null;
+  tableCount: number;
+  paragraphCount: number;
+  tables: ParsedRepresentationPreviewTable[];
+  paragraphs: ParsedRepresentationPreviewParagraph[];
+}
+
+export interface PrivacyReviewDecisions {
+  defaults?: {
+    freeTextRisk?: PrivacyReviewDecisionValue;
+    specialCategoryData?: PrivacyReviewDecisionValue;
+  };
+  fieldDecisions?: Array<{
+    field: string;
+    entityType: "FREE_TEXT_RISK" | "SPECIAL_CATEGORY_DATA";
+    decision: PrivacyReviewDecisionValue;
+  }>;
+}
+
+export interface PrivacyReviewRecord {
+  id: string;
+  organizationId: string;
+  projectId: string;
+  activityId: string | null;
+  uploadMetadataId: string;
+  processingJobId: string;
+  status: "pending" | "approved" | "rejected";
+  findings: Record<string, unknown>;
+  parsedRepresentationPreview: ParsedRepresentationPreviewRecord | null;
+  decisions: PrivacyReviewDecisions | null;
+  approvedById: string | null;
+  approvedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ApprovePrivacyReviewPayload {
+  decisions?: PrivacyReviewDecisions;
+}
+
+export interface ApprovePrivacyReviewResponse {
+  review: PrivacyReviewRecord;
+  job: ProcessingJobRecord;
+}
+
 export interface ResultRecord {
   id: string;
   organizationId: string;
@@ -751,6 +832,19 @@ export const apiClient = {
   syncJob(jobId: string): Promise<ProcessingJobRecord> {
     return request(`/jobs/${jobId}/sync`, {
       method: "POST",
+    });
+  },
+  getPrivacyReview(processingJobId: string): Promise<PrivacyReviewRecord> {
+    return request(`/privacy-review/${processingJobId}`);
+  },
+  approvePrivacyReview(
+    processingJobId: string,
+    payload: ApprovePrivacyReviewPayload,
+  ): Promise<ApprovePrivacyReviewResponse> {
+    return request(`/privacy-review/${processingJobId}/approve`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
     });
   },
 };

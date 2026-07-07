@@ -1,7 +1,7 @@
-## gr_webapp — Frontend
+## ia_webapp — Frontend
 
 Stack: React, Vite, TanStack Start (file-based routing). TanStack Query is
-the recommended way to handle server state against gr_backend.
+the recommended way to handle server state against ia_backend.
 
 ## Structure
 
@@ -28,7 +28,7 @@ the recommended way to handle server state against gr_backend.
 
 ## Data fetching
 
-Use TanStack Query for anything that hits gr_backend. Don't hand-roll
+Use TanStack Query for anything that hits ia_backend. Don't hand-roll
 useEffect + fetch + manual loading state — Query gives you caching,
 retries, and loading/error states for free, and keeps that logic
 consistent across the app.

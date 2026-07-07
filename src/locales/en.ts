@@ -279,6 +279,7 @@ const en = {
       interpretation: "Interpretation",
       analytics: "Analytics",
       insights: "Insights",
+      comingSoon: "Soon",
     },
     overview: {
       title: "Overview",
@@ -321,7 +322,96 @@ const en = {
       noFiles: "No evidence uploaded yet for this activity.",
       openFile: "Open file",
       analyzeFile: "Analyze",
-      analyzeDisabledHint: "Available in a later phase.",
+      retryAnalysis: "Retry analysis",
+      reviewPrivacy: "Review privacy",
+      approvePrivacy: "Approve and continue",
+      approvingPrivacy: "Approving…",
+      analysisInProgress: "Processing…",
+      analysisCompleted: "Completed",
+      analysisStarted: "Evidence analysis started.",
+      analysisStartFailed: "Evidence analysis could not be started.",
+      privacyApprovalSuccess: "Privacy review approved.",
+      privacyApprovalFailed: "Privacy review could not be approved.",
+      privacyReviewTitle: "Privacy review",
+      privacyReviewDescription:
+        "Review detected personal or sensitive information before Impact Atlas creates the privacy-safe representation.",
+      privacyReviewPageDescription:
+        "Confirm how detected personal and sensitive information should be handled before Impact Atlas continues with the privacy-safe representation.",
+      loadingPrivacyReview: "Loading privacy review…",
+      noPrivacyFindings: "No privacy findings available yet.",
+      privacyFindingSummary:
+        "{{entityType}} detected {{count}} time(s). Recommended action: {{action}}.",
+      backToEvidence: "Back to evidence",
+      reviewFile: "File",
+      reviewActivity: "Activity",
+      reviewStatus: "Review status",
+      reviewStates: {
+        pending: "Pending",
+        approved: "Approved",
+        rejected: "Rejected",
+      },
+      reviewUnknownFile: "Unknown file",
+      reviewUnknownActivity: "Unknown activity",
+      detectedFindingsTitle: "Detected findings",
+      detectedFindingsDescription:
+        "{{count}} findings detected. {{decisions}} item(s) still require an explicit review decision.",
+      decisionRequired: "Decision required",
+      reviewDecisionTitle: "Review decision",
+      reviewDecisionDescription:
+        "Choose how risky free-text and special-category content should be handled before the privacy-safe representation is created.",
+      noDecisionRequired:
+        "No additional review decisions are required for this file.",
+      decisionDefaultsTitle: "Default handling",
+      decisionOverridesTitle: "Review findings that require a choice",
+      freeTextRiskLabel: "Risky free-text",
+      freeTextRiskDescription:
+        "Use this as the default handling for free-text fields or document paragraphs that may contain personal data.",
+      specialCategoryDataLabel: "Special-category data",
+      specialCategoryDataDescription:
+        "Use this as the default handling for content that may include health, ethnicity, religion, or similar protected categories.",
+      fieldDecisionLabel: "{{entityType}} handling",
+      decisionExclude: "Exclude from processing",
+      decisionRestrict: "Keep structure, restrict content",
+      reviewApprovalLocked:
+        "Approval is only available while the job is waiting for privacy review.",
+      reviewUnavailableTitle: "Privacy review unavailable",
+      reviewUnavailableDescription:
+        "This processing job could not be loaded or is no longer available for review.",
+      reviewCompletedTitle: "Privacy review completed",
+      reviewCompletedDescription:
+        "This file has already been approved and converted into a privacy-safe representation.",
+      reviewTransformingTitle: "Privacy-safe representation in progress",
+      reviewTransformingDescription:
+        "The privacy review is approved. Impact Atlas is currently creating the privacy-safe representation.",
+      parsedRepresentationTitle: "Parsed representation",
+      parsedRepresentationDescription:
+        "Inspect the deterministic structure extracted from the uploaded file. This preview never shows raw personal values or paragraph text.",
+      noParsedRepresentation:
+        "No parsed representation is available for this review yet.",
+      parsedFileType: "Parsed file type",
+      parsedTableCount: "Tables",
+      parsedParagraphCount: "Paragraphs",
+      parsedSourceType: "File extension",
+      parsedTableFallback: "Table {{index}}",
+      parsedRowCount: "Rows",
+      parsedColumnCount: "Columns",
+      parsedColumnsLabel: "Columns",
+      parsedParagraphSummaryTitle: "Paragraph structure",
+      parsedParagraphLabel: "Paragraph {{index}}",
+      parsedCharacterCount: "Characters",
+      parsedPageLabel: "Page",
+      parsedNone: "None",
+      analysisStatus: "Analysis",
+      notStarted: "Not started",
+      analysisStates: {
+        queued: "Queued",
+        processing: "Processing",
+        awaiting_privacy_review: "Awaiting privacy review",
+        transforming: "Creating privacy-safe representation",
+        completed: "Completed",
+        failed: "Failed",
+        cancelled: "Cancelled",
+      },
       removeFile: "Remove",
       removeSuccess: "Evidence removed.",
       removeFailed: "Evidence could not be removed.",
@@ -359,6 +449,12 @@ const en = {
       notReady: "Still waiting for confirmation",
       understoodTitle: "Things Impact Atlas understands",
       empty: "No activities are available yet. Add an activity and upload evidence to begin interpretation.",
+      privacyTitle: "Privacy reviews needed",
+      privacyPendingDescription:
+        "The file {{fileName}} is waiting for privacy review before interpretation can continue.",
+      privacyUnknownFile: "Unknown file",
+      reviewPrivacyAction: "Review privacy",
+      noPrivacyReviews: "No files are currently blocked on privacy review.",
       questionsTitle: "Things Impact Atlas still needs help with",
       defaultQuestion:
         "This activity still has evidence that has not been fully interpreted. Review how the uploaded data should be classified.",
@@ -587,7 +683,7 @@ const en = {
       eyebrow: "Add evidence",
       title: "Bring monitoring data into this activity",
       description:
-        "Upload one CSV, Excel, PDF, DOC, or DOCX file and Impact Atlas will guide you through review, analysis, and insights from here.",
+        "Upload one CSV, Excel, PDF, or DOCX file and Impact Atlas will guide you through review, analysis, and insights from here.",
       cta: "Upload evidence",
       remove: "Remove",
     },
@@ -626,7 +722,7 @@ const en = {
       },
       items: {
         empty: [
-          "Upload a CSV, Excel, PDF, DOC, or DOCX file from your monitoring process.",
+          "Upload a CSV, Excel, PDF, or DOCX file from your monitoring process.",
           "Keep one clear evidence file per activity for the cleanest review flow.",
         ],
         uploading: [
@@ -659,8 +755,7 @@ const en = {
       reviewValue: "{{count}} item needs review",
       analysisValue: "{{status}}",
       insightsValue: "{{count}} insights available",
-      qualityIssuesValue:
-        "{{missing}} missing values · {{duplicates}} duplicate rows",
+      notYetAvailable: "Not yet available",
     },
   },
   upload: {
@@ -670,11 +765,11 @@ const en = {
     eyebrow: "Upload Evidence",
     title: "Upload evidence for {{name}}",
     description:
-      "Drop your CSV, Excel, PDF, DOC, or DOCX file to attach evidence to this activity.",
+      "Drop your CSV, Excel, PDF, or DOCX file to attach evidence to this activity.",
     dropzoneTitle: "Drag & drop your evidence file",
     dropzoneBrowsePrefix: "or",
     dropzoneBrowseAction: "browse from your computer",
-    accepts: "Accepts .csv, .xlsx, .xls, .pdf, .doc, .docx",
+    accepts: "Accepts .csv, .xlsx, .xls, .pdf, .docx",
     storageNote:
       "Uploaded evidence stays connected to this activity and can be analysed in a later step.",
     existingCounts: "Existing files: {{uploads}} · jobs: {{jobs}}",
@@ -685,6 +780,8 @@ const en = {
     createProcessingJob: "Analyse evidence",
     successToast: "Evidence uploaded.",
     failedToast: "Upload failed.",
+    unsupportedFileTypeToast:
+      "Unsupported file type. Please upload a CSV, Excel (.xlsx/.xls), PDF, or Word (.docx) file.",
   },
   processing: {
     loading: "Loading job status…",
@@ -733,6 +830,12 @@ const en = {
         "Prepare the dataset for AI interpretation",
       ],
       cta: "Upload dataset",
+    },
+    notReady: {
+      title: "Dataset review is not available yet",
+      description:
+        "Automated column-by-column dataset review is still being built. Check back in a future update.",
+      cta: "Back to Overview",
     },
     datasetStatus: {
       readyTitle: "Dataset successfully interpreted",
@@ -923,29 +1026,13 @@ const en = {
           "Stay in the guided workflow until the evidence is ready. Analysis opens automatically once review is complete.",
         cta: "Back to Overview",
       },
+      notReady: {
+        title: "Analysis is not available yet",
+        description:
+          "Automated metrics and analysis views for this dataset are still being built. Check back in a future update.",
+        cta: "Back to Overview",
+      },
     },
-    summary: {
-      rows: "Rows",
-      columns: "Columns",
-      review: "Data Review",
-      reviewValue: "{{count}} item pending",
-      insights: "Insights",
-      insightsValue: "{{count}} available",
-    },
-    metricsTitle: "Current analysis view",
-    storyTitle: "What this analysis is showing",
-    storyPoints: [
-      "The uploaded evidence can already be summarised into key monitoring metrics.",
-      "This first pass highlights participation, completion, and data quality trends.",
-      "Use the insights page for narrative interpretation and suggested actions.",
-    ],
-    nextActionTitle: "Next action",
-    nextActionReady:
-      "The dataset is analysis-ready. Move into insights when you want narrative interpretation and recommendations.",
-    nextActionBlocked:
-      "Clear the remaining review items before relying on downstream analysis or insights.",
-    reviewDataCta: "Review Data",
-    openInsightsCta: "Open Insights",
   },
   activityInsights: {
     loading: "Loading activity insights…",

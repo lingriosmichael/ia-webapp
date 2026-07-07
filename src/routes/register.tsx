@@ -24,7 +24,7 @@ function RegisterPage() {
     event.preventDefault();
 
     try {
-      const response = await registerMutation.mutateAsync({
+      await registerMutation.mutateAsync({
         fullName,
         email,
         password,

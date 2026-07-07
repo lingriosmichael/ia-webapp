@@ -10,13 +10,14 @@ import {
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { rememberActiveOrganizationId } from "@/lib/organizationSelection";
 import { ActivityDialog } from "@/components/activityDialog";
-import { AppSidebar } from "@/components/appSidebar";
+import { AppSidebar } from "@/components/AppSidebar";
 import { ProjectDeleteDialog } from "@/components/projectDeleteDialog";
 import { ProjectDialog } from "@/components/projectDialog";
 import {
   ApiError,
   type CreateActivityPayload,
   type CreateProjectPayload,
+  type OrganizationPermissions,
   type OrganizationRole,
   type UpdateActivityPayload,
   type ActivitySummary,
@@ -55,6 +56,7 @@ export function WorkspaceShell({
   organizationId,
   organizationName,
   organizationRole,
+  organizationPermissions,
   organizationLogoUrl,
   userName,
   projects,
@@ -65,6 +67,7 @@ export function WorkspaceShell({
   organizationId: string;
   organizationName: string;
   organizationRole: OrganizationRole;
+  organizationPermissions: OrganizationPermissions;
   organizationLogoUrl: string | null;
   userName: string;
   projects: WorkspaceProject[];
@@ -236,12 +239,14 @@ export function WorkspaceShell({
         <AppSidebar
           organizationName={organizationName}
           organizationRole={organizationRole}
+          organizationPermissions={organizationPermissions}
           organizationLogoUrl={organizationLogoUrl}
           organizationId={organizationId}
           userName={userName}
           projects={projects}
-          currentProjectId={currentProjectId}
           currentProject={currentProject}
+          onCreateProject={workspaceShellActions.openProjectDialog}
+          onDeleteProject={workspaceShellActions.openProjectDeleteDialog}
           onLogout={onLogout}
         />
 

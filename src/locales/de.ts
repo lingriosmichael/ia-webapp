@@ -285,6 +285,7 @@ const de: TranslationDictionary = {
       interpretation: "Interpretation",
       analytics: "Analysen",
       insights: "Erkenntnisse",
+      comingSoon: "Bald",
     },
     overview: {
       title: "Übersicht",
@@ -327,7 +328,96 @@ const de: TranslationDictionary = {
       noFiles: "Für diese Aktivität wurde noch keine Evidenz hochgeladen.",
       openFile: "Datei öffnen",
       analyzeFile: "Analysieren",
-      analyzeDisabledHint: "In einer späteren Phase verfügbar.",
+      retryAnalysis: "Analyse erneut starten",
+      reviewPrivacy: "Datenschutz prüfen",
+      approvePrivacy: "Freigeben und fortfahren",
+      approvingPrivacy: "Freigabe läuft…",
+      analysisInProgress: "Verarbeitung läuft…",
+      analysisCompleted: "Abgeschlossen",
+      analysisStarted: "Evidenzanalyse wurde gestartet.",
+      analysisStartFailed: "Evidenzanalyse konnte nicht gestartet werden.",
+      privacyApprovalSuccess: "Datenschutzprüfung wurde freigegeben.",
+      privacyApprovalFailed: "Datenschutzprüfung konnte nicht freigegeben werden.",
+      privacyReviewTitle: "Datenschutzprüfung",
+      privacyReviewDescription:
+        "Prüfen Sie erkannte personenbezogene oder sensible Informationen, bevor Impact Atlas die datenschutzsichere Repräsentation erstellt.",
+      privacyReviewPageDescription:
+        "Bestätigen Sie, wie erkannte personenbezogene oder sensible Informationen behandelt werden sollen, bevor Impact Atlas mit der datenschutzsicheren Repräsentation fortfährt.",
+      loadingPrivacyReview: "Datenschutzprüfung wird geladen…",
+      noPrivacyFindings: "Es liegen noch keine Datenschutzbefunde vor.",
+      privacyFindingSummary:
+        "{{entityType}} wurde {{count}}-mal erkannt. Empfohlene Aktion: {{action}}.",
+      backToEvidence: "Zurück zur Evidenz",
+      reviewFile: "Datei",
+      reviewActivity: "Aktivität",
+      reviewStatus: "Prüfstatus",
+      reviewStates: {
+        pending: "Ausstehend",
+        approved: "Freigegeben",
+        rejected: "Abgelehnt",
+      },
+      reviewUnknownFile: "Unbekannte Datei",
+      reviewUnknownActivity: "Unbekannte Aktivität",
+      detectedFindingsTitle: "Erkannte Befunde",
+      detectedFindingsDescription:
+        "{{count}} Befunde erkannt. Für {{decisions}} Eintrag(e) ist noch eine explizite Prüfentscheidung erforderlich.",
+      decisionRequired: "Entscheidung erforderlich",
+      reviewDecisionTitle: "Prüfentscheidung",
+      reviewDecisionDescription:
+        "Legen Sie fest, wie risikoreicher Freitext und besondere Kategorien personenbezogener Daten behandelt werden sollen, bevor die datenschutzsichere Repräsentation erstellt wird.",
+      noDecisionRequired:
+        "Für diese Datei sind keine zusätzlichen Prüfentscheidungen erforderlich.",
+      decisionDefaultsTitle: "Standardbehandlung",
+      decisionOverridesTitle: "Befunde mit Auswahlbedarf",
+      freeTextRiskLabel: "Risikoreicher Freitext",
+      freeTextRiskDescription:
+        "Diese Einstellung gilt standardmäßig für Freitextfelder oder Dokumentabsätze, die personenbezogene Daten enthalten könnten.",
+      specialCategoryDataLabel: "Besondere Kategorien personenbezogener Daten",
+      specialCategoryDataDescription:
+        "Diese Einstellung gilt standardmäßig für Inhalte, die Gesundheitsdaten, Ethnie, Religion oder ähnliche besonders geschützte Kategorien enthalten könnten.",
+      fieldDecisionLabel: "Behandlung für {{entityType}}",
+      decisionExclude: "Aus Verarbeitung ausschließen",
+      decisionRestrict: "Struktur behalten, Inhalt einschränken",
+      reviewApprovalLocked:
+        "Die Freigabe ist nur möglich, solange der Job auf die Datenschutzprüfung wartet.",
+      reviewUnavailableTitle: "Datenschutzprüfung nicht verfügbar",
+      reviewUnavailableDescription:
+        "Dieser Verarbeitungsjob konnte nicht geladen werden oder steht nicht mehr zur Prüfung bereit.",
+      reviewCompletedTitle: "Datenschutzprüfung abgeschlossen",
+      reviewCompletedDescription:
+        "Diese Datei wurde bereits freigegeben und in eine datenschutzsichere Repräsentation überführt.",
+      reviewTransformingTitle: "Datenschutzsichere Repräsentation in Erstellung",
+      reviewTransformingDescription:
+        "Die Datenschutzprüfung wurde freigegeben. Impact Atlas erstellt gerade die datenschutzsichere Repräsentation.",
+      parsedRepresentationTitle: "Geparste Repräsentation",
+      parsedRepresentationDescription:
+        "Prüfen Sie die deterministische Struktur, die aus der hochgeladenen Datei extrahiert wurde. Diese Vorschau zeigt keine rohen personenbezogenen Werte oder Absatztexte.",
+      noParsedRepresentation:
+        "Für diese Prüfung liegt noch keine geparste Repräsentation vor.",
+      parsedFileType: "Geparster Dateityp",
+      parsedTableCount: "Tabellen",
+      parsedParagraphCount: "Absätze",
+      parsedSourceType: "Dateiendung",
+      parsedTableFallback: "Tabelle {{index}}",
+      parsedRowCount: "Zeilen",
+      parsedColumnCount: "Spalten",
+      parsedColumnsLabel: "Spalten",
+      parsedParagraphSummaryTitle: "Absatzstruktur",
+      parsedParagraphLabel: "Absatz {{index}}",
+      parsedCharacterCount: "Zeichen",
+      parsedPageLabel: "Seite",
+      parsedNone: "Keine",
+      analysisStatus: "Analyse",
+      notStarted: "Noch nicht gestartet",
+      analysisStates: {
+        queued: "In Warteschlange",
+        processing: "Wird verarbeitet",
+        awaiting_privacy_review: "Wartet auf Datenschutzprüfung",
+        transforming: "Datenschutzsichere Repräsentation wird erstellt",
+        completed: "Abgeschlossen",
+        failed: "Fehlgeschlagen",
+        cancelled: "Abgebrochen",
+      },
       removeFile: "Entfernen",
       removeSuccess: "Evidenz entfernt.",
       removeFailed: "Evidenz konnte nicht entfernt werden.",
@@ -366,6 +456,13 @@ const de: TranslationDictionary = {
       understoodTitle: "Was Impact Atlas bereits versteht",
       empty:
         "Es sind noch keine Aktivitäten vorhanden. Legen Sie eine Aktivität an und laden Sie Evidenz hoch, um die Interpretation zu starten.",
+      privacyTitle: "Offene Datenschutzprüfungen",
+      privacyPendingDescription:
+        "Die Datei {{fileName}} wartet noch auf die Datenschutzprüfung, bevor die Interpretation fortgesetzt werden kann.",
+      privacyUnknownFile: "Unbekannte Datei",
+      reviewPrivacyAction: "Datenschutz prüfen",
+      noPrivacyReviews:
+        "Aktuell blockiert keine Datei die Interpretation wegen einer offenen Datenschutzprüfung.",
       questionsTitle: "Wobei Impact Atlas noch Hilfe braucht",
       defaultQuestion:
         "Für diese Aktivität gibt es noch Evidenz, die nicht vollständig interpretiert wurde. Prüfen Sie, wie die hochgeladenen Daten eingeordnet werden sollen.",
@@ -605,7 +702,7 @@ const de: TranslationDictionary = {
       eyebrow: "Evidenz hinzufügen",
       title: "Monitoring-Daten in diese Aktivität bringen",
       description:
-        "Laden Sie eine CSV-, Excel-, PDF-, DOC- oder DOCX-Datei hoch. Impact Atlas führt Sie von hier aus durch Prüfung, Analyse und Erkenntnisse.",
+        "Laden Sie eine CSV-, Excel-, PDF- oder DOCX-Datei hoch. Impact Atlas führt Sie von hier aus durch Prüfung, Analyse und Erkenntnisse.",
       cta: "Evidenz hochladen",
       remove: "Entfernen",
     },
@@ -678,8 +775,7 @@ const de: TranslationDictionary = {
       reviewValue: "{{count}} Punkt zur Prüfung",
       analysisValue: "{{status}}",
       insightsValue: "{{count}} Erkenntnisse verfügbar",
-      qualityIssuesValue:
-        "{{missing}} fehlende Werte · {{duplicates}} doppelte Zeilen",
+      notYetAvailable: "Noch nicht verfügbar",
     },
   },
   upload: {
@@ -689,11 +785,11 @@ const de: TranslationDictionary = {
     eyebrow: "Nachweise hochladen",
     title: "Nachweise für {{name}} hochladen",
     description:
-      "Legen Sie Ihre CSV-, Excel-, PDF-, DOC- oder DOCX-Datei ab, um Evidenz mit dieser Aktivität zu verknüpfen.",
+      "Legen Sie Ihre CSV-, Excel-, PDF- oder DOCX-Datei ab, um Evidenz mit dieser Aktivität zu verknüpfen.",
     dropzoneTitle: "Evidenzdatei hierher ziehen",
     dropzoneBrowsePrefix: "oder",
     dropzoneBrowseAction: "Datei vom Computer auswählen",
-    accepts: "Akzeptiert .csv, .xlsx, .xls, .pdf, .doc, .docx",
+    accepts: "Akzeptiert .csv, .xlsx, .xls, .pdf, .docx",
     storageNote:
       "Hochgeladene Evidenz bleibt mit dieser Aktivität verknüpft und kann in einem späteren Schritt analysiert werden.",
     existingCounts: "Vorhandene Dateien: {{uploads}} · Jobs: {{jobs}}",
@@ -704,6 +800,8 @@ const de: TranslationDictionary = {
     createProcessingJob: "Evidenz analysieren",
     successToast: "Evidenz hochgeladen.",
     failedToast: "Upload fehlgeschlagen.",
+    unsupportedFileTypeToast:
+      "Nicht unterstützter Dateityp. Bitte lade eine CSV-, Excel- (.xlsx/.xls), PDF- oder Word-Datei (.docx) hoch.",
   },
   processing: {
     loading: "Job-Status wird geladen…",
@@ -752,6 +850,12 @@ const de: TranslationDictionary = {
         "Den Datensatz für die KI-Interpretation vorbereiten",
       ],
       cta: "Datensatz hochladen",
+    },
+    notReady: {
+      title: "Datensatzprüfung ist noch nicht verfügbar",
+      description:
+        "Die automatisierte spaltenweise Datensatzprüfung wird noch entwickelt. Schauen Sie in einem zukünftigen Update wieder vorbei.",
+      cta: "Zurück zur Übersicht",
     },
     datasetStatus: {
       readyTitle: "Datensatz erfolgreich interpretiert",
@@ -946,29 +1050,13 @@ const de: TranslationDictionary = {
           "Bleiben Sie im geführten Workflow, bis die Evidenz bereit ist. Die Analyse öffnet sich automatisch nach der Datenprüfung.",
         cta: "Zurück zur Übersicht",
       },
+      notReady: {
+        title: "Analyse ist noch nicht verfügbar",
+        description:
+          "Automatisierte Kennzahlen und Analyseansichten für diesen Datensatz werden noch entwickelt. Schauen Sie in einem zukünftigen Update wieder vorbei.",
+        cta: "Zurück zur Übersicht",
+      },
     },
-    summary: {
-      rows: "Zeilen",
-      columns: "Spalten",
-      review: "Datenprüfung",
-      reviewValue: "{{count}} Punkt offen",
-      insights: "Erkenntnisse",
-      insightsValue: "{{count}} verfügbar",
-    },
-    metricsTitle: "Aktuelle Analyseansicht",
-    storyTitle: "Was diese Analyse bereits zeigt",
-    storyPoints: [
-      "Die hochgeladene Evidenz lässt sich schon jetzt in zentrale Monitoring-Kennzahlen übersetzen.",
-      "Dieser erste Durchgang macht Teilhabe, Abschlüsse und Datenqualitätsmuster sichtbar.",
-      "Für narrative Interpretation und Empfehlungen nutzen Sie als Nächstes die Erkenntnisse-Seite.",
-    ],
-    nextActionTitle: "Nächster Schritt",
-    nextActionReady:
-      "Der Datensatz ist analysebereit. Wechseln Sie zu den Erkenntnissen, wenn Sie narrative Interpretation und Empfehlungen sehen möchten.",
-    nextActionBlocked:
-      "Klären Sie zuerst die offenen Prüfpunkte, bevor Sie sich auf nachgelagerte Analyse oder Erkenntnisse verlassen.",
-    reviewDataCta: "Daten prüfen",
-    openInsightsCta: "Erkenntnisse öffnen",
   },
   activityInsights: {
     loading: "Aktivitätserkenntnisse werden geladen…",

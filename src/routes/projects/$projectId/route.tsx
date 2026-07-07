@@ -49,6 +49,7 @@ function ProjectLayout() {
         organizationId={workspaceQuery.data.organization.id}
         organizationName={workspaceQuery.data.organization.name}
         organizationRole={workspaceQuery.data.organization.role}
+        organizationPermissions={workspaceQuery.data.organization.permissions}
         organizationLogoUrl={workspaceQuery.data.organization.logoUrl}
         userName={
           auth.data?.user.fullName ?? auth.data?.user.email ?? "Account"

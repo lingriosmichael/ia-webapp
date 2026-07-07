@@ -1,4 +1,4 @@
-import { Building2, ImagePlus, UploadCloud } from "lucide-react";
+import { Building2, UploadCloud } from "lucide-react";
 import type { ChangeEvent, DragEvent, FormEvent, ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -610,7 +610,9 @@ function createFormState(
     isRecognizedNonProfit:
       settings.isRecognizedNonProfit === null
         ? ""
-        : String(settings.isRecognizedNonProfit),
+        : settings.isRecognizedNonProfit
+          ? "true"
+          : "false",
     taxExemptionValidFrom: settings.taxExemptionValidFrom ?? "",
   };
 }

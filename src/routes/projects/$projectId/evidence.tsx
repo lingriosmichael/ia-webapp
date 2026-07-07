@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Database, Sparkles, Trash2, UploadCloud } from "lucide-react";
 import type { ChangeEvent } from "react";
 import { useRef, useState } from "react";
@@ -11,20 +11,43 @@ import {
   useProjectWorkspacePage,
 } from "@/contexts/projectWorkspaceContext";
 import {
+  useActivityJobsQuery,
   useActivityUploadsQuery,
   useDeleteEvidenceMutation,
+  useJobQuery,
+  useStartEvidenceAnalysisMutation,
   useUploadActivityFileMutation,
 } from "@/hooks/useGrantready";
+import {
+  isSupportedEvidenceFileType,
+  SUPPORTED_EVIDENCE_FILE_ACCEPT,
+} from "@/lib/evidenceFileTypes";
 import { translateStatus } from "@/lib/translationUtils";
-import { ApiError, type WorkspaceActivity } from "@/services/apiClient";
+import {
+  ApiError,
+  type ProcessingJobRecord,
+  type UploadMetadataRecord,
+  type WorkspaceActivity,
+} from "@/services/apiClient";
 
 export const Route = createFileRoute("/projects/$projectId/evidence")({
   component: ProjectEvidencePage,
 });
 
-function ProjectEvidencePage() {
+function getLatestEvidenceJob(
+  jobs: ProcessingJobRecord[],
+  uploadMetadataId: string,
+) {
+  return jobs.find(
+    (job) =>
+      job.uploadMetadataId === uploadMetadataId &&
+      job.jobType === "evidence_processing",
+  );
+}
+
+export default function ProjectEvidencePage() {
   const { projectId } = Route.useParams();
-  const { project, workspace } = useProjectWorkspacePage();
+  const { workspace } = useProjectWorkspacePage();
   const workspaceProject = useCurrentWorkspaceProject();
   const activities = workspaceProject?.activities ?? [];
   const { t } = useTranslation();
@@ -77,6 +100,7 @@ function EvidenceActivityGroup({
 }) {
   const { t, i18n } = useTranslation();
   const uploadsQuery = useActivityUploadsQuery(activity.id, true);
+  const jobsQuery = useActivityJobsQuery(activity.id, true);
   const uploadMutation = useUploadActivityFileMutation(
     activity.id,
     projectId,
@@ -90,6 +114,7 @@ function EvidenceActivityGroup({
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploadingName, setUploadingName] = useState<string | null>(null);
   const uploads = uploadsQuery.data ?? [];
+  const jobs = jobsQuery.data ?? [];
 
   async function onPickFile(event: ChangeEvent<HTMLInputElement>) {
     const nextFile = event.target.files?.[0];
@@ -101,6 +126,11 @@ function EvidenceActivityGroup({
 
     if (!activity.permissions.canUploadEvidence) {
       toast.error(t("activityBrief.readOnlyUpload"));
+      return;
+    }
+
+    if (!isSupportedEvidenceFileType(nextFile.name)) {
+      toast.error(t("upload.unsupportedFileTypeToast"));
       return;
     }
 
@@ -184,6 +214,7 @@ function EvidenceActivityGroup({
               <input
                 ref={inputRef}
                 type="file"
+                accept={SUPPORTED_EVIDENCE_FILE_ACCEPT}
                 className="hidden"
                 onChange={onPickFile}
               />
@@ -220,67 +251,195 @@ function EvidenceActivityGroup({
       ) : (
         <div className="mt-4 space-y-3">
           {uploads.map((upload) => (
-            <div
+            <EvidenceFileRow
               key={upload.id}
-              className="flex flex-wrap items-start justify-between gap-4 rounded-xl border border-border bg-secondary/20 px-4 py-3"
-            >
-              <div className="min-w-0 flex-1">
-                <div className="truncate text-sm font-medium text-foreground">
-                  {upload.originalFileName}
-                </div>
-                <div className="mt-2 grid gap-1 text-xs text-muted-foreground sm:grid-cols-2">
-                  <div>
-                    {t("projectWorkspace.evidence.metadataType")}:{" "}
-                    {formatEvidenceType(
-                      upload.contentType,
-                      upload.originalFileName,
-                    )}
-                  </div>
-                  <div>
-                    {t("projectWorkspace.evidence.metadataSize")}:{" "}
-                    {formatFileSize(upload.sizeBytes)}
-                  </div>
-                  <div>
-                    {t("projectWorkspace.evidence.metadataUploadedAt")}:{" "}
-                    {formatUploadedAt(upload.createdAt)}
-                  </div>
-                  <div>
-                    {t("projectWorkspace.evidence.metadataUploadedBy")}:{" "}
-                    {upload.uploadedByName ??
-                      t("projectWorkspace.evidence.unknownUploader")}
-                  </div>
-                  <div className="sm:col-span-2">
-                    {t("projectWorkspace.evidence.metadataStatus")}:{" "}
-                    {translateStatus(t, upload.status)}
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  disabled
-                  title={t("projectWorkspace.evidence.analyzeDisabledHint")}
-                  className="inline-flex h-8 cursor-not-allowed items-center gap-1 rounded-md border border-border bg-background px-3 text-sm font-medium text-foreground/50 opacity-70"
-                >
-                  <Sparkles className="h-4 w-4" />
-                  {t("projectWorkspace.evidence.analyzeFile")}
-                </button>
-                {activity.permissions.canUploadEvidence ? (
-                  <button
-                    type="button"
-                    onClick={() => removeFile(upload.id)}
-                    disabled={deleteEvidenceMutation.isPending}
-                    className="inline-flex h-8 items-center gap-1 rounded-md border border-destructive/25 bg-background px-3 text-sm font-medium text-destructive hover:bg-destructive/5"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                    {t("projectWorkspace.evidence.removeFile")}
-                  </button>
-                ) : null}
-              </div>
-            </div>
+              activity={activity}
+              upload={upload}
+              latestJob={getLatestEvidenceJob(jobs, upload.id)}
+              projectId={projectId}
+              organizationId={organizationId}
+              onRemove={removeFile}
+              removePending={deleteEvidenceMutation.isPending}
+              formatEvidenceType={formatEvidenceType}
+              formatFileSize={formatFileSize}
+              formatUploadedAt={formatUploadedAt}
+            />
           ))}
         </div>
       )}
     </Card>
+  );
+}
+
+function EvidenceFileRow({
+  activity,
+  upload,
+  latestJob,
+  projectId,
+  organizationId,
+  onRemove,
+  removePending,
+  formatEvidenceType,
+  formatFileSize,
+  formatUploadedAt,
+}: {
+  activity: WorkspaceActivity;
+  upload: UploadMetadataRecord;
+  latestJob: ProcessingJobRecord | undefined;
+  projectId: string;
+  organizationId: string;
+  onRemove: (uploadMetadataId: string) => Promise<void>;
+  removePending: boolean;
+  formatEvidenceType: (contentType: string | null, originalFileName: string) => string;
+  formatFileSize: (sizeBytes: number | null) => string;
+  formatUploadedAt: (createdAt: string) => string;
+}) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const startAnalysisMutation = useStartEvidenceAnalysisMutation(
+    activity.id,
+    projectId,
+    organizationId,
+  );
+  const liveJobQuery = useJobQuery(latestJob?.id, Boolean(latestJob?.id));
+  const job = liveJobQuery.data ?? latestJob;
+  const hasActiveJob =
+    job &&
+    ["queued", "processing", "awaiting_privacy_review", "transforming"].includes(
+      job.status,
+    );
+  const canReviewPrivacy = Boolean(
+    job &&
+      ["awaiting_privacy_review", "transforming", "completed"].includes(
+        job.status,
+      ),
+  );
+  const canAnalyse =
+    activity.permissions.canUploadEvidence &&
+    upload.status === "uploaded" &&
+    !upload.originalFileDeletedAt &&
+    (!job || job.status === "failed" || job.status === "cancelled");
+
+  const analyzeButtonLabel = !job
+    ? t("projectWorkspace.evidence.analyzeFile")
+    : job.status === "failed"
+      ? t("projectWorkspace.evidence.retryAnalysis")
+      : t(`projectWorkspace.evidence.analysisStates.${job.status}`);
+
+  async function handleAnalyzeAction() {
+    if (!canAnalyse) {
+      return;
+    }
+
+    try {
+      await startAnalysisMutation.mutateAsync(upload.id);
+      toast.success(t("projectWorkspace.evidence.analysisStarted"));
+    } catch (error) {
+      toast.error(
+        error instanceof ApiError
+          ? error.message
+          : t("projectWorkspace.evidence.analysisStartFailed"),
+      );
+    }
+  }
+
+  function openPrivacyReview() {
+    if (!job) {
+      return;
+    }
+
+    void navigate({
+      to: "/projects/$projectId/evidence/$processingJobId/review",
+      params: {
+        projectId,
+        processingJobId: job.id,
+      },
+    });
+  }
+
+  return (
+    <div className="rounded-xl border border-border bg-secondary/20 px-4 py-3">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <div className="truncate text-sm font-medium text-foreground">
+            {upload.originalFileName}
+          </div>
+          <div className="mt-2 grid gap-1 text-xs text-muted-foreground sm:grid-cols-2">
+            <div>
+              {t("projectWorkspace.evidence.metadataType")}:{" "}
+              {formatEvidenceType(upload.contentType, upload.originalFileName)}
+            </div>
+            <div>
+              {t("projectWorkspace.evidence.metadataSize")}:{" "}
+              {formatFileSize(upload.sizeBytes)}
+            </div>
+            <div>
+              {t("projectWorkspace.evidence.metadataUploadedAt")}:{" "}
+              {formatUploadedAt(upload.createdAt)}
+            </div>
+            <div>
+              {t("projectWorkspace.evidence.metadataUploadedBy")}:{" "}
+              {upload.uploadedByName ??
+                t("projectWorkspace.evidence.unknownUploader")}
+            </div>
+            <div>
+              {t("projectWorkspace.evidence.metadataStatus")}:{" "}
+              {translateStatus(t, upload.status)}
+            </div>
+            <div>
+              {t("projectWorkspace.evidence.analysisStatus")}:{" "}
+              {job
+                ? t(`projectWorkspace.evidence.analysisStates.${job.status}`)
+                : t("projectWorkspace.evidence.notStarted")}
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleAnalyzeAction}
+            disabled={
+              startAnalysisMutation.isPending ||
+              Boolean(
+                job &&
+                job.status !== "failed" &&
+                job.status !== "cancelled" &&
+                !canAnalyse,
+              )
+            }
+            className="inline-flex h-8 items-center gap-1 rounded-md border border-border bg-background px-3 text-sm font-medium text-foreground disabled:cursor-not-allowed disabled:text-foreground/50 disabled:opacity-70"
+          >
+            <Sparkles className="h-4 w-4" />
+            {analyzeButtonLabel}
+          </button>
+          {canReviewPrivacy ? (
+            <button
+              type="button"
+              onClick={openPrivacyReview}
+              className="inline-flex h-8 items-center gap-1 rounded-md border border-primary/25 bg-background px-3 text-sm font-medium text-primary hover:bg-primary/5"
+            >
+              {t("projectWorkspace.evidence.reviewPrivacy")}
+            </button>
+          ) : null}
+          {activity.permissions.canUploadEvidence ? (
+            <button
+              type="button"
+              onClick={() => void onRemove(upload.id)}
+              disabled={removePending || hasActiveJob}
+              className="inline-flex h-8 items-center gap-1 rounded-md border border-destructive/25 bg-background px-3 text-sm font-medium text-destructive hover:bg-destructive/5 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <Trash2 className="h-4 w-4" />
+              {t("projectWorkspace.evidence.removeFile")}
+            </button>
+          ) : null}
+        </div>
+      </div>
+
+      {job?.errorMessage ? (
+        <div className="mt-3 rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+          {job.errorMessage}
+        </div>
+      ) : null}
+    </div>
   );
 }

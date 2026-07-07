@@ -100,7 +100,7 @@ export function ProjectDialog({
   useEffect(() => {
     if (!open) {
       setForm(initialState);
-      setTargetGroupsError(null);
+      setTargetGroupsError(false);
     }
   }, [open]);
 
@@ -122,7 +122,7 @@ export function ProjectDialog({
       targetGroups: deduplicateValues([...current.targetGroups, nextValue]),
       customTargetGroup: "",
     }));
-    setTargetGroupsError(null);
+    setTargetGroupsError(false);
   }
 
   function removeTargetGroup(value: string) {
@@ -253,21 +253,21 @@ export function ProjectDialog({
           <div className="space-y-2">
             <FieldLabel>{locale.dialogs.project.targetGroups}</FieldLabel>
             <TargetGroupMultiSelect
-              options={locale.dialogs.options.targetGroups}
+              options={[...locale.dialogs.options.targetGroups]}
               selectedValues={form.targetGroups}
               customOption={locale.dialogs.options.customTargetGroupOption}
               customValueEnabled={form.customTargetGroupEnabled}
               customValue={form.customTargetGroup}
               error={targetGroupsError}
               onToggleValue={(value) => {
-                setTargetGroupsError(null);
+                setTargetGroupsError(false);
                 setForm((current) => ({
                   ...current,
                   targetGroups: toggleValue(current.targetGroups, value),
                 }));
               }}
               onToggleCustomValueEnabled={() => {
-                setTargetGroupsError(null);
+                setTargetGroupsError(false);
                 setForm((current) => ({
                   ...current,
                   customTargetGroupEnabled: !current.customTargetGroupEnabled,
@@ -277,7 +277,7 @@ export function ProjectDialog({
                 }));
               }}
               onCustomValueChange={(value) => {
-                setTargetGroupsError(null);
+                setTargetGroupsError(false);
                 updateField("customTargetGroup", value);
               }}
               onAddCustomValue={addCustomTargetGroup}

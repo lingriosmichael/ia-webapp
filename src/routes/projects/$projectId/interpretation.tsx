@@ -1,5 +1,7 @@
+import { useQueries } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import {
+  AlertTriangle,
   CheckCircle2,
   CircleHelp,
   MessagesSquare,
@@ -12,13 +14,15 @@ import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShel
 import { Card } from "@/components/workspaceUI";
 import { useCurrentWorkspaceProject } from "@/contexts/projectWorkspaceContext";
 import {
+  activityJobsQueryKey,
+  activityUploadsQueryKey,
   useActivityJobsQuery,
   useActivityResultsQuery,
   useActivityUploadsQuery,
   useProjectOverviewQuery,
 } from "@/hooks/useGrantready";
 import { useRequireAuth } from "@/hooks/useAuth";
-import type { WorkspaceActivity } from "@/services/apiClient";
+import { apiClient, type WorkspaceActivity } from "@/services/apiClient";
 
 export const Route = createFileRoute("/projects/$projectId/interpretation")({
   component: ProjectInterpretationPage,
@@ -44,10 +48,11 @@ function ProjectInterpretationPage() {
   const questionsRemaining = Math.max(totalUploads - totalResults, 0);
   const confidencePercent =
     totalUploads === 0 ? 0 : Math.min(100, Math.round((totalResults / totalUploads) * 100));
-  const readyForAnalytics =
-    Boolean(overviewQuery.data) &&
+  const readyForAnalytics = Boolean(
+    overviewQuery.data &&
     overviewQuery.data.metrics.activitiesWithDatasetsCount > 0 &&
-    overviewQuery.data.metrics.failedJobCount === 0;
+    overviewQuery.data.metrics.failedJobCount === 0,
+  );
 
   const quickPrompts = useMemo(
     () => [
@@ -140,6 +145,14 @@ function ProjectInterpretationPage() {
                   />
                 ))
               )}
+            </div>
+
+            <div className="space-y-4">
+              <SectionTitle
+                icon={<AlertTriangle className="h-4 w-4 text-primary" />}
+                title={t("projectWorkspace.interpretation.privacyTitle")}
+              />
+              <PrivacyReviewSection activities={activities} projectId={projectId} />
             </div>
 
             <div className="space-y-4">
@@ -355,6 +368,111 @@ function InterpretationActivityCard({
         />
       </div>
     </Card>
+  );
+}
+
+function PrivacyReviewSection({
+  activities,
+  projectId,
+}: {
+  activities: WorkspaceActivity[];
+  projectId: string;
+}) {
+  const { t } = useTranslation();
+  const jobQueries = useQueries({
+    queries: activities.map((activity) => ({
+      queryKey: activityJobsQueryKey(activity.id),
+      queryFn: () => apiClient.listActivityJobs(activity.id),
+      enabled: true,
+    })),
+  });
+  const uploadQueries = useQueries({
+    queries: activities.map((activity) => ({
+      queryKey: activityUploadsQueryKey(activity.id),
+      queryFn: () => apiClient.listActivityUploads(activity.id),
+      enabled: true,
+    })),
+  });
+
+  if (activities.length === 0) {
+    return (
+      <Card className="p-5 text-sm text-muted-foreground">
+        {t("projectWorkspace.interpretation.empty")}
+      </Card>
+    );
+  }
+
+  const pendingItems = activities
+    .map((activity, index) => {
+      const pendingJob = jobQueries[index]?.data?.find(
+        (job) =>
+          job.jobType === "evidence_processing" &&
+          job.status === "awaiting_privacy_review",
+      );
+      if (!pendingJob) {
+        return null;
+      }
+
+      const upload = uploadQueries[index]?.data?.find(
+        (item) => item.id === pendingJob.uploadMetadataId,
+      );
+
+      return {
+        activity,
+        upload,
+        pendingJob,
+      };
+    })
+    .filter((item): item is NonNullable<typeof item> => item !== null);
+
+  const isLoading =
+    jobQueries.some((query) => query.isLoading) ||
+    uploadQueries.some((query) => query.isLoading);
+
+  if (isLoading && pendingItems.length === 0) {
+    return (
+      <Card className="p-5 text-sm text-muted-foreground">
+        {t("projectWorkspace.evidence.loadingPrivacyReview")}
+      </Card>
+    );
+  }
+
+  if (pendingItems.length === 0) {
+    return (
+      <Card className="p-5 text-sm text-muted-foreground">
+        {t("projectWorkspace.interpretation.noPrivacyReviews")}
+      </Card>
+    );
+  }
+
+  return (
+    <>
+      {pendingItems.map(({ activity, pendingJob, upload }) => (
+        <Card key={pendingJob.id} className="p-5">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <div className="text-sm font-semibold tracking-tight text-foreground">
+                {activity.name}
+              </div>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                {t("projectWorkspace.interpretation.privacyPendingDescription", {
+                  fileName:
+                    upload?.originalFileName ??
+                    t("projectWorkspace.interpretation.privacyUnknownFile"),
+                })}
+              </p>
+            </div>
+            <Link
+              to="/projects/$projectId/evidence/$processingJobId/review"
+              params={{ projectId, processingJobId: pendingJob.id }}
+              className="text-sm font-medium text-primary hover:underline"
+            >
+              {t("projectWorkspace.interpretation.reviewPrivacyAction")}
+            </Link>
+          </div>
+        </Card>
+      ))}
+    </>
   );
 }
 

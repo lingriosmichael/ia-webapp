@@ -331,7 +331,7 @@ export function ProjectSettingsPanel({
                   }
                 >
                   <TargetGroupMultiSelect
-                    options={locale.dialogs.options.targetGroups}
+                    options={[...locale.dialogs.options.targetGroups]}
                     selectedValues={formState.targetGroups}
                     customOption={
                       locale.dialogs.options.customTargetGroupOption

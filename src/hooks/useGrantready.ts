@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { sessionQueryKey } from "@/hooks/useAuth";
 import {
+  type ApprovePrivacyReviewResponse,
   ApiError,
   apiClient,
   type ActivitySummary,
@@ -14,9 +15,10 @@ import {
   type InvitationAcceptanceSummary,
   type InvitationSummary,
   type OrganizationMemberSummary,
-  type OrganizationSummary,
   type OrganizationWorkspace,
   type ProcessingJobRecord,
+  type PrivacyReviewDecisions,
+  type PrivacyReviewRecord,
   type ProjectOverview,
   type ProjectSummary,
   type ResultRecord,
@@ -43,6 +45,8 @@ export const activityJobsQueryKey = (activityId: string) =>
 export const activityResultsQueryKey = (activityId: string) =>
   ["activity-results", activityId] as const;
 export const jobQueryKey = (jobId: string) => ["job", jobId] as const;
+export const privacyReviewQueryKey = (processingJobId: string) =>
+  ["privacy-review", processingJobId] as const;
 export const organizationMembersQueryKey = (organizationId: string) =>
   ["organization-members", organizationId] as const;
 export const organizationInvitationsQueryKey = (organizationId: string) =>
@@ -158,6 +162,17 @@ export function useJobQuery(jobId: string | undefined, enabled = true) {
         ? false
         : 1000;
     },
+  });
+}
+
+export function usePrivacyReviewQuery(
+  processingJobId: string | undefined,
+  enabled = true,
+) {
+  return useQuery<PrivacyReviewRecord, ApiError>({
+    queryKey: privacyReviewQueryKey(processingJobId ?? "missing"),
+    queryFn: () => apiClient.getPrivacyReview(processingJobId!),
+    enabled: enabled && Boolean(processingJobId),
   });
 }
 
@@ -495,7 +510,7 @@ export function useDeleteEvidenceMutation(
 ) {
   const queryClient = useQueryClient();
 
-  return useMutation<DeleteEvidenceResponse, ApiError>({
+  return useMutation<DeleteEvidenceResponse, ApiError, string>({
     mutationFn: (uploadMetadataId: string) =>
       apiClient.deleteEvidence(uploadMetadataId),
     onSuccess: () => {
@@ -511,6 +526,75 @@ export function useDeleteEvidenceMutation(
         });
         void queryClient.invalidateQueries({
           queryKey: projectQueryKey(projectId),
+        });
+      }
+      if (organizationId) {
+        void queryClient.invalidateQueries({
+          queryKey: workspaceQueryKey(organizationId),
+        });
+      }
+    },
+  });
+}
+
+export function useStartEvidenceAnalysisMutation(
+  activityId: string,
+  projectId?: string,
+  organizationId?: string,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (uploadMetadataId: string) =>
+      apiClient.startEvidenceAnalysis(uploadMetadataId),
+    onSuccess: ({ job }) => {
+      queryClient.setQueryData(jobQueryKey(job.id), job);
+      void queryClient.invalidateQueries({
+        queryKey: activityJobsQueryKey(activityId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: activityUploadsQueryKey(activityId),
+      });
+      if (projectId) {
+        void queryClient.invalidateQueries({
+          queryKey: projectOverviewQueryKey(projectId),
+        });
+      }
+      if (organizationId) {
+        void queryClient.invalidateQueries({
+          queryKey: workspaceQueryKey(organizationId),
+        });
+      }
+    },
+  });
+}
+
+export function useApprovePrivacyReviewMutation(
+  activityId: string,
+  projectId?: string,
+  organizationId?: string,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    ApprovePrivacyReviewResponse,
+    ApiError,
+    { processingJobId: string; decisions?: PrivacyReviewDecisions }
+  >({
+    mutationFn: ({ processingJobId, decisions }) =>
+      apiClient.approvePrivacyReview(processingJobId, { decisions }),
+    onSuccess: ({ review, job }) => {
+      queryClient.setQueryData(jobQueryKey(job.id), job);
+      queryClient.setQueryData(privacyReviewQueryKey(review.processingJobId), review);
+      void queryClient.invalidateQueries({
+        queryKey: activityJobsQueryKey(activityId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: activityUploadsQueryKey(activityId),
+      });
+      if (projectId) {
+        void queryClient.invalidateQueries({
+          queryKey: projectOverviewQueryKey(projectId),
         });
       }
       if (organizationId) {

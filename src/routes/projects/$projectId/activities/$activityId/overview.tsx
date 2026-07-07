@@ -27,7 +27,10 @@ import {
   useProjectQuery,
   useUploadActivityFileMutation,
 } from "@/hooks/useGrantready";
-import { datasetOverview, getSchema } from "@/lib/mockData";
+import {
+  isSupportedEvidenceFileType,
+  SUPPORTED_EVIDENCE_FILE_ACCEPT,
+} from "@/lib/evidenceFileTypes";
 import { resolveProjectSummaryText } from "@/lib/projectSummary";
 import { cn } from "@/lib/utils";
 import { formatDateTime, translateStatus } from "@/lib/translationUtils";
@@ -96,9 +99,10 @@ function ActivityBriefPage() {
   const availableInsights = results.filter(
     (result) => result.status === "available",
   ).length;
-  const unresolvedIssues = getSchema(t).filter(
-    (column) => column.clarifyingQuestion || column.confidence < 0.8,
-  ).length;
+  // Column-level data-quality detection doesn't exist yet (Phase 3+); there
+  // is no real signal to report here, so this never routes to the data-review
+  // "needs review" path below.
+  const unresolvedIssues = 0;
   const canUploadEvidence = activity.permissions.canUploadEvidence;
 
   const workflowState = deriveWorkflowState({
@@ -139,6 +143,11 @@ function ActivityBriefPage() {
       : null;
 
   function pickFile(nextFile: File) {
+    if (!isSupportedEvidenceFileType(nextFile.name)) {
+      toast.error(t("upload.unsupportedFileTypeToast"));
+      return;
+    }
+
     setFile(nextFile);
     setShowUploader(true);
   }
@@ -360,10 +369,7 @@ function ActivityBriefPage() {
               />
               <DetailRow
                 label={t("activityBrief.evidence.qualityIssues")}
-                value={t("activityBrief.evidence.qualityIssuesValue", {
-                  missing: datasetOverview.missingValues,
-                  duplicates: datasetOverview.duplicateRows,
-                })}
+                value={t("activityBrief.evidence.notYetAvailable")}
               />
               <DetailRow
                 label={t("activityBrief.evidence.latestFile")}
@@ -553,7 +559,7 @@ function UploadComposer({
         <input
           ref={inputRef}
           type="file"
-          accept=".csv,.xlsx,.xls"
+          accept={SUPPORTED_EVIDENCE_FILE_ACCEPT}
           className="hidden"
           onChange={onChange}
         />
