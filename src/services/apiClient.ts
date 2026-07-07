@@ -18,7 +18,7 @@ interface ApiFailureEnvelope {
 
 export type OrganizationRole = "ORGANIZATION_ADMIN" | "PROJECT_MANAGER";
 export type ProjectStatus = "planning" | "active" | "completed";
-export type ActivityStatus = "planning" | "active" | "completed";
+export type ActivityStatus = "active" | "completed";
 
 export interface OrganizationPermissions {
   canManageMembers: boolean;
@@ -122,11 +122,9 @@ export interface ActivitySummary {
   startDate: string | null;
   endDate: string | null;
   objectives: string | null;
-  expectedOutcomes: string | null;
   successIndicators: string | null;
   targetAudience: string | null;
   additionalContext: string | null;
-  beneficiaryGroup: string | null;
   status: ActivityStatus;
   permissions: ActivityPermissions;
   createdAt: string;
@@ -223,10 +221,8 @@ export interface CreateActivityPayload {
   startDate?: string;
   endDate?: string;
   objectives?: string;
-  expectedOutcomes?: string;
   successIndicators?: string;
   targetAudience?: string;
-  beneficiaryGroup?: string;
   status?: ActivityStatus;
 }
 
@@ -238,11 +234,9 @@ export interface UpdateActivityPayload {
   startDate?: string | null;
   endDate?: string | null;
   objectives?: string | null;
-  expectedOutcomes?: string | null;
   successIndicators?: string | null;
   targetAudience?: string | null;
   additionalContext?: string | null;
-  beneficiaryGroup?: string | null;
   status?: ActivityStatus;
 }
 

@@ -159,10 +159,8 @@ export function WorkspaceShell({
         startDate: payload.startDate ?? null,
         endDate: payload.endDate ?? null,
         objectives: payload.objectives ?? null,
-        expectedOutcomes: payload.expectedOutcomes ?? null,
         successIndicators: payload.successIndicators ?? null,
         targetAudience: payload.targetAudience ?? null,
-        beneficiaryGroup: payload.beneficiaryGroup ?? null,
         status: payload.status,
       };
 
