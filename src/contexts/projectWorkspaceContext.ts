@@ -56,7 +56,8 @@ export function useCurrentWorkspaceProject() {
   const { projectId, workspace } = useProjectWorkspacePage();
 
   return (
-    workspace.projects.find((workspaceProject) => workspaceProject.id === projectId) ??
-    null
+    workspace.projects.find(
+      (workspaceProject) => workspaceProject.id === projectId,
+    ) ?? null
   );
 }

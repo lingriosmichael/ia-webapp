@@ -122,7 +122,7 @@ export function ActivityDialog({
   }
 
   return (
-      <EntityDialog
+    <EntityDialog
       open={open}
       onOpenChange={onOpenChange}
       title={

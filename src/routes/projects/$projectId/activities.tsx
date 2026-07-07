@@ -24,7 +24,10 @@ function ProjectActivitiesPage() {
   const { openActivityDialog } = useWorkspaceShell();
   const { project, workspace } = useProjectWorkspacePage();
   const workspaceProject = useCurrentWorkspaceProject();
-  const activitiesQuery = useProjectActivitiesQuery(projectId, Boolean(auth.token));
+  const activitiesQuery = useProjectActivitiesQuery(
+    projectId,
+    Boolean(auth.token),
+  );
 
   if (!auth.token || activitiesQuery.isLoading) {
     return (
@@ -35,7 +38,10 @@ function ProjectActivitiesPage() {
   }
 
   const countsByActivityId = Object.fromEntries(
-    (workspaceProject?.activities ?? []).map((activity) => [activity.id, activity]),
+    (workspaceProject?.activities ?? []).map((activity) => [
+      activity.id,
+      activity,
+    ]),
   );
   const activities: WorkspaceActivity[] = (activitiesQuery.data ?? []).map(
     (activity) => {

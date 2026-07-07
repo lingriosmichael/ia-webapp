@@ -7,7 +7,5 @@ export const Route = createFileRoute("/projects/$projectId/settings")({
 function ProjectSettingsPage() {
   const { projectId } = Route.useParams();
 
-  return (
-    <Navigate to="/projects/$projectId" params={{ projectId }} replace />
-  );
+  return <Navigate to="/projects/$projectId" params={{ projectId }} replace />;
 }

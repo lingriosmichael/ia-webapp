@@ -448,7 +448,8 @@ const en = {
       ready: "Ready for analytics",
       notReady: "Still waiting for confirmation",
       understoodTitle: "Things Impact Atlas understands",
-      empty: "No activities are available yet. Add an activity and upload evidence to begin interpretation.",
+      empty:
+        "No activities are available yet. Add an activity and upload evidence to begin interpretation.",
       privacyTitle: "Privacy reviews needed",
       privacyPendingDescription:
         "The file {{fileName}} is waiting for privacy review before interpretation can continue.",

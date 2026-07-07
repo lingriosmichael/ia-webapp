@@ -448,7 +448,10 @@ export function useUpdateActivityMutation(
     mutationFn: (payload: UpdateActivityPayload) =>
       apiClient.updateActivity(activityId, payload),
     onSuccess: (activity) => {
-      queryClient.setQueryData<ActivitySummary>(activityQueryKey(activityId), activity);
+      queryClient.setQueryData<ActivitySummary>(
+        activityQueryKey(activityId),
+        activity,
+      );
       void queryClient.invalidateQueries({
         queryKey: activityQueryKey(activityId),
       });
@@ -585,7 +588,10 @@ export function useApprovePrivacyReviewMutation(
       apiClient.approvePrivacyReview(processingJobId, { decisions }),
     onSuccess: ({ review, job }) => {
       queryClient.setQueryData(jobQueryKey(job.id), job);
-      queryClient.setQueryData(privacyReviewQueryKey(review.processingJobId), review);
+      queryClient.setQueryData(
+        privacyReviewQueryKey(review.processingJobId),
+        review,
+      );
       void queryClient.invalidateQueries({
         queryKey: activityJobsQueryKey(activityId),
       });

@@ -50,24 +50,31 @@ function EvidencePrivacyReviewPage() {
   const { workspace } = useProjectWorkspacePage();
   const workspaceProject = useCurrentWorkspaceProject();
   const { t } = useTranslation();
-  const [defaultDecisions, setDefaultDecisions] = useState<DecisionDefaultsState>({
-    freeTextRisk: "exclude",
-    specialCategoryData: "exclude",
-  });
+  const [defaultDecisions, setDefaultDecisions] =
+    useState<DecisionDefaultsState>({
+      freeTextRisk: "exclude",
+      specialCategoryData: "exclude",
+    });
   const [fieldDecisionMap, setFieldDecisionMap] = useState<
     Record<string, PrivacyReviewDecisionValue>
   >({});
 
   const jobQuery = useJobQuery(processingJobId, true);
   const job = jobQuery.data;
-  const privacyReviewQuery = usePrivacyReviewQuery(processingJobId, Boolean(job));
+  const privacyReviewQuery = usePrivacyReviewQuery(
+    processingJobId,
+    Boolean(job),
+  );
   const review = privacyReviewQuery.data;
   const findings = readFindingSummary(review);
   const decisionFindings = findings.filter(isDecisionFinding);
   const currentActivity = workspaceProject?.activities.find(
     (activity) => activity.id === job?.activityId,
   );
-  const uploadsQuery = useActivityUploadsQuery(job?.activityId ?? "", Boolean(job?.activityId));
+  const uploadsQuery = useActivityUploadsQuery(
+    job?.activityId ?? "",
+    Boolean(job?.activityId),
+  );
   const currentUpload = uploadsQuery.data?.find(
     (upload) => upload.id === job?.uploadMetadataId,
   );
@@ -80,9 +87,9 @@ function EvidencePrivacyReviewPage() {
 
   const canApprove = Boolean(
     job &&
-      review &&
-      job.status === "awaiting_privacy_review" &&
-      review.status === "pending",
+    review &&
+    job.status === "awaiting_privacy_review" &&
+    review.status === "pending",
   );
   const decisionRequiredCount = decisionFindings.length;
   const hasFreeTextDecision = decisionFindings.some(
@@ -99,13 +106,15 @@ function EvidencePrivacyReviewPage() {
 
     setDefaultDecisions({
       freeTextRisk: review.decisions?.defaults?.freeTextRisk ?? "exclude",
-      specialCategoryData: review.decisions?.defaults?.specialCategoryData ?? "exclude",
+      specialCategoryData:
+        review.decisions?.defaults?.specialCategoryData ?? "exclude",
     });
 
     const nextFieldDecisionMap: Record<string, PrivacyReviewDecisionValue> = {};
     for (const decision of review.decisions?.fieldDecisions ?? []) {
-      nextFieldDecisionMap[createDecisionKey(decision.field, decision.entityType)] =
-        decision.decision;
+      nextFieldDecisionMap[
+        createDecisionKey(decision.field, decision.entityType)
+      ] = decision.decision;
     }
     setFieldDecisionMap(nextFieldDecisionMap);
   }, [review]);
@@ -131,7 +140,9 @@ function EvidencePrivacyReviewPage() {
             field: finding.field,
             entityType: finding.entityType,
             decision:
-              fieldDecisionMap[createDecisionKey(finding.field, finding.entityType)] ??
+              fieldDecisionMap[
+                createDecisionKey(finding.field, finding.entityType)
+              ] ??
               getDefaultDecisionForEntity(finding.entityType, defaultDecisions),
           })),
         },
@@ -199,11 +210,15 @@ function EvidencePrivacyReviewPage() {
                 />
                 <MetaCard
                   label={t("projectWorkspace.evidence.analysisStatus")}
-                  value={t(`projectWorkspace.evidence.analysisStates.${job.status}`)}
+                  value={t(
+                    `projectWorkspace.evidence.analysisStates.${job.status}`,
+                  )}
                 />
                 <MetaCard
                   label={t("projectWorkspace.evidence.reviewStatus")}
-                  value={t(`projectWorkspace.evidence.reviewStates.${review?.status ?? "pending"}`)}
+                  value={t(
+                    `projectWorkspace.evidence.reviewStates.${review?.status ?? "pending"}`,
+                  )}
                 />
               </div>
             </Card>
@@ -251,7 +266,10 @@ function EvidencePrivacyReviewPage() {
               ) : (
                 <div className="mt-4 space-y-3">
                   {findings.map((finding) => (
-                    <FindingCard key={`${finding.field}-${finding.entityType}`} finding={finding} />
+                    <FindingCard
+                      key={`${finding.field}-${finding.entityType}`}
+                      finding={finding}
+                    />
                   ))}
                 </div>
               )}
@@ -294,7 +312,9 @@ function EvidencePrivacyReviewPage() {
                       </div>
                       {hasFreeTextDecision ? (
                         <DecisionSelector
-                          label={t("projectWorkspace.evidence.freeTextRiskLabel")}
+                          label={t(
+                            "projectWorkspace.evidence.freeTextRiskLabel",
+                          )}
                           description={t(
                             "projectWorkspace.evidence.freeTextRiskDescription",
                           )}
@@ -310,7 +330,9 @@ function EvidencePrivacyReviewPage() {
                       ) : null}
                       {hasSpecialCategoryDecision ? (
                         <DecisionSelector
-                          label={t("projectWorkspace.evidence.specialCategoryDataLabel")}
+                          label={t(
+                            "projectWorkspace.evidence.specialCategoryDataLabel",
+                          )}
                           description={t(
                             "projectWorkspace.evidence.specialCategoryDataDescription",
                           )}
@@ -365,7 +387,9 @@ function EvidencePrivacyReviewPage() {
                 <Button
                   type="button"
                   onClick={() => void handleApprovePrivacyReview()}
-                  disabled={!canApprove || approvePrivacyReviewMutation.isPending}
+                  disabled={
+                    !canApprove || approvePrivacyReviewMutation.isPending
+                  }
                 >
                   {approvePrivacyReviewMutation.isPending
                     ? t("projectWorkspace.evidence.approvingPrivacy")
@@ -418,7 +442,9 @@ function FindingCard({ finding }: { finding: FindingSummaryItem }) {
     <div className="rounded-xl border border-border bg-secondary/20 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <div className="text-sm font-semibold text-foreground">{finding.field}</div>
+          <div className="text-sm font-semibold text-foreground">
+            {finding.field}
+          </div>
           <div className="mt-1 text-sm text-muted-foreground">
             {finding.entityType} · {finding.count}
           </div>
@@ -492,15 +518,18 @@ function ParsedRepresentationPreviewPanel({
               </div>
               <div className="mt-2 flex flex-wrap gap-4 text-sm text-muted-foreground">
                 <span>
-                  {t("projectWorkspace.evidence.parsedRowCount")}: {table.rowCount}
+                  {t("projectWorkspace.evidence.parsedRowCount")}:{" "}
+                  {table.rowCount}
                 </span>
                 <span>
-                  {t("projectWorkspace.evidence.parsedColumnCount")}: {table.columnCount}
+                  {t("projectWorkspace.evidence.parsedColumnCount")}:{" "}
+                  {table.columnCount}
                 </span>
               </div>
               <div className="mt-3 text-sm text-muted-foreground">
                 {t("projectWorkspace.evidence.parsedColumnsLabel")}:{" "}
-                {table.columns.join(", ") || t("projectWorkspace.evidence.parsedNone")}
+                {table.columns.join(", ") ||
+                  t("projectWorkspace.evidence.parsedNone")}
               </div>
             </div>
           ))}
@@ -530,7 +559,8 @@ function ParsedRepresentationPreviewPanel({
                   </span>
                   {paragraph.page !== null ? (
                     <span>
-                      {t("projectWorkspace.evidence.parsedPageLabel")}: {paragraph.page}
+                      {t("projectWorkspace.evidence.parsedPageLabel")}:{" "}
+                      {paragraph.page}
                     </span>
                   ) : null}
                 </div>
@@ -560,7 +590,9 @@ function DecisionFindingCard({
     <div className="rounded-xl border border-border bg-secondary/20 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <div className="text-sm font-semibold text-foreground">{finding.field}</div>
+          <div className="text-sm font-semibold text-foreground">
+            {finding.field}
+          </div>
           <div className="mt-1 text-sm text-muted-foreground">
             {t("projectWorkspace.evidence.privacyFindingSummary", {
               entityType: finding.entityType,
@@ -606,7 +638,9 @@ function DecisionSelector({
     <div>
       <div className="text-sm font-medium text-foreground">{label}</div>
       {description ? (
-        <p className="mt-1 text-sm leading-6 text-muted-foreground">{description}</p>
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+          {description}
+        </p>
       ) : null}
       <div className="mt-3 inline-flex flex-wrap gap-2">
         <DecisionOptionButton

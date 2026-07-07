@@ -290,7 +290,10 @@ function EvidenceFileRow({
   organizationId: string;
   onRemove: (uploadMetadataId: string) => Promise<void>;
   removePending: boolean;
-  formatEvidenceType: (contentType: string | null, originalFileName: string) => string;
+  formatEvidenceType: (
+    contentType: string | null,
+    originalFileName: string,
+  ) => string;
   formatFileSize: (sizeBytes: number | null) => string;
   formatUploadedAt: (createdAt: string) => string;
 }) {
@@ -305,14 +308,17 @@ function EvidenceFileRow({
   const job = liveJobQuery.data ?? latestJob;
   const hasActiveJob =
     job &&
-    ["queued", "processing", "awaiting_privacy_review", "transforming"].includes(
-      job.status,
-    );
+    [
+      "queued",
+      "processing",
+      "awaiting_privacy_review",
+      "transforming",
+    ].includes(job.status);
   const canReviewPrivacy = Boolean(
     job &&
-      ["awaiting_privacy_review", "transforming", "completed"].includes(
-        job.status,
-      ),
+    ["awaiting_privacy_review", "transforming", "completed"].includes(
+      job.status,
+    ),
   );
   const canAnalyse =
     activity.permissions.canUploadEvidence &&

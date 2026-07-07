@@ -337,7 +337,8 @@ const de: TranslationDictionary = {
       analysisStarted: "Evidenzanalyse wurde gestartet.",
       analysisStartFailed: "Evidenzanalyse konnte nicht gestartet werden.",
       privacyApprovalSuccess: "Datenschutzprüfung wurde freigegeben.",
-      privacyApprovalFailed: "Datenschutzprüfung konnte nicht freigegeben werden.",
+      privacyApprovalFailed:
+        "Datenschutzprüfung konnte nicht freigegeben werden.",
       privacyReviewTitle: "Datenschutzprüfung",
       privacyReviewDescription:
         "Prüfen Sie erkannte personenbezogene oder sensible Informationen, bevor Impact Atlas die datenschutzsichere Repräsentation erstellt.",
@@ -386,7 +387,8 @@ const de: TranslationDictionary = {
       reviewCompletedTitle: "Datenschutzprüfung abgeschlossen",
       reviewCompletedDescription:
         "Diese Datei wurde bereits freigegeben und in eine datenschutzsichere Repräsentation überführt.",
-      reviewTransformingTitle: "Datenschutzsichere Repräsentation in Erstellung",
+      reviewTransformingTitle:
+        "Datenschutzsichere Repräsentation in Erstellung",
       reviewTransformingDescription:
         "Die Datenschutzprüfung wurde freigegeben. Impact Atlas erstellt gerade die datenschutzsichere Repräsentation.",
       parsedRepresentationTitle: "Geparste Repräsentation",

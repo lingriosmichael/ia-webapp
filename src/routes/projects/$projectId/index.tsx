@@ -37,7 +37,11 @@ function ProjectOverviewPage() {
       actions={
         project.permissions.canEdit ? (
           isEditing ? (
-            <Button type="button" variant="outline" onClick={() => setIsEditing(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsEditing(false)}
+            >
               {locale.projectSettings.cancelEditAction}
             </Button>
           ) : (

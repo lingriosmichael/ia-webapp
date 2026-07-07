@@ -365,8 +365,7 @@ export interface ParsedRepresentationRecord {
 }
 
 export type PrivacyReviewDecisionValue =
-  | "exclude"
-  | "continue_with_restriction";
+  "exclude" | "continue_with_restriction";
 
 export interface ParsedRepresentationPreviewTable {
   name: string;

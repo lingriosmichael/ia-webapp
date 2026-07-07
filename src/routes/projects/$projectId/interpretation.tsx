@@ -47,7 +47,9 @@ function ProjectInterpretationPage() {
   );
   const questionsRemaining = Math.max(totalUploads - totalResults, 0);
   const confidencePercent =
-    totalUploads === 0 ? 0 : Math.min(100, Math.round((totalResults / totalUploads) * 100));
+    totalUploads === 0
+      ? 0
+      : Math.min(100, Math.round((totalResults / totalUploads) * 100));
   const readyForAnalytics = Boolean(
     overviewQuery.data &&
     overviewQuery.data.metrics.activitiesWithDatasetsCount > 0 &&
@@ -80,7 +82,9 @@ function ProjectInterpretationPage() {
             <Card className="p-5">
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <SummaryMetric
-                  label={t("projectWorkspace.interpretation.metrics.understanding")}
+                  label={t(
+                    "projectWorkspace.interpretation.metrics.understanding",
+                  )}
                   value={`${confidencePercent}%`}
                 />
                 <SummaryMetric
@@ -88,7 +92,9 @@ function ProjectInterpretationPage() {
                   value={String(totalUploads)}
                 />
                 <SummaryMetric
-                  label={t("projectWorkspace.interpretation.metrics.indicators")}
+                  label={t(
+                    "projectWorkspace.interpretation.metrics.indicators",
+                  )}
                   value={String(totalResults)}
                 />
                 <SummaryMetric
@@ -107,7 +113,9 @@ function ProjectInterpretationPage() {
                     },
                     {
                       done: totalUploads > 0,
-                      label: t("projectWorkspace.interpretation.progress.detect"),
+                      label: t(
+                        "projectWorkspace.interpretation.progress.detect",
+                      ),
                     },
                     {
                       done: totalResults > 0,
@@ -115,7 +123,9 @@ function ProjectInterpretationPage() {
                     },
                     {
                       done: readyForAnalytics,
-                      label: t("projectWorkspace.interpretation.progress.ready"),
+                      label: t(
+                        "projectWorkspace.interpretation.progress.ready",
+                      ),
                     },
                   ]}
                 />
@@ -152,7 +162,10 @@ function ProjectInterpretationPage() {
                 icon={<AlertTriangle className="h-4 w-4 text-primary" />}
                 title={t("projectWorkspace.interpretation.privacyTitle")}
               />
-              <PrivacyReviewSection activities={activities} projectId={projectId} />
+              <PrivacyReviewSection
+                activities={activities}
+                projectId={projectId}
+              />
             </div>
 
             <div className="space-y-4">
@@ -161,17 +174,23 @@ function ProjectInterpretationPage() {
                 title={t("projectWorkspace.interpretation.questionsTitle")}
               />
               {activities
-                .filter((activity) => activity.uploadMetadataCount > activity.resultCount)
+                .filter(
+                  (activity) =>
+                    activity.uploadMetadataCount > activity.resultCount,
+                )
                 .slice(0, 3)
                 .map((activity) => (
                   <QuestionCard
                     key={activity.id}
                     title={activity.name}
-                    question={t("projectWorkspace.interpretation.defaultQuestion")}
+                    question={t(
+                      "projectWorkspace.interpretation.defaultQuestion",
+                    )}
                   />
                 ))}
               {activities.every(
-                (activity) => activity.uploadMetadataCount <= activity.resultCount,
+                (activity) =>
+                  activity.uploadMetadataCount <= activity.resultCount,
               ) ? (
                 <Card className="p-5 text-sm text-muted-foreground">
                   {t("projectWorkspace.interpretation.noQuestions")}
@@ -278,7 +297,11 @@ function DatasetSummaryCard({
         {t("projectWorkspace.interpretation.datasetSummaryTitle")}
       </div>
       <div className="mt-4 grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">
-        <div>{t("projectWorkspace.interpretation.datasetSummaryFiles", { count: files })}</div>
+        <div>
+          {t("projectWorkspace.interpretation.datasetSummaryFiles", {
+            count: files,
+          })}
+        </div>
         <div>
           {t("projectWorkspace.interpretation.datasetSummaryActivities", {
             count: activities,
@@ -294,13 +317,7 @@ function DatasetSummaryCard({
   );
 }
 
-function SectionTitle({
-  icon,
-  title,
-}: {
-  icon: ReactNode;
-  title: string;
-}) {
+function SectionTitle({ icon, title }: { icon: ReactNode; title: string }) {
   return (
     <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
       {icon}
@@ -320,9 +337,13 @@ function InterpretationActivityCard({
   const jobsQuery = useActivityJobsQuery(activity.id, true);
   const resultsQuery = useActivityResultsQuery(activity.id, true);
   const { t } = useTranslation();
-  const latestUpload = uploadsQuery.data?.find((upload) => upload.status !== "archived");
+  const latestUpload = uploadsQuery.data?.find(
+    (upload) => upload.status !== "archived",
+  );
   const latestJob = jobsQuery.data?.[0];
-  const latestResult = resultsQuery.data?.find((result) => result.status === "available");
+  const latestResult = resultsQuery.data?.find(
+    (result) => result.status === "available",
+  );
 
   return (
     <Card className="p-5">
@@ -455,11 +476,14 @@ function PrivacyReviewSection({
                 {activity.name}
               </div>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                {t("projectWorkspace.interpretation.privacyPendingDescription", {
-                  fileName:
-                    upload?.originalFileName ??
-                    t("projectWorkspace.interpretation.privacyUnknownFile"),
-                })}
+                {t(
+                  "projectWorkspace.interpretation.privacyPendingDescription",
+                  {
+                    fileName:
+                      upload?.originalFileName ??
+                      t("projectWorkspace.interpretation.privacyUnknownFile"),
+                  },
+                )}
               </p>
             </div>
             <Link

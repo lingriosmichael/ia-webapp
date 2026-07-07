@@ -2,7 +2,10 @@ import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { ProjectTabs } from "@/components/project/projectTabs";
 import { PageHeader, TopBar } from "@/components/workspaceUI";
-import { useProjectHierarchy, useProjectWorkspacePage } from "@/contexts/projectWorkspaceContext";
+import {
+  useProjectHierarchy,
+  useProjectWorkspacePage,
+} from "@/contexts/projectWorkspaceContext";
 import { resolveProjectSummaryText } from "@/lib/projectSummary";
 
 export function ProjectWorkspaceShell({
