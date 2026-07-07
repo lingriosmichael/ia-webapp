@@ -486,7 +486,22 @@ export class ApiError extends Error {
   }
 }
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:4000";
+function resolveConfiguredApiBaseUrl() {
+  const configuredValue = import.meta.env.VITE_API_BASE_URL;
+
+  if (!configuredValue) {
+    // No silent localhost fallback: an unset VITE_API_BASE_URL in
+    // staging/production must fail loudly at load time, not send every
+    // request to a wrong (or dead) local address.
+    throw new Error(
+      "VITE_API_BASE_URL is not set. Configure it in this environment's .env file.",
+    );
+  }
+
+  return configuredValue;
+}
+
+const apiBaseUrl = resolveConfiguredApiBaseUrl();
 
 export function resolveApiUrl(path: string | null | undefined) {
   if (!path) {
