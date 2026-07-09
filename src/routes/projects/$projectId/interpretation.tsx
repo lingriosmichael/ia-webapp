@@ -46,6 +46,7 @@ import {
   type InterpretationIndicator,
   type InterpretationQuestion,
   type InterpretationResultRecord,
+  type InterpretationWarning,
   type ProcessingJobRecord,
   type UploadMetadataRecord,
   type WorkspaceActivity,
@@ -234,6 +235,33 @@ function SectionTitle({ icon, title }: { icon: ReactNode; title: string }) {
       {icon}
       {title}
     </div>
+  );
+}
+
+function WarningsList({ warnings }: { warnings: InterpretationWarning[] }) {
+  return (
+    <ul className="space-y-1.5">
+      {warnings.map((warning) => {
+        const isWarning = warning.severity === "warning";
+        return (
+          <li
+            key={warning.id}
+            className={
+              isWarning
+                ? "flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900"
+                : "flex items-start gap-2 rounded-md border border-border bg-secondary/20 px-3 py-2 text-sm text-muted-foreground"
+            }
+          >
+            {isWarning ? (
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+            ) : (
+              <CircleHelp className="mt-0.5 h-4 w-4 shrink-0" />
+            )}
+            <span>{warning.message}</span>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
@@ -620,6 +648,10 @@ function DatasetInterpretationCard({
                 : t("projectWorkspace.interpretation.reinterpretAction")}
             </Button>
           </div>
+
+          {result.warnings.length > 0 ? (
+            <WarningsList warnings={result.warnings} />
+          ) : null}
 
           {result.entities.length > 0 ? (
             <EntitiesTable entities={result.entities} />
