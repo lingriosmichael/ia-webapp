@@ -1,70 +1,109 @@
-import { useQueries } from "@tanstack/react-query";
+import { useQueries, useQueryClient } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import {
   AlertTriangle,
-  CheckCircle2,
+  ChevronDown,
+  ChevronRight,
   CircleHelp,
-  MessagesSquare,
   Sparkles,
   WandSparkles,
 } from "lucide-react";
-import { type ReactNode, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { PrivacyReviewDialog } from "@/components/privacyReviewDialog";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
 import { Card } from "@/components/workspaceUI";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCurrentWorkspaceProject } from "@/contexts/projectWorkspaceContext";
 import {
   activityJobsQueryKey,
   activityUploadsQueryKey,
+  projectInterpretationsQueryKey,
+  useAcknowledgeInterpretationReviewMutation,
   useActivityJobsQuery,
-  useActivityResultsQuery,
   useActivityUploadsQuery,
-  useProjectOverviewQuery,
+  useAnswerInterpretationQuestionMutation,
+  useJobQuery,
+  useProjectInterpretationsQuery,
+  useSetIndicatorStatusMutation,
+  useStartInterpretationMutation,
 } from "@/hooks/useGrantready";
 import { useRequireAuth } from "@/hooks/useAuth";
-import { apiClient, type WorkspaceActivity } from "@/services/apiClient";
+import {
+  apiClient,
+  type InterpretationEntity,
+  type InterpretationIndicator,
+  type InterpretationQuestion,
+  type InterpretationResultRecord,
+  type ProcessingJobRecord,
+  type UploadMetadataRecord,
+  type WorkspaceActivity,
+} from "@/services/apiClient";
+
+const INTERPRETATION_POLL_INTERVAL_MS = 3000;
+const TERMINAL_JOB_STATUSES = ["completed", "failed", "cancelled"];
 
 export const Route = createFileRoute("/projects/$projectId/interpretation")({
   component: ProjectInterpretationPage,
 });
+
+function average(values: number[]): number {
+  return values.length === 0
+    ? 0
+    : values.reduce((total, value) => total + value, 0) / values.length;
+}
 
 function ProjectInterpretationPage() {
   const { projectId } = Route.useParams();
   const auth = useRequireAuth();
   const { t } = useTranslation();
   const workspaceProject = useCurrentWorkspaceProject();
-  const overviewQuery = useProjectOverviewQuery(projectId, Boolean(auth.token));
-  const [draftPrompt, setDraftPrompt] = useState("");
+  const interpretationsQuery = useProjectInterpretationsQuery(
+    projectId,
+    Boolean(auth.token),
+  );
 
   const activities = workspaceProject?.activities ?? [];
-  const totalUploads = activities.reduce(
+  const results = interpretationsQuery.data?.results ?? [];
+  const resultsByUploadId = new Map(
+    results.map((result) => [result.uploadMetadataId, result]),
+  );
+
+  const overallConfidencePercent = Math.round(
+    average(results.map((result) => result.overallConfidence)) * 100,
+  );
+  const totalEntities = results.reduce(
+    (total, result) => total + result.entities.length,
+    0,
+  );
+  const totalIndicators = results.reduce(
+    (total, result) =>
+      total +
+      result.indicators.filter((indicator) => indicator.status !== "rejected")
+        .length,
+    0,
+  );
+  const pendingQuestions = results.flatMap((result) =>
+    result.questions
+      .filter((question) => question.status === "pending")
+      .map((question) => ({ result, question })),
+  );
+  const totalUploadCount = activities.reduce(
     (total, activity) => total + activity.uploadMetadataCount,
     0,
   );
-  const totalResults = activities.reduce(
-    (total, activity) => total + activity.resultCount,
-    0,
-  );
-  const questionsRemaining = Math.max(totalUploads - totalResults, 0);
-  const confidencePercent =
-    totalUploads === 0
-      ? 0
-      : Math.min(100, Math.round((totalResults / totalUploads) * 100));
-  const readyForAnalytics = Boolean(
-    overviewQuery.data &&
-    overviewQuery.data.metrics.activitiesWithDatasetsCount > 0 &&
-    overviewQuery.data.metrics.failedJobCount === 0,
-  );
-
-  const quickPrompts = useMemo(
-    () => [
-      t("projectWorkspace.interpretation.prompts.attendance"),
-      t("projectWorkspace.interpretation.prompts.ignoreColumn"),
-      t("projectWorkspace.interpretation.prompts.renameIndicator"),
-      t("projectWorkspace.interpretation.prompts.excludeCancelled"),
-    ],
-    [t],
-  );
+  const interpretedUploadCount = results.length;
 
   return (
     <ProjectWorkspaceShell>
@@ -77,7 +116,7 @@ function ProjectInterpretationPage() {
           {t("projectWorkspace.interpretation.description")}
         </p>
 
-        <div className="mt-6 grid gap-4 xl:grid-cols-[1.3fr_0.7fr]">
+        <div className="mt-6">
           <div className="space-y-4">
             <Card className="p-5">
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -85,56 +124,29 @@ function ProjectInterpretationPage() {
                   label={t(
                     "projectWorkspace.interpretation.metrics.understanding",
                   )}
-                  value={`${confidencePercent}%`}
+                  value={`${overallConfidencePercent}%`}
                 />
                 <SummaryMetric
-                  label={t("projectWorkspace.interpretation.metrics.uploads")}
-                  value={String(totalUploads)}
+                  label={t("projectWorkspace.interpretation.metrics.entities")}
+                  value={String(totalEntities)}
                 />
                 <SummaryMetric
                   label={t(
                     "projectWorkspace.interpretation.metrics.indicators",
                   )}
-                  value={String(totalResults)}
+                  value={String(totalIndicators)}
                 />
                 <SummaryMetric
                   label={t("projectWorkspace.interpretation.metrics.questions")}
-                  value={String(questionsRemaining)}
+                  value={String(pendingQuestions.length)}
                 />
               </div>
-
-              <div className="mt-5 grid gap-3 md:grid-cols-2">
-                <ProgressCard
-                  title={t("projectWorkspace.interpretation.progress.title")}
-                  items={[
-                    {
-                      done: totalUploads > 0,
-                      label: t("projectWorkspace.interpretation.progress.read"),
-                    },
-                    {
-                      done: totalUploads > 0,
-                      label: t(
-                        "projectWorkspace.interpretation.progress.detect",
-                      ),
-                    },
-                    {
-                      done: totalResults > 0,
-                      label: t("projectWorkspace.interpretation.progress.link"),
-                    },
-                    {
-                      done: readyForAnalytics,
-                      label: t(
-                        "projectWorkspace.interpretation.progress.ready",
-                      ),
-                    },
-                  ]}
-                />
-                <DatasetSummaryCard
-                  files={totalUploads}
-                  activities={activities.length}
-                  readyForAnalytics={readyForAnalytics}
-                />
-              </div>
+              <p className="mt-4 text-sm font-medium text-foreground">
+                {t("projectWorkspace.interpretation.filesInterpretedStatus", {
+                  interpreted: interpretedUploadCount,
+                  total: totalUploadCount,
+                })}
+              </p>
             </Card>
 
             <div className="space-y-4">
@@ -144,14 +156,16 @@ function ProjectInterpretationPage() {
               />
               {activities.length === 0 ? (
                 <Card className="p-5 text-sm text-muted-foreground">
-                  {t("projectWorkspace.interpretation.empty")}
+                  {t("projectWorkspace.interpretation.understoodEmpty")}
                 </Card>
               ) : (
                 activities.map((activity) => (
-                  <InterpretationActivityCard
+                  <InterpretationActivityGroup
                     key={activity.id}
                     activity={activity}
                     projectId={projectId}
+                    organizationId={workspaceProject?.organizationId}
+                    resultsByUploadId={resultsByUploadId}
                   />
                 ))
               )}
@@ -165,73 +179,36 @@ function ProjectInterpretationPage() {
               <PrivacyReviewSection
                 activities={activities}
                 projectId={projectId}
+                organizationId={workspaceProject?.organizationId ?? ""}
               />
             </div>
 
             <div className="space-y-4">
               <SectionTitle
                 icon={<CircleHelp className="h-4 w-4 text-primary" />}
-                title={t("projectWorkspace.interpretation.questionsTitle")}
+                title={t("projectWorkspace.interpretation.needHelpTitle")}
               />
-              {activities
-                .filter(
-                  (activity) =>
-                    activity.uploadMetadataCount > activity.resultCount,
-                )
-                .slice(0, 3)
-                .map((activity) => (
-                  <QuestionCard
-                    key={activity.id}
-                    title={activity.name}
-                    question={t(
-                      "projectWorkspace.interpretation.defaultQuestion",
-                    )}
-                  />
-                ))}
-              {activities.every(
-                (activity) =>
-                  activity.uploadMetadataCount <= activity.resultCount,
-              ) ? (
+              {pendingQuestions.length === 0 ? (
                 <Card className="p-5 text-sm text-muted-foreground">
-                  {t("projectWorkspace.interpretation.noQuestions")}
+                  {t("projectWorkspace.interpretation.needHelpEmpty")}
                 </Card>
-              ) : null}
+              ) : (
+                pendingQuestions.map(({ result, question }) => (
+                  <QuestionCard
+                    key={question.id}
+                    activityName={
+                      activities.find(
+                        (activity) => activity.id === result.activityId,
+                      )?.name ?? result.datasetType
+                    }
+                    interpretationResultId={result.id}
+                    projectId={projectId}
+                    question={question}
+                  />
+                ))
+              )}
             </div>
           </div>
-
-          <Card className="h-fit p-5">
-            <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
-              <MessagesSquare className="h-4 w-4 text-primary" />
-              {t("projectWorkspace.interpretation.askPanelTitle")}
-            </div>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              {t("projectWorkspace.interpretation.askPanelDescription")}
-            </p>
-
-            <div className="mt-4 flex flex-wrap gap-2">
-              {quickPrompts.map((prompt) => (
-                <button
-                  key={prompt}
-                  type="button"
-                  onClick={() => setDraftPrompt(prompt)}
-                  className="rounded-full border border-border bg-secondary/20 px-3 py-1.5 text-sm text-foreground hover:bg-secondary"
-                >
-                  {prompt}
-                </button>
-              ))}
-            </div>
-
-            <div className="mt-4 rounded-xl border border-border bg-background p-4">
-              <div className="text-sm text-foreground">
-                {draftPrompt ||
-                  t("projectWorkspace.interpretation.askPanelPlaceholder")}
-              </div>
-            </div>
-
-            <div className="mt-4 rounded-xl border border-primary/20 bg-primary-soft px-4 py-3 text-sm leading-6 text-primary">
-              {t("projectWorkspace.interpretation.askPanelNote")}
-            </div>
-          </Card>
         </div>
       </section>
     </ProjectWorkspaceShell>
@@ -251,72 +228,6 @@ function SummaryMetric({ label, value }: { label: string; value: string }) {
   );
 }
 
-function ProgressCard({
-  title,
-  items,
-}: {
-  title: string;
-  items: Array<{ done: boolean; label: string }>;
-}) {
-  return (
-    <div className="rounded-2xl border border-border bg-secondary/20 p-4">
-      <div className="text-sm font-semibold tracking-tight text-foreground">
-        {title}
-      </div>
-      <div className="mt-4 space-y-2">
-        {items.map((item) => (
-          <div
-            key={item.label}
-            className="flex items-center gap-2 text-sm text-muted-foreground"
-          >
-            <CheckCircle2
-              className={`h-4 w-4 ${item.done ? "text-primary" : "text-border"}`}
-            />
-            {item.label}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function DatasetSummaryCard({
-  files,
-  activities,
-  readyForAnalytics,
-}: {
-  files: number;
-  activities: number;
-  readyForAnalytics: boolean;
-}) {
-  const { t } = useTranslation();
-
-  return (
-    <div className="rounded-2xl border border-border bg-secondary/20 p-4">
-      <div className="text-sm font-semibold tracking-tight text-foreground">
-        {t("projectWorkspace.interpretation.datasetSummaryTitle")}
-      </div>
-      <div className="mt-4 grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">
-        <div>
-          {t("projectWorkspace.interpretation.datasetSummaryFiles", {
-            count: files,
-          })}
-        </div>
-        <div>
-          {t("projectWorkspace.interpretation.datasetSummaryActivities", {
-            count: activities,
-          })}
-        </div>
-        <div>
-          {readyForAnalytics
-            ? t("projectWorkspace.interpretation.ready")
-            : t("projectWorkspace.interpretation.notReady")}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function SectionTitle({ icon, title }: { icon: ReactNode; title: string }) {
   return (
     <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
@@ -326,68 +237,497 @@ function SectionTitle({ icon, title }: { icon: ReactNode; title: string }) {
   );
 }
 
-function InterpretationActivityCard({
+function EntitiesTable({ entities }: { entities: InterpretationEntity[] }) {
+  const { t } = useTranslation();
+
+  return (
+    <div className="overflow-hidden rounded-xl border border-border">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>
+              {t("projectWorkspace.interpretation.entityFieldColumn")}
+            </TableHead>
+            <TableHead>
+              {t("projectWorkspace.interpretation.entityInterpretationColumn")}
+            </TableHead>
+            <TableHead>
+              {t("projectWorkspace.interpretation.entitySampleValuesLabel")}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {entities.map((entity) => (
+            <TableRow key={entity.id}>
+              <TableCell className="font-medium text-foreground">
+                {entity.originalField}
+              </TableCell>
+              <TableCell className="text-muted-foreground">
+                <div className="text-foreground">{entity.aiMeaning}</div>
+                <div className="mt-0.5 text-xs">{entity.reason}</div>
+              </TableCell>
+              <TableCell className="text-muted-foreground">
+                {entity.sampleValues.length > 0
+                  ? entity.sampleValues.join(", ")
+                  : t(
+                      "projectWorkspace.interpretation.entitySampleValuesEmpty",
+                    )}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
+function IndicatorsTable({
+  interpretationResultId,
+  projectId,
+  indicators,
+}: {
+  interpretationResultId: string;
+  projectId: string;
+  indicators: InterpretationIndicator[];
+}) {
+  const { t } = useTranslation();
+  const setStatusMutation = useSetIndicatorStatusMutation(
+    interpretationResultId,
+    projectId,
+  );
+
+  return (
+    <div className="overflow-hidden rounded-xl border border-border">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>
+              {t("projectWorkspace.interpretation.indicatorNameColumn")}
+            </TableHead>
+            <TableHead>
+              {t("projectWorkspace.interpretation.entityInterpretationColumn")}
+            </TableHead>
+            <TableHead className="text-right">
+              {t("projectWorkspace.interpretation.indicatorRelevanceLabel")}
+            </TableHead>
+            <TableHead className="text-right">
+              {t("projectWorkspace.interpretation.indicatorActionColumn")}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {indicators.map((indicator) => {
+            const isRejected = indicator.status === "rejected";
+            const isPending =
+              setStatusMutation.isPending &&
+              setStatusMutation.variables?.indicatorId === indicator.id;
+
+            return (
+              <TableRow
+                key={indicator.id}
+                className={isRejected ? "opacity-50" : undefined}
+              >
+                <TableCell className="font-medium text-foreground">
+                  {indicator.name}
+                </TableCell>
+                <TableCell className="text-muted-foreground">
+                  <div className="text-foreground">{indicator.description}</div>
+                  <div className="mt-0.5 text-xs">{indicator.reason}</div>
+                </TableCell>
+                <TableCell className="text-right">
+                  {indicator.relevanceStage ? (
+                    <Badge variant="outline">
+                      {t(
+                        `projectWorkspace.interpretation.indicatorRelevanceStage.${indicator.relevanceStage}`,
+                      )}
+                    </Badge>
+                  ) : null}
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={isPending}
+                    onClick={() =>
+                      setStatusMutation.mutate({
+                        indicatorId: indicator.id,
+                        status: isRejected ? "kept" : "rejected",
+                      })
+                    }
+                  >
+                    {isRejected
+                      ? t(
+                          "projectWorkspace.interpretation.restoreIndicatorAction",
+                        )
+                      : t(
+                          "projectWorkspace.interpretation.rejectIndicatorAction",
+                        )}
+                  </Button>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
+function InterpretationActivityGroup({
   activity,
   projectId,
+  organizationId,
+  resultsByUploadId,
 }: {
   activity: WorkspaceActivity;
   projectId: string;
+  organizationId: string | undefined;
+  resultsByUploadId: Map<string, InterpretationResultRecord>;
 }) {
+  const { t, i18n } = useTranslation();
   const uploadsQuery = useActivityUploadsQuery(activity.id, true);
-  const jobsQuery = useActivityJobsQuery(activity.id, true);
-  const resultsQuery = useActivityResultsQuery(activity.id, true);
-  const { t } = useTranslation();
-  const latestUpload = uploadsQuery.data?.find(
-    (upload) => upload.status !== "archived",
+  const jobsQuery = useActivityJobsQuery(
+    activity.id,
+    true,
+    INTERPRETATION_POLL_INTERVAL_MS,
   );
-  const latestJob = jobsQuery.data?.[0];
-  const latestResult = resultsQuery.data?.find(
-    (result) => result.status === "available",
+  const acknowledgeMutation = useAcknowledgeInterpretationReviewMutation(
+    activity.id,
+    organizationId,
   );
+  const [isExpanded, setIsExpanded] = useState(
+    !activity.interpretationAcknowledgedAt,
+  );
+
+  // Whenever acknowledgment actually transitions (newly acknowledged, or
+  // cleared by new evidence), reset to the sensible default for that state.
+  // Manual expand/collapse clicks in between are left alone since this only
+  // re-runs when the underlying value itself changes.
+  useEffect(() => {
+    setIsExpanded(!activity.interpretationAcknowledgedAt);
+  }, [activity.interpretationAcknowledgedAt]);
+
+  const uploads = uploadsQuery.data ?? [];
+  const jobs = jobsQuery.data ?? [];
+  const activityResults = uploads
+    .map((upload) => resultsByUploadId.get(upload.id))
+    .filter((result): result is InterpretationResultRecord => Boolean(result));
+  const activityEntityCount = activityResults.reduce(
+    (total, result) => total + result.entities.length,
+    0,
+  );
+  const activityIndicatorCount = activityResults.reduce(
+    (total, result) =>
+      total +
+      result.indicators.filter((indicator) => indicator.status !== "rejected")
+        .length,
+    0,
+  );
+  // The generic "additional context" question (kind "free_text") is
+  // deliberately optional and never blocks review — only normalization
+  // merge-confirmation questions are actionable. Mirrors the same gate the
+  // backend independently enforces (never trust the disabled button alone).
+  const hasUnresolvedActionableQuestion = activityResults.some((result) =>
+    result.questions.some(
+      (question) =>
+        question.kind !== "free_text" && question.status === "pending",
+    ),
+  );
+  const canAcknowledge =
+    activityResults.length > 0 && !hasUnresolvedActionableQuestion;
+
+  function formatAcknowledgedAt(acknowledgedAt: string) {
+    return new Intl.DateTimeFormat(i18n.language, {
+      dateStyle: "medium",
+      timeStyle: "short",
+    }).format(new Date(acknowledgedAt));
+  }
 
   return (
     <Card className="p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h3 className="text-[16px] font-semibold tracking-tight text-foreground">
-            {activity.name}
-          </h3>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {latestUpload?.originalFileName ??
-              t("projectWorkspace.interpretation.noEvidenceYet")}
-          </p>
-        </div>
+        <h3 className="text-[16px] font-semibold tracking-tight text-foreground">
+          {activity.name}
+        </h3>
         <LinkToActivity projectId={projectId} activityId={activity.id} />
       </div>
 
-      <div className="mt-4 grid gap-3 md:grid-cols-3">
-        <SignalBox
-          label={t("projectWorkspace.interpretation.cardMeaning")}
-          value={
-            latestResult
-              ? t("projectWorkspace.interpretation.cardMeaningResolved")
-              : t("projectWorkspace.interpretation.cardMeaningPending")
-          }
-        />
-        <SignalBox
-          label={t("projectWorkspace.interpretation.cardConfidence")}
-          value={
-            latestResult
-              ? t("projectWorkspace.interpretation.confidenceHigh")
-              : latestJob?.status === "completed"
-                ? t("projectWorkspace.interpretation.confidenceMedium")
-                : t("projectWorkspace.interpretation.confidenceLow")
-          }
-        />
-        <SignalBox
-          label={t("projectWorkspace.interpretation.cardReason")}
-          value={
-            latestResult
-              ? t("projectWorkspace.interpretation.cardReasonResolved")
-              : t("projectWorkspace.interpretation.cardReasonPending")
-          }
-        />
+      {uploads.length > 0 ? (
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+          <button
+            type="button"
+            className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+            onClick={() => setIsExpanded((expanded) => !expanded)}
+            aria-expanded={isExpanded}
+          >
+            {isExpanded ? (
+              <ChevronDown className="h-4 w-4" />
+            ) : (
+              <ChevronRight className="h-4 w-4" />
+            )}
+            {t("projectWorkspace.interpretation.activitySummaryLine", {
+              files: uploads.length,
+              entities: activityEntityCount,
+              indicators: activityIndicatorCount,
+            })}
+          </button>
+          {activity.interpretationAcknowledgedAt ? (
+            <Badge variant="outline" className="text-emerald-700">
+              {t("projectWorkspace.interpretation.acknowledgedBadge", {
+                date: formatAcknowledgedAt(
+                  activity.interpretationAcknowledgedAt,
+                ),
+                name:
+                  activity.interpretationAcknowledgedByName ??
+                  t("projectWorkspace.interpretation.acknowledgedByUnknown"),
+              })}
+            </Badge>
+          ) : (
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={!canAcknowledge || acknowledgeMutation.isPending}
+              onClick={() => acknowledgeMutation.mutate()}
+            >
+              {acknowledgeMutation.isPending
+                ? t("projectWorkspace.interpretation.acknowledgePending")
+                : t("projectWorkspace.interpretation.acknowledgeAction")}
+            </Button>
+          )}
+        </div>
+      ) : null}
+
+      {uploads.length === 0 ? (
+        <p className="mt-4 text-sm text-muted-foreground">
+          {t("projectWorkspace.interpretation.noEvidenceYet")}
+        </p>
+      ) : isExpanded ? (
+        <Tabs defaultValue={uploads[0]!.id} className="mt-4">
+          <TabsList className="h-auto flex-wrap justify-start gap-1 bg-transparent p-0">
+            {uploads.map((upload) => (
+              <TabsTrigger
+                key={upload.id}
+                value={upload.id}
+                className="rounded-md border border-border bg-secondary/20 data-[state=active]:border-primary/40 data-[state=active]:bg-background"
+              >
+                {upload.originalFileName}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          {uploads.map((upload) => (
+            <TabsContent key={upload.id} value={upload.id} className="mt-4">
+              <DatasetInterpretationCard
+                activityId={activity.id}
+                projectId={projectId}
+                upload={upload}
+                jobs={jobs}
+                result={resultsByUploadId.get(upload.id)}
+              />
+            </TabsContent>
+          ))}
+        </Tabs>
+      ) : null}
+    </Card>
+  );
+}
+
+// One instance per uploaded file — each file is interpreted, re-run, and
+// displayed independently, since an activity can have several evidence
+// files that each need their own job status, result, and action button.
+// Rendered as one Tabs panel per upload in InterpretationActivityGroup, so
+// only the selected dataset's data is fetched/shown at a time.
+function DatasetInterpretationCard({
+  activityId,
+  projectId,
+  upload,
+  jobs,
+  result,
+}: {
+  activityId: string;
+  projectId: string;
+  upload: UploadMetadataRecord;
+  jobs: ProcessingJobRecord[];
+  result: InterpretationResultRecord | undefined;
+}) {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const startMutation = useStartInterpretationMutation(activityId, projectId);
+
+  const latestEvidenceJob = jobs.find(
+    (job) =>
+      job.jobType === "evidence_processing" &&
+      job.uploadMetadataId === upload.id,
+  );
+  const activeInterpretationJob = jobs.find(
+    (job) =>
+      job.jobType === "dataset_interpretation" &&
+      job.uploadMetadataId === upload.id &&
+      !TERMINAL_JOB_STATUSES.includes(job.status),
+  );
+
+  // Merely re-fetching the job list (above) only re-reads whatever is
+  // already in the database — it never asks Python for the interpretation
+  // job's real, current status. useJobQuery is what actually calls
+  // POST /jobs/:id/sync (same mechanism the evidence/activity overview
+  // pages use), so without this the job would sit at "processing" forever
+  // once one exists, no matter how long the pipeline actually takes.
+  const activeJobSyncQuery = useJobQuery(
+    activeInterpretationJob?.id,
+    Boolean(activeInterpretationJob?.id),
+  );
+
+  useEffect(() => {
+    const syncedStatus = activeJobSyncQuery.data?.status;
+    if (syncedStatus && TERMINAL_JOB_STATUSES.includes(syncedStatus)) {
+      void queryClient.invalidateQueries({
+        queryKey: activityJobsQueryKey(activityId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: projectInterpretationsQueryKey(projectId),
+      });
+    }
+  }, [activeJobSyncQuery.data?.status, activityId, projectId, queryClient]);
+
+  const canInterpret =
+    latestEvidenceJob?.status === "completed" && !activeInterpretationJob;
+  const isInterpreting =
+    startMutation.isPending || Boolean(activeInterpretationJob);
+
+  function handleInterpret() {
+    startMutation.mutate(upload.id);
+  }
+
+  return (
+    <div>
+      {result ? (
+        <div className="space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="text-sm text-muted-foreground">
+              {t("projectWorkspace.interpretation.versionLabel", {
+                number: result.versionNumber,
+              })}{" "}
+              · {result.datasetType} ·{" "}
+              {Math.round(result.overallConfidence * 100)}%
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleInterpret}
+              disabled={!canInterpret}
+            >
+              {isInterpreting
+                ? t("projectWorkspace.interpretation.interpretPending")
+                : t("projectWorkspace.interpretation.reinterpretAction")}
+            </Button>
+          </div>
+
+          {result.entities.length > 0 ? (
+            <EntitiesTable entities={result.entities} />
+          ) : null}
+
+          {result.indicators.length > 0 ? (
+            <div>
+              <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+                {t("projectWorkspace.interpretation.indicatorsTitle")}
+              </div>
+              <IndicatorsTable
+                interpretationResultId={result.id}
+                projectId={projectId}
+                indicators={result.indicators}
+              />
+            </div>
+          ) : null}
+        </div>
+      ) : (
+        <div>
+          <Button size="sm" onClick={handleInterpret} disabled={!canInterpret}>
+            {isInterpreting
+              ? t("projectWorkspace.interpretation.interpretPending")
+              : t("projectWorkspace.interpretation.interpretAction")}
+          </Button>
+          {!canInterpret && !isInterpreting ? (
+            <p className="mt-2 text-xs text-muted-foreground">
+              {t("projectWorkspace.interpretation.interpretUnavailable")}
+            </p>
+          ) : null}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function QuestionCard({
+  activityName,
+  interpretationResultId,
+  projectId,
+  question,
+}: {
+  activityName: string;
+  interpretationResultId: string;
+  projectId: string;
+  question: InterpretationQuestion;
+}) {
+  const { t } = useTranslation();
+  const [freeTextValue, setFreeTextValue] = useState("");
+  const answerMutation = useAnswerInterpretationQuestionMutation(
+    interpretationResultId,
+    projectId,
+  );
+
+  function submitAnswer(answeredValue: string) {
+    if (!answeredValue.trim()) {
+      return;
+    }
+    answerMutation.mutate({
+      questionId: question.id,
+      payload: { answeredValue },
+    });
+  }
+
+  return (
+    <Card className="p-5">
+      <div className="text-sm font-semibold tracking-tight text-foreground">
+        {activityName}
       </div>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+        {question.prompt}
+      </p>
+
+      {question.kind === "free_text" || !question.options?.length ? (
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Input
+            value={freeTextValue}
+            onChange={(event) => setFreeTextValue(event.target.value)}
+            placeholder={t(
+              "projectWorkspace.interpretation.questionFreeTextPlaceholder",
+            )}
+            className="max-w-sm"
+          />
+          <Button
+            size="sm"
+            onClick={() => submitAnswer(freeTextValue)}
+            disabled={!freeTextValue.trim() || answerMutation.isPending}
+          >
+            {answerMutation.isPending
+              ? t("projectWorkspace.interpretation.questionSubmitting")
+              : t("projectWorkspace.interpretation.questionSubmit")}
+          </Button>
+        </div>
+      ) : (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {question.options.map((option) => (
+            <Button
+              key={option}
+              variant="outline"
+              size="sm"
+              onClick={() => submitAnswer(option)}
+              disabled={answerMutation.isPending}
+            >
+              {option}
+            </Button>
+          ))}
+        </div>
+      )}
     </Card>
   );
 }
@@ -395,11 +735,16 @@ function InterpretationActivityCard({
 function PrivacyReviewSection({
   activities,
   projectId,
+  organizationId,
 }: {
   activities: WorkspaceActivity[];
   projectId: string;
+  organizationId: string;
 }) {
   const { t } = useTranslation();
+  const [reviewProcessingJobId, setReviewProcessingJobId] = useState<
+    string | undefined
+  >(undefined);
   const jobQueries = useQueries({
     queries: activities.map((activity) => ({
       queryKey: activityJobsQueryKey(activity.id),
@@ -418,7 +763,7 @@ function PrivacyReviewSection({
   if (activities.length === 0) {
     return (
       <Card className="p-5 text-sm text-muted-foreground">
-        {t("projectWorkspace.interpretation.empty")}
+        {t("projectWorkspace.interpretation.understoodEmpty")}
       </Card>
     );
   }
@@ -486,16 +831,27 @@ function PrivacyReviewSection({
                 )}
               </p>
             </div>
-            <Link
-              to="/projects/$projectId/evidence/$processingJobId/review"
-              params={{ projectId, processingJobId: pendingJob.id }}
+            <button
+              type="button"
+              onClick={() => setReviewProcessingJobId(pendingJob.id)}
               className="text-sm font-medium text-primary hover:underline"
             >
               {t("projectWorkspace.interpretation.reviewPrivacyAction")}
-            </Link>
+            </button>
           </div>
         </Card>
       ))}
+      <PrivacyReviewDialog
+        open={Boolean(reviewProcessingJobId)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setReviewProcessingJobId(undefined);
+          }
+        }}
+        processingJobId={reviewProcessingJobId}
+        projectId={projectId}
+        organizationId={organizationId}
+      />
     </>
   );
 }
@@ -517,33 +873,5 @@ function LinkToActivity({
     >
       {t("projectWorkspace.activities.openActivity")}
     </Link>
-  );
-}
-
-function SignalBox({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-border bg-secondary/20 p-3">
-      <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
-        {label}
-      </div>
-      <div className="mt-2 text-sm font-medium text-foreground">{value}</div>
-    </div>
-  );
-}
-
-function QuestionCard({
-  title,
-  question,
-}: {
-  title: string;
-  question: string;
-}) {
-  return (
-    <Card className="p-5">
-      <div className="text-sm font-semibold tracking-tight text-foreground">
-        {title}
-      </div>
-      <p className="mt-2 text-sm leading-6 text-muted-foreground">{question}</p>
-    </Card>
   );
 }

@@ -1,9 +1,11 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Outlet, createFileRoute, useMatches } from "@tanstack/react-router";
 import { Database, Sparkles, Trash2, UploadCloud } from "lucide-react";
 import type { ChangeEvent } from "react";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { AnalysisProgressDialog } from "@/components/analysisProgressDialog";
+import { PrivacyReviewDialog } from "@/components/privacyReviewDialog";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
 import { Card } from "@/components/workspaceUI";
 import {
@@ -51,6 +53,18 @@ export default function ProjectEvidencePage() {
   const workspaceProject = useCurrentWorkspaceProject();
   const activities = workspaceProject?.activities ?? [];
   const { t } = useTranslation();
+
+  // This route's file lives alongside an `evidence/` folder (the privacy
+  // review page below), which makes this the technical parent of that
+  // nested route in TanStack Router's file-based tree — without this
+  // check, navigating to the review page would silently render nothing,
+  // since a parent route's own JSX is what has to contain the <Outlet />
+  // for a matched child to ever appear anywhere on screen.
+  const matches = useMatches();
+  const isExactMatch = matches[matches.length - 1]?.routeId === Route.id;
+  if (!isExactMatch) {
+    return <Outlet />;
+  }
 
   return (
     <ProjectWorkspaceShell>
@@ -298,7 +312,8 @@ function EvidenceFileRow({
   formatUploadedAt: (createdAt: string) => string;
 }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const [progressDialogOpen, setProgressDialogOpen] = useState(false);
+  const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const startAnalysisMutation = useStartEvidenceAnalysisMutation(
     activity.id,
     projectId,
@@ -337,6 +352,11 @@ function EvidenceFileRow({
       return;
     }
 
+    // Opened immediately, before the mutation resolves, so clicking the
+    // button gives instant feedback rather than only changing an inline
+    // label the user has to notice on their own.
+    setProgressDialogOpen(true);
+
     try {
       await startAnalysisMutation.mutateAsync(upload.id);
       toast.success(t("projectWorkspace.evidence.analysisStarted"));
@@ -354,13 +374,7 @@ function EvidenceFileRow({
       return;
     }
 
-    void navigate({
-      to: "/projects/$projectId/evidence/$processingJobId/review",
-      params: {
-        projectId,
-        processingJobId: job.id,
-      },
-    });
+    setReviewDialogOpen(true);
   }
 
   return (
@@ -446,6 +460,20 @@ function EvidenceFileRow({
           {job.errorMessage}
         </div>
       ) : null}
+
+      <AnalysisProgressDialog
+        open={progressDialogOpen}
+        onOpenChange={setProgressDialogOpen}
+        job={job}
+        onReviewPrivacy={() => setReviewDialogOpen(true)}
+      />
+      <PrivacyReviewDialog
+        open={reviewDialogOpen}
+        onOpenChange={setReviewDialogOpen}
+        processingJobId={job?.id}
+        projectId={projectId}
+        organizationId={organizationId}
+      />
     </div>
   );
 }

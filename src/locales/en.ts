@@ -25,6 +25,7 @@ const en = {
     optional: "Optional",
     back: "Back",
     continue: "Continue",
+    close: "Close",
     notFoundTitle: "Page not found",
     notFoundDescription:
       "The requested page does not exist or is no longer available.",
@@ -334,14 +335,20 @@ const en = {
       privacyApprovalFailed: "Privacy review could not be approved.",
       privacyReviewTitle: "Privacy review",
       privacyReviewDescription:
-        "Review detected personal or sensitive information before Impact Atlas creates the privacy-safe representation.",
-      privacyReviewPageDescription:
         "Confirm how detected personal and sensitive information should be handled before Impact Atlas continues with the privacy-safe representation.",
       loadingPrivacyReview: "Loading privacy review…",
       noPrivacyFindings: "No privacy findings available yet.",
       privacyFindingSummary:
         "{{entityType}} detected {{count}} time(s). Recommended action: {{action}}.",
-      backToEvidence: "Back to evidence",
+      analysisDialogAnalyzingTitle: "Analyzing your file…",
+      analysisDialogAnalyzingDescription:
+        "Impact Atlas is parsing the file and checking for personal or sensitive information. You can close this and keep working — it'll keep running in the background.",
+      analysisDialogReadyTitle: "Ready for privacy review",
+      analysisDialogReadyDescription:
+        "Impact Atlas finished analyzing this file. Review the detected findings before it continues.",
+      analysisDialogFailedTitle: "Analysis failed",
+      analysisDialogFailedFallback:
+        "The file could not be analyzed due to an unexpected error.",
       reviewFile: "File",
       reviewActivity: "Activity",
       reviewStatus: "Review status",
@@ -356,22 +363,23 @@ const en = {
       detectedFindingsDescription:
         "{{count}} findings detected. {{decisions}} item(s) still require an explicit review decision.",
       decisionRequired: "Decision required",
-      reviewDecisionTitle: "Review decision",
-      reviewDecisionDescription:
-        "Choose how risky free-text and special-category content should be handled before the privacy-safe representation is created.",
-      noDecisionRequired:
-        "No additional review decisions are required for this file.",
-      decisionDefaultsTitle: "Default handling",
-      decisionOverridesTitle: "Review findings that require a choice",
-      freeTextRiskLabel: "Risky free-text",
-      freeTextRiskDescription:
-        "Use this as the default handling for free-text fields or document paragraphs that may contain personal data.",
-      specialCategoryDataLabel: "Special-category data",
-      specialCategoryDataDescription:
-        "Use this as the default handling for content that may include health, ethnicity, religion, or similar protected categories.",
-      fieldDecisionLabel: "{{entityType}} handling",
-      decisionExclude: "Exclude from processing",
-      decisionRestrict: "Keep structure, restrict content",
+      gdprNoticeIntro:
+        "We found personal or sensitive data in this dataset that may not comply with GDPR. For each item below, decide whether Impact Atlas should apply the recommended adjustment automatically.",
+      recommendationSentence:
+        "We recommend that Impact Atlas {{verb}} this {{entityType}} data before the dataset is used further.",
+      recommendationSentenceWithExample:
+        'We recommend that Impact Atlas {{verb}} this {{entityType}} data before the dataset is used further. Example value: "{{example}}".',
+      recommendationVerbHash: "pseudonymize it by hashing",
+      recommendationVerbRemove: "remove",
+      recommendationVerbRestrict: "redact the risky parts of",
+      approveFinding: "Accept recommended adjustment",
+      rejectFinding: "Reject recommendation",
+      findingApprovedBadge: "Adjustment accepted",
+      findingRejectedBadge: "Recommendation rejected",
+      rejectedFindingWarning:
+        "Impact Atlas will leave this data unchanged, so the GDPR risk remains in the dataset.",
+      reviewDecisionsIncomplete:
+        "Accept or reject every recommended adjustment above before continuing.",
       reviewApprovalLocked:
         "Approval is only available while the job is waiting for privacy review.",
       reviewUnavailableTitle: "Privacy review unavailable",
@@ -430,60 +438,56 @@ const en = {
       description:
         "Review how Impact Atlas understands uploaded evidence, where confidence is strong, and where clarification is still needed.",
       metrics: {
-        understanding: "Evidence understanding",
-        uploads: "Uploads interpreted",
+        understanding: "Overall interpretation confidence",
+        entities: "Entities detected",
         indicators: "Indicators detected",
         questions: "Questions remaining",
       },
-      progress: {
-        title: "Progress",
-        read: "Read files",
-        detect: "Detect schema and entities",
-        link: "Link activities and outputs",
-        ready: "Ready for analytics",
+      filesInterpretedStatus: "{{interpreted}} of {{total}} files interpreted",
+      activitySummaryLine:
+        "{{files}} files · {{entities}} entities · {{indicators}} indicators",
+      acknowledgeAction: "Mark as reviewed",
+      acknowledgePending: "Saving…",
+      acknowledgedBadge: "✓ Reviewed on {{date}} by {{name}}",
+      acknowledgedByUnknown: "someone",
+      understoodTitle: "Things I understand",
+      understoodEmpty:
+        'No interpretation results yet. Run "Interpret with AI" on an activity\'s evidence once its privacy review is approved.',
+      entitySampleValuesLabel: "Sample values",
+      entitySampleValuesEmpty: "No sample values available.",
+      entityFieldColumn: "Field",
+      entityInterpretationColumn: "AI interpretation",
+      indicatorNameColumn: "Indicator",
+      indicatorRelevanceLabel: "Relevance",
+      indicatorRelevanceStage: {
+        output: "Output",
+        outcome: "Outcome",
+        impact: "Impact",
       },
-      datasetSummaryTitle: "Dataset summary",
-      datasetSummaryFiles: "{{count}} files linked",
-      datasetSummaryActivities: "{{count}} activities linked",
-      ready: "Ready for analytics",
-      notReady: "Still waiting for confirmation",
-      understoodTitle: "Things Impact Atlas understands",
-      empty:
-        "No activities are available yet. Add an activity and upload evidence to begin interpretation.",
+      indicatorActionColumn: "Action",
+      rejectIndicatorAction: "Reject",
+      restoreIndicatorAction: "Restore",
+      indicatorsTitle: "Indicators",
+      needHelpTitle: "Things I need your help with",
+      needHelpEmpty: "No open questions right now.",
+      questionAnsweredLabel: "Answered: {{value}}",
+      questionFreeTextPlaceholder: "Type your answer…",
+      questionSubmit: "Submit",
+      questionSubmitting: "Submitting…",
       privacyTitle: "Privacy reviews needed",
       privacyPendingDescription:
         "The file {{fileName}} is waiting for privacy review before interpretation can continue.",
       privacyUnknownFile: "Unknown file",
       reviewPrivacyAction: "Review privacy",
       noPrivacyReviews: "No files are currently blocked on privacy review.",
-      questionsTitle: "Things Impact Atlas still needs help with",
-      defaultQuestion:
-        "This activity still has evidence that has not been fully interpreted. Review how the uploaded data should be classified.",
-      noQuestions: "No open interpretation questions right now.",
-      askPanelTitle: "Ask Impact Atlas",
-      askPanelDescription:
-        "Use this panel to challenge classifications, rename indicators, or request a different interpretation.",
-      askPanelPlaceholder:
-        "Why was this classified as attendance? Ignore this column. Treat this as a participant identifier.",
-      askPanelNote:
-        "This conversational layer is currently a lightweight placeholder for the future analyst workflow.",
-      prompts: {
-        attendance: "Why was this classified as attendance?",
-        ignoreColumn: "Ignore this column.",
-        renameIndicator: "Rename this indicator.",
-        excludeCancelled: "Exclude cancelled sessions.",
-      },
-      cardMeaning: "Detected meaning",
-      cardMeaningResolved: "Meaning resolved",
-      cardMeaningPending: "Waiting for review",
-      cardConfidence: "Confidence",
-      cardReason: "Reason",
-      cardReasonResolved: "Backed by interpreted evidence",
-      cardReasonPending: "Needs confirmation before analytics",
-      confidenceHigh: "High",
-      confidenceMedium: "Medium",
-      confidenceLow: "Low",
       noEvidenceYet: "No evidence uploaded yet.",
+      interpretAction: "Interpret with AI",
+      interpretPending: "Interpreting…",
+      interpretUnavailable:
+        "Waiting for privacy-safe processing to finish before this evidence can be interpreted.",
+      interpretError: "Interpretation could not be started. Please try again.",
+      versionLabel: "Version {{number}}",
+      reinterpretAction: "Re-run interpretation",
     },
     analytics: {
       title: "Analytics",
@@ -1047,6 +1051,22 @@ const en = {
     emptyDescription:
       "Upload a dataset and complete data review to unlock AI-generated insights.",
     emptyCta: "Go to Overview",
+    noGoalsTitle: "Add goals to unlock this check",
+    noGoalsDescription:
+      "Set this activity's Ziele (Goals) and Outcome-Indikator(en) to see whether your uploaded data actually supports measuring them.",
+    noGoalsCta: "Go to Overview",
+    noAnalysisTitle: "No analysis run yet",
+    noAnalysisDescription:
+      "Upload evidence and run an analysis for this activity to see how well your data supports its stated goals.",
+    noAnalysisCta: "Go to Overview",
+    noCoverageDescription:
+      "The analysis didn't surface any goal coverage information for this dataset yet.",
+    coveredTitle: "Covered by your data",
+    coveredEmpty:
+      "None of your stated goals are currently supported by the uploaded data.",
+    notCoveredTitle: "Not covered by your data",
+    notCoveredEmpty:
+      "Nothing to flag — your data supports every goal it was checked against.",
     summary: {
       generated: "Generated insights",
       keyFindings: "Key findings",

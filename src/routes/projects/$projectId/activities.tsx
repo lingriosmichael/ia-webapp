@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Outlet, createFileRoute, useMatches } from "@tanstack/react-router";
 import { FolderKanban } from "lucide-react";
 import { ActivityCard } from "@/components/project/activities/activityCard";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
@@ -28,6 +28,19 @@ function ProjectActivitiesPage() {
     projectId,
     Boolean(auth.token),
   );
+
+  // This route's file lives alongside an `activities/` folder (every
+  // per-activity detail page — overview, brief, upload, processing, etc.),
+  // which makes this the technical parent of all of them in TanStack
+  // Router's file-based tree. Without this check, navigating to any of
+  // those pages would silently render this list instead, since a parent
+  // route's own JSX is what has to contain the <Outlet /> for a matched
+  // child to ever appear anywhere on screen.
+  const matches = useMatches();
+  const isExactMatch = matches[matches.length - 1]?.routeId === Route.id;
+  if (!isExactMatch) {
+    return <Outlet />;
+  }
 
   if (!auth.token || activitiesQuery.isLoading) {
     return (

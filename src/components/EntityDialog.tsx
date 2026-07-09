@@ -17,6 +17,7 @@ export function EntityDialog({
   submitLabel,
   cancelLabel,
   isSubmitting,
+  submitDisabled,
   onSubmit,
   children,
 }: {
@@ -27,6 +28,7 @@ export function EntityDialog({
   submitLabel: string;
   cancelLabel: string;
   isSubmitting?: boolean;
+  submitDisabled?: boolean;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   children: ReactNode;
 }) {
@@ -51,7 +53,7 @@ export function EntityDialog({
             >
               {cancelLabel}
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting || submitDisabled}>
               {submitLabel}
             </Button>
           </DialogFooter>

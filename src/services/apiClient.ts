@@ -127,6 +127,9 @@ export interface ActivitySummary {
   additionalContext: string | null;
   status: ActivityStatus;
   permissions: ActivityPermissions;
+  interpretationAcknowledgedAt: string | null;
+  interpretationAcknowledgedById: string | null;
+  interpretationAcknowledgedByName: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -358,8 +361,7 @@ export interface ParsedRepresentationRecord {
   updatedAt: string;
 }
 
-export type PrivacyReviewDecisionValue =
-  "exclude" | "continue_with_restriction";
+export type PrivacyReviewDecisionValue = "approved" | "rejected";
 
 export interface ParsedRepresentationPreviewTable {
   name: string;
@@ -387,16 +389,28 @@ export interface ParsedRepresentationPreviewRecord {
   paragraphs: ParsedRepresentationPreviewParagraph[];
 }
 
+// What this client sends when approving a review. decidedById/decidedAt are
+// never sent from here — the backend stamps those itself from the
+// authenticated caller.
+export interface PrivacyReviewFieldDecisionInput {
+  field: string;
+  entityType: string;
+  decision: PrivacyReviewDecisionValue;
+}
+
+// What the backend actually persists and returns — the input plus a real
+// audit trail of who decided this finding and when.
+export interface PrivacyReviewFieldDecisionRecord extends PrivacyReviewFieldDecisionInput {
+  decidedById: string;
+  decidedAt: string;
+}
+
 export interface PrivacyReviewDecisions {
-  defaults?: {
-    freeTextRisk?: PrivacyReviewDecisionValue;
-    specialCategoryData?: PrivacyReviewDecisionValue;
-  };
-  fieldDecisions?: Array<{
-    field: string;
-    entityType: "FREE_TEXT_RISK" | "SPECIAL_CATEGORY_DATA";
-    decision: PrivacyReviewDecisionValue;
-  }>;
+  fieldDecisions?: PrivacyReviewFieldDecisionRecord[];
+}
+
+export interface PrivacyReviewDecisionsInput {
+  fieldDecisions?: PrivacyReviewFieldDecisionInput[];
 }
 
 export interface PrivacyReviewRecord {
@@ -417,7 +431,7 @@ export interface PrivacyReviewRecord {
 }
 
 export interface ApprovePrivacyReviewPayload {
-  decisions?: PrivacyReviewDecisions;
+  decisions?: PrivacyReviewDecisionsInput;
 }
 
 export interface ApprovePrivacyReviewResponse {
@@ -466,6 +480,104 @@ export interface DeleteEvidenceResponse {
 export interface DeleteActivityResponse {
   id: string;
   projectId: string;
+}
+
+export interface InterpretationEntity {
+  id: string;
+  originalField: string;
+  aiMeaning: string;
+  entityType: string;
+  confidence: number;
+  reason: string;
+  sampleValues: string[];
+}
+
+export type IndicatorRelevanceStage = "output" | "outcome" | "impact";
+export type InterpretationIndicatorStatus = "kept" | "rejected";
+
+export interface InterpretationIndicator {
+  id: string;
+  name: string;
+  description: string;
+  confidence: number;
+  reason: string;
+  relatedEntityIds: string[];
+  relevanceStage: IndicatorRelevanceStage | null;
+  status: InterpretationIndicatorStatus;
+}
+
+export interface InterpretationRelationship {
+  id: string;
+  description: string;
+  involvedEntityIds: string[];
+  confidence: number;
+}
+
+export type InterpretationQuestionKind =
+  "single_choice" | "free_text" | "merge_confirmation";
+export type InterpretationQuestionStatus = "pending" | "answered";
+
+export interface InterpretationQuestion {
+  id: string;
+  prompt: string;
+  kind: InterpretationQuestionKind;
+  options: string[] | null;
+  status: InterpretationQuestionStatus;
+  answeredValue: string | null;
+  answeredById: string | null;
+  answeredAt: string | null;
+}
+
+export interface InterpretationWarning {
+  id: string;
+  message: string;
+  severity: "info" | "warning";
+}
+
+export interface InterpretationGoalCoverage {
+  id: string;
+  goalSummary: string;
+  isSupportedByData: boolean;
+  relatedIndicatorIds: string[];
+  gapExplanation: string | null;
+}
+
+export interface InterpretationResultRecord {
+  id: string;
+  organizationId: string;
+  projectId: string;
+  activityId: string | null;
+  uploadMetadataId: string;
+  privacySafeRepresentationId: string;
+  processingJobId: string;
+  versionNumber: number;
+  previousInterpretationResultId: string | null;
+  datasetType: string;
+  overallConfidence: number;
+  entities: InterpretationEntity[];
+  indicators: InterpretationIndicator[];
+  relationships: InterpretationRelationship[];
+  questions: InterpretationQuestion[];
+  warnings: InterpretationWarning[];
+  goalAlignment: InterpretationGoalCoverage[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProjectInterpretationOverview {
+  results: InterpretationResultRecord[];
+}
+
+export interface StartInterpretationResponse {
+  job: ProcessingJobRecord;
+}
+
+export interface StartInterpretationPayload {
+  language: "de" | "en";
+}
+
+export interface AnswerInterpretationQuestionPayload {
+  answeredValue: string;
 }
 
 export class ApiError extends Error {
@@ -853,6 +965,61 @@ export const apiClient = {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(payload),
+    });
+  },
+  startInterpretation(
+    uploadMetadataId: string,
+    payload: StartInterpretationPayload,
+  ): Promise<StartInterpretationResponse> {
+    return request(`/evidence/${uploadMetadataId}/interpret`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  },
+  getProjectInterpretations(
+    projectId: string,
+  ): Promise<ProjectInterpretationOverview> {
+    return request(`/projects/${projectId}/interpretation`);
+  },
+  getInterpretation(
+    interpretationResultId: string,
+  ): Promise<InterpretationResultRecord> {
+    return request(`/interpretations/${interpretationResultId}`);
+  },
+  answerInterpretationQuestion(
+    interpretationResultId: string,
+    questionId: string,
+    payload: AnswerInterpretationQuestionPayload,
+  ): Promise<InterpretationResultRecord> {
+    return request(
+      `/interpretations/${interpretationResultId}/questions/${questionId}`,
+      {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      },
+    );
+  },
+  setIndicatorStatus(
+    interpretationResultId: string,
+    indicatorId: string,
+    status: InterpretationIndicatorStatus,
+  ): Promise<InterpretationResultRecord> {
+    return request(
+      `/interpretations/${interpretationResultId}/indicators/${indicatorId}`,
+      {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ status }),
+      },
+    );
+  },
+  acknowledgeInterpretationReview(
+    activityId: string,
+  ): Promise<ActivitySummary> {
+    return request(`/activities/${activityId}/interpretation-acknowledgment`, {
+      method: "POST",
     });
   },
 };

@@ -27,6 +27,7 @@ const de: TranslationDictionary = {
     optional: "Optional",
     back: "Zurück",
     continue: "Weiter",
+    close: "Schließen",
     notFoundTitle: "Seite nicht gefunden",
     notFoundDescription:
       "Die angeforderte Seite existiert nicht oder ist nicht mehr verfügbar.",
@@ -341,14 +342,20 @@ const de: TranslationDictionary = {
         "Datenschutzprüfung konnte nicht freigegeben werden.",
       privacyReviewTitle: "Datenschutzprüfung",
       privacyReviewDescription:
-        "Prüfen Sie erkannte personenbezogene oder sensible Informationen, bevor Impact Atlas die datenschutzsichere Repräsentation erstellt.",
-      privacyReviewPageDescription:
         "Bestätigen Sie, wie erkannte personenbezogene oder sensible Informationen behandelt werden sollen, bevor Impact Atlas mit der datenschutzsicheren Repräsentation fortfährt.",
       loadingPrivacyReview: "Datenschutzprüfung wird geladen…",
       noPrivacyFindings: "Es liegen noch keine Datenschutzbefunde vor.",
       privacyFindingSummary:
         "{{entityType}} wurde {{count}}-mal erkannt. Empfohlene Aktion: {{action}}.",
-      backToEvidence: "Zurück zur Evidenz",
+      analysisDialogAnalyzingTitle: "Ihre Datei wird analysiert…",
+      analysisDialogAnalyzingDescription:
+        "Impact Atlas liest die Datei ein und prüft auf personenbezogene oder sensible Informationen. Sie können dieses Fenster schließen und weiterarbeiten — die Analyse läuft im Hintergrund weiter.",
+      analysisDialogReadyTitle: "Bereit zur Datenschutzprüfung",
+      analysisDialogReadyDescription:
+        "Impact Atlas hat die Analyse dieser Datei abgeschlossen. Prüfen Sie die erkannten Befunde, bevor es weitergeht.",
+      analysisDialogFailedTitle: "Analyse fehlgeschlagen",
+      analysisDialogFailedFallback:
+        "Die Datei konnte aufgrund eines unerwarteten Fehlers nicht analysiert werden.",
       reviewFile: "Datei",
       reviewActivity: "Aktivität",
       reviewStatus: "Prüfstatus",
@@ -363,22 +370,24 @@ const de: TranslationDictionary = {
       detectedFindingsDescription:
         "{{count}} Befunde erkannt. Für {{decisions}} Eintrag(e) ist noch eine explizite Prüfentscheidung erforderlich.",
       decisionRequired: "Entscheidung erforderlich",
-      reviewDecisionTitle: "Prüfentscheidung",
-      reviewDecisionDescription:
-        "Legen Sie fest, wie risikoreicher Freitext und besondere Kategorien personenbezogener Daten behandelt werden sollen, bevor die datenschutzsichere Repräsentation erstellt wird.",
-      noDecisionRequired:
-        "Für diese Datei sind keine zusätzlichen Prüfentscheidungen erforderlich.",
-      decisionDefaultsTitle: "Standardbehandlung",
-      decisionOverridesTitle: "Befunde mit Auswahlbedarf",
-      freeTextRiskLabel: "Risikoreicher Freitext",
-      freeTextRiskDescription:
-        "Diese Einstellung gilt standardmäßig für Freitextfelder oder Dokumentabsätze, die personenbezogene Daten enthalten könnten.",
-      specialCategoryDataLabel: "Besondere Kategorien personenbezogener Daten",
-      specialCategoryDataDescription:
-        "Diese Einstellung gilt standardmäßig für Inhalte, die Gesundheitsdaten, Ethnie, Religion oder ähnliche besonders geschützte Kategorien enthalten könnten.",
-      fieldDecisionLabel: "Behandlung für {{entityType}}",
-      decisionExclude: "Aus Verarbeitung ausschließen",
-      decisionRestrict: "Struktur behalten, Inhalt einschränken",
+      gdprNoticeIntro:
+        "Wir haben in diesem Datensatz personenbezogene oder sensible Daten gefunden, die möglicherweise nicht DSGVO-konform sind. Entscheiden Sie für jeden Punkt unten, ob Impact Atlas die empfohlene Anpassung automatisch anwenden soll.",
+      recommendationSentence:
+        "Wir empfehlen, dass Impact Atlas diese {{entityType}}-Daten {{verb}}, bevor der Datensatz weiterverwendet wird.",
+      recommendationSentenceWithExample:
+        "Wir empfehlen, dass Impact Atlas diese {{entityType}}-Daten {{verb}}, bevor der Datensatz weiterverwendet wird. Beispielwert: „{{example}}“.",
+      recommendationVerbHash: "durch Hashing pseudonymisiert",
+      recommendationVerbRemove: "entfernen",
+      recommendationVerbRestrict:
+        "an den sensiblen Stellen bereinigt oder schwärzt",
+      approveFinding: "Empfohlene Anpassung akzeptieren",
+      rejectFinding: "Empfehlung ablehnen",
+      findingApprovedBadge: "Anpassung akzeptiert",
+      findingRejectedBadge: "Empfehlung abgelehnt",
+      rejectedFindingWarning:
+        "Impact Atlas lässt diese Daten unverändert, daher bleibt das DSGVO-Risiko im Datensatz bestehen.",
+      reviewDecisionsIncomplete:
+        "Akzeptieren oder verwerfen Sie jede empfohlene Anpassung oben, bevor Sie fortfahren.",
       reviewApprovalLocked:
         "Die Freigabe ist nur möglich, solange der Job auf die Datenschutzprüfung wartet.",
       reviewUnavailableTitle: "Datenschutzprüfung nicht verfügbar",
@@ -438,26 +447,43 @@ const de: TranslationDictionary = {
       description:
         "Prüfen Sie, wie Impact Atlas hochgeladene Evidenz versteht, wo die Zuordnung belastbar ist und wo noch Klärung nötig bleibt.",
       metrics: {
-        understanding: "Evidenzverständnis",
-        uploads: "Interpretierte Uploads",
+        understanding: "Gesamtvertrauen der Interpretation",
+        entities: "Erkannte Entitäten",
         indicators: "Erkannte Indikatoren",
         questions: "Offene Fragen",
       },
-      progress: {
-        title: "Fortschritt",
-        read: "Dateien eingelesen",
-        detect: "Schema und Entitäten erkannt",
-        link: "Aktivitäten und Outputs verknüpft",
-        ready: "Bereit für Analysen",
+      filesInterpretedStatus:
+        "{{interpreted}} von {{total}} Dateien interpretiert",
+      activitySummaryLine:
+        "{{files}} Dateien · {{entities}} Entitäten · {{indicators}} Indikatoren",
+      acknowledgeAction: "Als geprüft markieren",
+      acknowledgePending: "Wird gespeichert…",
+      acknowledgedBadge: "✓ Geprüft am {{date}} von {{name}}",
+      acknowledgedByUnknown: "jemandem",
+      understoodTitle: "Was ich verstehe",
+      understoodEmpty:
+        "Noch keine Interpretationsergebnisse. Starten Sie „Mit KI interpretieren“ für die Evidenz einer Aktivität, sobald deren Datenschutzprüfung genehmigt ist.",
+      entitySampleValuesLabel: "Beispielwerte",
+      entitySampleValuesEmpty: "Keine Beispielwerte verfügbar.",
+      entityFieldColumn: "Feld",
+      entityInterpretationColumn: "KI-Interpretation",
+      indicatorNameColumn: "Indikator",
+      indicatorRelevanceLabel: "Relevanz",
+      indicatorRelevanceStage: {
+        output: "Output",
+        outcome: "Outcome",
+        impact: "Impact",
       },
-      datasetSummaryTitle: "Datensatzübersicht",
-      datasetSummaryFiles: "{{count}} Dateien verknüpft",
-      datasetSummaryActivities: "{{count}} Aktivitäten verknüpft",
-      ready: "Bereit für Analysen",
-      notReady: "Wartet noch auf Bestätigung",
-      understoodTitle: "Was Impact Atlas bereits versteht",
-      empty:
-        "Es sind noch keine Aktivitäten vorhanden. Legen Sie eine Aktivität an und laden Sie Evidenz hoch, um die Interpretation zu starten.",
+      indicatorActionColumn: "Aktion",
+      rejectIndicatorAction: "Ablehnen",
+      restoreIndicatorAction: "Wiederherstellen",
+      indicatorsTitle: "Indikatoren",
+      needHelpTitle: "Wobei ich Ihre Hilfe brauche",
+      needHelpEmpty: "Derzeit keine offenen Fragen.",
+      questionAnsweredLabel: "Beantwortet: {{value}}",
+      questionFreeTextPlaceholder: "Antwort eingeben…",
+      questionSubmit: "Absenden",
+      questionSubmitting: "Wird gesendet…",
       privacyTitle: "Offene Datenschutzprüfungen",
       privacyPendingDescription:
         "Die Datei {{fileName}} wartet noch auf die Datenschutzprüfung, bevor die Interpretation fortgesetzt werden kann.",
@@ -465,34 +491,15 @@ const de: TranslationDictionary = {
       reviewPrivacyAction: "Datenschutz prüfen",
       noPrivacyReviews:
         "Aktuell blockiert keine Datei die Interpretation wegen einer offenen Datenschutzprüfung.",
-      questionsTitle: "Wobei Impact Atlas noch Hilfe braucht",
-      defaultQuestion:
-        "Für diese Aktivität gibt es noch Evidenz, die nicht vollständig interpretiert wurde. Prüfen Sie, wie die hochgeladenen Daten eingeordnet werden sollen.",
-      noQuestions: "Derzeit gibt es keine offenen Interpretationsfragen.",
-      askPanelTitle: "Impact Atlas fragen",
-      askPanelDescription:
-        "Nutzen Sie dieses Feld, um Zuordnungen zu hinterfragen, Indikatoren umzubenennen oder eine andere Interpretation anzufordern.",
-      askPanelPlaceholder:
-        "Warum wurde das als Teilnahme klassifiziert? Diese Spalte ignorieren. Das als Teilnehmenden-ID behandeln.",
-      askPanelNote:
-        "Diese Gesprächsebene ist aktuell ein leichter Platzhalter für den späteren Analysten-Workflow.",
-      prompts: {
-        attendance: "Warum wurde das als Teilnahme klassifiziert?",
-        ignoreColumn: "Diese Spalte ignorieren.",
-        renameIndicator: "Diesen Indikator umbenennen.",
-        excludeCancelled: "Abgesagte Termine ausschließen.",
-      },
-      cardMeaning: "Erkannte Bedeutung",
-      cardMeaningResolved: "Bedeutung geklärt",
-      cardMeaningPending: "Wartet auf Prüfung",
-      cardConfidence: "Vertrauen",
-      cardReason: "Begründung",
-      cardReasonResolved: "Durch interpretierte Evidenz gestützt",
-      cardReasonPending: "Benötigt Bestätigung vor Analysen",
-      confidenceHigh: "Hoch",
-      confidenceMedium: "Mittel",
-      confidenceLow: "Niedrig",
       noEvidenceYet: "Noch keine Evidenz hochgeladen.",
+      interpretAction: "Mit KI interpretieren",
+      interpretPending: "Wird interpretiert…",
+      interpretUnavailable:
+        "Wartet auf den Abschluss der datenschutzsicheren Verarbeitung, bevor diese Evidenz interpretiert werden kann.",
+      interpretError:
+        "Die Interpretation konnte nicht gestartet werden. Bitte erneut versuchen.",
+      versionLabel: "Version {{number}}",
+      reinterpretAction: "Interpretation erneut ausführen",
     },
     analytics: {
       title: "Analysen",
@@ -1072,6 +1079,22 @@ const de: TranslationDictionary = {
     emptyDescription:
       "Laden Sie einen Datensatz hoch und schließen Sie die Datenprüfung ab, um KI-generierte Erkenntnisse zu erhalten.",
     emptyCta: "Zur Übersicht",
+    noGoalsTitle: "Ziele hinzufügen, um diese Prüfung freizuschalten",
+    noGoalsDescription:
+      "Hinterlegen Sie die Ziele und Outcome-Indikator(en) dieser Aktivität, um zu sehen, ob Ihre hochgeladenen Daten deren Messung tatsächlich unterstützen.",
+    noGoalsCta: "Zur Übersicht",
+    noAnalysisTitle: "Noch keine Analyse durchgeführt",
+    noAnalysisDescription:
+      "Laden Sie Evidenzdaten hoch und führen Sie eine Analyse für diese Aktivität durch, um zu sehen, wie gut Ihre Daten die gesetzten Ziele unterstützen.",
+    noAnalysisCta: "Zur Übersicht",
+    noCoverageDescription:
+      "Die Analyse hat für diesen Datensatz noch keine Informationen zur Zielabdeckung geliefert.",
+    coveredTitle: "Durch Ihre Daten abgedeckt",
+    coveredEmpty:
+      "Keines Ihrer festgelegten Ziele wird derzeit durch die hochgeladenen Daten unterstützt.",
+    notCoveredTitle: "Nicht durch Ihre Daten abgedeckt",
+    notCoveredEmpty:
+      "Nichts zu melden — Ihre Daten unterstützen jedes geprüfte Ziel.",
     summary: {
       generated: "Erstellte Erkenntnisse",
       keyFindings: "Zentrale Erkenntnisse",

@@ -8,737 +8,717 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as RegisterRouteImport } from './routes/register'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as OnboardingWorkspaceRouteImport } from './routes/onboarding/workspace'
-import { Route as OnboardingWelcomeRouteImport } from './routes/onboarding/welcome'
-import { Route as OnboardingProfileRouteImport } from './routes/onboarding/profile'
-import { Route as OnboardingInviteRouteImport } from './routes/onboarding/invite'
-import { Route as ProjectsProjectIdRouteRouteImport } from './routes/projects/$projectId/route'
-import { Route as OrganizationsOrganizationIdRouteRouteImport } from './routes/organizations/$organizationId/route'
-import { Route as ProjectsProjectIdIndexRouteImport } from './routes/projects/$projectId/index'
-import { Route as OrganizationsOrganizationIdIndexRouteImport } from './routes/organizations/$organizationId/index'
-import { Route as ProjectsProjectIdSettingsRouteImport } from './routes/projects/$projectId/settings'
-import { Route as ProjectsProjectIdInterpretationRouteImport } from './routes/projects/$projectId/interpretation'
-import { Route as ProjectsProjectIdInsightsRouteImport } from './routes/projects/$projectId/insights'
-import { Route as ProjectsProjectIdEvidenceRouteImport } from './routes/projects/$projectId/evidence'
-import { Route as ProjectsProjectIdAnalyticsRouteImport } from './routes/projects/$projectId/analytics'
-import { Route as ProjectsProjectIdActivitiesRouteImport } from './routes/projects/$projectId/activities'
-import { Route as OrganizationsOrganizationIdSettingsRouteImport } from './routes/organizations/$organizationId/settings'
-import { Route as OrganizationsOrganizationIdProjectsRouteImport } from './routes/organizations/$organizationId/projects'
-import { Route as OrganizationsOrganizationIdProfileRouteImport } from './routes/organizations/$organizationId/profile'
-import { Route as OrganizationsOrganizationIdMembersRouteImport } from './routes/organizations/$organizationId/members'
-import { Route as OrganizationsOrganizationIdBillingRouteImport } from './routes/organizations/$organizationId/billing'
-import { Route as OrganizationsOrganizationIdActivitiesRouteImport } from './routes/organizations/$organizationId/activities'
-import { Route as InvitationsTokenAcceptRouteImport } from './routes/invitations/$token/accept'
-import { Route as ProjectsProjectIdEvidenceProcessingJobIdReviewRouteImport } from './routes/projects/$projectId/evidence/$processingJobId/review'
-import { Route as ProjectsProjectIdActivitiesActivityIdUploadRouteImport } from './routes/projects/$projectId/activities/$activityId/upload'
-import { Route as ProjectsProjectIdActivitiesActivityIdSettingsRouteImport } from './routes/projects/$projectId/activities/$activityId/settings'
-import { Route as ProjectsProjectIdActivitiesActivityIdSchemaRouteImport } from './routes/projects/$projectId/activities/$activityId/schema'
-import { Route as ProjectsProjectIdActivitiesActivityIdProcessingRouteImport } from './routes/projects/$projectId/activities/$activityId/processing'
-import { Route as ProjectsProjectIdActivitiesActivityIdOverviewRouteImport } from './routes/projects/$projectId/activities/$activityId/overview'
-import { Route as ProjectsProjectIdActivitiesActivityIdInsightsRouteImport } from './routes/projects/$projectId/activities/$activityId/insights'
-import { Route as ProjectsProjectIdActivitiesActivityIdBriefRouteImport } from './routes/projects/$projectId/activities/$activityId/brief'
-import { Route as ProjectsProjectIdActivitiesActivityIdAnalyticsRouteImport } from './routes/projects/$projectId/activities/$activityId/analytics'
-import { Route as ProjectsProjectIdActivitiesActivityIdAnalysisRouteImport } from './routes/projects/$projectId/activities/$activityId/analysis'
-import { Route as ProjectsProjectIdActivitiesActivityIdDataReviewIndexRouteImport } from './routes/projects/$projectId/activities/$activityId/data-review/index'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as RegisterRouteImport } from "./routes/register";
+import { Route as LoginRouteImport } from "./routes/login";
+import { Route as IndexRouteImport } from "./routes/index";
+import { Route as OnboardingWorkspaceRouteImport } from "./routes/onboarding/workspace";
+import { Route as OnboardingWelcomeRouteImport } from "./routes/onboarding/welcome";
+import { Route as OnboardingProfileRouteImport } from "./routes/onboarding/profile";
+import { Route as OnboardingInviteRouteImport } from "./routes/onboarding/invite";
+import { Route as ProjectsProjectIdRouteRouteImport } from "./routes/projects/$projectId/route";
+import { Route as OrganizationsOrganizationIdRouteRouteImport } from "./routes/organizations/$organizationId/route";
+import { Route as ProjectsProjectIdIndexRouteImport } from "./routes/projects/$projectId/index";
+import { Route as OrganizationsOrganizationIdIndexRouteImport } from "./routes/organizations/$organizationId/index";
+import { Route as ProjectsProjectIdSettingsRouteImport } from "./routes/projects/$projectId/settings";
+import { Route as ProjectsProjectIdInterpretationRouteImport } from "./routes/projects/$projectId/interpretation";
+import { Route as ProjectsProjectIdInsightsRouteImport } from "./routes/projects/$projectId/insights";
+import { Route as ProjectsProjectIdEvidenceRouteImport } from "./routes/projects/$projectId/evidence";
+import { Route as ProjectsProjectIdAnalyticsRouteImport } from "./routes/projects/$projectId/analytics";
+import { Route as ProjectsProjectIdActivitiesRouteImport } from "./routes/projects/$projectId/activities";
+import { Route as OrganizationsOrganizationIdSettingsRouteImport } from "./routes/organizations/$organizationId/settings";
+import { Route as OrganizationsOrganizationIdProjectsRouteImport } from "./routes/organizations/$organizationId/projects";
+import { Route as OrganizationsOrganizationIdProfileRouteImport } from "./routes/organizations/$organizationId/profile";
+import { Route as OrganizationsOrganizationIdMembersRouteImport } from "./routes/organizations/$organizationId/members";
+import { Route as OrganizationsOrganizationIdBillingRouteImport } from "./routes/organizations/$organizationId/billing";
+import { Route as OrganizationsOrganizationIdActivitiesRouteImport } from "./routes/organizations/$organizationId/activities";
+import { Route as InvitationsTokenAcceptRouteImport } from "./routes/invitations/$token/accept";
+import { Route as ProjectsProjectIdActivitiesActivityIdUploadRouteImport } from "./routes/projects/$projectId/activities/$activityId/upload";
+import { Route as ProjectsProjectIdActivitiesActivityIdSettingsRouteImport } from "./routes/projects/$projectId/activities/$activityId/settings";
+import { Route as ProjectsProjectIdActivitiesActivityIdSchemaRouteImport } from "./routes/projects/$projectId/activities/$activityId/schema";
+import { Route as ProjectsProjectIdActivitiesActivityIdProcessingRouteImport } from "./routes/projects/$projectId/activities/$activityId/processing";
+import { Route as ProjectsProjectIdActivitiesActivityIdOverviewRouteImport } from "./routes/projects/$projectId/activities/$activityId/overview";
+import { Route as ProjectsProjectIdActivitiesActivityIdInsightsRouteImport } from "./routes/projects/$projectId/activities/$activityId/insights";
+import { Route as ProjectsProjectIdActivitiesActivityIdBriefRouteImport } from "./routes/projects/$projectId/activities/$activityId/brief";
+import { Route as ProjectsProjectIdActivitiesActivityIdAnalyticsRouteImport } from "./routes/projects/$projectId/activities/$activityId/analytics";
+import { Route as ProjectsProjectIdActivitiesActivityIdAnalysisRouteImport } from "./routes/projects/$projectId/activities/$activityId/analysis";
+import { Route as ProjectsProjectIdActivitiesActivityIdDataReviewIndexRouteImport } from "./routes/projects/$projectId/activities/$activityId/data-review/index";
 
 const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
+  id: "/register",
+  path: "/register",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+  id: "/login",
+  path: "/login",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const OnboardingWorkspaceRoute = OnboardingWorkspaceRouteImport.update({
-  id: '/onboarding/workspace',
-  path: '/onboarding/workspace',
+  id: "/onboarding/workspace",
+  path: "/onboarding/workspace",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const OnboardingWelcomeRoute = OnboardingWelcomeRouteImport.update({
-  id: '/onboarding/welcome',
-  path: '/onboarding/welcome',
+  id: "/onboarding/welcome",
+  path: "/onboarding/welcome",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const OnboardingProfileRoute = OnboardingProfileRouteImport.update({
-  id: '/onboarding/profile',
-  path: '/onboarding/profile',
+  id: "/onboarding/profile",
+  path: "/onboarding/profile",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const OnboardingInviteRoute = OnboardingInviteRouteImport.update({
-  id: '/onboarding/invite',
-  path: '/onboarding/invite',
+  id: "/onboarding/invite",
+  path: "/onboarding/invite",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ProjectsProjectIdRouteRoute = ProjectsProjectIdRouteRouteImport.update({
-  id: '/projects/$projectId',
-  path: '/projects/$projectId',
+  id: "/projects/$projectId",
+  path: "/projects/$projectId",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const OrganizationsOrganizationIdRouteRoute =
   OrganizationsOrganizationIdRouteRouteImport.update({
-    id: '/organizations/$organizationId',
-    path: '/organizations/$organizationId',
+    id: "/organizations/$organizationId",
+    path: "/organizations/$organizationId",
     getParentRoute: () => rootRouteImport,
-  } as any)
+  } as any);
 const ProjectsProjectIdIndexRoute = ProjectsProjectIdIndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => ProjectsProjectIdRouteRoute,
-} as any)
+} as any);
 const OrganizationsOrganizationIdIndexRoute =
   OrganizationsOrganizationIdIndexRouteImport.update({
-    id: '/',
-    path: '/',
+    id: "/",
+    path: "/",
     getParentRoute: () => OrganizationsOrganizationIdRouteRoute,
-  } as any)
+  } as any);
 const ProjectsProjectIdSettingsRoute =
   ProjectsProjectIdSettingsRouteImport.update({
-    id: '/settings',
-    path: '/settings',
+    id: "/settings",
+    path: "/settings",
     getParentRoute: () => ProjectsProjectIdRouteRoute,
-  } as any)
+  } as any);
 const ProjectsProjectIdInterpretationRoute =
   ProjectsProjectIdInterpretationRouteImport.update({
-    id: '/interpretation',
-    path: '/interpretation',
+    id: "/interpretation",
+    path: "/interpretation",
     getParentRoute: () => ProjectsProjectIdRouteRoute,
-  } as any)
+  } as any);
 const ProjectsProjectIdInsightsRoute =
   ProjectsProjectIdInsightsRouteImport.update({
-    id: '/insights',
-    path: '/insights',
+    id: "/insights",
+    path: "/insights",
     getParentRoute: () => ProjectsProjectIdRouteRoute,
-  } as any)
+  } as any);
 const ProjectsProjectIdEvidenceRoute =
   ProjectsProjectIdEvidenceRouteImport.update({
-    id: '/evidence',
-    path: '/evidence',
+    id: "/evidence",
+    path: "/evidence",
     getParentRoute: () => ProjectsProjectIdRouteRoute,
-  } as any)
+  } as any);
 const ProjectsProjectIdAnalyticsRoute =
   ProjectsProjectIdAnalyticsRouteImport.update({
-    id: '/analytics',
-    path: '/analytics',
+    id: "/analytics",
+    path: "/analytics",
     getParentRoute: () => ProjectsProjectIdRouteRoute,
-  } as any)
+  } as any);
 const ProjectsProjectIdActivitiesRoute =
   ProjectsProjectIdActivitiesRouteImport.update({
-    id: '/activities',
-    path: '/activities',
+    id: "/activities",
+    path: "/activities",
     getParentRoute: () => ProjectsProjectIdRouteRoute,
-  } as any)
+  } as any);
 const OrganizationsOrganizationIdSettingsRoute =
   OrganizationsOrganizationIdSettingsRouteImport.update({
-    id: '/settings',
-    path: '/settings',
+    id: "/settings",
+    path: "/settings",
     getParentRoute: () => OrganizationsOrganizationIdRouteRoute,
-  } as any)
+  } as any);
 const OrganizationsOrganizationIdProjectsRoute =
   OrganizationsOrganizationIdProjectsRouteImport.update({
-    id: '/projects',
-    path: '/projects',
+    id: "/projects",
+    path: "/projects",
     getParentRoute: () => OrganizationsOrganizationIdRouteRoute,
-  } as any)
+  } as any);
 const OrganizationsOrganizationIdProfileRoute =
   OrganizationsOrganizationIdProfileRouteImport.update({
-    id: '/profile',
-    path: '/profile',
+    id: "/profile",
+    path: "/profile",
     getParentRoute: () => OrganizationsOrganizationIdRouteRoute,
-  } as any)
+  } as any);
 const OrganizationsOrganizationIdMembersRoute =
   OrganizationsOrganizationIdMembersRouteImport.update({
-    id: '/members',
-    path: '/members',
+    id: "/members",
+    path: "/members",
     getParentRoute: () => OrganizationsOrganizationIdRouteRoute,
-  } as any)
+  } as any);
 const OrganizationsOrganizationIdBillingRoute =
   OrganizationsOrganizationIdBillingRouteImport.update({
-    id: '/billing',
-    path: '/billing',
+    id: "/billing",
+    path: "/billing",
     getParentRoute: () => OrganizationsOrganizationIdRouteRoute,
-  } as any)
+  } as any);
 const OrganizationsOrganizationIdActivitiesRoute =
   OrganizationsOrganizationIdActivitiesRouteImport.update({
-    id: '/activities',
-    path: '/activities',
+    id: "/activities",
+    path: "/activities",
     getParentRoute: () => OrganizationsOrganizationIdRouteRoute,
-  } as any)
+  } as any);
 const InvitationsTokenAcceptRoute = InvitationsTokenAcceptRouteImport.update({
-  id: '/invitations/$token/accept',
-  path: '/invitations/$token/accept',
+  id: "/invitations/$token/accept",
+  path: "/invitations/$token/accept",
   getParentRoute: () => rootRouteImport,
-} as any)
-const ProjectsProjectIdEvidenceProcessingJobIdReviewRoute =
-  ProjectsProjectIdEvidenceProcessingJobIdReviewRouteImport.update({
-    id: '/$processingJobId/review',
-    path: '/$processingJobId/review',
-    getParentRoute: () => ProjectsProjectIdEvidenceRoute,
-  } as any)
+} as any);
 const ProjectsProjectIdActivitiesActivityIdUploadRoute =
   ProjectsProjectIdActivitiesActivityIdUploadRouteImport.update({
-    id: '/$activityId/upload',
-    path: '/$activityId/upload',
+    id: "/$activityId/upload",
+    path: "/$activityId/upload",
     getParentRoute: () => ProjectsProjectIdActivitiesRoute,
-  } as any)
+  } as any);
 const ProjectsProjectIdActivitiesActivityIdSettingsRoute =
   ProjectsProjectIdActivitiesActivityIdSettingsRouteImport.update({
-    id: '/$activityId/settings',
-    path: '/$activityId/settings',
+    id: "/$activityId/settings",
+    path: "/$activityId/settings",
     getParentRoute: () => ProjectsProjectIdActivitiesRoute,
-  } as any)
+  } as any);
 const ProjectsProjectIdActivitiesActivityIdSchemaRoute =
   ProjectsProjectIdActivitiesActivityIdSchemaRouteImport.update({
-    id: '/$activityId/schema',
-    path: '/$activityId/schema',
+    id: "/$activityId/schema",
+    path: "/$activityId/schema",
     getParentRoute: () => ProjectsProjectIdActivitiesRoute,
-  } as any)
+  } as any);
 const ProjectsProjectIdActivitiesActivityIdProcessingRoute =
   ProjectsProjectIdActivitiesActivityIdProcessingRouteImport.update({
-    id: '/$activityId/processing',
-    path: '/$activityId/processing',
+    id: "/$activityId/processing",
+    path: "/$activityId/processing",
     getParentRoute: () => ProjectsProjectIdActivitiesRoute,
-  } as any)
+  } as any);
 const ProjectsProjectIdActivitiesActivityIdOverviewRoute =
   ProjectsProjectIdActivitiesActivityIdOverviewRouteImport.update({
-    id: '/$activityId/overview',
-    path: '/$activityId/overview',
+    id: "/$activityId/overview",
+    path: "/$activityId/overview",
     getParentRoute: () => ProjectsProjectIdActivitiesRoute,
-  } as any)
+  } as any);
 const ProjectsProjectIdActivitiesActivityIdInsightsRoute =
   ProjectsProjectIdActivitiesActivityIdInsightsRouteImport.update({
-    id: '/$activityId/insights',
-    path: '/$activityId/insights',
+    id: "/$activityId/insights",
+    path: "/$activityId/insights",
     getParentRoute: () => ProjectsProjectIdActivitiesRoute,
-  } as any)
+  } as any);
 const ProjectsProjectIdActivitiesActivityIdBriefRoute =
   ProjectsProjectIdActivitiesActivityIdBriefRouteImport.update({
-    id: '/$activityId/brief',
-    path: '/$activityId/brief',
+    id: "/$activityId/brief",
+    path: "/$activityId/brief",
     getParentRoute: () => ProjectsProjectIdActivitiesRoute,
-  } as any)
+  } as any);
 const ProjectsProjectIdActivitiesActivityIdAnalyticsRoute =
   ProjectsProjectIdActivitiesActivityIdAnalyticsRouteImport.update({
-    id: '/$activityId/analytics',
-    path: '/$activityId/analytics',
+    id: "/$activityId/analytics",
+    path: "/$activityId/analytics",
     getParentRoute: () => ProjectsProjectIdActivitiesRoute,
-  } as any)
+  } as any);
 const ProjectsProjectIdActivitiesActivityIdAnalysisRoute =
   ProjectsProjectIdActivitiesActivityIdAnalysisRouteImport.update({
-    id: '/$activityId/analysis',
-    path: '/$activityId/analysis',
+    id: "/$activityId/analysis",
+    path: "/$activityId/analysis",
     getParentRoute: () => ProjectsProjectIdActivitiesRoute,
-  } as any)
+  } as any);
 const ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute =
   ProjectsProjectIdActivitiesActivityIdDataReviewIndexRouteImport.update({
-    id: '/$activityId/data-review/',
-    path: '/$activityId/data-review/',
+    id: "/$activityId/data-review/",
+    path: "/$activityId/data-review/",
     getParentRoute: () => ProjectsProjectIdActivitiesRoute,
-  } as any)
+  } as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/organizations/$organizationId': typeof OrganizationsOrganizationIdRouteRouteWithChildren
-  '/projects/$projectId': typeof ProjectsProjectIdRouteRouteWithChildren
-  '/onboarding/invite': typeof OnboardingInviteRoute
-  '/onboarding/profile': typeof OnboardingProfileRoute
-  '/onboarding/welcome': typeof OnboardingWelcomeRoute
-  '/onboarding/workspace': typeof OnboardingWorkspaceRoute
-  '/invitations/$token/accept': typeof InvitationsTokenAcceptRoute
-  '/organizations/$organizationId/activities': typeof OrganizationsOrganizationIdActivitiesRoute
-  '/organizations/$organizationId/billing': typeof OrganizationsOrganizationIdBillingRoute
-  '/organizations/$organizationId/members': typeof OrganizationsOrganizationIdMembersRoute
-  '/organizations/$organizationId/profile': typeof OrganizationsOrganizationIdProfileRoute
-  '/organizations/$organizationId/projects': typeof OrganizationsOrganizationIdProjectsRoute
-  '/organizations/$organizationId/settings': typeof OrganizationsOrganizationIdSettingsRoute
-  '/projects/$projectId/activities': typeof ProjectsProjectIdActivitiesRouteWithChildren
-  '/projects/$projectId/analytics': typeof ProjectsProjectIdAnalyticsRoute
-  '/projects/$projectId/evidence': typeof ProjectsProjectIdEvidenceRouteWithChildren
-  '/projects/$projectId/insights': typeof ProjectsProjectIdInsightsRoute
-  '/projects/$projectId/interpretation': typeof ProjectsProjectIdInterpretationRoute
-  '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
-  '/organizations/$organizationId/': typeof OrganizationsOrganizationIdIndexRoute
-  '/projects/$projectId/': typeof ProjectsProjectIdIndexRoute
-  '/projects/$projectId/activities/$activityId/analysis': typeof ProjectsProjectIdActivitiesActivityIdAnalysisRoute
-  '/projects/$projectId/activities/$activityId/analytics': typeof ProjectsProjectIdActivitiesActivityIdAnalyticsRoute
-  '/projects/$projectId/activities/$activityId/brief': typeof ProjectsProjectIdActivitiesActivityIdBriefRoute
-  '/projects/$projectId/activities/$activityId/insights': typeof ProjectsProjectIdActivitiesActivityIdInsightsRoute
-  '/projects/$projectId/activities/$activityId/overview': typeof ProjectsProjectIdActivitiesActivityIdOverviewRoute
-  '/projects/$projectId/activities/$activityId/processing': typeof ProjectsProjectIdActivitiesActivityIdProcessingRoute
-  '/projects/$projectId/activities/$activityId/schema': typeof ProjectsProjectIdActivitiesActivityIdSchemaRoute
-  '/projects/$projectId/activities/$activityId/settings': typeof ProjectsProjectIdActivitiesActivityIdSettingsRoute
-  '/projects/$projectId/activities/$activityId/upload': typeof ProjectsProjectIdActivitiesActivityIdUploadRoute
-  '/projects/$projectId/evidence/$processingJobId/review': typeof ProjectsProjectIdEvidenceProcessingJobIdReviewRoute
-  '/projects/$projectId/activities/$activityId/data-review/': typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute
+  "/": typeof IndexRoute;
+  "/login": typeof LoginRoute;
+  "/register": typeof RegisterRoute;
+  "/organizations/$organizationId": typeof OrganizationsOrganizationIdRouteRouteWithChildren;
+  "/projects/$projectId": typeof ProjectsProjectIdRouteRouteWithChildren;
+  "/onboarding/invite": typeof OnboardingInviteRoute;
+  "/onboarding/profile": typeof OnboardingProfileRoute;
+  "/onboarding/welcome": typeof OnboardingWelcomeRoute;
+  "/onboarding/workspace": typeof OnboardingWorkspaceRoute;
+  "/invitations/$token/accept": typeof InvitationsTokenAcceptRoute;
+  "/organizations/$organizationId/activities": typeof OrganizationsOrganizationIdActivitiesRoute;
+  "/organizations/$organizationId/billing": typeof OrganizationsOrganizationIdBillingRoute;
+  "/organizations/$organizationId/members": typeof OrganizationsOrganizationIdMembersRoute;
+  "/organizations/$organizationId/profile": typeof OrganizationsOrganizationIdProfileRoute;
+  "/organizations/$organizationId/projects": typeof OrganizationsOrganizationIdProjectsRoute;
+  "/organizations/$organizationId/settings": typeof OrganizationsOrganizationIdSettingsRoute;
+  "/projects/$projectId/activities": typeof ProjectsProjectIdActivitiesRouteWithChildren;
+  "/projects/$projectId/analytics": typeof ProjectsProjectIdAnalyticsRoute;
+  "/projects/$projectId/evidence": typeof ProjectsProjectIdEvidenceRoute;
+  "/projects/$projectId/insights": typeof ProjectsProjectIdInsightsRoute;
+  "/projects/$projectId/interpretation": typeof ProjectsProjectIdInterpretationRoute;
+  "/projects/$projectId/settings": typeof ProjectsProjectIdSettingsRoute;
+  "/organizations/$organizationId/": typeof OrganizationsOrganizationIdIndexRoute;
+  "/projects/$projectId/": typeof ProjectsProjectIdIndexRoute;
+  "/projects/$projectId/activities/$activityId/analysis": typeof ProjectsProjectIdActivitiesActivityIdAnalysisRoute;
+  "/projects/$projectId/activities/$activityId/analytics": typeof ProjectsProjectIdActivitiesActivityIdAnalyticsRoute;
+  "/projects/$projectId/activities/$activityId/brief": typeof ProjectsProjectIdActivitiesActivityIdBriefRoute;
+  "/projects/$projectId/activities/$activityId/insights": typeof ProjectsProjectIdActivitiesActivityIdInsightsRoute;
+  "/projects/$projectId/activities/$activityId/overview": typeof ProjectsProjectIdActivitiesActivityIdOverviewRoute;
+  "/projects/$projectId/activities/$activityId/processing": typeof ProjectsProjectIdActivitiesActivityIdProcessingRoute;
+  "/projects/$projectId/activities/$activityId/schema": typeof ProjectsProjectIdActivitiesActivityIdSchemaRoute;
+  "/projects/$projectId/activities/$activityId/settings": typeof ProjectsProjectIdActivitiesActivityIdSettingsRoute;
+  "/projects/$projectId/activities/$activityId/upload": typeof ProjectsProjectIdActivitiesActivityIdUploadRoute;
+  "/projects/$projectId/activities/$activityId/data-review/": typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/onboarding/invite': typeof OnboardingInviteRoute
-  '/onboarding/profile': typeof OnboardingProfileRoute
-  '/onboarding/welcome': typeof OnboardingWelcomeRoute
-  '/onboarding/workspace': typeof OnboardingWorkspaceRoute
-  '/invitations/$token/accept': typeof InvitationsTokenAcceptRoute
-  '/organizations/$organizationId/activities': typeof OrganizationsOrganizationIdActivitiesRoute
-  '/organizations/$organizationId/billing': typeof OrganizationsOrganizationIdBillingRoute
-  '/organizations/$organizationId/members': typeof OrganizationsOrganizationIdMembersRoute
-  '/organizations/$organizationId/profile': typeof OrganizationsOrganizationIdProfileRoute
-  '/organizations/$organizationId/projects': typeof OrganizationsOrganizationIdProjectsRoute
-  '/organizations/$organizationId/settings': typeof OrganizationsOrganizationIdSettingsRoute
-  '/projects/$projectId/activities': typeof ProjectsProjectIdActivitiesRouteWithChildren
-  '/projects/$projectId/analytics': typeof ProjectsProjectIdAnalyticsRoute
-  '/projects/$projectId/evidence': typeof ProjectsProjectIdEvidenceRouteWithChildren
-  '/projects/$projectId/insights': typeof ProjectsProjectIdInsightsRoute
-  '/projects/$projectId/interpretation': typeof ProjectsProjectIdInterpretationRoute
-  '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
-  '/organizations/$organizationId': typeof OrganizationsOrganizationIdIndexRoute
-  '/projects/$projectId': typeof ProjectsProjectIdIndexRoute
-  '/projects/$projectId/activities/$activityId/analysis': typeof ProjectsProjectIdActivitiesActivityIdAnalysisRoute
-  '/projects/$projectId/activities/$activityId/analytics': typeof ProjectsProjectIdActivitiesActivityIdAnalyticsRoute
-  '/projects/$projectId/activities/$activityId/brief': typeof ProjectsProjectIdActivitiesActivityIdBriefRoute
-  '/projects/$projectId/activities/$activityId/insights': typeof ProjectsProjectIdActivitiesActivityIdInsightsRoute
-  '/projects/$projectId/activities/$activityId/overview': typeof ProjectsProjectIdActivitiesActivityIdOverviewRoute
-  '/projects/$projectId/activities/$activityId/processing': typeof ProjectsProjectIdActivitiesActivityIdProcessingRoute
-  '/projects/$projectId/activities/$activityId/schema': typeof ProjectsProjectIdActivitiesActivityIdSchemaRoute
-  '/projects/$projectId/activities/$activityId/settings': typeof ProjectsProjectIdActivitiesActivityIdSettingsRoute
-  '/projects/$projectId/activities/$activityId/upload': typeof ProjectsProjectIdActivitiesActivityIdUploadRoute
-  '/projects/$projectId/evidence/$processingJobId/review': typeof ProjectsProjectIdEvidenceProcessingJobIdReviewRoute
-  '/projects/$projectId/activities/$activityId/data-review': typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute
+  "/": typeof IndexRoute;
+  "/login": typeof LoginRoute;
+  "/register": typeof RegisterRoute;
+  "/onboarding/invite": typeof OnboardingInviteRoute;
+  "/onboarding/profile": typeof OnboardingProfileRoute;
+  "/onboarding/welcome": typeof OnboardingWelcomeRoute;
+  "/onboarding/workspace": typeof OnboardingWorkspaceRoute;
+  "/invitations/$token/accept": typeof InvitationsTokenAcceptRoute;
+  "/organizations/$organizationId/activities": typeof OrganizationsOrganizationIdActivitiesRoute;
+  "/organizations/$organizationId/billing": typeof OrganizationsOrganizationIdBillingRoute;
+  "/organizations/$organizationId/members": typeof OrganizationsOrganizationIdMembersRoute;
+  "/organizations/$organizationId/profile": typeof OrganizationsOrganizationIdProfileRoute;
+  "/organizations/$organizationId/projects": typeof OrganizationsOrganizationIdProjectsRoute;
+  "/organizations/$organizationId/settings": typeof OrganizationsOrganizationIdSettingsRoute;
+  "/projects/$projectId/activities": typeof ProjectsProjectIdActivitiesRouteWithChildren;
+  "/projects/$projectId/analytics": typeof ProjectsProjectIdAnalyticsRoute;
+  "/projects/$projectId/evidence": typeof ProjectsProjectIdEvidenceRoute;
+  "/projects/$projectId/insights": typeof ProjectsProjectIdInsightsRoute;
+  "/projects/$projectId/interpretation": typeof ProjectsProjectIdInterpretationRoute;
+  "/projects/$projectId/settings": typeof ProjectsProjectIdSettingsRoute;
+  "/organizations/$organizationId": typeof OrganizationsOrganizationIdIndexRoute;
+  "/projects/$projectId": typeof ProjectsProjectIdIndexRoute;
+  "/projects/$projectId/activities/$activityId/analysis": typeof ProjectsProjectIdActivitiesActivityIdAnalysisRoute;
+  "/projects/$projectId/activities/$activityId/analytics": typeof ProjectsProjectIdActivitiesActivityIdAnalyticsRoute;
+  "/projects/$projectId/activities/$activityId/brief": typeof ProjectsProjectIdActivitiesActivityIdBriefRoute;
+  "/projects/$projectId/activities/$activityId/insights": typeof ProjectsProjectIdActivitiesActivityIdInsightsRoute;
+  "/projects/$projectId/activities/$activityId/overview": typeof ProjectsProjectIdActivitiesActivityIdOverviewRoute;
+  "/projects/$projectId/activities/$activityId/processing": typeof ProjectsProjectIdActivitiesActivityIdProcessingRoute;
+  "/projects/$projectId/activities/$activityId/schema": typeof ProjectsProjectIdActivitiesActivityIdSchemaRoute;
+  "/projects/$projectId/activities/$activityId/settings": typeof ProjectsProjectIdActivitiesActivityIdSettingsRoute;
+  "/projects/$projectId/activities/$activityId/upload": typeof ProjectsProjectIdActivitiesActivityIdUploadRoute;
+  "/projects/$projectId/activities/$activityId/data-review": typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/organizations/$organizationId': typeof OrganizationsOrganizationIdRouteRouteWithChildren
-  '/projects/$projectId': typeof ProjectsProjectIdRouteRouteWithChildren
-  '/onboarding/invite': typeof OnboardingInviteRoute
-  '/onboarding/profile': typeof OnboardingProfileRoute
-  '/onboarding/welcome': typeof OnboardingWelcomeRoute
-  '/onboarding/workspace': typeof OnboardingWorkspaceRoute
-  '/invitations/$token/accept': typeof InvitationsTokenAcceptRoute
-  '/organizations/$organizationId/activities': typeof OrganizationsOrganizationIdActivitiesRoute
-  '/organizations/$organizationId/billing': typeof OrganizationsOrganizationIdBillingRoute
-  '/organizations/$organizationId/members': typeof OrganizationsOrganizationIdMembersRoute
-  '/organizations/$organizationId/profile': typeof OrganizationsOrganizationIdProfileRoute
-  '/organizations/$organizationId/projects': typeof OrganizationsOrganizationIdProjectsRoute
-  '/organizations/$organizationId/settings': typeof OrganizationsOrganizationIdSettingsRoute
-  '/projects/$projectId/activities': typeof ProjectsProjectIdActivitiesRouteWithChildren
-  '/projects/$projectId/analytics': typeof ProjectsProjectIdAnalyticsRoute
-  '/projects/$projectId/evidence': typeof ProjectsProjectIdEvidenceRouteWithChildren
-  '/projects/$projectId/insights': typeof ProjectsProjectIdInsightsRoute
-  '/projects/$projectId/interpretation': typeof ProjectsProjectIdInterpretationRoute
-  '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
-  '/organizations/$organizationId/': typeof OrganizationsOrganizationIdIndexRoute
-  '/projects/$projectId/': typeof ProjectsProjectIdIndexRoute
-  '/projects/$projectId/activities/$activityId/analysis': typeof ProjectsProjectIdActivitiesActivityIdAnalysisRoute
-  '/projects/$projectId/activities/$activityId/analytics': typeof ProjectsProjectIdActivitiesActivityIdAnalyticsRoute
-  '/projects/$projectId/activities/$activityId/brief': typeof ProjectsProjectIdActivitiesActivityIdBriefRoute
-  '/projects/$projectId/activities/$activityId/insights': typeof ProjectsProjectIdActivitiesActivityIdInsightsRoute
-  '/projects/$projectId/activities/$activityId/overview': typeof ProjectsProjectIdActivitiesActivityIdOverviewRoute
-  '/projects/$projectId/activities/$activityId/processing': typeof ProjectsProjectIdActivitiesActivityIdProcessingRoute
-  '/projects/$projectId/activities/$activityId/schema': typeof ProjectsProjectIdActivitiesActivityIdSchemaRoute
-  '/projects/$projectId/activities/$activityId/settings': typeof ProjectsProjectIdActivitiesActivityIdSettingsRoute
-  '/projects/$projectId/activities/$activityId/upload': typeof ProjectsProjectIdActivitiesActivityIdUploadRoute
-  '/projects/$projectId/evidence/$processingJobId/review': typeof ProjectsProjectIdEvidenceProcessingJobIdReviewRoute
-  '/projects/$projectId/activities/$activityId/data-review/': typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute
+  __root__: typeof rootRouteImport;
+  "/": typeof IndexRoute;
+  "/login": typeof LoginRoute;
+  "/register": typeof RegisterRoute;
+  "/organizations/$organizationId": typeof OrganizationsOrganizationIdRouteRouteWithChildren;
+  "/projects/$projectId": typeof ProjectsProjectIdRouteRouteWithChildren;
+  "/onboarding/invite": typeof OnboardingInviteRoute;
+  "/onboarding/profile": typeof OnboardingProfileRoute;
+  "/onboarding/welcome": typeof OnboardingWelcomeRoute;
+  "/onboarding/workspace": typeof OnboardingWorkspaceRoute;
+  "/invitations/$token/accept": typeof InvitationsTokenAcceptRoute;
+  "/organizations/$organizationId/activities": typeof OrganizationsOrganizationIdActivitiesRoute;
+  "/organizations/$organizationId/billing": typeof OrganizationsOrganizationIdBillingRoute;
+  "/organizations/$organizationId/members": typeof OrganizationsOrganizationIdMembersRoute;
+  "/organizations/$organizationId/profile": typeof OrganizationsOrganizationIdProfileRoute;
+  "/organizations/$organizationId/projects": typeof OrganizationsOrganizationIdProjectsRoute;
+  "/organizations/$organizationId/settings": typeof OrganizationsOrganizationIdSettingsRoute;
+  "/projects/$projectId/activities": typeof ProjectsProjectIdActivitiesRouteWithChildren;
+  "/projects/$projectId/analytics": typeof ProjectsProjectIdAnalyticsRoute;
+  "/projects/$projectId/evidence": typeof ProjectsProjectIdEvidenceRoute;
+  "/projects/$projectId/insights": typeof ProjectsProjectIdInsightsRoute;
+  "/projects/$projectId/interpretation": typeof ProjectsProjectIdInterpretationRoute;
+  "/projects/$projectId/settings": typeof ProjectsProjectIdSettingsRoute;
+  "/organizations/$organizationId/": typeof OrganizationsOrganizationIdIndexRoute;
+  "/projects/$projectId/": typeof ProjectsProjectIdIndexRoute;
+  "/projects/$projectId/activities/$activityId/analysis": typeof ProjectsProjectIdActivitiesActivityIdAnalysisRoute;
+  "/projects/$projectId/activities/$activityId/analytics": typeof ProjectsProjectIdActivitiesActivityIdAnalyticsRoute;
+  "/projects/$projectId/activities/$activityId/brief": typeof ProjectsProjectIdActivitiesActivityIdBriefRoute;
+  "/projects/$projectId/activities/$activityId/insights": typeof ProjectsProjectIdActivitiesActivityIdInsightsRoute;
+  "/projects/$projectId/activities/$activityId/overview": typeof ProjectsProjectIdActivitiesActivityIdOverviewRoute;
+  "/projects/$projectId/activities/$activityId/processing": typeof ProjectsProjectIdActivitiesActivityIdProcessingRoute;
+  "/projects/$projectId/activities/$activityId/schema": typeof ProjectsProjectIdActivitiesActivityIdSchemaRoute;
+  "/projects/$projectId/activities/$activityId/settings": typeof ProjectsProjectIdActivitiesActivityIdSettingsRoute;
+  "/projects/$projectId/activities/$activityId/upload": typeof ProjectsProjectIdActivitiesActivityIdUploadRoute;
+  "/projects/$projectId/activities/$activityId/data-review/": typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
-    | '/'
-    | '/login'
-    | '/register'
-    | '/organizations/$organizationId'
-    | '/projects/$projectId'
-    | '/onboarding/invite'
-    | '/onboarding/profile'
-    | '/onboarding/welcome'
-    | '/onboarding/workspace'
-    | '/invitations/$token/accept'
-    | '/organizations/$organizationId/activities'
-    | '/organizations/$organizationId/billing'
-    | '/organizations/$organizationId/members'
-    | '/organizations/$organizationId/profile'
-    | '/organizations/$organizationId/projects'
-    | '/organizations/$organizationId/settings'
-    | '/projects/$projectId/activities'
-    | '/projects/$projectId/analytics'
-    | '/projects/$projectId/evidence'
-    | '/projects/$projectId/insights'
-    | '/projects/$projectId/interpretation'
-    | '/projects/$projectId/settings'
-    | '/organizations/$organizationId/'
-    | '/projects/$projectId/'
-    | '/projects/$projectId/activities/$activityId/analysis'
-    | '/projects/$projectId/activities/$activityId/analytics'
-    | '/projects/$projectId/activities/$activityId/brief'
-    | '/projects/$projectId/activities/$activityId/insights'
-    | '/projects/$projectId/activities/$activityId/overview'
-    | '/projects/$projectId/activities/$activityId/processing'
-    | '/projects/$projectId/activities/$activityId/schema'
-    | '/projects/$projectId/activities/$activityId/settings'
-    | '/projects/$projectId/activities/$activityId/upload'
-    | '/projects/$projectId/evidence/$processingJobId/review'
-    | '/projects/$projectId/activities/$activityId/data-review/'
-  fileRoutesByTo: FileRoutesByTo
+    | "/"
+    | "/login"
+    | "/register"
+    | "/organizations/$organizationId"
+    | "/projects/$projectId"
+    | "/onboarding/invite"
+    | "/onboarding/profile"
+    | "/onboarding/welcome"
+    | "/onboarding/workspace"
+    | "/invitations/$token/accept"
+    | "/organizations/$organizationId/activities"
+    | "/organizations/$organizationId/billing"
+    | "/organizations/$organizationId/members"
+    | "/organizations/$organizationId/profile"
+    | "/organizations/$organizationId/projects"
+    | "/organizations/$organizationId/settings"
+    | "/projects/$projectId/activities"
+    | "/projects/$projectId/analytics"
+    | "/projects/$projectId/evidence"
+    | "/projects/$projectId/insights"
+    | "/projects/$projectId/interpretation"
+    | "/projects/$projectId/settings"
+    | "/organizations/$organizationId/"
+    | "/projects/$projectId/"
+    | "/projects/$projectId/activities/$activityId/analysis"
+    | "/projects/$projectId/activities/$activityId/analytics"
+    | "/projects/$projectId/activities/$activityId/brief"
+    | "/projects/$projectId/activities/$activityId/insights"
+    | "/projects/$projectId/activities/$activityId/overview"
+    | "/projects/$projectId/activities/$activityId/processing"
+    | "/projects/$projectId/activities/$activityId/schema"
+    | "/projects/$projectId/activities/$activityId/settings"
+    | "/projects/$projectId/activities/$activityId/upload"
+    | "/projects/$projectId/activities/$activityId/data-review/";
+  fileRoutesByTo: FileRoutesByTo;
   to:
-    | '/'
-    | '/login'
-    | '/register'
-    | '/onboarding/invite'
-    | '/onboarding/profile'
-    | '/onboarding/welcome'
-    | '/onboarding/workspace'
-    | '/invitations/$token/accept'
-    | '/organizations/$organizationId/activities'
-    | '/organizations/$organizationId/billing'
-    | '/organizations/$organizationId/members'
-    | '/organizations/$organizationId/profile'
-    | '/organizations/$organizationId/projects'
-    | '/organizations/$organizationId/settings'
-    | '/projects/$projectId/activities'
-    | '/projects/$projectId/analytics'
-    | '/projects/$projectId/evidence'
-    | '/projects/$projectId/insights'
-    | '/projects/$projectId/interpretation'
-    | '/projects/$projectId/settings'
-    | '/organizations/$organizationId'
-    | '/projects/$projectId'
-    | '/projects/$projectId/activities/$activityId/analysis'
-    | '/projects/$projectId/activities/$activityId/analytics'
-    | '/projects/$projectId/activities/$activityId/brief'
-    | '/projects/$projectId/activities/$activityId/insights'
-    | '/projects/$projectId/activities/$activityId/overview'
-    | '/projects/$projectId/activities/$activityId/processing'
-    | '/projects/$projectId/activities/$activityId/schema'
-    | '/projects/$projectId/activities/$activityId/settings'
-    | '/projects/$projectId/activities/$activityId/upload'
-    | '/projects/$projectId/evidence/$processingJobId/review'
-    | '/projects/$projectId/activities/$activityId/data-review'
+    | "/"
+    | "/login"
+    | "/register"
+    | "/onboarding/invite"
+    | "/onboarding/profile"
+    | "/onboarding/welcome"
+    | "/onboarding/workspace"
+    | "/invitations/$token/accept"
+    | "/organizations/$organizationId/activities"
+    | "/organizations/$organizationId/billing"
+    | "/organizations/$organizationId/members"
+    | "/organizations/$organizationId/profile"
+    | "/organizations/$organizationId/projects"
+    | "/organizations/$organizationId/settings"
+    | "/projects/$projectId/activities"
+    | "/projects/$projectId/analytics"
+    | "/projects/$projectId/evidence"
+    | "/projects/$projectId/insights"
+    | "/projects/$projectId/interpretation"
+    | "/projects/$projectId/settings"
+    | "/organizations/$organizationId"
+    | "/projects/$projectId"
+    | "/projects/$projectId/activities/$activityId/analysis"
+    | "/projects/$projectId/activities/$activityId/analytics"
+    | "/projects/$projectId/activities/$activityId/brief"
+    | "/projects/$projectId/activities/$activityId/insights"
+    | "/projects/$projectId/activities/$activityId/overview"
+    | "/projects/$projectId/activities/$activityId/processing"
+    | "/projects/$projectId/activities/$activityId/schema"
+    | "/projects/$projectId/activities/$activityId/settings"
+    | "/projects/$projectId/activities/$activityId/upload"
+    | "/projects/$projectId/activities/$activityId/data-review";
   id:
-    | '__root__'
-    | '/'
-    | '/login'
-    | '/register'
-    | '/organizations/$organizationId'
-    | '/projects/$projectId'
-    | '/onboarding/invite'
-    | '/onboarding/profile'
-    | '/onboarding/welcome'
-    | '/onboarding/workspace'
-    | '/invitations/$token/accept'
-    | '/organizations/$organizationId/activities'
-    | '/organizations/$organizationId/billing'
-    | '/organizations/$organizationId/members'
-    | '/organizations/$organizationId/profile'
-    | '/organizations/$organizationId/projects'
-    | '/organizations/$organizationId/settings'
-    | '/projects/$projectId/activities'
-    | '/projects/$projectId/analytics'
-    | '/projects/$projectId/evidence'
-    | '/projects/$projectId/insights'
-    | '/projects/$projectId/interpretation'
-    | '/projects/$projectId/settings'
-    | '/organizations/$organizationId/'
-    | '/projects/$projectId/'
-    | '/projects/$projectId/activities/$activityId/analysis'
-    | '/projects/$projectId/activities/$activityId/analytics'
-    | '/projects/$projectId/activities/$activityId/brief'
-    | '/projects/$projectId/activities/$activityId/insights'
-    | '/projects/$projectId/activities/$activityId/overview'
-    | '/projects/$projectId/activities/$activityId/processing'
-    | '/projects/$projectId/activities/$activityId/schema'
-    | '/projects/$projectId/activities/$activityId/settings'
-    | '/projects/$projectId/activities/$activityId/upload'
-    | '/projects/$projectId/evidence/$processingJobId/review'
-    | '/projects/$projectId/activities/$activityId/data-review/'
-  fileRoutesById: FileRoutesById
+    | "__root__"
+    | "/"
+    | "/login"
+    | "/register"
+    | "/organizations/$organizationId"
+    | "/projects/$projectId"
+    | "/onboarding/invite"
+    | "/onboarding/profile"
+    | "/onboarding/welcome"
+    | "/onboarding/workspace"
+    | "/invitations/$token/accept"
+    | "/organizations/$organizationId/activities"
+    | "/organizations/$organizationId/billing"
+    | "/organizations/$organizationId/members"
+    | "/organizations/$organizationId/profile"
+    | "/organizations/$organizationId/projects"
+    | "/organizations/$organizationId/settings"
+    | "/projects/$projectId/activities"
+    | "/projects/$projectId/analytics"
+    | "/projects/$projectId/evidence"
+    | "/projects/$projectId/insights"
+    | "/projects/$projectId/interpretation"
+    | "/projects/$projectId/settings"
+    | "/organizations/$organizationId/"
+    | "/projects/$projectId/"
+    | "/projects/$projectId/activities/$activityId/analysis"
+    | "/projects/$projectId/activities/$activityId/analytics"
+    | "/projects/$projectId/activities/$activityId/brief"
+    | "/projects/$projectId/activities/$activityId/insights"
+    | "/projects/$projectId/activities/$activityId/overview"
+    | "/projects/$projectId/activities/$activityId/processing"
+    | "/projects/$projectId/activities/$activityId/schema"
+    | "/projects/$projectId/activities/$activityId/settings"
+    | "/projects/$projectId/activities/$activityId/upload"
+    | "/projects/$projectId/activities/$activityId/data-review/";
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  LoginRoute: typeof LoginRoute
-  RegisterRoute: typeof RegisterRoute
-  OrganizationsOrganizationIdRouteRoute: typeof OrganizationsOrganizationIdRouteRouteWithChildren
-  ProjectsProjectIdRouteRoute: typeof ProjectsProjectIdRouteRouteWithChildren
-  OnboardingInviteRoute: typeof OnboardingInviteRoute
-  OnboardingProfileRoute: typeof OnboardingProfileRoute
-  OnboardingWelcomeRoute: typeof OnboardingWelcomeRoute
-  OnboardingWorkspaceRoute: typeof OnboardingWorkspaceRoute
-  InvitationsTokenAcceptRoute: typeof InvitationsTokenAcceptRoute
+  IndexRoute: typeof IndexRoute;
+  LoginRoute: typeof LoginRoute;
+  RegisterRoute: typeof RegisterRoute;
+  OrganizationsOrganizationIdRouteRoute: typeof OrganizationsOrganizationIdRouteRouteWithChildren;
+  ProjectsProjectIdRouteRoute: typeof ProjectsProjectIdRouteRouteWithChildren;
+  OnboardingInviteRoute: typeof OnboardingInviteRoute;
+  OnboardingProfileRoute: typeof OnboardingProfileRoute;
+  OnboardingWelcomeRoute: typeof OnboardingWelcomeRoute;
+  OnboardingWorkspaceRoute: typeof OnboardingWorkspaceRoute;
+  InvitationsTokenAcceptRoute: typeof InvitationsTokenAcceptRoute;
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/onboarding/workspace': {
-      id: '/onboarding/workspace'
-      path: '/onboarding/workspace'
-      fullPath: '/onboarding/workspace'
-      preLoaderRoute: typeof OnboardingWorkspaceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/onboarding/welcome': {
-      id: '/onboarding/welcome'
-      path: '/onboarding/welcome'
-      fullPath: '/onboarding/welcome'
-      preLoaderRoute: typeof OnboardingWelcomeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/onboarding/profile': {
-      id: '/onboarding/profile'
-      path: '/onboarding/profile'
-      fullPath: '/onboarding/profile'
-      preLoaderRoute: typeof OnboardingProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/onboarding/invite': {
-      id: '/onboarding/invite'
-      path: '/onboarding/invite'
-      fullPath: '/onboarding/invite'
-      preLoaderRoute: typeof OnboardingInviteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/projects/$projectId': {
-      id: '/projects/$projectId'
-      path: '/projects/$projectId'
-      fullPath: '/projects/$projectId'
-      preLoaderRoute: typeof ProjectsProjectIdRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/organizations/$organizationId': {
-      id: '/organizations/$organizationId'
-      path: '/organizations/$organizationId'
-      fullPath: '/organizations/$organizationId'
-      preLoaderRoute: typeof OrganizationsOrganizationIdRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/projects/$projectId/': {
-      id: '/projects/$projectId/'
-      path: '/'
-      fullPath: '/projects/$projectId/'
-      preLoaderRoute: typeof ProjectsProjectIdIndexRouteImport
-      parentRoute: typeof ProjectsProjectIdRouteRoute
-    }
-    '/organizations/$organizationId/': {
-      id: '/organizations/$organizationId/'
-      path: '/'
-      fullPath: '/organizations/$organizationId/'
-      preLoaderRoute: typeof OrganizationsOrganizationIdIndexRouteImport
-      parentRoute: typeof OrganizationsOrganizationIdRouteRoute
-    }
-    '/projects/$projectId/settings': {
-      id: '/projects/$projectId/settings'
-      path: '/settings'
-      fullPath: '/projects/$projectId/settings'
-      preLoaderRoute: typeof ProjectsProjectIdSettingsRouteImport
-      parentRoute: typeof ProjectsProjectIdRouteRoute
-    }
-    '/projects/$projectId/interpretation': {
-      id: '/projects/$projectId/interpretation'
-      path: '/interpretation'
-      fullPath: '/projects/$projectId/interpretation'
-      preLoaderRoute: typeof ProjectsProjectIdInterpretationRouteImport
-      parentRoute: typeof ProjectsProjectIdRouteRoute
-    }
-    '/projects/$projectId/insights': {
-      id: '/projects/$projectId/insights'
-      path: '/insights'
-      fullPath: '/projects/$projectId/insights'
-      preLoaderRoute: typeof ProjectsProjectIdInsightsRouteImport
-      parentRoute: typeof ProjectsProjectIdRouteRoute
-    }
-    '/projects/$projectId/evidence': {
-      id: '/projects/$projectId/evidence'
-      path: '/evidence'
-      fullPath: '/projects/$projectId/evidence'
-      preLoaderRoute: typeof ProjectsProjectIdEvidenceRouteImport
-      parentRoute: typeof ProjectsProjectIdRouteRoute
-    }
-    '/projects/$projectId/analytics': {
-      id: '/projects/$projectId/analytics'
-      path: '/analytics'
-      fullPath: '/projects/$projectId/analytics'
-      preLoaderRoute: typeof ProjectsProjectIdAnalyticsRouteImport
-      parentRoute: typeof ProjectsProjectIdRouteRoute
-    }
-    '/projects/$projectId/activities': {
-      id: '/projects/$projectId/activities'
-      path: '/activities'
-      fullPath: '/projects/$projectId/activities'
-      preLoaderRoute: typeof ProjectsProjectIdActivitiesRouteImport
-      parentRoute: typeof ProjectsProjectIdRouteRoute
-    }
-    '/organizations/$organizationId/settings': {
-      id: '/organizations/$organizationId/settings'
-      path: '/settings'
-      fullPath: '/organizations/$organizationId/settings'
-      preLoaderRoute: typeof OrganizationsOrganizationIdSettingsRouteImport
-      parentRoute: typeof OrganizationsOrganizationIdRouteRoute
-    }
-    '/organizations/$organizationId/projects': {
-      id: '/organizations/$organizationId/projects'
-      path: '/projects'
-      fullPath: '/organizations/$organizationId/projects'
-      preLoaderRoute: typeof OrganizationsOrganizationIdProjectsRouteImport
-      parentRoute: typeof OrganizationsOrganizationIdRouteRoute
-    }
-    '/organizations/$organizationId/profile': {
-      id: '/organizations/$organizationId/profile'
-      path: '/profile'
-      fullPath: '/organizations/$organizationId/profile'
-      preLoaderRoute: typeof OrganizationsOrganizationIdProfileRouteImport
-      parentRoute: typeof OrganizationsOrganizationIdRouteRoute
-    }
-    '/organizations/$organizationId/members': {
-      id: '/organizations/$organizationId/members'
-      path: '/members'
-      fullPath: '/organizations/$organizationId/members'
-      preLoaderRoute: typeof OrganizationsOrganizationIdMembersRouteImport
-      parentRoute: typeof OrganizationsOrganizationIdRouteRoute
-    }
-    '/organizations/$organizationId/billing': {
-      id: '/organizations/$organizationId/billing'
-      path: '/billing'
-      fullPath: '/organizations/$organizationId/billing'
-      preLoaderRoute: typeof OrganizationsOrganizationIdBillingRouteImport
-      parentRoute: typeof OrganizationsOrganizationIdRouteRoute
-    }
-    '/organizations/$organizationId/activities': {
-      id: '/organizations/$organizationId/activities'
-      path: '/activities'
-      fullPath: '/organizations/$organizationId/activities'
-      preLoaderRoute: typeof OrganizationsOrganizationIdActivitiesRouteImport
-      parentRoute: typeof OrganizationsOrganizationIdRouteRoute
-    }
-    '/invitations/$token/accept': {
-      id: '/invitations/$token/accept'
-      path: '/invitations/$token/accept'
-      fullPath: '/invitations/$token/accept'
-      preLoaderRoute: typeof InvitationsTokenAcceptRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/projects/$projectId/evidence/$processingJobId/review': {
-      id: '/projects/$projectId/evidence/$processingJobId/review'
-      path: '/$processingJobId/review'
-      fullPath: '/projects/$projectId/evidence/$processingJobId/review'
-      preLoaderRoute: typeof ProjectsProjectIdEvidenceProcessingJobIdReviewRouteImport
-      parentRoute: typeof ProjectsProjectIdEvidenceRoute
-    }
-    '/projects/$projectId/activities/$activityId/upload': {
-      id: '/projects/$projectId/activities/$activityId/upload'
-      path: '/$activityId/upload'
-      fullPath: '/projects/$projectId/activities/$activityId/upload'
-      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdUploadRouteImport
-      parentRoute: typeof ProjectsProjectIdActivitiesRoute
-    }
-    '/projects/$projectId/activities/$activityId/settings': {
-      id: '/projects/$projectId/activities/$activityId/settings'
-      path: '/$activityId/settings'
-      fullPath: '/projects/$projectId/activities/$activityId/settings'
-      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdSettingsRouteImport
-      parentRoute: typeof ProjectsProjectIdActivitiesRoute
-    }
-    '/projects/$projectId/activities/$activityId/schema': {
-      id: '/projects/$projectId/activities/$activityId/schema'
-      path: '/$activityId/schema'
-      fullPath: '/projects/$projectId/activities/$activityId/schema'
-      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdSchemaRouteImport
-      parentRoute: typeof ProjectsProjectIdActivitiesRoute
-    }
-    '/projects/$projectId/activities/$activityId/processing': {
-      id: '/projects/$projectId/activities/$activityId/processing'
-      path: '/$activityId/processing'
-      fullPath: '/projects/$projectId/activities/$activityId/processing'
-      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdProcessingRouteImport
-      parentRoute: typeof ProjectsProjectIdActivitiesRoute
-    }
-    '/projects/$projectId/activities/$activityId/overview': {
-      id: '/projects/$projectId/activities/$activityId/overview'
-      path: '/$activityId/overview'
-      fullPath: '/projects/$projectId/activities/$activityId/overview'
-      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdOverviewRouteImport
-      parentRoute: typeof ProjectsProjectIdActivitiesRoute
-    }
-    '/projects/$projectId/activities/$activityId/insights': {
-      id: '/projects/$projectId/activities/$activityId/insights'
-      path: '/$activityId/insights'
-      fullPath: '/projects/$projectId/activities/$activityId/insights'
-      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdInsightsRouteImport
-      parentRoute: typeof ProjectsProjectIdActivitiesRoute
-    }
-    '/projects/$projectId/activities/$activityId/brief': {
-      id: '/projects/$projectId/activities/$activityId/brief'
-      path: '/$activityId/brief'
-      fullPath: '/projects/$projectId/activities/$activityId/brief'
-      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdBriefRouteImport
-      parentRoute: typeof ProjectsProjectIdActivitiesRoute
-    }
-    '/projects/$projectId/activities/$activityId/analytics': {
-      id: '/projects/$projectId/activities/$activityId/analytics'
-      path: '/$activityId/analytics'
-      fullPath: '/projects/$projectId/activities/$activityId/analytics'
-      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdAnalyticsRouteImport
-      parentRoute: typeof ProjectsProjectIdActivitiesRoute
-    }
-    '/projects/$projectId/activities/$activityId/analysis': {
-      id: '/projects/$projectId/activities/$activityId/analysis'
-      path: '/$activityId/analysis'
-      fullPath: '/projects/$projectId/activities/$activityId/analysis'
-      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdAnalysisRouteImport
-      parentRoute: typeof ProjectsProjectIdActivitiesRoute
-    }
-    '/projects/$projectId/activities/$activityId/data-review/': {
-      id: '/projects/$projectId/activities/$activityId/data-review/'
-      path: '/$activityId/data-review'
-      fullPath: '/projects/$projectId/activities/$activityId/data-review/'
-      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRouteImport
-      parentRoute: typeof ProjectsProjectIdActivitiesRoute
-    }
+    "/register": {
+      id: "/register";
+      path: "/register";
+      fullPath: "/register";
+      preLoaderRoute: typeof RegisterRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/login": {
+      id: "/login";
+      path: "/login";
+      fullPath: "/login";
+      preLoaderRoute: typeof LoginRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/onboarding/workspace": {
+      id: "/onboarding/workspace";
+      path: "/onboarding/workspace";
+      fullPath: "/onboarding/workspace";
+      preLoaderRoute: typeof OnboardingWorkspaceRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/onboarding/welcome": {
+      id: "/onboarding/welcome";
+      path: "/onboarding/welcome";
+      fullPath: "/onboarding/welcome";
+      preLoaderRoute: typeof OnboardingWelcomeRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/onboarding/profile": {
+      id: "/onboarding/profile";
+      path: "/onboarding/profile";
+      fullPath: "/onboarding/profile";
+      preLoaderRoute: typeof OnboardingProfileRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/onboarding/invite": {
+      id: "/onboarding/invite";
+      path: "/onboarding/invite";
+      fullPath: "/onboarding/invite";
+      preLoaderRoute: typeof OnboardingInviteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/projects/$projectId": {
+      id: "/projects/$projectId";
+      path: "/projects/$projectId";
+      fullPath: "/projects/$projectId";
+      preLoaderRoute: typeof ProjectsProjectIdRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/organizations/$organizationId": {
+      id: "/organizations/$organizationId";
+      path: "/organizations/$organizationId";
+      fullPath: "/organizations/$organizationId";
+      preLoaderRoute: typeof OrganizationsOrganizationIdRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/projects/$projectId/": {
+      id: "/projects/$projectId/";
+      path: "/";
+      fullPath: "/projects/$projectId/";
+      preLoaderRoute: typeof ProjectsProjectIdIndexRouteImport;
+      parentRoute: typeof ProjectsProjectIdRouteRoute;
+    };
+    "/organizations/$organizationId/": {
+      id: "/organizations/$organizationId/";
+      path: "/";
+      fullPath: "/organizations/$organizationId/";
+      preLoaderRoute: typeof OrganizationsOrganizationIdIndexRouteImport;
+      parentRoute: typeof OrganizationsOrganizationIdRouteRoute;
+    };
+    "/projects/$projectId/settings": {
+      id: "/projects/$projectId/settings";
+      path: "/settings";
+      fullPath: "/projects/$projectId/settings";
+      preLoaderRoute: typeof ProjectsProjectIdSettingsRouteImport;
+      parentRoute: typeof ProjectsProjectIdRouteRoute;
+    };
+    "/projects/$projectId/interpretation": {
+      id: "/projects/$projectId/interpretation";
+      path: "/interpretation";
+      fullPath: "/projects/$projectId/interpretation";
+      preLoaderRoute: typeof ProjectsProjectIdInterpretationRouteImport;
+      parentRoute: typeof ProjectsProjectIdRouteRoute;
+    };
+    "/projects/$projectId/insights": {
+      id: "/projects/$projectId/insights";
+      path: "/insights";
+      fullPath: "/projects/$projectId/insights";
+      preLoaderRoute: typeof ProjectsProjectIdInsightsRouteImport;
+      parentRoute: typeof ProjectsProjectIdRouteRoute;
+    };
+    "/projects/$projectId/evidence": {
+      id: "/projects/$projectId/evidence";
+      path: "/evidence";
+      fullPath: "/projects/$projectId/evidence";
+      preLoaderRoute: typeof ProjectsProjectIdEvidenceRouteImport;
+      parentRoute: typeof ProjectsProjectIdRouteRoute;
+    };
+    "/projects/$projectId/analytics": {
+      id: "/projects/$projectId/analytics";
+      path: "/analytics";
+      fullPath: "/projects/$projectId/analytics";
+      preLoaderRoute: typeof ProjectsProjectIdAnalyticsRouteImport;
+      parentRoute: typeof ProjectsProjectIdRouteRoute;
+    };
+    "/projects/$projectId/activities": {
+      id: "/projects/$projectId/activities";
+      path: "/activities";
+      fullPath: "/projects/$projectId/activities";
+      preLoaderRoute: typeof ProjectsProjectIdActivitiesRouteImport;
+      parentRoute: typeof ProjectsProjectIdRouteRoute;
+    };
+    "/organizations/$organizationId/settings": {
+      id: "/organizations/$organizationId/settings";
+      path: "/settings";
+      fullPath: "/organizations/$organizationId/settings";
+      preLoaderRoute: typeof OrganizationsOrganizationIdSettingsRouteImport;
+      parentRoute: typeof OrganizationsOrganizationIdRouteRoute;
+    };
+    "/organizations/$organizationId/projects": {
+      id: "/organizations/$organizationId/projects";
+      path: "/projects";
+      fullPath: "/organizations/$organizationId/projects";
+      preLoaderRoute: typeof OrganizationsOrganizationIdProjectsRouteImport;
+      parentRoute: typeof OrganizationsOrganizationIdRouteRoute;
+    };
+    "/organizations/$organizationId/profile": {
+      id: "/organizations/$organizationId/profile";
+      path: "/profile";
+      fullPath: "/organizations/$organizationId/profile";
+      preLoaderRoute: typeof OrganizationsOrganizationIdProfileRouteImport;
+      parentRoute: typeof OrganizationsOrganizationIdRouteRoute;
+    };
+    "/organizations/$organizationId/members": {
+      id: "/organizations/$organizationId/members";
+      path: "/members";
+      fullPath: "/organizations/$organizationId/members";
+      preLoaderRoute: typeof OrganizationsOrganizationIdMembersRouteImport;
+      parentRoute: typeof OrganizationsOrganizationIdRouteRoute;
+    };
+    "/organizations/$organizationId/billing": {
+      id: "/organizations/$organizationId/billing";
+      path: "/billing";
+      fullPath: "/organizations/$organizationId/billing";
+      preLoaderRoute: typeof OrganizationsOrganizationIdBillingRouteImport;
+      parentRoute: typeof OrganizationsOrganizationIdRouteRoute;
+    };
+    "/organizations/$organizationId/activities": {
+      id: "/organizations/$organizationId/activities";
+      path: "/activities";
+      fullPath: "/organizations/$organizationId/activities";
+      preLoaderRoute: typeof OrganizationsOrganizationIdActivitiesRouteImport;
+      parentRoute: typeof OrganizationsOrganizationIdRouteRoute;
+    };
+    "/invitations/$token/accept": {
+      id: "/invitations/$token/accept";
+      path: "/invitations/$token/accept";
+      fullPath: "/invitations/$token/accept";
+      preLoaderRoute: typeof InvitationsTokenAcceptRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/projects/$projectId/activities/$activityId/upload": {
+      id: "/projects/$projectId/activities/$activityId/upload";
+      path: "/$activityId/upload";
+      fullPath: "/projects/$projectId/activities/$activityId/upload";
+      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdUploadRouteImport;
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute;
+    };
+    "/projects/$projectId/activities/$activityId/settings": {
+      id: "/projects/$projectId/activities/$activityId/settings";
+      path: "/$activityId/settings";
+      fullPath: "/projects/$projectId/activities/$activityId/settings";
+      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdSettingsRouteImport;
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute;
+    };
+    "/projects/$projectId/activities/$activityId/schema": {
+      id: "/projects/$projectId/activities/$activityId/schema";
+      path: "/$activityId/schema";
+      fullPath: "/projects/$projectId/activities/$activityId/schema";
+      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdSchemaRouteImport;
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute;
+    };
+    "/projects/$projectId/activities/$activityId/processing": {
+      id: "/projects/$projectId/activities/$activityId/processing";
+      path: "/$activityId/processing";
+      fullPath: "/projects/$projectId/activities/$activityId/processing";
+      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdProcessingRouteImport;
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute;
+    };
+    "/projects/$projectId/activities/$activityId/overview": {
+      id: "/projects/$projectId/activities/$activityId/overview";
+      path: "/$activityId/overview";
+      fullPath: "/projects/$projectId/activities/$activityId/overview";
+      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdOverviewRouteImport;
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute;
+    };
+    "/projects/$projectId/activities/$activityId/insights": {
+      id: "/projects/$projectId/activities/$activityId/insights";
+      path: "/$activityId/insights";
+      fullPath: "/projects/$projectId/activities/$activityId/insights";
+      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdInsightsRouteImport;
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute;
+    };
+    "/projects/$projectId/activities/$activityId/brief": {
+      id: "/projects/$projectId/activities/$activityId/brief";
+      path: "/$activityId/brief";
+      fullPath: "/projects/$projectId/activities/$activityId/brief";
+      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdBriefRouteImport;
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute;
+    };
+    "/projects/$projectId/activities/$activityId/analytics": {
+      id: "/projects/$projectId/activities/$activityId/analytics";
+      path: "/$activityId/analytics";
+      fullPath: "/projects/$projectId/activities/$activityId/analytics";
+      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdAnalyticsRouteImport;
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute;
+    };
+    "/projects/$projectId/activities/$activityId/analysis": {
+      id: "/projects/$projectId/activities/$activityId/analysis";
+      path: "/$activityId/analysis";
+      fullPath: "/projects/$projectId/activities/$activityId/analysis";
+      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdAnalysisRouteImport;
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute;
+    };
+    "/projects/$projectId/activities/$activityId/data-review/": {
+      id: "/projects/$projectId/activities/$activityId/data-review/";
+      path: "/$activityId/data-review";
+      fullPath: "/projects/$projectId/activities/$activityId/data-review/";
+      preLoaderRoute: typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRouteImport;
+      parentRoute: typeof ProjectsProjectIdActivitiesRoute;
+    };
   }
 }
 
 interface OrganizationsOrganizationIdRouteRouteChildren {
-  OrganizationsOrganizationIdActivitiesRoute: typeof OrganizationsOrganizationIdActivitiesRoute
-  OrganizationsOrganizationIdBillingRoute: typeof OrganizationsOrganizationIdBillingRoute
-  OrganizationsOrganizationIdMembersRoute: typeof OrganizationsOrganizationIdMembersRoute
-  OrganizationsOrganizationIdProfileRoute: typeof OrganizationsOrganizationIdProfileRoute
-  OrganizationsOrganizationIdProjectsRoute: typeof OrganizationsOrganizationIdProjectsRoute
-  OrganizationsOrganizationIdSettingsRoute: typeof OrganizationsOrganizationIdSettingsRoute
-  OrganizationsOrganizationIdIndexRoute: typeof OrganizationsOrganizationIdIndexRoute
+  OrganizationsOrganizationIdActivitiesRoute: typeof OrganizationsOrganizationIdActivitiesRoute;
+  OrganizationsOrganizationIdBillingRoute: typeof OrganizationsOrganizationIdBillingRoute;
+  OrganizationsOrganizationIdMembersRoute: typeof OrganizationsOrganizationIdMembersRoute;
+  OrganizationsOrganizationIdProfileRoute: typeof OrganizationsOrganizationIdProfileRoute;
+  OrganizationsOrganizationIdProjectsRoute: typeof OrganizationsOrganizationIdProjectsRoute;
+  OrganizationsOrganizationIdSettingsRoute: typeof OrganizationsOrganizationIdSettingsRoute;
+  OrganizationsOrganizationIdIndexRoute: typeof OrganizationsOrganizationIdIndexRoute;
 }
 
 const OrganizationsOrganizationIdRouteRouteChildren: OrganizationsOrganizationIdRouteRouteChildren =
@@ -757,24 +737,24 @@ const OrganizationsOrganizationIdRouteRouteChildren: OrganizationsOrganizationId
       OrganizationsOrganizationIdSettingsRoute,
     OrganizationsOrganizationIdIndexRoute:
       OrganizationsOrganizationIdIndexRoute,
-  }
+  };
 
 const OrganizationsOrganizationIdRouteRouteWithChildren =
   OrganizationsOrganizationIdRouteRoute._addFileChildren(
     OrganizationsOrganizationIdRouteRouteChildren,
-  )
+  );
 
 interface ProjectsProjectIdActivitiesRouteChildren {
-  ProjectsProjectIdActivitiesActivityIdAnalysisRoute: typeof ProjectsProjectIdActivitiesActivityIdAnalysisRoute
-  ProjectsProjectIdActivitiesActivityIdAnalyticsRoute: typeof ProjectsProjectIdActivitiesActivityIdAnalyticsRoute
-  ProjectsProjectIdActivitiesActivityIdBriefRoute: typeof ProjectsProjectIdActivitiesActivityIdBriefRoute
-  ProjectsProjectIdActivitiesActivityIdInsightsRoute: typeof ProjectsProjectIdActivitiesActivityIdInsightsRoute
-  ProjectsProjectIdActivitiesActivityIdOverviewRoute: typeof ProjectsProjectIdActivitiesActivityIdOverviewRoute
-  ProjectsProjectIdActivitiesActivityIdProcessingRoute: typeof ProjectsProjectIdActivitiesActivityIdProcessingRoute
-  ProjectsProjectIdActivitiesActivityIdSchemaRoute: typeof ProjectsProjectIdActivitiesActivityIdSchemaRoute
-  ProjectsProjectIdActivitiesActivityIdSettingsRoute: typeof ProjectsProjectIdActivitiesActivityIdSettingsRoute
-  ProjectsProjectIdActivitiesActivityIdUploadRoute: typeof ProjectsProjectIdActivitiesActivityIdUploadRoute
-  ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute: typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute
+  ProjectsProjectIdActivitiesActivityIdAnalysisRoute: typeof ProjectsProjectIdActivitiesActivityIdAnalysisRoute;
+  ProjectsProjectIdActivitiesActivityIdAnalyticsRoute: typeof ProjectsProjectIdActivitiesActivityIdAnalyticsRoute;
+  ProjectsProjectIdActivitiesActivityIdBriefRoute: typeof ProjectsProjectIdActivitiesActivityIdBriefRoute;
+  ProjectsProjectIdActivitiesActivityIdInsightsRoute: typeof ProjectsProjectIdActivitiesActivityIdInsightsRoute;
+  ProjectsProjectIdActivitiesActivityIdOverviewRoute: typeof ProjectsProjectIdActivitiesActivityIdOverviewRoute;
+  ProjectsProjectIdActivitiesActivityIdProcessingRoute: typeof ProjectsProjectIdActivitiesActivityIdProcessingRoute;
+  ProjectsProjectIdActivitiesActivityIdSchemaRoute: typeof ProjectsProjectIdActivitiesActivityIdSchemaRoute;
+  ProjectsProjectIdActivitiesActivityIdSettingsRoute: typeof ProjectsProjectIdActivitiesActivityIdSettingsRoute;
+  ProjectsProjectIdActivitiesActivityIdUploadRoute: typeof ProjectsProjectIdActivitiesActivityIdUploadRoute;
+  ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute: typeof ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute;
 }
 
 const ProjectsProjectIdActivitiesRouteChildren: ProjectsProjectIdActivitiesRouteChildren =
@@ -799,36 +779,21 @@ const ProjectsProjectIdActivitiesRouteChildren: ProjectsProjectIdActivitiesRoute
       ProjectsProjectIdActivitiesActivityIdUploadRoute,
     ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute:
       ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute,
-  }
+  };
 
 const ProjectsProjectIdActivitiesRouteWithChildren =
   ProjectsProjectIdActivitiesRoute._addFileChildren(
     ProjectsProjectIdActivitiesRouteChildren,
-  )
-
-interface ProjectsProjectIdEvidenceRouteChildren {
-  ProjectsProjectIdEvidenceProcessingJobIdReviewRoute: typeof ProjectsProjectIdEvidenceProcessingJobIdReviewRoute
-}
-
-const ProjectsProjectIdEvidenceRouteChildren: ProjectsProjectIdEvidenceRouteChildren =
-  {
-    ProjectsProjectIdEvidenceProcessingJobIdReviewRoute:
-      ProjectsProjectIdEvidenceProcessingJobIdReviewRoute,
-  }
-
-const ProjectsProjectIdEvidenceRouteWithChildren =
-  ProjectsProjectIdEvidenceRoute._addFileChildren(
-    ProjectsProjectIdEvidenceRouteChildren,
-  )
+  );
 
 interface ProjectsProjectIdRouteRouteChildren {
-  ProjectsProjectIdActivitiesRoute: typeof ProjectsProjectIdActivitiesRouteWithChildren
-  ProjectsProjectIdAnalyticsRoute: typeof ProjectsProjectIdAnalyticsRoute
-  ProjectsProjectIdEvidenceRoute: typeof ProjectsProjectIdEvidenceRouteWithChildren
-  ProjectsProjectIdInsightsRoute: typeof ProjectsProjectIdInsightsRoute
-  ProjectsProjectIdInterpretationRoute: typeof ProjectsProjectIdInterpretationRoute
-  ProjectsProjectIdSettingsRoute: typeof ProjectsProjectIdSettingsRoute
-  ProjectsProjectIdIndexRoute: typeof ProjectsProjectIdIndexRoute
+  ProjectsProjectIdActivitiesRoute: typeof ProjectsProjectIdActivitiesRouteWithChildren;
+  ProjectsProjectIdAnalyticsRoute: typeof ProjectsProjectIdAnalyticsRoute;
+  ProjectsProjectIdEvidenceRoute: typeof ProjectsProjectIdEvidenceRoute;
+  ProjectsProjectIdInsightsRoute: typeof ProjectsProjectIdInsightsRoute;
+  ProjectsProjectIdInterpretationRoute: typeof ProjectsProjectIdInterpretationRoute;
+  ProjectsProjectIdSettingsRoute: typeof ProjectsProjectIdSettingsRoute;
+  ProjectsProjectIdIndexRoute: typeof ProjectsProjectIdIndexRoute;
 }
 
 const ProjectsProjectIdRouteRouteChildren: ProjectsProjectIdRouteRouteChildren =
@@ -836,17 +801,17 @@ const ProjectsProjectIdRouteRouteChildren: ProjectsProjectIdRouteRouteChildren =
     ProjectsProjectIdActivitiesRoute:
       ProjectsProjectIdActivitiesRouteWithChildren,
     ProjectsProjectIdAnalyticsRoute: ProjectsProjectIdAnalyticsRoute,
-    ProjectsProjectIdEvidenceRoute: ProjectsProjectIdEvidenceRouteWithChildren,
+    ProjectsProjectIdEvidenceRoute: ProjectsProjectIdEvidenceRoute,
     ProjectsProjectIdInsightsRoute: ProjectsProjectIdInsightsRoute,
     ProjectsProjectIdInterpretationRoute: ProjectsProjectIdInterpretationRoute,
     ProjectsProjectIdSettingsRoute: ProjectsProjectIdSettingsRoute,
     ProjectsProjectIdIndexRoute: ProjectsProjectIdIndexRoute,
-  }
+  };
 
 const ProjectsProjectIdRouteRouteWithChildren =
   ProjectsProjectIdRouteRoute._addFileChildren(
     ProjectsProjectIdRouteRouteChildren,
-  )
+  );
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -860,17 +825,17 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingWelcomeRoute: OnboardingWelcomeRoute,
   OnboardingWorkspaceRoute: OnboardingWorkspaceRoute,
   InvitationsTokenAcceptRoute: InvitationsTokenAcceptRoute,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
+import type { getRouter } from "./router.tsx";
+import type { startInstance } from "./start.ts";
+declare module "@tanstack/react-start" {
   interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+    ssr: true;
+    router: Awaited<ReturnType<typeof getRouter>>;
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>;
   }
 }

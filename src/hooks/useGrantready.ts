@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { sessionQueryKey } from "@/hooks/useAuth";
 import {
+  type AnswerInterpretationQuestionPayload,
   type ApprovePrivacyReviewResponse,
   ApiError,
   apiClient,
@@ -12,13 +14,16 @@ import {
   type DeleteEvidenceResponse,
   type DeleteProjectPayload,
   type DeleteProjectResponse,
+  type InterpretationIndicatorStatus,
+  type InterpretationResultRecord,
   type InvitationAcceptanceSummary,
   type InvitationSummary,
   type OrganizationMemberSummary,
   type OrganizationWorkspace,
   type ProcessingJobRecord,
-  type PrivacyReviewDecisions,
+  type PrivacyReviewDecisionsInput,
   type PrivacyReviewRecord,
+  type ProjectInterpretationOverview,
   type ProjectOverview,
   type ProjectSummary,
   type ResultRecord,
@@ -47,6 +52,10 @@ export const activityResultsQueryKey = (activityId: string) =>
 export const jobQueryKey = (jobId: string) => ["job", jobId] as const;
 export const privacyReviewQueryKey = (processingJobId: string) =>
   ["privacy-review", processingJobId] as const;
+export const projectInterpretationsQueryKey = (projectId: string) =>
+  ["project-interpretations", projectId] as const;
+export const interpretationQueryKey = (interpretationResultId: string) =>
+  ["interpretation", interpretationResultId] as const;
 export const organizationMembersQueryKey = (organizationId: string) =>
   ["organization-members", organizationId] as const;
 export const organizationInvitationsQueryKey = (organizationId: string) =>
@@ -135,11 +144,16 @@ export function useActivityUploadsQuery(activityId: string, enabled = true) {
   });
 }
 
-export function useActivityJobsQuery(activityId: string, enabled = true) {
+export function useActivityJobsQuery(
+  activityId: string,
+  enabled = true,
+  refetchIntervalMs?: number,
+) {
   return useQuery<ProcessingJobRecord[], ApiError>({
     queryKey: activityJobsQueryKey(activityId),
     queryFn: () => apiClient.listActivityJobs(activityId),
     enabled,
+    refetchInterval: refetchIntervalMs,
   });
 }
 
@@ -173,6 +187,28 @@ export function usePrivacyReviewQuery(
     queryKey: privacyReviewQueryKey(processingJobId ?? "missing"),
     queryFn: () => apiClient.getPrivacyReview(processingJobId!),
     enabled: enabled && Boolean(processingJobId),
+  });
+}
+
+export function useProjectInterpretationsQuery(
+  projectId: string,
+  enabled = true,
+) {
+  return useQuery<ProjectInterpretationOverview, ApiError>({
+    queryKey: projectInterpretationsQueryKey(projectId),
+    queryFn: () => apiClient.getProjectInterpretations(projectId),
+    enabled,
+  });
+}
+
+export function useInterpretationQuery(
+  interpretationResultId: string | undefined,
+  enabled = true,
+) {
+  return useQuery<InterpretationResultRecord, ApiError>({
+    queryKey: interpretationQueryKey(interpretationResultId ?? "missing"),
+    queryFn: () => apiClient.getInterpretation(interpretationResultId!),
+    enabled: enabled && Boolean(interpretationResultId),
   });
 }
 
@@ -582,7 +618,7 @@ export function useApprovePrivacyReviewMutation(
   return useMutation<
     ApprovePrivacyReviewResponse,
     ApiError,
-    { processingJobId: string; decisions?: PrivacyReviewDecisions }
+    { processingJobId: string; decisions?: PrivacyReviewDecisionsInput }
   >({
     mutationFn: ({ processingJobId, decisions }) =>
       apiClient.approvePrivacyReview(processingJobId, { decisions }),
@@ -603,6 +639,117 @@ export function useApprovePrivacyReviewMutation(
           queryKey: projectOverviewQueryKey(projectId),
         });
       }
+      if (organizationId) {
+        void queryClient.invalidateQueries({
+          queryKey: workspaceQueryKey(organizationId),
+        });
+      }
+    },
+  });
+}
+
+export function useStartInterpretationMutation(
+  activityId: string,
+  projectId?: string,
+) {
+  const queryClient = useQueryClient();
+  const { i18n } = useTranslation();
+
+  return useMutation({
+    mutationFn: (uploadMetadataId: string) => {
+      const language =
+        (i18n.resolvedLanguage ?? i18n.language).toLowerCase().slice(0, 2) ===
+        "en"
+          ? "en"
+          : "de";
+
+      return apiClient.startInterpretation(uploadMetadataId, { language });
+    },
+    onSuccess: ({ job }) => {
+      queryClient.setQueryData(jobQueryKey(job.id), job);
+      void queryClient.invalidateQueries({
+        queryKey: activityJobsQueryKey(activityId),
+      });
+      if (projectId) {
+        void queryClient.invalidateQueries({
+          queryKey: projectInterpretationsQueryKey(projectId),
+        });
+      }
+    },
+  });
+}
+
+export function useAnswerInterpretationQuestionMutation(
+  interpretationResultId: string,
+  projectId?: string,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    InterpretationResultRecord,
+    ApiError,
+    { questionId: string; payload: AnswerInterpretationQuestionPayload }
+  >({
+    mutationFn: ({ questionId, payload }) =>
+      apiClient.answerInterpretationQuestion(
+        interpretationResultId,
+        questionId,
+        payload,
+      ),
+    onSuccess: (result) => {
+      queryClient.setQueryData(
+        interpretationQueryKey(interpretationResultId),
+        result,
+      );
+      if (projectId) {
+        void queryClient.invalidateQueries({
+          queryKey: projectInterpretationsQueryKey(projectId),
+        });
+      }
+    },
+  });
+}
+
+export function useSetIndicatorStatusMutation(
+  interpretationResultId: string,
+  projectId?: string,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    InterpretationResultRecord,
+    ApiError,
+    { indicatorId: string; status: InterpretationIndicatorStatus }
+  >({
+    mutationFn: ({ indicatorId, status }) =>
+      apiClient.setIndicatorStatus(interpretationResultId, indicatorId, status),
+    onSuccess: (result) => {
+      queryClient.setQueryData(
+        interpretationQueryKey(interpretationResultId),
+        result,
+      );
+      if (projectId) {
+        void queryClient.invalidateQueries({
+          queryKey: projectInterpretationsQueryKey(projectId),
+        });
+      }
+    },
+  });
+}
+
+export function useAcknowledgeInterpretationReviewMutation(
+  activityId: string,
+  organizationId?: string,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation<ActivitySummary, ApiError>({
+    mutationFn: () => apiClient.acknowledgeInterpretationReview(activityId),
+    onSuccess: (activity) => {
+      queryClient.setQueryData(activityQueryKey(activityId), activity);
+      void queryClient.invalidateQueries({
+        queryKey: activityQueryKey(activityId),
+      });
       if (organizationId) {
         void queryClient.invalidateQueries({
           queryKey: workspaceQueryKey(organizationId),
