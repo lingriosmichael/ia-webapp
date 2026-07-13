@@ -1,12 +1,20 @@
 import { Outlet, createFileRoute, useMatches } from "@tanstack/react-router";
-import { Sparkles, Trash2, UploadCloud } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Sparkles,
+  Trash2,
+  UploadCloud,
+} from "lucide-react";
 import type { ChangeEvent } from "react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { AnalysisProgressDialog } from "@/components/analysisProgressDialog";
 import { PrivacyReviewDialog } from "@/components/privacyReviewDialog";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
+import { StatusBadge } from "@/components/statusBadge";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/workspaceUI";
 import {
   useCurrentWorkspaceProject,
@@ -47,12 +55,29 @@ function getLatestEvidenceJob(
   );
 }
 
+function isEvidenceReviewed(
+  activity: Pick<WorkspaceActivity, "interpretationAcknowledgedAt">,
+  uploadCount: number,
+) {
+  return activity.interpretationAcknowledgedAt !== null && uploadCount > 0;
+}
+
 export default function ProjectEvidencePage() {
   const { projectId } = Route.useParams();
   const { workspace } = useProjectWorkspacePage();
   const workspaceProject = useCurrentWorkspaceProject();
   const activities = workspaceProject?.activities ?? [];
   const { t } = useTranslation();
+  const orderedActivities = [...activities].sort((left, right) => {
+    const leftReviewed = isEvidenceReviewed(left, left.uploadMetadataCount);
+    const rightReviewed = isEvidenceReviewed(right, right.uploadMetadataCount);
+
+    if (leftReviewed === rightReviewed) {
+      return 0;
+    }
+
+    return leftReviewed ? 1 : -1;
+  });
 
   // This route's file lives alongside an `evidence/` folder (the privacy
   // review page below), which makes this the technical parent of that
@@ -79,8 +104,8 @@ export default function ProjectEvidencePage() {
             </p>
           </Card>
         ) : (
-          <div className="mt-6 space-y-4">
-            {activities.map((activity) => (
+          <div className="mt-6 space-y-3">
+            {orderedActivities.map((activity) => (
               <EvidenceActivityGroup
                 key={activity.id}
                 activity={activity}
@@ -93,6 +118,10 @@ export default function ProjectEvidencePage() {
       </section>
     </ProjectWorkspaceShell>
   );
+}
+
+function shouldCollapseActivity(activity: WorkspaceActivity) {
+  return isEvidenceReviewed(activity, activity.uploadMetadataCount);
 }
 
 function EvidenceActivityGroup({
@@ -119,8 +148,25 @@ function EvidenceActivityGroup({
   );
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploadingName, setUploadingName] = useState<string | null>(null);
+  const [isExpanded, setIsExpanded] = useState(
+    !shouldCollapseActivity(activity),
+  );
   const uploads = uploadsQuery.data ?? [];
+  const evidenceCount = uploadsQuery.data
+    ? uploads.length
+    : activity.uploadMetadataCount;
   const jobs = jobsQuery.data ?? [];
+  const latestUpload = uploads[0];
+  const pendingPrivacyReviewCount = jobs.filter(
+    (job) =>
+      job.jobType === "evidence_processing" &&
+      job.status === "awaiting_privacy_review",
+  ).length;
+  const isReviewedActivity = isEvidenceReviewed(activity, evidenceCount);
+
+  useEffect(() => {
+    setIsExpanded(!isReviewedActivity);
+  }, [isReviewedActivity]);
 
   async function onPickFile(event: ChangeEvent<HTMLInputElement>) {
     const nextFile = event.target.files?.[0];
@@ -201,21 +247,58 @@ function EvidenceActivityGroup({
     }).format(new Date(createdAt));
   }
 
+  const showExpandedDetails =
+    !isReviewedActivity || isExpanded || uploadMutation.isPending;
+  const canToggleDetails = isReviewedActivity && evidenceCount > 0;
+
   return (
-    <Card className="p-5">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
+    <Card className="overflow-hidden">
+      <div className="flex flex-wrap items-start justify-between gap-4 px-5 py-4">
+        <div className="min-w-0 flex-1">
           <h2 className="text-[17px] font-semibold tracking-tight text-foreground">
             {activity.name}
           </h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {activity.activityType ??
-              t("projectWorkspace.activities.defaultType")}
-          </p>
+          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+            <span>
+              {activity.activityType ??
+                t("projectWorkspace.activities.defaultType")}
+            </span>
+            {evidenceCount > 0 ? (
+              <span>
+                {t("projectWorkspace.activities.evidenceCount", {
+                  count: evidenceCount,
+                })}
+              </span>
+            ) : (
+              <span>{t("projectWorkspace.evidence.noFiles")}</span>
+            )}
+          </div>
+          {evidenceCount > 0 ? (
+            <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+              {latestUpload ? (
+                <span className="rounded-full border border-border/80 bg-background px-2.5 py-1">
+                  {t("projectWorkspace.evidence.metadataUploadedAt")}:{" "}
+                  {formatUploadedAt(latestUpload.createdAt)}
+                </span>
+              ) : null}
+              {pendingPrivacyReviewCount > 0 ? (
+                <StatusBadge
+                  status="awaiting_privacy_review"
+                  label={t("projectWorkspace.evidence.reviewPrivacy")}
+                />
+              ) : null}
+              {isReviewedActivity ? (
+                <StatusBadge
+                  status="available"
+                  label={t("projectWorkspace.evidence.reviewedStatus")}
+                />
+              ) : null}
+            </div>
+          ) : null}
         </div>
 
         <div className="flex items-center gap-2">
-          {activity.permissions.canUploadEvidence ? (
+          {activity.permissions.canUploadEvidence && showExpandedDetails ? (
             <>
               <input
                 ref={inputRef}
@@ -224,38 +307,54 @@ function EvidenceActivityGroup({
                 className="hidden"
                 onChange={onPickFile}
               />
-              <button
+              <Button
                 type="button"
                 onClick={() => inputRef.current?.click()}
                 disabled={uploadMutation.isPending}
-                className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-3.5 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-70"
               >
                 <UploadCloud className="h-4 w-4" />
                 {uploadMutation.isPending
                   ? t("projectWorkspace.evidence.uploading")
                   : t("projectWorkspace.evidence.uploadAction")}
-              </button>
+              </Button>
             </>
+          ) : null}
+          {canToggleDetails ? (
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onClick={() => setIsExpanded((expanded) => !expanded)}
+              aria-expanded={isExpanded}
+              aria-label={isExpanded ? t("common.close") : t("common.open")}
+              title={isExpanded ? t("common.close") : t("common.open")}
+            >
+              {isExpanded ? (
+                <ChevronDown className="h-4 w-4" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
+              )}
+            </Button>
           ) : null}
         </div>
       </div>
 
-      {uploadMutation.isPending && uploadingName ? (
-        <p className="mt-4 text-sm text-muted-foreground">
+      {uploadMutation.isPending && uploadingName && showExpandedDetails ? (
+        <p className="border-t border-border/70 px-5 py-3 text-sm text-muted-foreground">
           {t("projectWorkspace.evidence.uploading")} {uploadingName}
         </p>
       ) : null}
 
-      {uploadsQuery.isLoading ? (
-        <p className="mt-4 text-sm text-muted-foreground">
+      {!showExpandedDetails ? null : uploadsQuery.isLoading ? (
+        <p className="border-t border-border/70 px-5 py-3 text-sm text-muted-foreground">
           {t("projectWorkspace.evidence.loading")}
         </p>
       ) : uploads.length === 0 ? (
-        <p className="mt-4 text-sm text-muted-foreground">
+        <p className="border-t border-border/70 px-5 py-3 text-sm text-muted-foreground">
           {t("projectWorkspace.evidence.noFiles")}
         </p>
       ) : (
-        <div className="mt-4 space-y-3">
+        <div className="divide-y divide-border/70 border-t border-border/70">
           {uploads.map((upload) => (
             <EvidenceFileRow
               key={upload.id}
@@ -370,7 +469,7 @@ function EvidenceFileRow({
   }
 
   return (
-    <div className="rounded-xl border border-border bg-secondary/20 px-4 py-3">
+    <div className="px-5 py-4">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <div className="truncate text-sm font-medium text-foreground">
@@ -407,7 +506,7 @@ function EvidenceFileRow({
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <button
+          <Button
             type="button"
             onClick={handleAnalyzeAction}
             disabled={
@@ -419,30 +518,34 @@ function EvidenceFileRow({
                 !canAnalyse,
               )
             }
-            className="inline-flex h-8 items-center gap-1 rounded-md border border-border bg-background px-3 text-sm font-medium text-foreground disabled:cursor-not-allowed disabled:text-foreground/50 disabled:opacity-70"
+            variant="outline"
+            size="sm"
           >
             <Sparkles className="h-4 w-4" />
             {analyzeButtonLabel}
-          </button>
+          </Button>
           {canReviewPrivacy ? (
-            <button
+            <Button
               type="button"
               onClick={openPrivacyReview}
-              className="inline-flex h-8 items-center gap-1 rounded-md border border-primary/25 bg-background px-3 text-sm font-medium text-primary hover:bg-primary/5"
+              variant="outline"
+              size="sm"
             >
               {t("projectWorkspace.evidence.reviewPrivacy")}
-            </button>
+            </Button>
           ) : null}
           {activity.permissions.canUploadEvidence ? (
-            <button
+            <Button
               type="button"
               onClick={() => void onRemove(upload.id)}
               disabled={removePending || hasActiveJob}
-              className="inline-flex h-8 items-center gap-1 rounded-md border border-destructive/25 bg-background px-3 text-sm font-medium text-destructive hover:bg-destructive/5 disabled:cursor-not-allowed disabled:opacity-60"
+              variant="outline"
+              size="sm"
+              className="border-destructive/25 text-destructive hover:bg-destructive/5 hover:text-destructive"
             >
               <Trash2 className="h-4 w-4" />
               {t("projectWorkspace.evidence.removeFile")}
-            </button>
+            </Button>
           ) : null}
         </div>
       </div>

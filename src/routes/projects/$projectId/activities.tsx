@@ -1,5 +1,6 @@
 import { Outlet, createFileRoute, useMatches } from "@tanstack/react-router";
 import { ActivityCard } from "@/components/project/activities/activityCard";
+import { Button } from "@/components/ui/button";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
 import { Card } from "@/components/workspaceUI";
 import {
@@ -72,13 +73,9 @@ function ProjectActivitiesPage() {
     <ProjectWorkspaceShell
       actions={
         project.permissions.canCreateActivity ? (
-          <button
-            type="button"
-            onClick={() => openActivityDialog(projectId)}
-            className="inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
-          >
+          <Button type="button" onClick={() => openActivityDialog(projectId)}>
             {locale.project.addActivity}
-          </button>
+          </Button>
         ) : undefined
       }
     >
@@ -92,17 +89,17 @@ function ProjectActivitiesPage() {
               {locale.projectWorkspace.activities.emptyDescription}
             </p>
             {project.permissions.canCreateActivity ? (
-              <button
+              <Button
                 type="button"
                 onClick={() => openActivityDialog(projectId)}
-                className="mt-5 inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
+                className="mt-5"
               >
                 {locale.projectWorkspace.activities.emptyAction}
-              </button>
+              </Button>
             ) : null}
           </Card>
         ) : (
-          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {activities.map((activity) => (
               <ActivityCard
                 key={activity.id}

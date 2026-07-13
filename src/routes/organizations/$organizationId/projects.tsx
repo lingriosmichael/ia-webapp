@@ -1,8 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ProjectCard } from "@/components/projectCard";
+import { Button } from "@/components/ui/button";
 import { useOrganizationWorkspacePage } from "@/contexts/organizationWorkspaceContext";
-import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
-import { useWorkspaceShell } from "@/components/workspaceShell";
+import {
+  Card,
+  PageContainer,
+  PageHeader,
+  TopBar,
+} from "@/components/workspaceUI";
+import {
+  useWorkspaceShell,
+  WorkspaceMobileNavigationButton,
+} from "@/components/workspaceShell";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 
 export const Route = createFileRoute("/organizations/$organizationId/projects")(
@@ -29,21 +38,18 @@ function OrganizationProjectsPage() {
           },
           { label: locale.sidebar.projects },
         ]}
+        leading={<WorkspaceMobileNavigationButton />}
       />
-      <div className="mx-auto w-full max-w-6xl px-8 py-8">
+      <PageContainer className="py-6 sm:py-7 lg:py-8">
         <PageHeader
           eyebrow={locale.organizationProjects.eyebrow}
           title={locale.organizationProjects.title}
           description={locale.organizationProjects.description}
           actions={
             canCreateProject ? (
-              <button
-                type="button"
-                onClick={openProjectDialog}
-                className="inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
-              >
+              <Button type="button" onClick={openProjectDialog}>
                 {locale.organizationProjects.primaryAction}
-              </button>
+              </Button>
             ) : undefined
           }
         />
@@ -58,18 +64,18 @@ function OrganizationProjectsPage() {
                 {locale.organizationProjects.emptyDescription}
               </p>
               {canCreateProject ? (
-                <button
+                <Button
                   type="button"
                   onClick={openProjectDialog}
-                  className="mt-6 inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
+                  className="mt-6"
                 >
                   {locale.organizationProjects.primaryAction}
-                </button>
+                </Button>
               ) : null}
             </div>
           </Card>
         ) : (
-          <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-8 grid gap-4 xl:grid-cols-2">
             {workspace.projects.map((project) => (
               <ProjectCard
                 key={project.id}
@@ -79,7 +85,7 @@ function OrganizationProjectsPage() {
             ))}
           </div>
         )}
-      </div>
+      </PageContainer>
     </>
   );
 }

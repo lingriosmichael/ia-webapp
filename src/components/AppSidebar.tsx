@@ -34,10 +34,12 @@ function SidebarHeader({
   organizationName,
   organizationRole,
   organizationLogoUrl,
+  compact = false,
 }: {
   organizationName: string;
   organizationRole: OrganizationRole;
   organizationLogoUrl: string | null;
+  compact?: boolean;
 }) {
   const { i18n } = useTranslation();
   const branding = getOrganizationBranding({
@@ -48,7 +50,7 @@ function SidebarHeader({
   });
 
   return (
-    <div className="px-4 py-5">
+    <div className={cn("px-3 py-4", compact ? "pr-10" : "px-4 py-5")}>
       <div className="flex items-center gap-3">
         <OrganizationAvatar
           name={branding.displayName}
@@ -89,13 +91,13 @@ function NavRow({
       params={params}
       activeOptions={{ exact }}
       className={cn(
-        "group relative flex items-center gap-2 rounded-xl py-2 text-[13px] font-medium text-sidebar-foreground/85 transition-colors",
+        "group relative flex h-11 items-center gap-2.5 rounded-[10px] px-3.5 text-[13px] font-medium text-sidebar-foreground/85 transition-colors",
         "hover:bg-sidebar-hover hover:text-foreground",
-        "data-[status=active]:bg-sidebar-active data-[status=active]:text-primary data-[status=active]:font-semibold",
+        "data-[status=active]:border data-[status=active]:border-primary/12 data-[status=active]:bg-sidebar-active data-[status=active]:font-semibold data-[status=active]:text-primary",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-2",
       )}
       style={{
-        paddingLeft: `${0.75 + depth * 0.8}rem`,
-        paddingRight: "0.75rem",
+        paddingLeft: `${0.875 + depth * 0.8}rem`,
       }}
     >
       {icon ?? <ChevronRight className="h-3 w-3 opacity-50" />}
@@ -136,6 +138,7 @@ export function AppSidebar({
   onCreateProject,
   onDeleteProject,
   onLogout,
+  mode = "desktop",
 }: {
   organizationName: string;
   organizationRole: OrganizationRole;
@@ -150,6 +153,7 @@ export function AppSidebar({
     project: Pick<WorkspaceProject, "id" | "name" | "organizationId">,
   ) => void;
   onLogout: () => void;
+  mode?: "desktop" | "mobile";
 }) {
   const { t, i18n } = useTranslation();
   const locale = useWorkspaceLocale();
@@ -164,6 +168,7 @@ export function AppSidebar({
       ? locale.sidebar.projectSingular
       : locale.sidebar.projectPlural;
   const isOrganizationAdmin = organizationRole === "ORGANIZATION_ADMIN";
+  const accountMenuLabel = `${userName} ${locale.sidebar.projectActions}`;
   const primaryNavigation = isOrganizationAdmin
     ? [
         {
@@ -205,16 +210,17 @@ export function AppSidebar({
         },
       ];
 
-  return (
-    <aside className="sticky top-0 flex h-dvh w-[21rem] shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
+  const content = (
+    <>
       <SidebarHeader
         organizationName={organizationName}
         organizationRole={organizationRole}
         organizationLogoUrl={organizationLogoUrl}
+        compact={mode === "mobile"}
       />
 
-      <div className="flex-1 space-y-5 overflow-y-auto px-3 pb-4">
-        <div className="rounded-2xl border border-sidebar-border bg-card/75 p-2 shadow-[var(--shadow-soft)]">
+      <div className="flex-1 space-y-6 overflow-y-auto px-3 pb-4">
+        <div className="space-y-1">
           {primaryNavigation.map((item) => (
             <NavRow
               key={item.to}
@@ -239,7 +245,7 @@ export function AppSidebar({
           </div>
 
           {projects.length === 0 ? (
-            <div className="rounded-2xl border border-border/70 bg-card/60 px-4 py-4 text-sm text-muted-foreground">
+            <div className="rounded-[12px] border border-border/70 bg-card/80 px-4 py-4 text-sm text-muted-foreground">
               <div className="font-medium text-foreground">
                 {locale.sidebar.noProjects}
               </div>
@@ -255,10 +261,12 @@ export function AppSidebar({
                     to="/projects/$projectId"
                     params={{ projectId: project.id }}
                     className={cn(
-                      "group relative flex min-w-0 flex-1 items-center gap-2 rounded-xl px-2 py-2 text-[13px] font-medium text-sidebar-foreground/85 transition-colors",
+                      "group relative flex h-11 min-w-0 flex-1 items-center gap-2.5 rounded-[10px] px-3.5 text-[13px] font-medium text-sidebar-foreground/85 transition-colors",
                       "hover:bg-sidebar-hover hover:text-foreground",
-                      "data-[status=active]:bg-sidebar-active data-[status=active]:text-primary data-[status=active]:font-semibold",
+                      "data-[status=active]:border data-[status=active]:border-primary/12 data-[status=active]:bg-sidebar-active data-[status=active]:font-semibold data-[status=active]:text-primary",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-2",
                     )}
+                    title={project.name}
                   >
                     <FolderKanban className="h-3.5 w-3.5 shrink-0 text-primary" />
                     <span className="truncate">{project.name}</span>
@@ -277,38 +285,73 @@ export function AppSidebar({
         </div>
       </div>
 
-      <div className="m-3 rounded-2xl border border-sidebar-border bg-card p-4 shadow-[var(--shadow-soft)]">
-        <div className="text-sm font-semibold tracking-tight text-foreground">
-          {userName}
-        </div>
-        <div className="mt-1 text-xs text-muted-foreground">
-          {branding.roleLabel}
-        </div>
-        <div className="mt-3 border-t border-border pt-3 text-xs text-muted-foreground">
-          {projects.length} {projectCountLabel}
-        </div>
-        <div className="mt-4 grid gap-2">
-          <Link
-            to="/organizations/$organizationId/settings"
-            params={{ organizationId }}
-            className="inline-flex items-center justify-center rounded-xl border border-border bg-background px-3 py-2 text-sm font-medium text-foreground hover:bg-secondary"
-          >
-            {locale.sidebar.organizationSettings}
-          </Link>
-          {currentProject && !currentProject.permissions.canEdit ? (
-            <div className="rounded-xl border border-primary/20 bg-primary-soft px-3 py-2 text-xs leading-5 text-primary">
-              {locale.sidebar.readOnlyProject}
+      <div className="mx-3 mb-3 mt-auto border-t border-sidebar-border pt-3">
+        {currentProject && !currentProject.permissions.canEdit ? (
+          <div className="mb-3 rounded-[10px] border border-primary/20 bg-primary-soft/65 px-3 py-2 text-xs leading-5 text-primary">
+            {locale.sidebar.readOnlyProject}
+          </div>
+        ) : null}
+
+        <div className="flex items-center gap-3 rounded-[12px] px-2 py-2">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-soft text-sm font-semibold text-primary">
+            {userName
+              .split(" ")
+              .map((part) => part.charAt(0))
+              .join("")
+              .slice(0, 2)
+              .toUpperCase()}
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="truncate text-sm font-semibold tracking-tight text-foreground">
+              {userName}
             </div>
-          ) : null}
-          <button
-            type="button"
-            onClick={onLogout}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-background px-3 py-2 text-sm font-medium hover:bg-secondary"
-          >
-            <LogOut className="h-4 w-4" /> {t("common.logOut")}
-          </button>
+            <div className="truncate text-xs text-muted-foreground">
+              {branding.roleLabel} · {projects.length} {projectCountLabel}
+            </div>
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-[10px] text-muted-foreground transition-colors hover:bg-sidebar-hover hover:text-foreground"
+                aria-label={accountMenuLabel}
+                title={accountMenuLabel}
+              >
+                <MoreHorizontal className="h-4 w-4" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              {organizationPermissions.canManageSettings ? (
+                <DropdownMenuItem asChild>
+                  <Link
+                    to="/organizations/$organizationId/settings"
+                    params={{ organizationId }}
+                  >
+                    <Settings2 className="h-4 w-4" />
+                    {locale.sidebar.organizationSettings}
+                  </Link>
+                </DropdownMenuItem>
+              ) : null}
+              {(organizationPermissions.canManageSettings ||
+                mode === "mobile") && <DropdownMenuSeparator />}
+              <DropdownMenuItem onSelect={onLogout}>
+                <LogOut className="h-4 w-4" />
+                {t("common.logOut")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
+    </>
+  );
+
+  if (mode === "mobile") {
+    return <div className="flex h-full flex-col bg-sidebar">{content}</div>;
+  }
+
+  return (
+    <aside className="sticky top-0 hidden h-dvh w-[15.75rem] shrink-0 flex-col border-r border-sidebar-border bg-sidebar lg:flex xl:w-[17rem]">
+      {content}
     </aside>
   );
 }

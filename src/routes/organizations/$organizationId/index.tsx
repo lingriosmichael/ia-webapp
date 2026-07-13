@@ -1,12 +1,25 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { AlertCircle, ArrowUpRight, Clock3, FolderKanban } from "lucide-react";
+import { AlertCircle, ArrowRight, Clock3, FolderKanban } from "lucide-react";
+import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { OrganizationCard } from "@/components/organizationCard";
-import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
+import { StatusBadge } from "@/components/statusBadge";
+import { Button } from "@/components/ui/button";
+import {
+  PageContainer,
+  Card,
+  PageHeader,
+  TopBar,
+} from "@/components/workspaceUI";
 import { useOrganizationWorkspacePage } from "@/contexts/organizationWorkspaceContext";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { resolveProjectSummaryText } from "@/lib/projectSummary";
-import { formatDateTime, translateStatus } from "@/lib/translationUtils";
+import {
+  formatDateTime,
+  formatMonthRange,
+  translateStatus,
+} from "@/lib/translationUtils";
+import { WorkspaceMobileNavigationButton } from "@/components/workspaceShell";
 import type { WorkspaceActivity, WorkspaceProject } from "@/services/apiClient";
 
 export const Route = createFileRoute("/organizations/$organizationId/")({
@@ -76,6 +89,7 @@ function OrganizationWorkspacePage() {
       Boolean(item),
     )
     .slice(0, 4);
+  const nextAction = getNextWorkspaceAction(t, workspace.projects);
 
   return (
     <>
@@ -84,9 +98,10 @@ function OrganizationWorkspacePage() {
           { label: workspace.organization.name },
           { label: locale.sidebar.workspace },
         ]}
+        leading={<WorkspaceMobileNavigationButton />}
       />
 
-      <div className="mx-auto w-full max-w-6xl px-8 py-8">
+      <PageContainer className="py-6 sm:py-7 lg:py-8">
         <PageHeader
           eyebrow={locale.organizationPage.eyebrow}
           title={
@@ -117,17 +132,37 @@ function OrganizationWorkspacePage() {
                 <p className="mt-3 text-sm leading-6 text-muted-foreground">
                   {locale.organizationPage.emptyDescription}
                 </p>
-                <Link
-                  to="/organizations/$organizationId/projects"
-                  params={{ organizationId }}
-                  className="mt-6 inline-flex h-10 items-center rounded-md border border-border bg-card px-4 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
-                >
-                  {locale.organizationPage.openProjectsPage}
-                </Link>
+                <Button asChild variant="outline" className="mt-6">
+                  <Link
+                    to="/organizations/$organizationId/projects"
+                    params={{ organizationId }}
+                  >
+                    {locale.organizationPage.openProjectsPage}
+                  </Link>
+                </Button>
               </div>
             </Card>
           ) : (
             <>
+              <Card className="border-primary/12 bg-primary-soft/35 p-6">
+                <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+                  <div className="max-w-[40rem]">
+                    <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
+                      <FolderKanban className="h-4 w-4 text-primary" />
+                      {t("organizationPage.nextActionTitle")}
+                    </div>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                      {nextAction.message}
+                    </p>
+                  </div>
+                  <Button asChild>
+                    <Link to={nextAction.to} params={nextAction.params}>
+                      {nextAction.actionLabel}
+                    </Link>
+                  </Button>
+                </div>
+              </Card>
+
               <Card className="p-6">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
@@ -139,13 +174,14 @@ function OrganizationWorkspacePage() {
                       {locale.organizationPage.continueWorkingDescription}
                     </p>
                   </div>
-                  <Link
-                    to="/organizations/$organizationId/projects"
-                    params={{ organizationId }}
-                    className="inline-flex h-9 items-center rounded-md border border-border bg-card px-3.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
-                  >
-                    {locale.organizationPage.viewAllProjects}
-                  </Link>
+                  <Button asChild variant="outline" size="sm">
+                    <Link
+                      to="/organizations/$organizationId/projects"
+                      params={{ organizationId }}
+                    >
+                      {locale.organizationPage.viewAllProjects}
+                    </Link>
+                  </Button>
                 </div>
 
                 <div className="mt-5 grid gap-3">
@@ -218,7 +254,7 @@ function OrganizationWorkspacePage() {
             </>
           )}
         </div>
-      </div>
+      </PageContainer>
     </>
   );
 }
@@ -226,6 +262,11 @@ function OrganizationWorkspacePage() {
 function RecentProjectRow({ project }: { project: WorkspaceProject }) {
   const { t, i18n } = useTranslation();
   const locale = useWorkspaceLocale();
+  const period = formatMonthRange(
+    project.startMonth,
+    project.endMonth,
+    i18n.language,
+  );
   const summary =
     resolveProjectSummaryText(project) ??
     locale.organizationPage.noProjectDescription;
@@ -234,21 +275,28 @@ function RecentProjectRow({ project }: { project: WorkspaceProject }) {
     <Link
       to="/projects/$projectId"
       params={{ projectId: project.id }}
-      className="group flex items-start justify-between gap-4 rounded-2xl border border-border bg-secondary/20 px-4 py-4 transition-colors hover:border-primary/25 hover:bg-primary-soft/40"
+      className="group flex flex-col gap-4 rounded-[14px] border border-border/80 bg-secondary/20 px-4 py-4 transition-colors hover:border-primary/20 hover:bg-primary-soft/35 lg:flex-row lg:items-start lg:justify-between"
     >
-      <div className="min-w-0">
-        <div className="text-sm font-semibold text-foreground">
-          {project.name}
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="text-sm font-semibold text-foreground">
+            {project.name}
+          </div>
+          <StatusBadge
+            status={project.status}
+            label={translateStatus(t, project.status)}
+          />
         </div>
-        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+        <p className="mt-1 line-clamp-2 max-w-[42rem] text-sm leading-6 text-muted-foreground">
           {summary}
         </p>
-        <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-          <span className="rounded-full border border-border bg-background px-2.5 py-1">
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
+          {project.fundingProgram ? (
+            <span>{project.fundingProgram}</span>
+          ) : null}
+          {period ? <span>{period}</span> : null}
+          <span>
             {project.activities.length} {locale.sidebar.activities}
-          </span>
-          <span className="rounded-full border border-border bg-background px-2.5 py-1">
-            {translateStatus(t, project.status)}
           </span>
         </div>
       </div>
@@ -260,8 +308,9 @@ function RecentProjectRow({ project }: { project: WorkspaceProject }) {
             {formatDateTime(project.updatedAt, i18n.language)}
           </div>
         </div>
-        <div className="grid h-9 w-9 place-items-center rounded-2xl border border-border bg-card text-muted-foreground transition-colors group-hover:border-primary/25 group-hover:text-primary">
-          <ArrowUpRight className="h-4 w-4" />
+        <div className="inline-flex h-10 items-center gap-2 rounded-[10px] border border-border bg-card px-3 text-sm font-medium text-foreground transition-colors group-hover:border-primary/20 group-hover:text-primary">
+          {t("common.open")}
+          <ArrowRight className="h-4 w-4" />
         </div>
       </div>
     </Link>
@@ -285,7 +334,7 @@ function RecentActivityRow({
     <Link
       to="/projects/$projectId/activities"
       params={{ projectId }}
-      className="block rounded-2xl border border-border bg-secondary/20 px-4 py-4 transition-colors hover:border-primary/25 hover:bg-primary-soft/40"
+      className="block rounded-[14px] border border-border/80 bg-secondary/20 px-4 py-4 transition-colors hover:border-primary/20 hover:bg-primary-soft/35"
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
@@ -302,10 +351,11 @@ function RecentActivityRow({
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-        <span className="rounded-full border border-border bg-background px-2.5 py-1">
-          {translateStatus(t, activity.status)}
-        </span>
-        <span className="rounded-full border border-border bg-background px-2.5 py-1">
+        <StatusBadge
+          status={activity.status}
+          label={translateStatus(t, activity.status)}
+        />
+        <span className="rounded-full border border-border/80 bg-background px-2.5 py-1">
           {t("organizationPage.recentActivityUploads", {
             count: activity.uploadMetadataCount,
           })}
@@ -326,7 +376,7 @@ function AttentionProjectRow({
     <Link
       to="/projects/$projectId"
       params={{ projectId: project.id }}
-      className="block rounded-2xl border border-border bg-secondary/20 px-4 py-4 transition-colors hover:border-primary/25 hover:bg-primary-soft/40"
+      className="block rounded-[14px] border border-border/80 bg-secondary/20 px-4 py-4 transition-colors hover:border-primary/20 hover:bg-primary-soft/35"
     >
       <div className="text-sm font-semibold text-foreground">
         {project.name}
@@ -334,4 +384,50 @@ function AttentionProjectRow({
       <p className="mt-1 text-sm leading-6 text-muted-foreground">{reason}</p>
     </Link>
   );
+}
+
+function getNextWorkspaceAction(t: TFunction, projects: WorkspaceProject[]) {
+  const projectWithoutActivities = projects.find(
+    (project) => project.activities.length === 0,
+  );
+
+  if (projectWithoutActivities) {
+    return {
+      message: t("organizationPage.nextActionStates.createActivity"),
+      actionLabel: t("organizationPage.nextActionLabels.openProject"),
+      to: "/projects/$projectId" as const,
+      params: { projectId: projectWithoutActivities.id },
+    };
+  }
+
+  const projectWithMissingEvidence = projects.find((project) =>
+    project.activities.some((activity) => activity.uploadMetadataCount === 0),
+  );
+
+  if (projectWithMissingEvidence) {
+    const missingCount = projectWithMissingEvidence.activities.filter(
+      (activity) => activity.uploadMetadataCount === 0,
+    ).length;
+
+    return {
+      message: t("organizationPage.nextActionStates.uploadEvidence", {
+        count: missingCount,
+      }),
+      actionLabel: t("organizationPage.nextActionLabels.uploadEvidence"),
+      to: "/projects/$projectId/evidence" as const,
+      params: { projectId: projectWithMissingEvidence.id },
+    };
+  }
+
+  const mostRecentProject = [...projects].sort(
+    (left, right) =>
+      new Date(right.updatedAt).getTime() - new Date(left.updatedAt).getTime(),
+  )[0];
+
+  return {
+    message: t("organizationPage.nextActionStates.continueProject"),
+    actionLabel: t("organizationPage.nextActionLabels.openProject"),
+    to: "/projects/$projectId" as const,
+    params: { projectId: mostRecentProject?.id ?? "" },
+  };
 }

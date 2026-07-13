@@ -221,36 +221,89 @@ function ProjectInterpretationPage() {
       <section>
         <div className="mt-6">
           <div className="space-y-4">
-            <Card className="p-5">
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                <SummaryMetric
-                  label={t(
-                    "projectWorkspace.interpretation.metrics.understanding",
-                  )}
-                  value={`${overallConfidencePercent}%`}
-                />
-                <SummaryMetric
-                  label={t("projectWorkspace.interpretation.metrics.entities")}
-                  value={String(totalEntities)}
-                />
-                <SummaryMetric
-                  label={t(
-                    "projectWorkspace.interpretation.metrics.indicators",
-                  )}
-                  value={String(totalIndicators)}
-                />
-                <SummaryMetric
-                  label={t("projectWorkspace.interpretation.metrics.questions")}
-                  value={String(pendingQuestions.length)}
-                />
-              </div>
-              <p className="mt-4 text-sm font-medium text-foreground">
-                {t("projectWorkspace.interpretation.filesInterpretedStatus", {
-                  interpreted: interpretedUploadCount,
-                  total: totalUploadCount,
-                })}
-              </p>
-            </Card>
+            {interpretedUploadCount === 0 ? (
+              <Card className="border-primary/12 bg-primary-soft/30 p-6">
+                <div className="max-w-[42rem]">
+                  <div className="text-sm font-semibold tracking-tight text-foreground">
+                    {t("projectWorkspace.interpretation.title")}
+                  </div>
+                  <div className="mt-3 text-3xl font-semibold tracking-tight text-foreground">
+                    0%
+                  </div>
+                  <p className="mt-2 text-sm font-medium text-foreground">
+                    {t(
+                      "projectWorkspace.interpretation.filesInterpretedStatus",
+                      {
+                        interpreted: interpretedUploadCount,
+                        total: totalUploadCount,
+                      },
+                    )}
+                  </p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    0{" "}
+                    {t(
+                      "projectWorkspace.interpretation.metrics.entities",
+                    ).toLowerCase()}{" "}
+                    · 0{" "}
+                    {t(
+                      "projectWorkspace.interpretation.metrics.indicators",
+                    ).toLowerCase()}{" "}
+                    · 0{" "}
+                    {t(
+                      "projectWorkspace.interpretation.metrics.questions",
+                    ).toLowerCase()}
+                  </p>
+                  <p className="mt-4 max-w-[40rem] text-sm leading-6 text-muted-foreground">
+                    {t("projectWorkspace.interpretation.understoodEmpty")}
+                  </p>
+                  <Button asChild className="mt-5">
+                    <Link
+                      to="/projects/$projectId/evidence"
+                      params={{ projectId }}
+                    >
+                      {totalUploadCount === 0
+                        ? t("projectWorkspace.evidence.uploadAction")
+                        : t("projectWorkspace.tabs.evidence")}
+                    </Link>
+                  </Button>
+                </div>
+              </Card>
+            ) : (
+              <Card className="p-5">
+                <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                  <SummaryMetric
+                    label={t(
+                      "projectWorkspace.interpretation.metrics.understanding",
+                    )}
+                    value={`${overallConfidencePercent}%`}
+                  />
+                  <SummaryMetric
+                    label={t(
+                      "projectWorkspace.interpretation.metrics.entities",
+                    )}
+                    value={String(totalEntities)}
+                  />
+                  <SummaryMetric
+                    label={t(
+                      "projectWorkspace.interpretation.metrics.indicators",
+                    )}
+                    value={String(totalIndicators)}
+                  />
+                  <SummaryMetric
+                    label={t(
+                      "projectWorkspace.interpretation.metrics.questions",
+                    )}
+                    value={String(pendingQuestions.length)}
+                  />
+                </div>
+                <p className="mt-4 text-sm font-medium text-foreground">
+                  {t("projectWorkspace.interpretation.filesInterpretedStatus", {
+                    interpreted: interpretedUploadCount,
+                    total: totalUploadCount,
+                  })}
+                </p>
+              </Card>
+            )}
 
             <div className="space-y-4">
               <SectionTitle
@@ -314,28 +367,12 @@ function ProjectInterpretationPage() {
             </div>
 
             {answeredQuestions.length > 0 ? (
-              <div className="space-y-4">
-                <SectionTitle
-                  icon={<CircleHelp className="h-4 w-4 text-primary" />}
-                  title={t(
-                    "projectWorkspace.interpretation.reviewedQuestionsTitle",
-                  )}
-                />
-                {answeredQuestions.map(({ result, question }) => (
-                  <QuestionCard
-                    key={question.id}
-                    activityName={
-                      activities.find(
-                        (activity) => activity.id === result.activityId,
-                      )?.name ?? result.datasetType
-                    }
-                    interpretationResultId={result.id}
-                    projectId={projectId}
-                    organizationId={workspaceProject?.organizationId}
-                    question={question}
-                  />
-                ))}
-              </div>
+              <ReviewedQuestionsSection
+                questions={answeredQuestions}
+                activities={activities}
+                projectId={projectId}
+                organizationId={workspaceProject?.organizationId}
+              />
             ) : null}
           </div>
         </div>
@@ -346,11 +383,11 @@ function ProjectInterpretationPage() {
 
 function SummaryMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-border bg-secondary/20 p-4">
+    <div className="rounded-[12px] border border-border/80 bg-secondary/30 p-4">
       <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
         {label}
       </div>
-      <div className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
+      <div className="mt-2 text-[1.75rem] font-semibold tracking-tight text-foreground">
         {value}
       </div>
     </div>
@@ -362,6 +399,74 @@ function SectionTitle({ icon, title }: { icon: ReactNode; title: string }) {
     <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
       {icon}
       {title}
+    </div>
+  );
+}
+
+function ReviewedQuestionsSection({
+  questions,
+  activities,
+  projectId,
+  organizationId,
+}: {
+  questions: Array<{
+    result: InterpretationResultRecord;
+    question: InterpretationQuestion;
+  }>;
+  activities: WorkspaceActivity[];
+  projectId: string;
+  organizationId: string | undefined;
+}) {
+  const { t } = useTranslation();
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <div className="space-y-4">
+      <SectionTitle
+        icon={<CircleHelp className="h-4 w-4 text-primary" />}
+        title={t("projectWorkspace.interpretation.reviewedQuestionsTitle")}
+      />
+      <button
+        type="button"
+        onClick={() => setIsExpanded((expanded) => !expanded)}
+        className="flex w-full items-center justify-between rounded-[12px] border border-border/80 bg-background px-5 py-4 text-left transition-colors hover:bg-secondary/20"
+        aria-expanded={isExpanded}
+      >
+        <div className="min-w-0">
+          <p className="text-sm text-muted-foreground">
+            {t("projectWorkspace.interpretation.reviewedQuestionsSummary", {
+              count: questions.length,
+            })}
+          </p>
+        </div>
+        <div className="ml-4 flex items-center gap-2">
+          <Badge variant="secondary">{questions.length}</Badge>
+          {isExpanded ? (
+            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+          ) : (
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          )}
+        </div>
+      </button>
+
+      {isExpanded ? (
+        <Card className="divide-y divide-border/70 overflow-hidden">
+          {questions.map(({ result, question }) => (
+            <QuestionCard
+              key={question.id}
+              activityName={
+                activities.find((activity) => activity.id === result.activityId)
+                  ?.name ?? result.datasetType
+              }
+              interpretationResultId={result.id}
+              projectId={projectId}
+              organizationId={organizationId}
+              question={question}
+              embedded
+            />
+          ))}
+        </Card>
+      ) : null}
     </div>
   );
 }
@@ -1190,12 +1295,14 @@ function QuestionCard({
   projectId,
   organizationId,
   question,
+  embedded = false,
 }: {
   activityName: string;
   interpretationResultId: string;
   projectId: string;
   organizationId: string | undefined;
   question: InterpretationQuestion;
+  embedded?: boolean;
 }) {
   const { t } = useTranslation();
   const [freeTextValue, setFreeTextValue] = useState(
@@ -1223,8 +1330,8 @@ function QuestionCard({
     });
   }
 
-  return (
-    <Card className="p-5">
+  const content = (
+    <>
       <div className="flex flex-wrap items-center gap-2">
         <div className="text-sm font-semibold tracking-tight text-foreground">
           {activityName}
@@ -1316,8 +1423,14 @@ function QuestionCard({
           ) : null}
         </div>
       )}
-    </Card>
+    </>
   );
+
+  if (embedded) {
+    return <div className="px-5 py-4">{content}</div>;
+  }
+
+  return <Card className="p-5">{content}</Card>;
 }
 
 function PrivacyReviewSection({

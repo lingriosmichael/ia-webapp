@@ -86,3 +86,39 @@ export function formatDateTime(value: string, language: string) {
     timeStyle: "short",
   }).format(new Date(value));
 }
+
+function formatMonthValue(value: string, language: string) {
+  const parsed = new Date(`${value}-01T12:00:00Z`);
+
+  if (Number.isNaN(parsed.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat(language === "de" ? "de-DE" : "en-US", {
+    month: "short",
+    year: "numeric",
+  }).format(parsed);
+}
+
+export function formatMonthRange(
+  startMonth: string | null | undefined,
+  endMonth: string | null | undefined,
+  language: string,
+) {
+  if (!startMonth && !endMonth) {
+    return null;
+  }
+
+  if (startMonth && endMonth) {
+    if (startMonth === endMonth) {
+      return formatMonthValue(startMonth, language);
+    }
+
+    return `${formatMonthValue(startMonth, language)} - ${formatMonthValue(
+      endMonth,
+      language,
+    )}`;
+  }
+
+  return formatMonthValue(startMonth ?? endMonth ?? "", language);
+}

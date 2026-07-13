@@ -335,7 +335,8 @@ const de: TranslationDictionary = {
       approvePrivacy: "Freigeben und fortfahren",
       approvingPrivacy: "Freigabe läuft…",
       analysisInProgress: "Verarbeitung läuft…",
-      analysisCompleted: "Abgeschlossen",
+      analysisCompleted: "Verarbeitung abgeschlossen",
+      reviewedStatus: "Geprüft",
       analysisStarted: "Evidenzanalyse wurde gestartet.",
       analysisStartFailed: "Evidenzanalyse konnte nicht gestartet werden.",
       privacyApprovalSuccess: "Datenschutzprüfung wurde freigegeben.",
@@ -426,7 +427,7 @@ const de: TranslationDictionary = {
         processing: "Wird verarbeitet",
         awaiting_privacy_review: "Wartet auf Datenschutzprüfung",
         transforming: "Datenschutzsichere Repräsentation wird erstellt",
-        completed: "Abgeschlossen",
+        completed: "Verarbeitung abgeschlossen",
         failed: "Fehlgeschlagen",
         cancelled: "Abgebrochen",
       },
@@ -527,6 +528,10 @@ const de: TranslationDictionary = {
       needHelpTitle: "Wobei ich Ihre Hilfe brauche",
       needHelpEmpty: "Derzeit keine offenen Fragen.",
       reviewedQuestionsTitle: "Bereits geprüfte Fragen",
+      reviewedQuestionsSummary:
+        "{{count}} beantwortete Frage kann bei Bedarf erneut geprüft oder bearbeitet werden.",
+      reviewedQuestionsSummary_other:
+        "{{count}} beantwortete Fragen können bei Bedarf erneut geprüft oder bearbeitet werden.",
       questionAnsweredLabel: "Beantwortet: {{value}}",
       questionRequiredLabel: "Für die Prüfung erforderlich",
       questionOptionalLabel: "Optional",
@@ -1270,6 +1275,7 @@ const de: TranslationDictionary = {
       "Fügen Sie in den Organisationseinstellungen eine Mission hinzu.",
     members: "Mitglieder",
     projects: "Projekte",
+    role: "Rolle",
     workspace: "Workspace",
     workspaceReady: "Bereit",
     readOnly: "Nur lesen",
@@ -1306,6 +1312,21 @@ const de: TranslationDictionary = {
     allProjectsOnTrack:
       "Derzeit benötigt kein Projekt im Workspace unmittelbare Aufmerksamkeit.",
     openProjectsPage: "Zur Projektseite",
+    nextActionTitle: "Nächster Schritt",
+    nextActionLabels: {
+      openProject: "Projekt öffnen",
+      uploadEvidence: "Evidenz hochladen",
+    },
+    nextActionStates: {
+      createActivity:
+        "Für dieses Projekt fehlt noch die erste Aktivität. Legen Sie zuerst die Maßnahme an, bevor Evidenz hochgeladen werden kann.",
+      uploadEvidence:
+        "Für {{count}} Aktivität fehlt noch Evidenz. Laden Sie Nachweise hoch, damit Datenschutzprüfung und Interpretation starten können.",
+      uploadEvidence_other:
+        "Für {{count}} Aktivitäten fehlt noch Evidenz. Laden Sie Nachweise hoch, damit Datenschutzprüfung und Interpretation starten können.",
+      continueProject:
+        "Alle Projekte haben Aktivitäten und erste Evidenz. Öffnen Sie das zuletzt bearbeitete Projekt, um die nächste Arbeitsphase fortzusetzen.",
+    },
     attentionReasons: {
       noActivities: "Diesem Projekt fehlt noch die erste Aktivität.",
       noEvidence:
@@ -1484,6 +1505,10 @@ const de: TranslationDictionary = {
       "Beim Löschen eines Projekts werden alle verknüpften Aktivitäten, Uploads, Jobs, Prüfergebnisse, Analysen und Erkenntnisse dauerhaft entfernt.",
     deleteAction: "Projekt löschen",
     notSet: "Nicht gesetzt",
+    sections: {
+      fundingContext: "Förderkontext",
+      projectContext: "Projektkontext",
+    },
     fields: {
       timeline: "Zeitraum",
       fundingProgram: "Förderprogramm",

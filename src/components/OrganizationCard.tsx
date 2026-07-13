@@ -1,11 +1,12 @@
 import { FolderKanban, Users2 } from "lucide-react";
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { OrganizationAvatar } from "@/components/organizationAvatar";
+import { StatusBadge } from "@/components/statusBadge";
 import { Card } from "@/components/workspaceUI";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { getOrganizationBranding } from "@/lib/organizationBranding";
 import type { OrganizationSummary } from "@/services/apiClient";
-import { useTranslation } from "react-i18next";
 
 export function OrganizationCard({
   organization,
@@ -27,13 +28,13 @@ export function OrganizationCard({
 
   return (
     <Card className="p-5 sm:p-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
         <div className="flex items-start gap-3.5">
           <OrganizationAvatar
             name={branding.displayName}
             initials={branding.initials}
             logoUrl={branding.logoUrl}
-            className="h-12 w-12 rounded-2xl text-base"
+            className="h-12 w-12 rounded-[14px] text-base"
           />
           <div className="min-w-0">
             <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">
@@ -47,7 +48,7 @@ export function OrganizationCard({
                 {organization.settings.legalForm}
               </p>
             ) : null}
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+            <p className="mt-2 max-w-[42rem] text-sm leading-6 text-muted-foreground">
               {organization.settings.mission ||
                 locale.organizationCard.noMission}
             </p>
@@ -55,13 +56,11 @@ export function OrganizationCard({
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="rounded-full border border-border bg-secondary/40 px-3 py-1 text-xs font-medium text-muted-foreground">
-            {branding.roleLabel}
-          </span>
+          <StatusBadge status="available" label={branding.roleLabel} />
         </div>
       </div>
 
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+      <div className="mt-5 grid gap-3 sm:grid-cols-3">
         <MetricTile
           icon={<Users2 className="h-4 w-4 text-primary" />}
           label={locale.organizationCard.members}
@@ -71,6 +70,10 @@ export function OrganizationCard({
           icon={<FolderKanban className="h-4 w-4 text-primary" />}
           label={locale.organizationCard.projects}
           value={String(projectCount)}
+        />
+        <MetricTile
+          label={locale.organizationCard.role}
+          value={branding.roleLabel}
         />
       </div>
     </Card>
@@ -82,17 +85,17 @@ function MetricTile({
   label,
   value,
 }: {
-  icon: ReactNode;
+  icon?: ReactNode;
   label: string;
   value: string;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-secondary/20 p-3.5">
+    <div className="rounded-[12px] border border-border/80 bg-secondary/35 p-3.5">
       <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
         {icon}
         {label}
       </div>
-      <div className="mt-2.5 text-lg font-semibold tracking-tight text-foreground">
+      <div className="mt-2 text-base font-semibold tracking-tight text-foreground">
         {value}
       </div>
     </div>

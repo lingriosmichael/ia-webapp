@@ -7,6 +7,7 @@ import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShel
 import { useWorkspaceShell } from "@/components/workspaceShell";
 import { useProjectWorkspacePage } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
+import { resolveProjectSummaryText } from "@/lib/projectSummary";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 
 export const Route = createFileRoute("/projects/$projectId/")({
@@ -19,6 +20,11 @@ function ProjectOverviewPage() {
   const { openProjectDeleteDialog } = useWorkspaceShell();
   const { project } = useProjectWorkspacePage();
   const [isEditing, setIsEditing] = useState(false);
+  const projectDescription =
+    resolveProjectSummaryText({
+      impactModel: project.impactModel,
+      successIndicators: project.successIndicators,
+    }) ?? locale.projectSettings.generalDescription;
 
   useEffect(() => {
     setIsEditing(false);
@@ -34,6 +40,7 @@ function ProjectOverviewPage() {
 
   return (
     <ProjectWorkspaceShell
+      description={!isEditing ? projectDescription : undefined}
       actions={
         project.permissions.canEdit ? (
           isEditing ? (

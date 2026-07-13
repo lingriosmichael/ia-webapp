@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
+import { PanelLeft } from "lucide-react";
 import { toast } from "sonner";
 import {
   useCreateActivityMutation,
@@ -13,6 +14,14 @@ import { ActivityDialog } from "@/components/activityDialog";
 import { AppSidebar } from "@/components/AppSidebar";
 import { ProjectDeleteDialog } from "@/components/projectDeleteDialog";
 import { ProjectDialog } from "@/components/projectDialog";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import {
   ApiError,
   type CreateActivityPayload,
@@ -36,6 +45,7 @@ interface WorkspaceShellContextValue {
     name: string;
     organizationId: string;
   }) => void;
+  openMobileSidebar: () => void;
 }
 
 const WorkspaceShellContext = createContext<WorkspaceShellContextValue | null>(
@@ -78,6 +88,7 @@ export function WorkspaceShell({
   const navigate = useNavigate();
   const locale = useWorkspaceLocale();
   const [projectDialogOpen, setProjectDialogOpen] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [activityDialogTarget, setActivityDialogTarget] = useState<{
     projectId: string;
     activity: ActivitySummary | WorkspaceActivity | null;
@@ -122,6 +133,7 @@ export function WorkspaceShell({
       openActivityDialog: (projectId: string, activity = null) =>
         setActivityDialogTarget({ projectId, activity }),
       openProjectDeleteDialog: (project) => setProjectDeleteTarget(project),
+      openMobileSidebar: () => setMobileSidebarOpen(true),
     }),
     [],
   );
@@ -249,6 +261,34 @@ export function WorkspaceShell({
 
         <main className="flex min-w-0 flex-1 flex-col">{children}</main>
 
+        <Sheet open={mobileSidebarOpen} onOpenChange={setMobileSidebarOpen}>
+          <SheetContent side="left" className="w-[18rem] p-0 sm:max-w-none">
+            <SheetHeader className="sr-only">
+              <SheetTitle>Workspace navigation</SheetTitle>
+              <SheetDescription>
+                Navigate between workspace areas and projects.
+              </SheetDescription>
+            </SheetHeader>
+            <AppSidebar
+              organizationName={organizationName}
+              organizationRole={organizationRole}
+              organizationPermissions={organizationPermissions}
+              organizationLogoUrl={organizationLogoUrl}
+              organizationId={organizationId}
+              userName={userName}
+              projects={projects}
+              currentProject={currentProject}
+              onCreateProject={workspaceShellActions.openProjectDialog}
+              onDeleteProject={workspaceShellActions.openProjectDeleteDialog}
+              onLogout={() => {
+                setMobileSidebarOpen(false);
+                onLogout();
+              }}
+              mode="mobile"
+            />
+          </SheetContent>
+        </Sheet>
+
         <ProjectDialog
           open={projectDialogOpen}
           onOpenChange={setProjectDialogOpen}
@@ -286,5 +326,22 @@ export function WorkspaceShell({
         />
       </div>
     </WorkspaceShellContext.Provider>
+  );
+}
+
+export function WorkspaceMobileNavigationButton() {
+  const { openMobileSidebar } = useWorkspaceShell();
+
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      size="icon"
+      className="lg:hidden"
+      onClick={openMobileSidebar}
+      aria-label="Open workspace navigation"
+    >
+      <PanelLeft className="h-4 w-4" />
+    </Button>
   );
 }

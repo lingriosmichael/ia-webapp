@@ -12,6 +12,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { FieldLabel } from "@/components/entityDialog";
+import { StatusBadge } from "@/components/statusBadge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -27,7 +28,11 @@ import { useUpdateProjectMutation } from "@/hooks/useGrantready";
 import { resolveProjectSummaryText } from "@/lib/projectSummary";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { cn } from "@/lib/utils";
-import { formatDateTime } from "@/lib/translationUtils";
+import {
+  formatDateTime,
+  formatMonthRange,
+  translateStatus,
+} from "@/lib/translationUtils";
 import { ApiError, type ProjectSummary } from "@/services/apiClient";
 
 function deduplicateValues(values: string[]) {
@@ -93,7 +98,7 @@ export function ProjectSettingsPanel({
   onDeleteProject: () => void;
 }) {
   const locale = useWorkspaceLocale();
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const canEdit = project.permissions.canEdit;
   const updateProjectMutation = useUpdateProjectMutation(
     project.id,
@@ -124,14 +129,24 @@ export function ProjectSettingsPanel({
   }, [initialFormState, isEditing]);
 
   const hasChanges = hasFormStateChanges(formState, initialFormState);
-  const timeline = [project.startMonth, project.endMonth]
-    .filter(Boolean)
-    .join(" -> ");
+  const timeline = formatMonthRange(
+    project.startMonth,
+    project.endMonth,
+    i18n.language,
+  );
   const overviewDescription =
     resolveProjectSummaryText({
       impactModel: project.impactModel,
       successIndicators: project.successIndicators,
     }) ?? locale.projectSettings.generalDescription;
+  const targetGroupsDisplay =
+    project.targetGroups.length > 0
+      ? project.targetGroups.join(" · ")
+      : locale.projectSettings.notSet;
+  const sdgsDisplay =
+    project.sdgs.length > 0
+      ? project.sdgs.join(" · ")
+      : locale.projectSettings.notSet;
 
   function updateField<Key extends keyof ProjectSettingsFormState>(
     key: Key,
@@ -228,17 +243,146 @@ export function ProjectSettingsPanel({
     }
   }
 
+  if (!isEditing) {
+    return (
+      <div className="space-y-6">
+        {!canEdit ? (
+          <Card className="border-primary/20 bg-primary-soft/40 px-5 py-4 shadow-none">
+            <p className="text-sm leading-6 text-primary">
+              {locale.projectSettings.readOnlyNotice}
+            </p>
+          </Card>
+        ) : null}
+
+        <OverviewSectionCard title={locale.dialogs.project.projectProfile}>
+          <OverviewFieldRow
+            label={locale.projectSettings.fields.fundingProgram}
+            value={project.fundingProgram || locale.projectSettings.notSet}
+          />
+          <OverviewFieldRow
+            label={locale.projectSettings.fields.fundingOrganization}
+            value={project.fundingOrganization || locale.projectSettings.notSet}
+          />
+          <OverviewFieldRow
+            label={locale.projectSettings.fields.timeline}
+            value={timeline || locale.projectSettings.notSet}
+          />
+          <OverviewFieldRow
+            label={locale.projectSettings.fields.targetGroups}
+            value={targetGroupsDisplay}
+          />
+          <OverviewFieldRow
+            label={locale.projectSettings.fields.areaOfOperation}
+            value={project.areaOfOperation || locale.projectSettings.notSet}
+          />
+          <OverviewFieldRow
+            label={locale.projectSettings.fields.sdgs}
+            value={sdgsDisplay}
+          />
+          <OverviewFieldRow
+            label={locale.projectSettings.fields.partnerships}
+            value={
+              <div className="max-w-[62rem] whitespace-pre-wrap text-[15px] leading-7 text-foreground">
+                {project.partnerships || locale.projectSettings.notSet}
+              </div>
+            }
+          />
+          <OverviewFieldRow
+            label={locale.dialogs.project.impactModel}
+            value={
+              <div className="grid gap-4 lg:grid-cols-2">
+                <OverviewFieldValueBlock
+                  label={locale.projectSettings.fields.inputs}
+                  value={
+                    project.impactModel.inputs || locale.projectSettings.notSet
+                  }
+                />
+                <OverviewFieldValueBlock
+                  label={locale.projectSettings.fields.activities}
+                  value={
+                    project.impactModel.activities ||
+                    locale.projectSettings.notSet
+                  }
+                />
+                <OverviewFieldValueBlock
+                  label={locale.projectSettings.fields.outputs}
+                  value={
+                    project.impactModel.outputs || locale.projectSettings.notSet
+                  }
+                />
+                <OverviewFieldValueBlock
+                  label={locale.projectSettings.fields.impact}
+                  value={
+                    project.impactModel.impact || locale.projectSettings.notSet
+                  }
+                />
+                <OverviewFieldValueBlock
+                  label={locale.projectSettings.fields.outcomes}
+                  value={
+                    project.impactModel.outcomes ||
+                    locale.projectSettings.notSet
+                  }
+                  className="lg:col-span-2"
+                />
+              </div>
+            }
+          />
+          <OverviewFieldRow
+            label={locale.projectSettings.fields.successIndicators}
+            value={
+              <div className="max-w-[62rem] whitespace-pre-wrap text-[15px] leading-7 text-foreground">
+                {project.successIndicators || locale.projectSettings.notSet}
+              </div>
+            }
+          />
+        </OverviewSectionCard>
+
+        {project.permissions.canDelete ? (
+          <Card className="border-destructive/20 p-5 shadow-none sm:p-6">
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div className="max-w-2xl">
+                <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
+                  <ShieldAlert className="h-4 w-4 text-destructive" />
+                  {locale.projectSettings.dangerTitle}
+                </div>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  {locale.projectSettings.dangerDescription}
+                </p>
+              </div>
+              <Button
+                type="button"
+                variant="destructive"
+                className="justify-center md:self-center"
+                onClick={onDeleteProject}
+              >
+                <Trash2 className="h-4 w-4" />
+                {locale.projectSettings.deleteAction}
+              </Button>
+            </div>
+          </Card>
+        ) : null}
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="mt-8 space-y-6">
         <Card className="p-6 sm:p-8">
-          <div>
-            <div className="text-sm font-semibold tracking-tight text-foreground">
-              {locale.projectSettings.general}
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div>
+              <div className="text-sm font-semibold tracking-tight text-foreground">
+                {locale.projectSettings.general}
+              </div>
+              <p className="mt-2 max-w-[44rem] text-sm leading-6 text-muted-foreground">
+                {overviewDescription}
+              </p>
             </div>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-              {overviewDescription}
-            </p>
+            <StatusBadge
+              status={project.status}
+              label={translateStatus(t, project.status)}
+              className="self-start"
+            />
           </div>
 
           {!canEdit ? (
@@ -423,7 +567,7 @@ export function ProjectSettingsPanel({
                 </FieldGroup>
               </div>
 
-              <div className="rounded-2xl border border-border/70 p-5">
+              <div className="rounded-[12px] border border-border/70 p-5">
                 <div className="text-sm font-semibold tracking-tight text-foreground">
                   {locale.dialogs.project.impactModel}
                 </div>
@@ -515,7 +659,7 @@ export function ProjectSettingsPanel({
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-border/70 p-5">
+              <div className="rounded-[12px] border border-border/70 p-5">
                 <FieldGroup
                   label={locale.dialogs.project.successIndicators}
                   error={formErrors.successIndicators}
@@ -824,7 +968,7 @@ function DetailCard({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-border bg-secondary/20 p-4",
+        "rounded-[12px] border border-border/80 bg-secondary/35 p-5",
         className,
       )}
     >
@@ -833,6 +977,63 @@ function DetailCard({
         {label}
       </div>
       <div className="mt-3 whitespace-pre-wrap text-sm leading-6 text-foreground">
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function OverviewSectionCard({
+  title,
+  children,
+  className,
+}: {
+  title: string;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <Card className={cn("p-6 sm:p-7", className)}>
+      <div className="text-[15px] font-semibold tracking-tight text-foreground">
+        {title}
+      </div>
+      <div className="mt-5">{children}</div>
+    </Card>
+  );
+}
+
+function OverviewFieldRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: ReactNode;
+}) {
+  return (
+    <div className="grid gap-1.5 border-t border-border/60 py-2 first:border-t-0 first:pt-0 last:pb-0 sm:grid-cols-[minmax(0,12rem)_minmax(0,1fr)] sm:gap-4">
+      <div className="pt-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+        {label}
+      </div>
+      <div className="text-[15px] leading-7 text-foreground">{value}</div>
+    </div>
+  );
+}
+
+function OverviewFieldValueBlock({
+  label,
+  value,
+  className,
+}: {
+  label: string;
+  value: string;
+  className?: string;
+}) {
+  return (
+    <div className={cn("space-y-2", className)}>
+      <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+        {label}
+      </div>
+      <div className="whitespace-pre-wrap text-[15px] leading-7 text-foreground">
         {value}
       </div>
     </div>

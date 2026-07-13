@@ -68,7 +68,7 @@ export function ProjectTabs({
   return (
     <nav
       className={cn(
-        "flex gap-1 overflow-x-auto border-b border-border/70",
+        "flex gap-1 overflow-x-auto border-b border-border/70 pb-px",
         className,
       )}
     >
@@ -79,15 +79,15 @@ export function ProjectTabs({
           params={{ projectId }}
           activeOptions={{ exact: tab.exact ?? false }}
           className={cn(
-            "inline-flex items-center gap-2 border-b-2 border-transparent px-4 py-3 text-sm font-medium text-foreground/70 transition-colors",
-            "hover:rounded-t-md hover:bg-secondary/45 hover:text-foreground",
+            "inline-flex h-12 shrink-0 items-center gap-2 border-b-2 border-transparent px-3.5 text-sm font-medium text-foreground/70 transition-colors",
+            "hover:text-foreground",
             "data-[status=active]:border-primary data-[status=active]:text-primary data-[status=active]:font-semibold",
           )}
         >
           {tab.icon}
           {tab.label}
           {tab.comingSoon ? (
-            <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
+            <Badge variant="secondary" className="h-5 px-1.5 py-0 text-[10px]">
               {t("projectWorkspace.tabs.comingSoon")}
             </Badge>
           ) : null}

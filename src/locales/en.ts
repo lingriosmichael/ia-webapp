@@ -329,7 +329,8 @@ const en = {
       approvePrivacy: "Approve and continue",
       approvingPrivacy: "Approving…",
       analysisInProgress: "Processing…",
-      analysisCompleted: "Completed",
+      analysisCompleted: "Processing complete",
+      reviewedStatus: "Reviewed",
       analysisStarted: "Evidence analysis started.",
       analysisStartFailed: "Evidence analysis could not be started.",
       privacyApprovalSuccess: "Privacy review approved.",
@@ -417,7 +418,7 @@ const en = {
         processing: "Processing",
         awaiting_privacy_review: "Awaiting privacy review",
         transforming: "Creating privacy-safe representation",
-        completed: "Completed",
+        completed: "Processing complete",
         failed: "Failed",
         cancelled: "Cancelled",
       },
@@ -517,6 +518,10 @@ const en = {
       needHelpTitle: "Things I need your help with",
       needHelpEmpty: "No open questions right now.",
       reviewedQuestionsTitle: "Reviewed questions",
+      reviewedQuestionsSummary:
+        "{{count}} answered question can still be reviewed or edited if needed.",
+      reviewedQuestionsSummary_other:
+        "{{count}} answered questions can still be reviewed or edited if needed.",
       questionAnsweredLabel: "Answered: {{value}}",
       questionRequiredLabel: "Required for review",
       questionOptionalLabel: "Optional",
@@ -1240,6 +1245,7 @@ const en = {
     noMission: "Add a mission in organization settings.",
     members: "Members",
     projects: "Projects",
+    role: "Role",
     workspace: "Workspace",
     workspaceReady: "Ready",
     readOnly: "Read-only",
@@ -1276,6 +1282,21 @@ const en = {
     allProjectsOnTrack:
       "No project currently needs immediate attention in this workspace.",
     openProjectsPage: "Open projects page",
+    nextActionTitle: "Next step",
+    nextActionLabels: {
+      openProject: "Open project",
+      uploadEvidence: "Upload evidence",
+    },
+    nextActionStates: {
+      createActivity:
+        "This project still needs its first activity. Define the intervention first before evidence can be uploaded.",
+      uploadEvidence:
+        "{{count}} activity is still missing evidence. Upload files so privacy review and interpretation can begin.",
+      uploadEvidence_other:
+        "{{count}} activities are still missing evidence. Upload files so privacy review and interpretation can begin.",
+      continueProject:
+        "Every project already has activities and initial evidence. Open the most recently updated project to continue the next work phase.",
+    },
     attentionReasons: {
       noActivities: "This project still needs its first activity.",
       noEvidence:
@@ -1451,6 +1472,10 @@ const en = {
       "Deleting a project permanently removes all activities, uploads, jobs, review outputs, analyses, and insights linked to it.",
     deleteAction: "Delete project",
     notSet: "Not set",
+    sections: {
+      fundingContext: "Funding context",
+      projectContext: "Project context",
+    },
     fields: {
       timeline: "Timeline",
       fundingProgram: "Funding programme",
