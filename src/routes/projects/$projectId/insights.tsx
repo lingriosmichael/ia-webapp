@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
 import { Card } from "@/components/workspaceUI";
@@ -26,14 +25,6 @@ function ProjectInsightsPage() {
   return (
     <ProjectWorkspaceShell>
       <section>
-        <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
-          <Sparkles className="h-4 w-4 text-primary" />
-          {t("projectWorkspace.insights.title")}
-        </div>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-          {t("projectWorkspace.insights.description")}
-        </p>
-
         <Card className="mt-6 p-6">
           <h2 className="text-lg font-semibold tracking-tight text-foreground">
             {t("projectWorkspace.insights.notReadyTitle")}

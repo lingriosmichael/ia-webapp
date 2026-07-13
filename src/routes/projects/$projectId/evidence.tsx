@@ -1,5 +1,5 @@
 import { Outlet, createFileRoute, useMatches } from "@tanstack/react-router";
-import { Database, Sparkles, Trash2, UploadCloud } from "lucide-react";
+import { Sparkles, Trash2, UploadCloud } from "lucide-react";
 import type { ChangeEvent } from "react";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -69,14 +69,6 @@ export default function ProjectEvidencePage() {
   return (
     <ProjectWorkspaceShell>
       <section>
-        <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
-          <Database className="h-4 w-4 text-primary" />
-          {t("projectWorkspace.evidence.title")}
-        </div>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-          {t("projectWorkspace.evidence.description")}
-        </p>
-
         {activities.length === 0 ? (
           <Card className="mt-6 p-6">
             <h2 className="text-lg font-semibold tracking-tight text-foreground">
@@ -473,6 +465,7 @@ function EvidenceFileRow({
         processingJobId={job?.id}
         projectId={projectId}
         organizationId={organizationId}
+        activityName={activity.name}
       />
     </div>
   );

@@ -9,17 +9,17 @@ export const Route = createFileRoute(
 });
 
 function LegacyBriefRedirect() {
-  const { projectId, activityId } = Route.useParams();
+  const { projectId } = Route.useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   useEffect(() => {
     void navigate({
-      to: "/projects/$projectId/activities/$activityId/overview",
-      params: { projectId, activityId },
+      to: "/projects/$projectId/activities",
+      params: { projectId },
       replace: true,
     });
-  }, [activityId, navigate, projectId]);
+  }, [navigate, projectId]);
 
   return (
     <div className="flex min-h-screen items-center justify-center text-sm text-muted-foreground">

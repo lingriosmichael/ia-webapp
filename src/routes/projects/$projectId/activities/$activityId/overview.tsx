@@ -206,7 +206,6 @@ function ActivityBriefPage() {
         <PageHeader
           eyebrow={t("activityBrief.eyebrow")}
           title={activity.name}
-          description={activity.description ?? t("activityBrief.noDescription")}
         />
         <ActivityTabs
           projectId={projectId}

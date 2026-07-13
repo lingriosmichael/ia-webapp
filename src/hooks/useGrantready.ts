@@ -28,6 +28,7 @@ import {
   type ProjectSummary,
   type ResultRecord,
   type SessionResponse,
+  type StartInterpretationResponse,
   type UpdateProjectPayload,
   type UpdateActivityPayload,
   type UploadMetadataRecord,
@@ -655,7 +656,7 @@ export function useStartInterpretationMutation(
   const queryClient = useQueryClient();
   const { i18n } = useTranslation();
 
-  return useMutation({
+  return useMutation<StartInterpretationResponse, ApiError, string>({
     mutationFn: (uploadMetadataId: string) => {
       const language =
         (i18n.resolvedLanguage ?? i18n.language).toLowerCase().slice(0, 2) ===
@@ -682,6 +683,7 @@ export function useStartInterpretationMutation(
 export function useAnswerInterpretationQuestionMutation(
   interpretationResultId: string,
   projectId?: string,
+  organizationId?: string,
 ) {
   const queryClient = useQueryClient();
 
@@ -705,24 +707,31 @@ export function useAnswerInterpretationQuestionMutation(
         void queryClient.invalidateQueries({
           queryKey: projectInterpretationsQueryKey(projectId),
         });
+        void queryClient.invalidateQueries({
+          queryKey: projectOverviewQueryKey(projectId),
+        });
+      }
+      if (organizationId) {
+        void queryClient.invalidateQueries({
+          queryKey: workspaceQueryKey(organizationId),
+        });
       }
     },
   });
 }
 
-export function useSetIndicatorStatusMutation(
+function useSetInterpretationItemStatusMutation<
+  TVariables extends { status: InterpretationIndicatorStatus },
+>(
   interpretationResultId: string,
-  projectId?: string,
+  projectId: string | undefined,
+  organizationId: string | undefined,
+  mutationFn: (variables: TVariables) => Promise<InterpretationResultRecord>,
 ) {
   const queryClient = useQueryClient();
 
-  return useMutation<
-    InterpretationResultRecord,
-    ApiError,
-    { indicatorId: string; status: InterpretationIndicatorStatus }
-  >({
-    mutationFn: ({ indicatorId, status }) =>
-      apiClient.setIndicatorStatus(interpretationResultId, indicatorId, status),
+  return useMutation<InterpretationResultRecord, ApiError, TVariables>({
+    mutationFn,
     onSuccess: (result) => {
       queryClient.setQueryData(
         interpretationQueryKey(interpretationResultId),
@@ -732,9 +741,85 @@ export function useSetIndicatorStatusMutation(
         void queryClient.invalidateQueries({
           queryKey: projectInterpretationsQueryKey(projectId),
         });
+        void queryClient.invalidateQueries({
+          queryKey: projectOverviewQueryKey(projectId),
+        });
+      }
+      if (organizationId) {
+        void queryClient.invalidateQueries({
+          queryKey: workspaceQueryKey(organizationId),
+        });
       }
     },
   });
+}
+
+export function useSetIndicatorStatusMutation(
+  interpretationResultId: string,
+  projectId?: string,
+  organizationId?: string,
+) {
+  return useSetInterpretationItemStatusMutation(
+    interpretationResultId,
+    projectId,
+    organizationId,
+    ({
+      indicatorId,
+      status,
+    }: {
+      indicatorId: string;
+      status: InterpretationIndicatorStatus;
+    }) =>
+      apiClient.setIndicatorStatus(interpretationResultId, indicatorId, status),
+  );
+}
+
+export function useSetQualitativeFindingStatusMutation(
+  interpretationResultId: string,
+  projectId?: string,
+  organizationId?: string,
+) {
+  return useSetInterpretationItemStatusMutation(
+    interpretationResultId,
+    projectId,
+    organizationId,
+    ({
+      qualitativeFindingId,
+      status,
+    }: {
+      qualitativeFindingId: string;
+      status: InterpretationIndicatorStatus;
+    }) =>
+      apiClient.setQualitativeFindingStatus(
+        interpretationResultId,
+        qualitativeFindingId,
+        status,
+      ),
+  );
+}
+
+export function useSetSupportingQuoteStatusMutation(
+  interpretationResultId: string,
+  projectId?: string,
+  organizationId?: string,
+) {
+  return useSetInterpretationItemStatusMutation(
+    interpretationResultId,
+    projectId,
+    organizationId,
+    ({
+      supportingQuoteId,
+      status,
+    }: {
+      supportingQuoteId: string;
+      status: InterpretationIndicatorStatus;
+    }) =>
+      apiClient.setSupportingQuoteStatus(
+        interpretationResultId,
+        supportingQuoteId,
+        status,
+      ),
+  );
 }
 
 export function useAcknowledgeInterpretationReviewMutation(

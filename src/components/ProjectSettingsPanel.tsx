@@ -24,6 +24,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/workspaceUI";
 import { useUpdateProjectMutation } from "@/hooks/useGrantready";
+import { resolveProjectSummaryText } from "@/lib/projectSummary";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { cn } from "@/lib/utils";
 import { formatDateTime } from "@/lib/translationUtils";
@@ -126,6 +127,11 @@ export function ProjectSettingsPanel({
   const timeline = [project.startMonth, project.endMonth]
     .filter(Boolean)
     .join(" -> ");
+  const overviewDescription =
+    resolveProjectSummaryText({
+      impactModel: project.impactModel,
+      successIndicators: project.successIndicators,
+    }) ?? locale.projectSettings.generalDescription;
 
   function updateField<Key extends keyof ProjectSettingsFormState>(
     key: Key,
@@ -231,7 +237,7 @@ export function ProjectSettingsPanel({
               {locale.projectSettings.general}
             </div>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-              {locale.projectSettings.generalDescription}
+              {overviewDescription}
             </p>
           </div>
 

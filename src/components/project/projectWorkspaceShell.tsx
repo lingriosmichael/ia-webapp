@@ -6,7 +6,6 @@ import {
   useProjectHierarchy,
   useProjectWorkspacePage,
 } from "@/contexts/projectWorkspaceContext";
-import { resolveProjectSummaryText } from "@/lib/projectSummary";
 
 export function ProjectWorkspaceShell({
   children,
@@ -17,7 +16,7 @@ export function ProjectWorkspaceShell({
 }) {
   const { projectId, project } = useProjectWorkspacePage();
   const hierarchy = useProjectHierarchy();
-  const { t } = useTranslation();
+  useTranslation();
 
   return (
     <>
@@ -30,14 +29,7 @@ export function ProjectWorkspaceShell({
       />
 
       <div className="mx-auto w-full max-w-6xl px-8 py-8">
-        <PageHeader
-          title={project.name}
-          description={
-            resolveProjectSummaryText(project) ??
-            t("projectWorkspace.noDescription")
-          }
-          actions={actions}
-        />
+        <PageHeader title={project.name} actions={actions} />
 
         <ProjectTabs projectId={projectId} className="mt-6" />
 

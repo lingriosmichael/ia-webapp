@@ -6,7 +6,6 @@ import {
   ChevronRight,
   CircleHelp,
   Sparkles,
-  WandSparkles,
 } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -37,6 +36,8 @@ import {
   useJobQuery,
   useProjectInterpretationsQuery,
   useSetIndicatorStatusMutation,
+  useSetQualitativeFindingStatusMutation,
+  useSetSupportingQuoteStatusMutation,
   useStartInterpretationMutation,
 } from "@/hooks/useGrantready";
 import { useRequireAuth } from "@/hooks/useAuth";
@@ -44,9 +45,16 @@ import {
   apiClient,
   type InterpretationEntity,
   type InterpretationIndicator,
+  type InterpretationQualitativeFinding,
+  type InterpretationQualitativeFindingRelation,
+  type InterpretationQualitativeStage,
+  type InterpretationQuotePrivacyMode,
+  type InterpretationDataType,
   type InterpretationQuestion,
   type InterpretationResultRecord,
+  type InterpretationSupportingQuote,
   type InterpretationWarning,
+  type ParsedRepresentationPreviewRecord,
   type ProcessingJobRecord,
   type UploadMetadataRecord,
   type WorkspaceActivity,
@@ -54,6 +62,103 @@ import {
 
 const INTERPRETATION_POLL_INTERVAL_MS = 3000;
 const TERMINAL_JOB_STATUSES = ["completed", "failed", "cancelled"];
+
+function hasPendingBlockingQuestions(
+  questions: InterpretationQuestion[],
+): boolean {
+  return questions.some(
+    (question) => question.isBlocking && question.status === "pending",
+  );
+}
+
+function getInterpretationSupportState(
+  interpretationDataType: InterpretationDataType | null | undefined,
+): "supported" | "insufficiently_extracted" | "not_ready" {
+  if (!interpretationDataType) {
+    return "not_ready";
+  }
+
+  return interpretationDataType === "insufficiently_extracted"
+    ? "insufficiently_extracted"
+    : "supported";
+}
+
+function getInterpretationDataTypeLabelKey(
+  interpretationDataType: InterpretationDataType | null | undefined,
+) {
+  switch (interpretationDataType) {
+    case "tabular_structured":
+      return "projectWorkspace.interpretation.dataTypeTabularLabel";
+    case "text_narrative":
+      return "projectWorkspace.interpretation.dataTypeNarrativeLabel";
+    case "mixed_structured_text":
+      return "projectWorkspace.interpretation.dataTypeMixedLabel";
+    case "insufficiently_extracted":
+      return "projectWorkspace.interpretation.dataTypeInsufficientLabel";
+    default:
+      return null;
+  }
+}
+
+function getQualitativeStageLabelKey(stage: InterpretationQualitativeStage) {
+  return `projectWorkspace.interpretation.qualitativeStage.${stage}` as const;
+}
+
+function getQualitativeFindingRelationLabelKey(
+  relationToEvidence: InterpretationQualitativeFindingRelation,
+) {
+  return `projectWorkspace.interpretation.qualitativeFindingRelation.${relationToEvidence}` as const;
+}
+
+type AttentionLevel = "neutral" | "caution" | "critical";
+
+function getAttentionBadgeVariant(
+  level: AttentionLevel,
+): "secondary" | "outline" | "destructive" {
+  if (level === "critical") {
+    return "destructive";
+  }
+  return level === "caution" ? "outline" : "secondary";
+}
+
+function getWarningAttentionLevel(
+  severity: InterpretationWarning["severity"],
+): AttentionLevel {
+  return severity === "warning" ? "caution" : "neutral";
+}
+
+function getQualitativeFindingRelationAttentionLevel(
+  relationToEvidence: InterpretationQualitativeFindingRelation,
+): AttentionLevel {
+  if (relationToEvidence === "contradicts") {
+    return "critical";
+  }
+  return relationToEvidence === "complicates" ? "caution" : "neutral";
+}
+
+function getQuotePrivacyModeLabelKey(
+  privacyMode: InterpretationQuotePrivacyMode,
+) {
+  return `projectWorkspace.interpretation.privacyMode.${privacyMode}` as const;
+}
+
+function getQuotePrivacyAttentionLevel(
+  privacyMode: InterpretationQuotePrivacyMode,
+): AttentionLevel {
+  if (privacyMode === "redacted") {
+    return "critical";
+  }
+  return privacyMode === "paraphrased_only" ? "caution" : "neutral";
+}
+
+function isPrivacyPreviewAvailable(job: ProcessingJobRecord | undefined) {
+  return Boolean(
+    job &&
+    ["awaiting_privacy_review", "transforming", "completed"].includes(
+      job.status,
+    ),
+  );
+}
 
 export const Route = createFileRoute("/projects/$projectId/interpretation")({
   component: ProjectInterpretationPage,
@@ -100,6 +205,11 @@ function ProjectInterpretationPage() {
       .filter((question) => question.status === "pending")
       .map((question) => ({ result, question })),
   );
+  const answeredQuestions = results.flatMap((result) =>
+    result.questions
+      .filter((question) => question.status === "answered")
+      .map((question) => ({ result, question })),
+  );
   const totalUploadCount = activities.reduce(
     (total, activity) => total + activity.uploadMetadataCount,
     0,
@@ -109,14 +219,6 @@ function ProjectInterpretationPage() {
   return (
     <ProjectWorkspaceShell>
       <section>
-        <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
-          <WandSparkles className="h-4 w-4 text-primary" />
-          {t("projectWorkspace.interpretation.title")}
-        </div>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-          {t("projectWorkspace.interpretation.description")}
-        </p>
-
         <div className="mt-6">
           <div className="space-y-4">
             <Card className="p-5">
@@ -204,11 +306,37 @@ function ProjectInterpretationPage() {
                     }
                     interpretationResultId={result.id}
                     projectId={projectId}
+                    organizationId={workspaceProject?.organizationId}
                     question={question}
                   />
                 ))
               )}
             </div>
+
+            {answeredQuestions.length > 0 ? (
+              <div className="space-y-4">
+                <SectionTitle
+                  icon={<CircleHelp className="h-4 w-4 text-primary" />}
+                  title={t(
+                    "projectWorkspace.interpretation.reviewedQuestionsTitle",
+                  )}
+                />
+                {answeredQuestions.map(({ result, question }) => (
+                  <QuestionCard
+                    key={question.id}
+                    activityName={
+                      activities.find(
+                        (activity) => activity.id === result.activityId,
+                      )?.name ?? result.datasetType
+                    }
+                    interpretationResultId={result.id}
+                    projectId={projectId}
+                    organizationId={workspaceProject?.organizationId}
+                    question={question}
+                  />
+                ))}
+              </div>
+            ) : null}
           </div>
         </div>
       </section>
@@ -242,17 +370,19 @@ function WarningsList({ warnings }: { warnings: InterpretationWarning[] }) {
   return (
     <ul className="space-y-1.5">
       {warnings.map((warning) => {
-        const isWarning = warning.severity === "warning";
+        const level = getWarningAttentionLevel(warning.severity);
         return (
           <li
             key={warning.id}
             className={
-              isWarning
-                ? "flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900"
-                : "flex items-start gap-2 rounded-md border border-border bg-secondary/20 px-3 py-2 text-sm text-muted-foreground"
+              level === "critical"
+                ? "flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+                : level === "caution"
+                  ? "flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900"
+                  : "flex items-start gap-2 rounded-md border border-border bg-secondary/20 px-3 py-2 text-sm text-muted-foreground"
             }
           >
-            {isWarning ? (
+            {level !== "neutral" ? (
               <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
             ) : (
               <CircleHelp className="mt-0.5 h-4 w-4 shrink-0" />
@@ -312,16 +442,19 @@ function EntitiesTable({ entities }: { entities: InterpretationEntity[] }) {
 function IndicatorsTable({
   interpretationResultId,
   projectId,
+  organizationId,
   indicators,
 }: {
   interpretationResultId: string;
   projectId: string;
+  organizationId: string | undefined;
   indicators: InterpretationIndicator[];
 }) {
   const { t } = useTranslation();
   const setStatusMutation = useSetIndicatorStatusMutation(
     interpretationResultId,
     projectId,
+    organizationId,
   );
 
   return (
@@ -361,6 +494,14 @@ function IndicatorsTable({
                 <TableCell className="text-muted-foreground">
                   <div className="text-foreground">{indicator.description}</div>
                   <div className="mt-0.5 text-xs">{indicator.reason}</div>
+                  {indicator.supportingParagraphKeys.length > 0 ? (
+                    <div className="mt-0.5 text-xs italic">
+                      {t(
+                        "projectWorkspace.interpretation.indicatorNarrativeGrounding",
+                        { count: indicator.supportingParagraphKeys.length },
+                      )}
+                    </div>
+                  ) : null}
                 </TableCell>
                 <TableCell className="text-right">
                   {indicator.relevanceStage ? (
@@ -401,6 +542,238 @@ function IndicatorsTable({
   );
 }
 
+function ReviewableEvidenceCard({
+  isRejected,
+  title,
+  meta,
+  actionLabel,
+  actionDisabled,
+  onToggleStatus,
+  children,
+}: {
+  isRejected: boolean;
+  title: ReactNode;
+  meta: ReactNode;
+  actionLabel: string;
+  actionDisabled: boolean;
+  onToggleStatus: () => void;
+  children?: ReactNode;
+}) {
+  return (
+    <div
+      className={`rounded-xl border p-4 ${
+        isRejected
+          ? "border-border opacity-50"
+          : "border-border bg-secondary/10"
+      }`}
+    >
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <div>
+          <div className="text-sm font-medium text-foreground">{title}</div>
+          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+            {meta}
+          </div>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={actionDisabled}
+          onClick={onToggleStatus}
+        >
+          {actionLabel}
+        </Button>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function QualitativeFindingsList({
+  interpretationResultId,
+  projectId,
+  organizationId,
+  qualitativeFindings,
+  supportingQuotes,
+}: {
+  interpretationResultId: string;
+  projectId: string;
+  organizationId: string | undefined;
+  qualitativeFindings: InterpretationQualitativeFinding[];
+  supportingQuotes: InterpretationSupportingQuote[];
+}) {
+  const { t } = useTranslation();
+  const setStatusMutation = useSetQualitativeFindingStatusMutation(
+    interpretationResultId,
+    projectId,
+    organizationId,
+  );
+  const quoteById = new Map(supportingQuotes.map((quote) => [quote.id, quote]));
+
+  return (
+    <div className="space-y-3">
+      {qualitativeFindings.map((finding) => {
+        const isRejected = finding.status === "rejected";
+        const isPending =
+          setStatusMutation.isPending &&
+          setStatusMutation.variables?.qualitativeFindingId === finding.id;
+        const linkedQuotes = finding.supportingQuoteIds
+          .map((quoteId) => quoteById.get(quoteId))
+          .filter((quote): quote is InterpretationSupportingQuote =>
+            Boolean(quote),
+          );
+
+        return (
+          <ReviewableEvidenceCard
+            key={finding.id}
+            isRejected={isRejected}
+            title={finding.summary}
+            meta={
+              <>
+                <Badge variant="outline">
+                  {t(getQualitativeStageLabelKey(finding.stage))}
+                </Badge>
+                <Badge
+                  variant={getAttentionBadgeVariant(
+                    getQualitativeFindingRelationAttentionLevel(
+                      finding.relationToEvidence,
+                    ),
+                  )}
+                >
+                  {t(
+                    getQualitativeFindingRelationLabelKey(
+                      finding.relationToEvidence,
+                    ),
+                  )}
+                </Badge>
+                <span>{Math.round(finding.confidence * 100)}%</span>
+                {linkedQuotes.length > 0 ? (
+                  <span>
+                    {t(
+                      "projectWorkspace.interpretation.qualitativeLinkedQuotes",
+                      {
+                        count: linkedQuotes.length,
+                      },
+                    )}
+                  </span>
+                ) : null}
+              </>
+            }
+            actionLabel={
+              isRejected
+                ? t("projectWorkspace.interpretation.restoreFindingAction")
+                : t("projectWorkspace.interpretation.rejectFindingAction")
+            }
+            actionDisabled={isPending}
+            onToggleStatus={() =>
+              setStatusMutation.mutate({
+                qualitativeFindingId: finding.id,
+                status: isRejected ? "kept" : "rejected",
+              })
+            }
+          >
+            <p className="mt-2 text-sm text-muted-foreground">
+              {finding.reason}
+            </p>
+            {linkedQuotes.length > 0 ? (
+              <div className="mt-3 space-y-2">
+                {linkedQuotes.slice(0, 2).map((quote) => (
+                  <div
+                    key={quote.id}
+                    className="rounded-md border border-border bg-background px-3 py-2 text-sm text-muted-foreground"
+                  >
+                    <div className="text-foreground">"{quote.excerptText}"</div>
+                    <div className="mt-1 text-xs">{quote.sourceReference}</div>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </ReviewableEvidenceCard>
+        );
+      })}
+    </div>
+  );
+}
+
+function SupportingQuotesList({
+  interpretationResultId,
+  projectId,
+  organizationId,
+  supportingQuotes,
+}: {
+  interpretationResultId: string;
+  projectId: string;
+  organizationId: string | undefined;
+  supportingQuotes: InterpretationSupportingQuote[];
+}) {
+  const { t } = useTranslation();
+  const setStatusMutation = useSetSupportingQuoteStatusMutation(
+    interpretationResultId,
+    projectId,
+    organizationId,
+  );
+
+  return (
+    <div className="space-y-3">
+      {supportingQuotes.map((quote) => {
+        const isRejected = quote.status === "rejected";
+        const isPending =
+          setStatusMutation.isPending &&
+          setStatusMutation.variables?.supportingQuoteId === quote.id;
+
+        return (
+          <ReviewableEvidenceCard
+            key={quote.id}
+            isRejected={isRejected}
+            title={`"${quote.excerptText}"`}
+            meta={
+              <>
+                <Badge variant="outline">
+                  {t(getQualitativeStageLabelKey(quote.stage))}
+                </Badge>
+                <Badge variant="secondary">
+                  {t(
+                    `projectWorkspace.interpretation.quoteSpeaker.${quote.speakerType}`,
+                  )}
+                </Badge>
+                <Badge variant="secondary">
+                  {t(
+                    `projectWorkspace.interpretation.quoteKind.${quote.excerptKind}`,
+                  )}
+                </Badge>
+                <Badge
+                  variant={getAttentionBadgeVariant(
+                    getQuotePrivacyAttentionLevel(quote.privacyMode),
+                  )}
+                >
+                  {t(getQuotePrivacyModeLabelKey(quote.privacyMode))}
+                </Badge>
+                <span>{Math.round(quote.confidence * 100)}%</span>
+              </>
+            }
+            actionLabel={
+              isRejected
+                ? t("projectWorkspace.interpretation.restoreQuoteAction")
+                : t("projectWorkspace.interpretation.rejectQuoteAction")
+            }
+            actionDisabled={isPending}
+            onToggleStatus={() =>
+              setStatusMutation.mutate({
+                supportingQuoteId: quote.id,
+                status: isRejected ? "kept" : "rejected",
+              })
+            }
+          >
+            <p className="mt-2 text-sm text-muted-foreground">{quote.reason}</p>
+            <div className="mt-2 text-xs text-muted-foreground">
+              {quote.sourceReference}
+            </div>
+          </ReviewableEvidenceCard>
+        );
+      })}
+    </div>
+  );
+}
+
 function InterpretationActivityGroup({
   activity,
   projectId,
@@ -437,6 +810,38 @@ function InterpretationActivityGroup({
 
   const uploads = uploadsQuery.data ?? [];
   const jobs = jobsQuery.data ?? [];
+  const latestEvidenceJobByUploadId = new Map(
+    uploads.map((upload) => [
+      upload.id,
+      jobs.find(
+        (job) =>
+          job.jobType === "evidence_processing" &&
+          job.uploadMetadataId === upload.id,
+      ),
+    ]),
+  );
+  const privacyReviewQueries = useQueries({
+    queries: uploads.map((upload) => {
+      const latestEvidenceJob = latestEvidenceJobByUploadId.get(upload.id);
+      return {
+        queryKey: [
+          "privacy-review",
+          latestEvidenceJob?.id ?? `missing-${upload.id}`,
+        ],
+        queryFn: () => apiClient.getPrivacyReview(latestEvidenceJob!.id),
+        enabled: isPrivacyPreviewAvailable(latestEvidenceJob),
+      };
+    }),
+  });
+  const previewByUploadId = new Map<
+    string,
+    ParsedRepresentationPreviewRecord | null
+  >(
+    uploads.map((upload, index) => [
+      upload.id,
+      privacyReviewQueries[index]?.data?.parsedRepresentationPreview ?? null,
+    ]),
+  );
   const activityResults = uploads
     .map((upload) => resultsByUploadId.get(upload.id))
     .filter((result): result is InterpretationResultRecord => Boolean(result));
@@ -451,18 +856,28 @@ function InterpretationActivityGroup({
         .length,
     0,
   );
-  // The generic "additional context" question (kind "free_text") is
-  // deliberately optional and never blocks review — only normalization
-  // merge-confirmation questions are actionable. Mirrors the same gate the
-  // backend independently enforces (never trust the disabled button alone).
+  // Mirrors the backend gate: acknowledgment is blocked only while
+  // required clarification questions remain pending. Optional questions
+  // stay visible here, but do not prevent final acknowledgment.
   const hasUnresolvedActionableQuestion = activityResults.some((result) =>
-    result.questions.some(
-      (question) =>
-        question.kind !== "free_text" && question.status === "pending",
-    ),
+    hasPendingBlockingQuestions(result.questions),
   );
+  const everyUploadOnSupportedReviewedPath =
+    uploads.length > 0 &&
+    uploads.every((upload) => {
+      const latestEvidenceJob = latestEvidenceJobByUploadId.get(upload.id);
+      const preview = previewByUploadId.get(upload.id);
+      const interpretationSupportState = getInterpretationSupportState(
+        preview?.interpretationDataType,
+      );
+      return (
+        latestEvidenceJob?.status === "completed" &&
+        interpretationSupportState === "supported" &&
+        Boolean(resultsByUploadId.get(upload.id))
+      );
+    });
   const canAcknowledge =
-    activityResults.length > 0 && !hasUnresolvedActionableQuestion;
+    everyUploadOnSupportedReviewedPath && !hasUnresolvedActionableQuestion;
 
   function formatAcknowledgedAt(acknowledgedAt: string) {
     return new Intl.DateTimeFormat(i18n.language, {
@@ -477,7 +892,7 @@ function InterpretationActivityGroup({
         <h3 className="text-[16px] font-semibold tracking-tight text-foreground">
           {activity.name}
         </h3>
-        <LinkToActivity projectId={projectId} activityId={activity.id} />
+        <LinkToActivity projectId={projectId} />
       </div>
 
       {uploads.length > 0 ? (
@@ -547,6 +962,8 @@ function InterpretationActivityGroup({
               <DatasetInterpretationCard
                 activityId={activity.id}
                 projectId={projectId}
+                organizationId={organizationId}
+                parsedRepresentationPreview={previewByUploadId.get(upload.id)}
                 upload={upload}
                 jobs={jobs}
                 result={resultsByUploadId.get(upload.id)}
@@ -567,12 +984,17 @@ function InterpretationActivityGroup({
 function DatasetInterpretationCard({
   activityId,
   projectId,
+  organizationId,
+  parsedRepresentationPreview,
   upload,
   jobs,
   result,
 }: {
   activityId: string;
   projectId: string;
+  organizationId: string | undefined;
+  parsedRepresentationPreview:
+    ParsedRepresentationPreviewRecord | null | undefined;
   upload: UploadMetadataRecord;
   jobs: ProcessingJobRecord[];
   result: InterpretationResultRecord | undefined;
@@ -603,6 +1025,14 @@ function DatasetInterpretationCard({
     activeInterpretationJob?.id,
     Boolean(activeInterpretationJob?.id),
   );
+  const interpretationDataType =
+    parsedRepresentationPreview?.interpretationDataType ?? null;
+  const interpretationSupportState = getInterpretationSupportState(
+    interpretationDataType,
+  );
+  const interpretationDataTypeLabelKey = getInterpretationDataTypeLabelKey(
+    interpretationDataType,
+  );
 
   useEffect(() => {
     const syncedStatus = activeJobSyncQuery.data?.status;
@@ -617,9 +1047,14 @@ function DatasetInterpretationCard({
   }, [activeJobSyncQuery.data?.status, activityId, projectId, queryClient]);
 
   const canInterpret =
-    latestEvidenceJob?.status === "completed" && !activeInterpretationJob;
+    latestEvidenceJob?.status === "completed" &&
+    interpretationSupportState === "supported" &&
+    !activeInterpretationJob &&
+    !startMutation.isPending;
   const isInterpreting =
     startMutation.isPending || Boolean(activeInterpretationJob);
+  const interpretErrorCode =
+    startMutation.variables === upload.id ? startMutation.error?.code : null;
 
   function handleInterpret() {
     startMutation.mutate(upload.id);
@@ -637,16 +1072,23 @@ function DatasetInterpretationCard({
               · {result.datasetType} ·{" "}
               {Math.round(result.overallConfidence * 100)}%
             </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleInterpret}
-              disabled={!canInterpret}
-            >
-              {isInterpreting
-                ? t("projectWorkspace.interpretation.interpretPending")
-                : t("projectWorkspace.interpretation.reinterpretAction")}
-            </Button>
+            <div className="flex flex-wrap items-center gap-2">
+              {interpretationDataTypeLabelKey ? (
+                <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
+                  {t(interpretationDataTypeLabelKey)}
+                </Badge>
+              ) : null}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleInterpret}
+                disabled={!canInterpret}
+              >
+                {isInterpreting
+                  ? t("projectWorkspace.interpretation.interpretPending")
+                  : t("projectWorkspace.interpretation.reinterpretAction")}
+              </Button>
+            </div>
           </div>
 
           {result.warnings.length > 0 ? (
@@ -665,21 +1107,75 @@ function DatasetInterpretationCard({
               <IndicatorsTable
                 interpretationResultId={result.id}
                 projectId={projectId}
+                organizationId={organizationId}
                 indicators={result.indicators}
+              />
+            </div>
+          ) : null}
+
+          {result.qualitativeFindings.length > 0 ? (
+            <div>
+              <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+                {t("projectWorkspace.interpretation.qualitativeFindingsTitle")}
+              </div>
+              <QualitativeFindingsList
+                interpretationResultId={result.id}
+                projectId={projectId}
+                organizationId={organizationId}
+                qualitativeFindings={result.qualitativeFindings}
+                supportingQuotes={result.supportingQuotes}
+              />
+            </div>
+          ) : null}
+
+          {result.supportingQuotes.length > 0 ? (
+            <div>
+              <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+                {t("projectWorkspace.interpretation.supportingQuotesTitle")}
+              </div>
+              <SupportingQuotesList
+                interpretationResultId={result.id}
+                projectId={projectId}
+                organizationId={organizationId}
+                supportingQuotes={result.supportingQuotes}
               />
             </div>
           ) : null}
         </div>
       ) : (
         <div>
-          <Button size="sm" onClick={handleInterpret} disabled={!canInterpret}>
-            {isInterpreting
-              ? t("projectWorkspace.interpretation.interpretPending")
-              : t("projectWorkspace.interpretation.interpretAction")}
-          </Button>
-          {!canInterpret && !isInterpreting ? (
+          <div className="flex flex-wrap items-center gap-2">
+            {interpretationDataTypeLabelKey ? (
+              <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
+                {t(interpretationDataTypeLabelKey)}
+              </Badge>
+            ) : null}
+            {interpretationSupportState === "supported" ? (
+              <Button
+                size="sm"
+                onClick={handleInterpret}
+                disabled={!canInterpret}
+              >
+                {isInterpreting
+                  ? t("projectWorkspace.interpretation.interpretPending")
+                  : t("projectWorkspace.interpretation.interpretAction")}
+              </Button>
+            ) : null}
+          </div>
+          {interpretationSupportState === "insufficiently_extracted" ? (
             <p className="mt-2 text-xs text-muted-foreground">
-              {t("projectWorkspace.interpretation.interpretUnavailable")}
+              {t(
+                "projectWorkspace.interpretation.interpretInsufficientExtraction",
+              )}
+            </p>
+          ) : !canInterpret && !isInterpreting ? (
+            <p className="mt-2 text-xs text-muted-foreground">
+              {interpretErrorCode ===
+              "interpretation_data_type_insufficiently_extracted"
+                ? t(
+                    "projectWorkspace.interpretation.interpretInsufficientExtraction",
+                  )
+                : t("projectWorkspace.interpretation.interpretUnavailable")}
             </p>
           ) : null}
         </div>
@@ -692,19 +1188,30 @@ function QuestionCard({
   activityName,
   interpretationResultId,
   projectId,
+  organizationId,
   question,
 }: {
   activityName: string;
   interpretationResultId: string;
   projectId: string;
+  organizationId: string | undefined;
   question: InterpretationQuestion;
 }) {
   const { t } = useTranslation();
-  const [freeTextValue, setFreeTextValue] = useState("");
+  const [freeTextValue, setFreeTextValue] = useState(
+    question.answeredValue ?? "",
+  );
+  const [isEditing, setIsEditing] = useState(question.status === "pending");
   const answerMutation = useAnswerInterpretationQuestionMutation(
     interpretationResultId,
     projectId,
+    organizationId,
   );
+
+  useEffect(() => {
+    setFreeTextValue(question.answeredValue ?? "");
+    setIsEditing(question.status === "pending");
+  }, [question.answeredValue, question.id, question.status]);
 
   function submitAnswer(answeredValue: string) {
     if (!answeredValue.trim()) {
@@ -718,14 +1225,35 @@ function QuestionCard({
 
   return (
     <Card className="p-5">
-      <div className="text-sm font-semibold tracking-tight text-foreground">
-        {activityName}
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="text-sm font-semibold tracking-tight text-foreground">
+          {activityName}
+        </div>
+        <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
+          {question.isBlocking
+            ? t("projectWorkspace.interpretation.questionRequiredLabel")
+            : t("projectWorkspace.interpretation.questionOptionalLabel")}
+        </Badge>
       </div>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">
         {question.prompt}
       </p>
-
-      {question.kind === "free_text" || !question.options?.length ? (
+      {question.status === "answered" && !isEditing ? (
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <Badge variant="outline">
+            {t("projectWorkspace.interpretation.questionAnsweredLabel", {
+              value: question.answeredValue ?? "",
+            })}
+          </Badge>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsEditing(true)}
+          >
+            {t("projectWorkspace.interpretation.questionEdit")}
+          </Button>
+        </div>
+      ) : question.kind === "free_text" || !question.options?.length ? (
         <div className="mt-3 flex flex-wrap gap-2">
           <Input
             value={freeTextValue}
@@ -742,22 +1270,50 @@ function QuestionCard({
           >
             {answerMutation.isPending
               ? t("projectWorkspace.interpretation.questionSubmitting")
-              : t("projectWorkspace.interpretation.questionSubmit")}
+              : question.status === "answered"
+                ? t("projectWorkspace.interpretation.questionSave")
+                : t("projectWorkspace.interpretation.questionSubmit")}
           </Button>
+          {question.status === "answered" ? (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setFreeTextValue(question.answeredValue ?? "");
+                setIsEditing(false);
+              }}
+              disabled={answerMutation.isPending}
+            >
+              {t("projectWorkspace.interpretation.questionCancel")}
+            </Button>
+          ) : null}
         </div>
       ) : (
         <div className="mt-3 flex flex-wrap gap-2">
-          {question.options.map((option) => (
+          {question.options.map((option) => {
+            const isSelected = question.answeredValue === option;
+            return (
+              <Button
+                key={option}
+                variant={isSelected ? "secondary" : "outline"}
+                size="sm"
+                onClick={() => submitAnswer(option)}
+                disabled={answerMutation.isPending}
+              >
+                {option}
+              </Button>
+            );
+          })}
+          {question.status === "answered" ? (
             <Button
-              key={option}
               variant="outline"
               size="sm"
-              onClick={() => submitAnswer(option)}
+              onClick={() => setIsEditing(false)}
               disabled={answerMutation.isPending}
             >
-              {option}
+              {t("projectWorkspace.interpretation.questionCancel")}
             </Button>
-          ))}
+          ) : null}
         </div>
       )}
     </Card>
@@ -774,8 +1330,8 @@ function PrivacyReviewSection({
   organizationId: string;
 }) {
   const { t } = useTranslation();
-  const [reviewProcessingJobId, setReviewProcessingJobId] = useState<
-    string | undefined
+  const [reviewProcessingJob, setReviewProcessingJob] = useState<
+    { jobId: string; activityName: string } | undefined
   >(undefined);
   const jobQueries = useQueries({
     queries: activities.map((activity) => ({
@@ -865,7 +1421,12 @@ function PrivacyReviewSection({
             </div>
             <button
               type="button"
-              onClick={() => setReviewProcessingJobId(pendingJob.id)}
+              onClick={() =>
+                setReviewProcessingJob({
+                  jobId: pendingJob.id,
+                  activityName: activity.name,
+                })
+              }
               className="text-sm font-medium text-primary hover:underline"
             >
               {t("projectWorkspace.interpretation.reviewPrivacyAction")}
@@ -874,33 +1435,28 @@ function PrivacyReviewSection({
         </Card>
       ))}
       <PrivacyReviewDialog
-        open={Boolean(reviewProcessingJobId)}
+        open={Boolean(reviewProcessingJob)}
         onOpenChange={(open) => {
           if (!open) {
-            setReviewProcessingJobId(undefined);
+            setReviewProcessingJob(undefined);
           }
         }}
-        processingJobId={reviewProcessingJobId}
+        processingJobId={reviewProcessingJob?.jobId}
         projectId={projectId}
         organizationId={organizationId}
+        activityName={reviewProcessingJob?.activityName}
       />
     </>
   );
 }
 
-function LinkToActivity({
-  projectId,
-  activityId,
-}: {
-  projectId: string;
-  activityId: string;
-}) {
+function LinkToActivity({ projectId }: { projectId: string }) {
   const { t } = useTranslation();
 
   return (
     <Link
-      to="/projects/$projectId/activities/$activityId/overview"
-      params={{ projectId, activityId }}
+      to="/projects/$projectId/activities"
+      params={{ projectId }}
       className="text-sm font-medium text-primary hover:underline"
     >
       {t("projectWorkspace.activities.openActivity")}

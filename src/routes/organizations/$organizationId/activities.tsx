@@ -56,8 +56,8 @@ function OrganizationActivitiesPage() {
                   </div>
                 </div>
                 <Link
-                  to="/projects/$projectId/activities/$activityId/overview"
-                  params={{ projectId, activityId: activity.id }}
+                  to="/projects/$projectId/activities"
+                  params={{ projectId }}
                   className="inline-flex h-10 items-center rounded-md border border-border bg-background px-4 text-sm font-medium"
                 >
                   {locale.organizationActivities.openActivity}

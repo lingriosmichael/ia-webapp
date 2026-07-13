@@ -181,14 +181,13 @@ export function WorkspaceShell({
     }
 
     try {
-      const activity = await createActivityMutation.mutateAsync(payload);
+      await createActivityMutation.mutateAsync(payload);
       toast.success(locale.dialogs.activity.success);
       setActivityDialogTarget(null);
       void navigate({
-        to: "/projects/$projectId/activities/$activityId/overview",
+        to: "/projects/$projectId/activities",
         params: {
           projectId: activeActivityProjectId,
-          activityId: activity.id,
         },
       });
     } catch (error) {

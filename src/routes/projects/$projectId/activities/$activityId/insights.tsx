@@ -63,11 +63,7 @@ function ActivityInsightsPage() {
           hierarchy.projectsCrumb,
           hierarchy.projectCrumb,
           { label: hierarchy.activitiesLabel },
-          {
-            label: activity.name,
-            to: "/projects/$projectId/activities/$activityId/overview",
-            params: { projectId, activityId },
-          },
+          { label: activity.name },
           { label: t("activityInsights.crumb") },
         ]}
       />
@@ -75,7 +71,6 @@ function ActivityInsightsPage() {
         <PageHeader
           eyebrow={t("activityInsights.eyebrow")}
           title={t("activityInsights.title")}
-          description={t("activityInsights.description")}
         />
         <ActivityTabs
           projectId={projectId}
@@ -89,7 +84,6 @@ function ActivityInsightsPage() {
             description={t("activityInsights.noGoalsDescription")}
             ctaLabel={t("activityInsights.noGoalsCta")}
             projectId={projectId}
-            activityId={activityId}
           />
         ) : !result ? (
           <EmptyStateCard
@@ -97,7 +91,6 @@ function ActivityInsightsPage() {
             description={t("activityInsights.noAnalysisDescription")}
             ctaLabel={t("activityInsights.noAnalysisCta")}
             projectId={projectId}
-            activityId={activityId}
           />
         ) : (
           <GoalCoverageSections
@@ -115,13 +108,11 @@ function EmptyStateCard({
   description,
   ctaLabel,
   projectId,
-  activityId,
 }: {
   title: string;
   description: string;
   ctaLabel: string;
   projectId: string;
-  activityId: string;
 }) {
   return (
     <Card className="mt-6 border-primary/15 bg-primary-soft/25 p-8">
@@ -133,8 +124,8 @@ function EmptyStateCard({
           {description}
         </p>
         <Link
-          to="/projects/$projectId/activities/$activityId/overview"
-          params={{ projectId, activityId }}
+          to="/projects/$projectId/activities"
+          params={{ projectId }}
           className="mt-5 inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
         >
           {ctaLabel}

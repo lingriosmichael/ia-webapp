@@ -1,5 +1,4 @@
 import { Outlet, createFileRoute, useMatches } from "@tanstack/react-router";
-import { FolderKanban } from "lucide-react";
 import { ActivityCard } from "@/components/project/activities/activityCard";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
 import { Card } from "@/components/workspaceUI";
@@ -84,14 +83,6 @@ function ProjectActivitiesPage() {
       }
     >
       <section>
-        <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
-          <FolderKanban className="h-4 w-4 text-primary" />
-          {locale.projectWorkspace.activities.title}
-        </div>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-          {locale.projectWorkspace.activities.description}
-        </p>
-
         {activities.length === 0 ? (
           <Card className="mt-6 p-6">
             <h2 className="text-lg font-semibold tracking-tight text-foreground">

@@ -283,8 +283,8 @@ function RecentActivityRow({
 
   return (
     <Link
-      to="/projects/$projectId/activities/$activityId/overview"
-      params={{ projectId, activityId: activity.id }}
+      to="/projects/$projectId/activities"
+      params={{ projectId }}
       className="block rounded-2xl border border-border bg-secondary/20 px-4 py-4 transition-colors hover:border-primary/25 hover:bg-primary-soft/40"
     >
       <div className="flex items-start justify-between gap-4">

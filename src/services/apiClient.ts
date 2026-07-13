@@ -356,10 +356,17 @@ export interface ParsedRepresentationRecord {
   uploadMetadataId: string;
   processingJobId: string;
   fileType: "spreadsheet" | "document" | "unknown";
+  interpretationDataType: InterpretationDataType;
   payload: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
 }
+
+export type InterpretationDataType =
+  | "tabular_structured"
+  | "text_narrative"
+  | "mixed_structured_text"
+  | "insufficiently_extracted";
 
 export type PrivacyReviewDecisionValue = "approved" | "rejected";
 
@@ -379,6 +386,7 @@ export interface ParsedRepresentationPreviewParagraph {
 
 export interface ParsedRepresentationPreviewRecord {
   fileType: "spreadsheet" | "document" | "unknown";
+  interpretationDataType: InterpretationDataType;
   sourceFileName: string | null;
   extension: string | null;
   contentType: string | null;
@@ -494,6 +502,15 @@ export interface InterpretationEntity {
 
 export type IndicatorRelevanceStage = "output" | "outcome" | "impact";
 export type InterpretationIndicatorStatus = "kept" | "rejected";
+export type InterpretationQualitativeStage =
+  "output" | "outcome" | "impact" | "context" | "risk";
+export type InterpretationQuoteExcerptKind = "direct" | "paraphrased";
+export type InterpretationQuoteSpeakerType =
+  "participant" | "caregiver" | "staff" | "volunteer" | "evaluator" | "unknown";
+export type InterpretationQuotePrivacyMode =
+  "verbatim_safe" | "redacted" | "paraphrased_only";
+export type InterpretationQualitativeFindingRelation =
+  "reinforces" | "contradicts" | "complicates" | "context_only";
 
 export interface InterpretationIndicator {
   id: string;
@@ -502,6 +519,7 @@ export interface InterpretationIndicator {
   confidence: number;
   reason: string;
   relatedEntityIds: string[];
+  supportingParagraphKeys: string[];
   relevanceStage: IndicatorRelevanceStage | null;
   status: InterpretationIndicatorStatus;
 }
@@ -513,6 +531,32 @@ export interface InterpretationRelationship {
   confidence: number;
 }
 
+export interface InterpretationSupportingQuote {
+  id: string;
+  excerptText: string;
+  excerptKind: InterpretationQuoteExcerptKind;
+  speakerType: InterpretationQuoteSpeakerType;
+  stage: InterpretationQualitativeStage;
+  confidence: number;
+  reason: string;
+  sourceReference: string;
+  privacyMode: InterpretationQuotePrivacyMode;
+  status: InterpretationIndicatorStatus;
+}
+
+export interface InterpretationQualitativeFinding {
+  id: string;
+  summary: string;
+  stage: InterpretationQualitativeStage;
+  confidence: number;
+  reason: string;
+  relatedEntityIds: string[];
+  relatedIndicatorIds: string[];
+  supportingQuoteIds: string[];
+  relationToEvidence: InterpretationQualitativeFindingRelation;
+  status: InterpretationIndicatorStatus;
+}
+
 export type InterpretationQuestionKind =
   "single_choice" | "free_text" | "merge_confirmation";
 export type InterpretationQuestionStatus = "pending" | "answered";
@@ -522,6 +566,7 @@ export interface InterpretationQuestion {
   prompt: string;
   kind: InterpretationQuestionKind;
   options: string[] | null;
+  isBlocking: boolean;
   status: InterpretationQuestionStatus;
   answeredValue: string | null;
   answeredById: string | null;
@@ -557,6 +602,8 @@ export interface InterpretationResultRecord {
   entities: InterpretationEntity[];
   indicators: InterpretationIndicator[];
   relationships: InterpretationRelationship[];
+  qualitativeFindings: InterpretationQualitativeFinding[];
+  supportingQuotes: InterpretationSupportingQuote[];
   questions: InterpretationQuestion[];
   warnings: InterpretationWarning[];
   goalAlignment: InterpretationGoalCoverage[];
@@ -1008,6 +1055,34 @@ export const apiClient = {
   ): Promise<InterpretationResultRecord> {
     return request(
       `/interpretations/${interpretationResultId}/indicators/${indicatorId}`,
+      {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ status }),
+      },
+    );
+  },
+  setQualitativeFindingStatus(
+    interpretationResultId: string,
+    qualitativeFindingId: string,
+    status: InterpretationIndicatorStatus,
+  ): Promise<InterpretationResultRecord> {
+    return request(
+      `/interpretations/${interpretationResultId}/qualitative-findings/${qualitativeFindingId}`,
+      {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ status }),
+      },
+    );
+  },
+  setSupportingQuoteStatus(
+    interpretationResultId: string,
+    supportingQuoteId: string,
+    status: InterpretationIndicatorStatus,
+  ): Promise<InterpretationResultRecord> {
+    return request(
+      `/interpretations/${interpretationResultId}/supporting-quotes/${supportingQuoteId}`,
       {
         method: "PATCH",
         headers: { "content-type": "application/json" },

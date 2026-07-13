@@ -48,11 +48,7 @@ function ActivitySettingsPage() {
           hierarchy.projectsCrumb,
           hierarchy.projectCrumb,
           { label: hierarchy.activitiesLabel },
-          {
-            label: activity.name,
-            to: "/projects/$projectId/activities/$activityId/overview",
-            params: { projectId, activityId },
-          },
+          { label: activity.name },
           { label: t("activitySettings.crumb") },
         ]}
       />
@@ -60,7 +56,6 @@ function ActivitySettingsPage() {
         <PageHeader
           eyebrow={t("activitySettings.eyebrow")}
           title={t("activitySettings.title")}
-          description={t("activitySettings.description")}
         />
         <ActivityTabs
           projectId={projectId}

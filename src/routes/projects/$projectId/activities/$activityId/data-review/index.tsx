@@ -51,11 +51,7 @@ function SchemaReview() {
           hierarchy.projectsCrumb,
           hierarchy.projectCrumb,
           { label: hierarchy.activitiesLabel },
-          {
-            label: activity.name,
-            to: "/projects/$projectId/activities/$activityId/overview",
-            params: { projectId, activityId },
-          },
+          { label: activity.name },
           { label: t("schemaReview.crumb") },
         ]}
       />
@@ -63,7 +59,6 @@ function SchemaReview() {
         <PageHeader
           eyebrow={t("schemaReview.eyebrow")}
           title={t("schemaReview.title")}
-          description={t("schemaReview.description")}
         />
         <ActivityTabs
           projectId={projectId}
@@ -81,8 +76,8 @@ function SchemaReview() {
                 {t("schemaReview.empty.description")}
               </p>
               <Link
-                to="/projects/$projectId/activities/$activityId/overview"
-                params={{ projectId, activityId }}
+                to="/projects/$projectId/activities"
+                params={{ projectId }}
                 className="mt-5 inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
               >
                 <UploadCloud className="h-4 w-4" />
@@ -100,8 +95,8 @@ function SchemaReview() {
                 {t("schemaReview.notReady.description")}
               </p>
               <Link
-                to="/projects/$projectId/activities/$activityId/overview"
-                params={{ projectId, activityId }}
+                to="/projects/$projectId/activities"
+                params={{ projectId }}
                 className="mt-5 inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
               >
                 {t("schemaReview.notReady.cta")}

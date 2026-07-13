@@ -43,12 +43,14 @@ export function PrivacyReviewDialog({
   processingJobId,
   projectId,
   organizationId,
+  activityName,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   processingJobId: string | undefined;
   projectId: string;
   organizationId: string;
+  activityName?: string;
 }) {
   const { t } = useTranslation();
   const [fieldDecisionMap, setFieldDecisionMap] = useState<
@@ -73,6 +75,10 @@ export function PrivacyReviewDialog({
   const currentUpload = uploadsQuery.data?.find(
     (upload) => upload.id === job?.uploadMetadataId,
   );
+  const isJobLoading =
+    jobQuery.isLoading || (open && !job && !jobQuery.isError);
+  const isReviewLoading = privacyReviewQuery.isLoading;
+  const hasError = jobQuery.isError || privacyReviewQuery.isError;
 
   const approvePrivacyReviewMutation = useApprovePrivacyReviewMutation(
     job?.activityId ?? "",
@@ -161,7 +167,16 @@ export function PrivacyReviewDialog({
         void handleApprovePrivacyReview();
       }}
     >
-      {jobQuery.isLoading || !job ? (
+      {hasError ? (
+        <Card className="p-5">
+          <div className="text-sm font-semibold text-foreground">
+            {t("projectWorkspace.evidence.reviewUnavailableTitle")}
+          </div>
+          <p className="mt-1 text-sm leading-6 text-muted-foreground">
+            {t("projectWorkspace.evidence.reviewUnavailableDescription")}
+          </p>
+        </Card>
+      ) : isJobLoading || !job ? (
         <p className="text-sm text-muted-foreground">
           {t("projectWorkspace.evidence.loadingPrivacyReview")}
         </p>
@@ -182,6 +197,18 @@ export function PrivacyReviewDialog({
                   `projectWorkspace.evidence.reviewStates.${review?.status ?? "pending"}`,
                 )}
               />
+            </div>
+            <div className="mt-3 rounded-xl border border-border bg-secondary/20 px-4 py-3 text-sm text-muted-foreground">
+              <span className="font-medium text-foreground">
+                {t("projectWorkspace.evidence.reviewActivity")}:
+              </span>
+              {activityName ??
+                t("projectWorkspace.evidence.reviewUnknownActivity")}
+              {" · "}
+              <span className="font-medium text-foreground">
+                {t("projectWorkspace.evidence.reviewStatus")}:
+              </span>
+              {t(`projectWorkspace.evidence.analysisStates.${job.status}`)}
             </div>
           </DialogSection>
 
@@ -212,7 +239,7 @@ export function PrivacyReviewDialog({
               { count: findings.length, decisions: decisionFindings.length },
             )}
           >
-            {privacyReviewQuery.isLoading ? (
+            {isReviewLoading ? (
               <p className="text-sm text-muted-foreground">
                 {t("projectWorkspace.evidence.loadingPrivacyReview")}
               </p>

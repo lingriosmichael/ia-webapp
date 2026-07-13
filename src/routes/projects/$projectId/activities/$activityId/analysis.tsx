@@ -57,11 +57,7 @@ function ActivityAnalyticsPage() {
           hierarchy.projectsCrumb,
           hierarchy.projectCrumb,
           { label: hierarchy.activitiesLabel },
-          {
-            label: activity.name,
-            to: "/projects/$projectId/activities/$activityId/overview",
-            params: { projectId, activityId },
-          },
+          { label: activity.name },
           { label: t("activityAnalytics.crumb") },
         ]}
       />
@@ -69,7 +65,6 @@ function ActivityAnalyticsPage() {
         <PageHeader
           eyebrow={t("activityAnalytics.eyebrow")}
           title={t("activityAnalytics.title")}
-          description={t("activityAnalytics.description")}
         />
         <ActivityTabs
           projectId={projectId}
@@ -82,7 +77,6 @@ function ActivityAnalyticsPage() {
             title={t("activityAnalytics.gates.noDataset.title")}
             description={t("activityAnalytics.gates.noDataset.description")}
             projectId={projectId}
-            activityId={activityId}
             cta={t("activityAnalytics.gates.noDataset.cta")}
           />
         ) : isProcessing ? (
@@ -90,7 +84,6 @@ function ActivityAnalyticsPage() {
             title={t("activityAnalytics.gates.processing.title")}
             description={t("activityAnalytics.gates.processing.description")}
             projectId={projectId}
-            activityId={activityId}
             cta={t("activityAnalytics.gates.processing.cta")}
           />
         ) : (
@@ -98,7 +91,6 @@ function ActivityAnalyticsPage() {
             title={t("activityAnalytics.gates.notReady.title")}
             description={t("activityAnalytics.gates.notReady.description")}
             projectId={projectId}
-            activityId={activityId}
             cta={t("activityAnalytics.gates.notReady.cta")}
           />
         )}
@@ -111,13 +103,11 @@ function WorkflowGate({
   title,
   description,
   projectId,
-  activityId,
   cta,
 }: {
   title: string;
   description: string;
   projectId: string;
-  activityId: string;
   cta: string;
 }) {
   return (
@@ -130,8 +120,8 @@ function WorkflowGate({
           {description}
         </p>
         <Link
-          to="/projects/$projectId/activities/$activityId/overview"
-          params={{ projectId, activityId }}
+          to="/projects/$projectId/activities"
+          params={{ projectId }}
           className="mt-5 inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
         >
           {cta}

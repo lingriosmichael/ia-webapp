@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ClipboardList, Pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ProjectSettingsPanel } from "@/components/projectSettingsPanel";
 import { Button } from "@/components/ui/button";
@@ -54,14 +54,6 @@ function ProjectOverviewPage() {
       }
     >
       <section>
-        <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
-          <ClipboardList className="h-4 w-4 text-primary" />
-          {locale.projectWorkspace.overview.title}
-        </div>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-          {locale.projectWorkspace.overview.description}
-        </p>
-
         <ProjectSettingsPanel
           project={project}
           isEditing={isEditing}
