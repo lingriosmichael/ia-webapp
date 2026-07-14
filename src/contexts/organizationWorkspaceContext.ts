@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { useOrganizationWorkspaceQuery } from "@/hooks/useGrantready";
+import type { useOrganizationWorkspaceQuery } from "@/hooks/useWorkspaceQueries";
 
 interface OrganizationWorkspacePageContextValue {
   organizationId: string;

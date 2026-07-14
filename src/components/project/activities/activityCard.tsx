@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdownMenu";
 import { useWorkspaceShell } from "@/components/workspaceShell";
-import { useDeleteActivityMutation } from "@/hooks/useGrantready";
+import { useDeleteActivityMutation } from "@/hooks/useWorkspaceQueries";
 import { Card } from "@/components/workspaceUI";
 import { formatDateTime, translateStatus } from "@/lib/translationUtils";
 import { ApiError, type WorkspaceActivity } from "@/services/apiClient";

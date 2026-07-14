@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 import type {
   useOrganizationWorkspaceQuery,
   useProjectQuery,
-} from "@/hooks/useGrantready";
+} from "@/hooks/useWorkspaceQueries";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 
 interface ProjectWorkspacePageContextValue {

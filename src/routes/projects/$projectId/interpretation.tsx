@@ -37,9 +37,8 @@ import {
   useProjectInterpretationsQuery,
   useSetIndicatorStatusMutation,
   useSetQualitativeFindingStatusMutation,
-  useSetSupportingQuoteStatusMutation,
   useStartInterpretationMutation,
-} from "@/hooks/useGrantready";
+} from "@/hooks/useWorkspaceQueries";
 import { useRequireAuth } from "@/hooks/useAuth";
 import {
   apiClient,
@@ -48,7 +47,6 @@ import {
   type InterpretationQualitativeFinding,
   type InterpretationQualitativeFindingRelation,
   type InterpretationQualitativeStage,
-  type InterpretationQuotePrivacyMode,
   type InterpretationDataType,
   type InterpretationQuestion,
   type InterpretationResultRecord,
@@ -134,21 +132,6 @@ function getQualitativeFindingRelationAttentionLevel(
     return "critical";
   }
   return relationToEvidence === "complicates" ? "caution" : "neutral";
-}
-
-function getQuotePrivacyModeLabelKey(
-  privacyMode: InterpretationQuotePrivacyMode,
-) {
-  return `projectWorkspace.interpretation.privacyMode.${privacyMode}` as const;
-}
-
-function getQuotePrivacyAttentionLevel(
-  privacyMode: InterpretationQuotePrivacyMode,
-): AttentionLevel {
-  if (privacyMode === "redacted") {
-    return "critical";
-  }
-  return privacyMode === "paraphrased_only" ? "caution" : "neutral";
 }
 
 function isPrivacyPreviewAvailable(job: ProcessingJobRecord | undefined) {
@@ -256,16 +239,6 @@ function ProjectInterpretationPage() {
                   <p className="mt-4 max-w-[40rem] text-sm leading-6 text-muted-foreground">
                     {t("projectWorkspace.interpretation.understoodEmpty")}
                   </p>
-                  <Button asChild className="mt-5">
-                    <Link
-                      to="/projects/$projectId/evidence"
-                      params={{ projectId }}
-                    >
-                      {totalUploadCount === 0
-                        ? t("projectWorkspace.evidence.uploadAction")
-                        : t("projectWorkspace.tabs.evidence")}
-                    </Link>
-                  </Button>
                 </div>
               </Card>
             ) : (
@@ -597,6 +570,15 @@ function IndicatorsTable({
                   {indicator.name}
                 </TableCell>
                 <TableCell className="text-muted-foreground">
+                  {indicator.matchesStatedGoal ? (
+                    <Badge variant="default" className="mb-1">
+                      {t("projectWorkspace.interpretation.highlyRecommended")}
+                    </Badge>
+                  ) : (
+                    <Badge variant="secondary" className="mb-1">
+                      {t("projectWorkspace.interpretation.extraNotStatedGoal")}
+                    </Badge>
+                  )}
                   <div className="text-foreground">{indicator.description}</div>
                   <div className="mt-0.5 text-xs">{indicator.reason}</div>
                   {indicator.supportingParagraphKeys.length > 0 ? (
@@ -672,13 +654,12 @@ function ReviewableEvidenceCard({
           : "border-border bg-secondary/10"
       }`}
     >
-      <div className="flex flex-wrap items-start justify-between gap-2">
-        <div>
-          <div className="text-sm font-medium text-foreground">{title}</div>
-          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-            {meta}
-          </div>
-        </div>
+      <div className="text-sm font-medium text-foreground">{title}</div>
+      <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+        {meta}
+      </div>
+      {children}
+      <div className="mt-3 flex justify-end">
         <Button
           variant="outline"
           size="sm"
@@ -688,7 +669,6 @@ function ReviewableEvidenceCard({
           {actionLabel}
         </Button>
       </div>
-      {children}
     </div>
   );
 }
@@ -792,86 +772,6 @@ function QualitativeFindingsList({
                 ))}
               </div>
             ) : null}
-          </ReviewableEvidenceCard>
-        );
-      })}
-    </div>
-  );
-}
-
-function SupportingQuotesList({
-  interpretationResultId,
-  projectId,
-  organizationId,
-  supportingQuotes,
-}: {
-  interpretationResultId: string;
-  projectId: string;
-  organizationId: string | undefined;
-  supportingQuotes: InterpretationSupportingQuote[];
-}) {
-  const { t } = useTranslation();
-  const setStatusMutation = useSetSupportingQuoteStatusMutation(
-    interpretationResultId,
-    projectId,
-    organizationId,
-  );
-
-  return (
-    <div className="space-y-3">
-      {supportingQuotes.map((quote) => {
-        const isRejected = quote.status === "rejected";
-        const isPending =
-          setStatusMutation.isPending &&
-          setStatusMutation.variables?.supportingQuoteId === quote.id;
-
-        return (
-          <ReviewableEvidenceCard
-            key={quote.id}
-            isRejected={isRejected}
-            title={`"${quote.excerptText}"`}
-            meta={
-              <>
-                <Badge variant="outline">
-                  {t(getQualitativeStageLabelKey(quote.stage))}
-                </Badge>
-                <Badge variant="secondary">
-                  {t(
-                    `projectWorkspace.interpretation.quoteSpeaker.${quote.speakerType}`,
-                  )}
-                </Badge>
-                <Badge variant="secondary">
-                  {t(
-                    `projectWorkspace.interpretation.quoteKind.${quote.excerptKind}`,
-                  )}
-                </Badge>
-                <Badge
-                  variant={getAttentionBadgeVariant(
-                    getQuotePrivacyAttentionLevel(quote.privacyMode),
-                  )}
-                >
-                  {t(getQuotePrivacyModeLabelKey(quote.privacyMode))}
-                </Badge>
-                <span>{Math.round(quote.confidence * 100)}%</span>
-              </>
-            }
-            actionLabel={
-              isRejected
-                ? t("projectWorkspace.interpretation.restoreQuoteAction")
-                : t("projectWorkspace.interpretation.rejectQuoteAction")
-            }
-            actionDisabled={isPending}
-            onToggleStatus={() =>
-              setStatusMutation.mutate({
-                supportingQuoteId: quote.id,
-                status: isRejected ? "kept" : "rejected",
-              })
-            }
-          >
-            <p className="mt-2 text-sm text-muted-foreground">{quote.reason}</p>
-            <div className="mt-2 text-xs text-muted-foreground">
-              {quote.sourceReference}
-            </div>
           </ReviewableEvidenceCard>
         );
       })}
@@ -1228,20 +1128,6 @@ function DatasetInterpretationCard({
                 projectId={projectId}
                 organizationId={organizationId}
                 qualitativeFindings={result.qualitativeFindings}
-                supportingQuotes={result.supportingQuotes}
-              />
-            </div>
-          ) : null}
-
-          {result.supportingQuotes.length > 0 ? (
-            <div>
-              <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
-                {t("projectWorkspace.interpretation.supportingQuotesTitle")}
-              </div>
-              <SupportingQuotesList
-                interpretationResultId={result.id}
-                projectId={projectId}
-                organizationId={organizationId}
                 supportingQuotes={result.supportingQuotes}
               />
             </div>

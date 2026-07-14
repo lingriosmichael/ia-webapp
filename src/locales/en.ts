@@ -380,6 +380,11 @@ const en = {
       findingRejectedBadge: "Recommendation rejected",
       rejectedFindingWarning:
         "Impact Atlas will leave this data unchanged, so the GDPR risk remains in the dataset.",
+      rejectionReasonLabel: "Reason for overriding this finding (required)",
+      rejectionReasonPlaceholder:
+        'Explain why this finding should not be redacted, e.g. "this PERSON match is a project name, not a real name."',
+      rejectionReasonTooShort:
+        "Please provide a more detailed reason (at least 10 characters).",
       reviewDecisionsIncomplete:
         "Accept or reject every recommended adjustment above before continuing.",
       reviewApprovalLocked:
@@ -467,6 +472,8 @@ const en = {
         impact: "Impact",
       },
       indicatorActionColumn: "Action",
+      highlyRecommended: "Highly recommended — fits a stated goal",
+      extraNotStatedGoal: "Extra — not tied to a stated goal",
       rejectIndicatorAction: "Reject",
       restoreIndicatorAction: "Restore",
       indicatorNarrativeGrounding: "Grounded in {{count}} narrative excerpt",
@@ -474,13 +481,10 @@ const en = {
         "Grounded in {{count}} narrative excerpts",
       indicatorsTitle: "Indicators",
       qualitativeFindingsTitle: "Qualitative findings",
-      supportingQuotesTitle: "Supporting quotes",
       qualitativeLinkedQuotes: "{{count}} linked quote",
       qualitativeLinkedQuotes_other: "{{count}} linked quotes",
       rejectFindingAction: "Reject",
       restoreFindingAction: "Restore",
-      rejectQuoteAction: "Reject",
-      restoreQuoteAction: "Restore",
       qualitativeStage: {
         output: "Output",
         outcome: "Outcome",
@@ -493,23 +497,6 @@ const en = {
         contradicts: "Contradicts indicator",
         complicates: "Complicates indicator",
         context_only: "Context only",
-      },
-      quoteSpeaker: {
-        participant: "Participant",
-        caregiver: "Caregiver",
-        staff: "Staff",
-        volunteer: "Volunteer",
-        evaluator: "Evaluator",
-        unknown: "Unknown speaker",
-      },
-      quoteKind: {
-        direct: "Direct quote",
-        paraphrased: "Paraphrased",
-      },
-      privacyMode: {
-        verbatim_safe: "Verbatim safe",
-        redacted: "Redacted",
-        paraphrased_only: "Paraphrased only",
       },
       dataTypeTabularLabel: "Structured table",
       dataTypeNarrativeLabel: "Narrative document",
@@ -567,56 +554,47 @@ const en = {
       nextSteps: "Suggested next steps",
     },
   },
+  analytics: {
+    aiCurated: "AI-curated",
+    notDeduplicatedNote: "Sum across sources — not a deduplicated count.",
+    narrativeTitle: "What the data suggests",
+    fullCatalogTitle: "See full catalog",
+    featured: "Featured on this dashboard",
+    notFeatured: "Not featured this time",
+    omittedTitle: "Not yet calculable",
+    quoteCount: "{{count}} supporting quote",
+    quoteCount_other: "{{count}} supporting quotes",
+    dataQualityTitle: "Data quality",
+    groundingFallbackNotice:
+      "Analytics were generated, but the automatic curation could not be confirmed; only metrics are shown, without narrative.",
+    generatedAt: "Generated {{date}}",
+    actions: {
+      generate: "Refresh analytics",
+      generating: "Generating…",
+    },
+    status: {
+      NOT_STARTED: "Analytics have not been generated yet.",
+      QUEUED: "Analytics are queued.",
+      RUNNING: "Analytics are being generated…",
+      COMPLETED: "Analytics are up to date.",
+      COMPLETED_WITH_WARNINGS:
+        "Analytics were generated. Some values are based on incomplete data.",
+      FAILED: "Analytics could not be generated.",
+      STALE:
+        "New or changed verified evidence is available since the last calculation.",
+    },
+  },
   projectAnalytics: {
     loading: "Loading analytics…",
     loadFailed: "Analytics could not be loaded.",
-    crumbsProjects: "Projects",
-    crumbsAnalytics: "Analytics",
     eyebrow: "Programme Analytics",
-    title: "Placeholder analytics view",
-    description:
-      "This screen is still using representative charts because AI analytics are not implemented yet. Live project and activity metadata are already coming from the backend for {{count}} activities.",
-    charts: {
-      attendanceTrend: "Attendance Trend",
-      confidenceImprovement: "Confidence Improvement",
-      attendanceDistribution: "Attendance Distribution",
-      completionByAgeGroup: "Completion by Age Group",
-      mentorMatching: "Mentor Matching",
-      backendStatus: "Backend status",
-      mockDataset: "Mock dataset",
-    },
-    backendStatus: {
-      projectLoaded: "Project loaded",
-      activitiesLoaded: "Activities loaded",
-      aiAnalytics: "AI analytics",
-      notImplemented: "Not implemented yet",
-      yes: "Yes",
-    },
-    metrics: {
-      participants: { label: "Participants", delta: "+12 vs last cycle" },
-      attendanceRate: { label: "Attendance Rate", delta: "+4 pts" },
-      programmeCompletion: { label: "Programme Completion", delta: "+6 pts" },
-      confidenceImprovement: {
-        label: "Confidence Improvement",
-        delta: "scale 1–10",
-      },
-      missingValues: { label: "Missing Values", delta: "1.1% of cells" },
-      duplicateRows: { label: "Duplicate Rows", delta: "auto-flagged" },
-    },
-    mentorMatching: {
-      matched: "Matched",
-      pending: "Pending",
-      unmatched: "Unmatched",
-    },
-    series: {
-      attendance: "Attendance",
-      preConfidence: "Baseline confidence",
-      postConfidence: "Endline confidence",
-      count: "Count",
-      completed: "Completed",
-      dropped: "Dropped",
-      mentorMatches: "Mentor matches",
-    },
+    title: "Analytics",
+    subtitle:
+      "Analytics are based exclusively on verified, structured evidence.",
+    noVerifiedEvidenceTitle: "No verified evidence yet",
+    noVerifiedEvidenceDescription:
+      "This project has no verified structured evidence yet.",
+    noVerifiedEvidenceCta: "Go to Interpretation",
   },
   projectInsights: {
     loading: "Loading insights…",
@@ -1074,29 +1052,11 @@ const en = {
     loadFailed: "Activity analytics could not be loaded.",
     crumb: "Analysis",
     eyebrow: "Evidence Analysis",
-    title: "Turn reviewed evidence into findings",
-    description:
-      "This page summarizes the dataset once AI has prepared it for analysis.",
-    gates: {
-      noDataset: {
-        title: "Analysis starts after the first dataset arrives",
-        description:
-          "Upload monitoring data from the activity overview first. Once AI has read the evidence, this page will be ready.",
-        cta: "Go to Overview",
-      },
-      processing: {
-        title: "AI is still preparing this dataset",
-        description:
-          "Stay in the guided workflow until the evidence is ready. Analysis opens automatically once review is complete.",
-        cta: "Back to Overview",
-      },
-      notReady: {
-        title: "Analysis is not available yet",
-        description:
-          "Automated metrics and analysis views for this dataset are still being built. Check back in a future update.",
-        cta: "Back to Overview",
-      },
-    },
+    title: "Analysis",
+    noVerifiedEvidenceTitle: "No verified evidence yet",
+    noVerifiedEvidenceDescription:
+      "Analytics are not available yet because this activity has no verified structured evidence.",
+    noVerifiedEvidenceCta: "Go to Overview",
   },
   activityInsights: {
     loading: "Loading activity insights…",

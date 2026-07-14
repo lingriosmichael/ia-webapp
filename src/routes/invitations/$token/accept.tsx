@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import {
   useAcceptInvitationMutation,
   useInvitationQuery,
-} from "@/hooks/useGrantready";
+} from "@/hooks/useWorkspaceQueries";
 import { sessionQueryKey, useSessionQuery } from "@/hooks/useAuth";
 import { rememberActiveOrganizationId } from "@/lib/organizationSelection";
 import { resolveWorkspaceDestination } from "@/lib/workspaceRouting";

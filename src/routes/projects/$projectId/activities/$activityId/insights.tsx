@@ -10,7 +10,7 @@ import {
   useActivityQuery,
   useProjectInterpretationsQuery,
   useProjectQuery,
-} from "@/hooks/useGrantready";
+} from "@/hooks/useWorkspaceQueries";
 import type {
   InterpretationGoalCoverage,
   InterpretationIndicator,

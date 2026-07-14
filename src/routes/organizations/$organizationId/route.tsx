@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { WorkspaceShell } from "@/components/workspaceShell";
 import { OrganizationWorkspacePageContext } from "@/contexts/organizationWorkspaceContext";
 import { useLogout, useRequireAuth } from "@/hooks/useAuth";
-import { useOrganizationWorkspaceQuery } from "@/hooks/useGrantready";
+import { useOrganizationWorkspaceQuery } from "@/hooks/useWorkspaceQueries";
 import { resolveActiveOrganizationId } from "@/lib/organizationSelection";
 import { resolveWorkspaceDestination } from "@/lib/workspaceRouting";
 

@@ -9,7 +9,7 @@ import {
 } from "@/contexts/projectWorkspaceContext";
 import { useWorkspaceShell } from "@/components/workspaceShell";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
-import { useProjectActivitiesQuery } from "@/hooks/useGrantready";
+import { useProjectActivitiesQuery } from "@/hooks/useWorkspaceQueries";
 import { useRequireAuth } from "@/hooks/useAuth";
 import type { WorkspaceActivity } from "@/services/apiClient";
 

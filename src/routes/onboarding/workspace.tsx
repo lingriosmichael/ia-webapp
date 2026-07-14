@@ -5,7 +5,7 @@ import { PublicMarketingShell } from "@/components/publicMarketingShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRequireAuth } from "@/hooks/useAuth";
-import { useCreateOrganizationMutation } from "@/hooks/useGrantready";
+import { useCreateOrganizationMutation } from "@/hooks/useWorkspaceQueries";
 import {
   rememberActiveOrganizationId,
   resolveActiveOrganizationId,

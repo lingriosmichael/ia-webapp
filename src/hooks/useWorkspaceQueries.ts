@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { sessionQueryKey } from "@/hooks/useAuth";
 import {
+  type AnalyticsExecutionRecord,
+  type AnalyticsQueryResponse,
   type AnswerInterpretationQuestionPayload,
   type ApprovePrivacyReviewResponse,
   ApiError,
@@ -63,6 +65,10 @@ export const organizationInvitationsQueryKey = (organizationId: string) =>
   ["organization-invitations", organizationId] as const;
 export const invitationQueryKey = (token: string) =>
   ["invitation", token] as const;
+export const projectAnalyticsQueryKey = (projectId: string) =>
+  ["project-analytics", projectId] as const;
+export const activityAnalyticsQueryKey = (activityId: string) =>
+  ["activity-analytics", activityId] as const;
 
 export function useOrganizationWorkspaceQuery(
   organizationId: string,
@@ -798,30 +804,6 @@ export function useSetQualitativeFindingStatusMutation(
   );
 }
 
-export function useSetSupportingQuoteStatusMutation(
-  interpretationResultId: string,
-  projectId?: string,
-  organizationId?: string,
-) {
-  return useSetInterpretationItemStatusMutation(
-    interpretationResultId,
-    projectId,
-    organizationId,
-    ({
-      supportingQuoteId,
-      status,
-    }: {
-      supportingQuoteId: string;
-      status: InterpretationIndicatorStatus;
-    }) =>
-      apiClient.setSupportingQuoteStatus(
-        interpretationResultId,
-        supportingQuoteId,
-        status,
-      ),
-  );
-}
-
 export function useAcknowledgeInterpretationReviewMutation(
   activityId: string,
   organizationId?: string,
@@ -880,6 +862,56 @@ export function useDeleteActivityMutation(
           queryKey: workspaceQueryKey(organizationId),
         });
       }
+    },
+  });
+}
+
+export function useProjectAnalyticsQuery(projectId: string, enabled = true) {
+  return useQuery<AnalyticsQueryResponse, ApiError>({
+    queryKey: projectAnalyticsQueryKey(projectId),
+    queryFn: () => apiClient.getProjectAnalytics(projectId),
+    enabled,
+  });
+}
+
+export function useActivityAnalyticsQuery(
+  projectId: string,
+  activityId: string,
+  enabled = true,
+) {
+  return useQuery<AnalyticsQueryResponse, ApiError>({
+    queryKey: activityAnalyticsQueryKey(activityId),
+    queryFn: () => apiClient.getActivityAnalytics(projectId, activityId),
+    enabled,
+  });
+}
+
+export function useGenerateProjectAnalyticsMutation(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<AnalyticsExecutionRecord, ApiError, void>({
+    mutationFn: () => apiClient.generateProjectAnalytics(projectId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: projectAnalyticsQueryKey(projectId),
+      });
+    },
+  });
+}
+
+export function useGenerateActivityAnalyticsMutation(
+  projectId: string,
+  activityId: string,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation<AnalyticsExecutionRecord, ApiError, void>({
+    mutationFn: () =>
+      apiClient.generateActivityAnalytics(projectId, activityId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: activityAnalyticsQueryKey(activityId),
+      });
     },
   });
 }

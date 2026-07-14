@@ -5,7 +5,7 @@ import { ActivityTabs } from "@/components/activityTabs";
 import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
 import { useProjectHierarchy } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
-import { useActivityQuery, useProjectQuery } from "@/hooks/useGrantready";
+import { useActivityQuery, useProjectQuery } from "@/hooks/useWorkspaceQueries";
 import { resolveProjectSummaryText } from "@/lib/projectSummary";
 import { formatDateTime, translateStatus } from "@/lib/translationUtils";
 

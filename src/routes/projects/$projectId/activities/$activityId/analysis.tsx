@@ -1,15 +1,25 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { ActivityTabs } from "@/components/activityTabs";
-import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
+import { PageHeader, PageContainer, TopBar } from "@/components/workspaceUI";
 import { useProjectHierarchy } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
 import {
-  useActivityJobsQuery,
+  useActivityAnalyticsQuery,
   useActivityQuery,
-  useActivityUploadsQuery,
+  useGenerateActivityAnalyticsMutation,
   useProjectQuery,
-} from "@/hooks/useGrantready";
+} from "@/hooks/useWorkspaceQueries";
+import {
+  AnalyticsEmptyState,
+  AnalyticsErrorState,
+  analyticsCtaLinkClassName,
+} from "@/components/analytics/analyticsEmptyState";
+import { AnalyticsStatusBanner } from "@/components/analytics/analyticsStatusBanner";
+import { MetricGrid } from "@/components/analytics/metricGrid";
+import { ConnectiveNarrativeCallout } from "@/components/analytics/connectiveNarrativeCallout";
+import { CatalogDetailsSection } from "@/components/analytics/catalogDetailsSection";
+import { DataQualityPanel } from "@/components/analytics/dataQualityPanel";
 
 export const Route = createFileRoute(
   "/projects/$projectId/activities/$activityId/analysis",
@@ -22,8 +32,15 @@ function ActivityAnalyticsPage() {
   const auth = useRequireAuth();
   const projectQuery = useProjectQuery(projectId, Boolean(auth.token));
   const activityQuery = useActivityQuery(activityId, Boolean(auth.token));
-  const uploadsQuery = useActivityUploadsQuery(activityId, Boolean(auth.token));
-  const jobsQuery = useActivityJobsQuery(activityId, Boolean(auth.token));
+  const analyticsQuery = useActivityAnalyticsQuery(
+    projectId,
+    activityId,
+    Boolean(auth.token),
+  );
+  const generateMutation = useGenerateActivityAnalyticsMutation(
+    projectId,
+    activityId,
+  );
   const { t } = useTranslation();
   const hierarchy = useProjectHierarchy();
 
@@ -31,23 +48,20 @@ function ActivityAnalyticsPage() {
     !auth.token ||
     projectQuery.isLoading ||
     activityQuery.isLoading ||
-    uploadsQuery.isLoading ||
-    jobsQuery.isLoading
+    analyticsQuery.isLoading
   ) {
-    return <CenteredState label={t("activityAnalytics.loading")} />;
+    return <AnalyticsErrorState label={t("activityAnalytics.loading")} />;
   }
 
-  if (!projectQuery.data || !activityQuery.data) {
-    return <CenteredState label={t("activityAnalytics.loadFailed")} />;
+  if (!projectQuery.data || !activityQuery.data || analyticsQuery.isError) {
+    return <AnalyticsErrorState label={t("activityAnalytics.loadFailed")} />;
   }
 
   const activity = activityQuery.data;
-  const uploads = uploadsQuery.data ?? [];
-  const jobs = jobsQuery.data ?? [];
-  const hasDataset = uploads.length > 0;
-  const isProcessing = jobs.some((job) =>
-    ["queued", "processing"].includes(job.status),
-  );
+  const { execution, result } = analyticsQuery.data ?? {
+    execution: null,
+    result: null,
+  };
 
   return (
     <>
@@ -61,7 +75,7 @@ function ActivityAnalyticsPage() {
           { label: t("activityAnalytics.crumb") },
         ]}
       />
-      <div className="mx-auto w-full max-w-6xl px-8 py-8">
+      <PageContainer className="py-8">
         <PageHeader
           eyebrow={t("activityAnalytics.eyebrow")}
           title={t("activityAnalytics.title")}
@@ -72,69 +86,46 @@ function ActivityAnalyticsPage() {
           className="mt-6"
         />
 
-        {!hasDataset ? (
-          <WorkflowGate
-            title={t("activityAnalytics.gates.noDataset.title")}
-            description={t("activityAnalytics.gates.noDataset.description")}
-            projectId={projectId}
-            cta={t("activityAnalytics.gates.noDataset.cta")}
+        <div className="mt-6 space-y-5">
+          <AnalyticsStatusBanner
+            execution={execution}
+            result={result}
+            onRegenerate={() => generateMutation.mutate()}
+            isRegenerating={generateMutation.isPending}
           />
-        ) : isProcessing ? (
-          <WorkflowGate
-            title={t("activityAnalytics.gates.processing.title")}
-            description={t("activityAnalytics.gates.processing.description")}
-            projectId={projectId}
-            cta={t("activityAnalytics.gates.processing.cta")}
-          />
-        ) : (
-          <WorkflowGate
-            title={t("activityAnalytics.gates.notReady.title")}
-            description={t("activityAnalytics.gates.notReady.description")}
-            projectId={projectId}
-            cta={t("activityAnalytics.gates.notReady.cta")}
-          />
-        )}
-      </div>
-    </>
-  );
-}
 
-function WorkflowGate({
-  title,
-  description,
-  projectId,
-  cta,
-}: {
-  title: string;
-  description: string;
-  projectId: string;
-  cta: string;
-}) {
-  return (
-    <Card className="mt-6 border-primary/15 bg-primary-soft/25 p-8">
-      <div className="max-w-2xl">
-        <div className="text-sm font-semibold tracking-tight text-foreground">
-          {title}
+          {!result || result.catalog.entries.length === 0 ? (
+            <AnalyticsEmptyState
+              title={t("activityAnalytics.noVerifiedEvidenceTitle")}
+              description={t("activityAnalytics.noVerifiedEvidenceDescription")}
+              cta={
+                <Link
+                  to="/projects/$projectId/activities"
+                  params={{ projectId }}
+                  className={analyticsCtaLinkClassName}
+                >
+                  {t("activityAnalytics.noVerifiedEvidenceCta")}
+                </Link>
+              }
+            />
+          ) : (
+            <>
+              <MetricGrid
+                entries={result.catalog.entries}
+                featuredEntryIds={result.curation.featuredEntryIds}
+              />
+              <ConnectiveNarrativeCallout
+                narrative={result.curation.narrative}
+              />
+              <CatalogDetailsSection
+                catalog={result.catalog}
+                featuredEntryIds={result.curation.featuredEntryIds}
+              />
+              <DataQualityPanel result={result} />
+            </>
+          )}
         </div>
-        <p className="mt-3 text-sm leading-7 text-muted-foreground">
-          {description}
-        </p>
-        <Link
-          to="/projects/$projectId/activities"
-          params={{ projectId }}
-          className="mt-5 inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
-        >
-          {cta}
-        </Link>
-      </div>
-    </Card>
-  );
-}
-
-function CenteredState({ label }: { label: string }) {
-  return (
-    <div className="flex min-h-screen items-center justify-center text-sm text-muted-foreground">
-      {label}
-    </div>
+      </PageContainer>
+    </>
   );
 }

@@ -388,6 +388,12 @@ const de: TranslationDictionary = {
       findingRejectedBadge: "Empfehlung abgelehnt",
       rejectedFindingWarning:
         "Impact Atlas lässt diese Daten unverändert, daher bleibt das DSGVO-Risiko im Datensatz bestehen.",
+      rejectionReasonLabel:
+        "Begründung für das Verwerfen dieses Befunds (erforderlich)",
+      rejectionReasonPlaceholder:
+        "Erklären Sie, warum dieser Befund nicht redigiert werden sollte, z. B. „diese PERSON-Übereinstimmung ist ein Projektname, kein echter Name.“",
+      rejectionReasonTooShort:
+        "Bitte geben Sie eine ausführlichere Begründung an (mindestens 10 Zeichen).",
       reviewDecisionsIncomplete:
         "Akzeptieren oder verwerfen Sie jede empfohlene Anpassung oben, bevor Sie fortfahren.",
       reviewApprovalLocked:
@@ -477,6 +483,8 @@ const de: TranslationDictionary = {
         impact: "Impact",
       },
       indicatorActionColumn: "Aktion",
+      highlyRecommended: "Sehr empfohlen — passt zu einem Ziel",
+      extraNotStatedGoal: "Zusatz — nicht an ein Ziel gebunden",
       rejectIndicatorAction: "Ablehnen",
       restoreIndicatorAction: "Wiederherstellen",
       indicatorNarrativeGrounding: "Basierend auf {{count}} narrativem Auszug",
@@ -484,13 +492,10 @@ const de: TranslationDictionary = {
         "Basierend auf {{count}} narrativen Auszügen",
       indicatorsTitle: "Indikatoren",
       qualitativeFindingsTitle: "Qualitative Erkenntnisse",
-      supportingQuotesTitle: "Unterstützende Zitate",
       qualitativeLinkedQuotes: "{{count}} verknüpftes Zitat",
       qualitativeLinkedQuotes_other: "{{count}} verknüpfte Zitate",
       rejectFindingAction: "Ablehnen",
       restoreFindingAction: "Wiederherstellen",
-      rejectQuoteAction: "Ablehnen",
-      restoreQuoteAction: "Wiederherstellen",
       qualitativeStage: {
         output: "Output",
         outcome: "Outcome",
@@ -503,23 +508,6 @@ const de: TranslationDictionary = {
         contradicts: "Widerspricht Indikator",
         complicates: "Relativiert Indikator",
         context_only: "Nur Kontext",
-      },
-      quoteSpeaker: {
-        participant: "Teilnehmende Person",
-        caregiver: "Angehörige Person",
-        staff: "Mitarbeitende",
-        volunteer: "Freiwillige Person",
-        evaluator: "Evaluierende Person",
-        unknown: "Unbekannte sprechende Person",
-      },
-      quoteKind: {
-        direct: "Direktes Zitat",
-        paraphrased: "Paraphrasiert",
-      },
-      privacyMode: {
-        verbatim_safe: "Wörtlich sicher",
-        redacted: "Geschwärzt",
-        paraphrased_only: "Nur paraphrasiert",
       },
       dataTypeTabularLabel: "Strukturierte Tabelle",
       dataTypeNarrativeLabel: "Narratives Dokument",
@@ -579,62 +567,48 @@ const de: TranslationDictionary = {
       nextSteps: "Empfohlene nächste Schritte",
     },
   },
+  analytics: {
+    aiCurated: "KI-kuratiert",
+    notDeduplicatedNote:
+      "Summe über mehrere Quellen — keine deduplizierte Zählung.",
+    narrativeTitle: "Was die Daten nahelegen",
+    fullCatalogTitle: "Vollständigen Katalog anzeigen",
+    featured: "In diesem Dashboard hervorgehoben",
+    notFeatured: "Diesmal nicht hervorgehoben",
+    omittedTitle: "Noch nicht berechenbar",
+    quoteCount: "{{count}} unterstützendes Zitat",
+    quoteCount_other: "{{count}} unterstützende Zitate",
+    dataQualityTitle: "Datenqualität",
+    groundingFallbackNotice:
+      "Die Analysen wurden erstellt, aber die automatische Einordnung konnte nicht bestätigt werden; es werden nur Kennzahlen ohne Erläuterung angezeigt.",
+    generatedAt: "Erstellt am {{date}}",
+    actions: {
+      generate: "Analysen aktualisieren",
+      generating: "Wird erstellt…",
+    },
+    status: {
+      NOT_STARTED: "Für dieses Projekt wurden noch keine Analysen erstellt.",
+      QUEUED: "Analysen sind in der Warteschlange.",
+      RUNNING: "Analysen werden erstellt…",
+      COMPLETED: "Die Analysen sind aktuell.",
+      COMPLETED_WITH_WARNINGS:
+        "Die Analysen wurden erstellt. Einige Werte basieren auf unvollständigen Daten.",
+      FAILED: "Die Analysen konnten nicht erstellt werden.",
+      STALE:
+        "Seit der letzten Berechnung wurden neue oder geänderte Evidenzdaten bestätigt.",
+    },
+  },
   projectAnalytics: {
     loading: "Analysen werden geladen…",
     loadFailed: "Analysen konnten nicht geladen werden.",
-    crumbsProjects: "Projekte",
-    crumbsAnalytics: "Analysen",
     eyebrow: "Programm-Analysen",
-    title: "Platzhalteransicht für Analysen",
-    description:
-      "Diese Ansicht verwendet noch repräsentative Diagramme, da KI-Analysen noch nicht implementiert sind. Live-Metadaten für {{count}} Aktivitäten kommen bereits aus dem Backend.",
-    charts: {
-      attendanceTrend: "Teilnahmetrends",
-      confidenceImprovement: "Entwicklung des Vertrauens",
-      attendanceDistribution: "Verteilung der Teilnahme",
-      completionByAgeGroup: "Abschluss nach Altersgruppe",
-      mentorMatching: "Mentor-Zuordnung",
-      backendStatus: "Backend-Status",
-      mockDataset: "Beispieldatensatz",
-    },
-    backendStatus: {
-      projectLoaded: "Projekt geladen",
-      activitiesLoaded: "Aktivitäten geladen",
-      aiAnalytics: "KI-Analysen",
-      notImplemented: "Noch nicht implementiert",
-      yes: "Ja",
-    },
-    metrics: {
-      participants: {
-        label: "Teilnehmende",
-        delta: "+12 gegenüber letztem Zyklus",
-      },
-      attendanceRate: { label: "Teilnahmequote", delta: "+4 Punkte" },
-      programmeCompletion: { label: "Programmabschluss", delta: "+6 Punkte" },
-      confidenceImprovement: {
-        label: "Vertrauenszuwachs",
-        delta: "Skala 1–10",
-      },
-      missingValues: { label: "Fehlende Werte", delta: "1,1 % der Zellen" },
-      duplicateRows: {
-        label: "Doppelte Zeilen",
-        delta: "automatisch markiert",
-      },
-    },
-    mentorMatching: {
-      matched: "Zugeordnet",
-      pending: "Ausstehend",
-      unmatched: "Nicht zugeordnet",
-    },
-    series: {
-      attendance: "Teilnahme",
-      preConfidence: "Ausgangsvertrauen",
-      postConfidence: "Vertrauen am Ende",
-      count: "Anzahl",
-      completed: "Abgeschlossen",
-      dropped: "Abgebrochen",
-      mentorMatches: "Mentor-Zuordnungen",
-    },
+    title: "Analysen",
+    subtitle:
+      "Die Analysen basieren ausschließlich auf geprüften und strukturierten Evidenzdaten.",
+    noVerifiedEvidenceTitle: "Noch keine geprüfte Evidenz",
+    noVerifiedEvidenceDescription:
+      "Für dieses Projekt liegen noch keine geprüften Evidenzdaten vor.",
+    noVerifiedEvidenceCta: "Zur Interpretation",
   },
   projectInsights: {
     loading: "Erkenntnisse werden geladen…",
@@ -1102,29 +1076,11 @@ const de: TranslationDictionary = {
     loadFailed: "Aktivitätsanalysen konnten nicht geladen werden.",
     crumb: "Analyse",
     eyebrow: "Evidenzanalyse",
-    title: "Geprüfte Evidenz in Erkenntnisse übersetzen",
-    description:
-      "Diese Seite fasst den Datensatz zusammen, sobald die KI ihn für die Analyse vorbereitet hat.",
-    gates: {
-      noDataset: {
-        title: "Die Analyse beginnt mit dem ersten Datensatz",
-        description:
-          "Laden Sie zuerst Monitoring-Daten in der Aktivitätsübersicht hoch. Sobald die KI die Evidenz gelesen hat, ist diese Seite bereit.",
-        cta: "Zur Übersicht",
-      },
-      processing: {
-        title: "Die KI bereitet diesen Datensatz noch vor",
-        description:
-          "Bleiben Sie im geführten Workflow, bis die Evidenz bereit ist. Die Analyse öffnet sich automatisch nach der Datenprüfung.",
-        cta: "Zurück zur Übersicht",
-      },
-      notReady: {
-        title: "Analyse ist noch nicht verfügbar",
-        description:
-          "Automatisierte Kennzahlen und Analyseansichten für diesen Datensatz werden noch entwickelt. Schauen Sie in einem zukünftigen Update wieder vorbei.",
-        cta: "Zurück zur Übersicht",
-      },
-    },
+    title: "Analyse",
+    noVerifiedEvidenceTitle: "Noch keine geprüfte Evidenz",
+    noVerifiedEvidenceDescription:
+      "Für diese Aktivität liegen noch keine geprüften, strukturierten Evidenzdaten vor.",
+    noVerifiedEvidenceCta: "Zur Übersicht",
   },
   activityInsights: {
     loading: "Aktivitätserkenntnisse werden geladen…",

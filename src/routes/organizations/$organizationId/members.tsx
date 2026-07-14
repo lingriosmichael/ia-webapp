@@ -9,7 +9,7 @@ import {
   useOrganizationMembersQuery,
   useRemoveOrganizationMemberMutation,
   useResendInvitationMutation,
-} from "@/hooks/useGrantready";
+} from "@/hooks/useWorkspaceQueries";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { ApiError } from "@/services/apiClient";
 

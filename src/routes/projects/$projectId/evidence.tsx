@@ -27,7 +27,7 @@ import {
   useJobQuery,
   useStartEvidenceAnalysisMutation,
   useUploadActivityFileMutation,
-} from "@/hooks/useGrantready";
+} from "@/hooks/useWorkspaceQueries";
 import {
   isSupportedEvidenceFileType,
   SUPPORTED_EVIDENCE_FILE_ACCEPT,

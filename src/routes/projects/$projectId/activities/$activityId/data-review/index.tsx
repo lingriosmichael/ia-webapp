@@ -9,7 +9,7 @@ import {
   useActivityQuery,
   useActivityUploadsQuery,
   useProjectQuery,
-} from "@/hooks/useGrantready";
+} from "@/hooks/useWorkspaceQueries";
 
 export const Route = createFileRoute(
   "/projects/$projectId/activities/$activityId/data-review/",

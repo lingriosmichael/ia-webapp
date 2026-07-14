@@ -7,7 +7,7 @@ import {
   useCreateProjectMutation,
   useDeleteProjectMutation,
   useUpdateActivityMutation,
-} from "@/hooks/useGrantready";
+} from "@/hooks/useWorkspaceQueries";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { rememberActiveOrganizationId } from "@/lib/organizationSelection";
 import { ActivityDialog } from "@/components/activityDialog";

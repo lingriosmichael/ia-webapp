@@ -399,11 +399,13 @@ export interface ParsedRepresentationPreviewRecord {
 
 // What this client sends when approving a review. decidedById/decidedAt are
 // never sent from here — the backend stamps those itself from the
-// authenticated caller.
+// authenticated caller. `reason` is required by the backend whenever
+// decision is "rejected" (overriding a privacy finding must be justified).
 export interface PrivacyReviewFieldDecisionInput {
   field: string;
   entityType: string;
   decision: PrivacyReviewDecisionValue;
+  reason?: string;
 }
 
 // What the backend actually persists and returns — the input plus a real
@@ -521,6 +523,7 @@ export interface InterpretationIndicator {
   relatedEntityIds: string[];
   supportingParagraphKeys: string[];
   relevanceStage: IndicatorRelevanceStage | null;
+  matchesStatedGoal: boolean;
   status: InterpretationIndicatorStatus;
 }
 
@@ -625,6 +628,135 @@ export interface StartInterpretationPayload {
 
 export interface AnswerInterpretationQuestionPayload {
   answeredValue: string;
+}
+
+// ============================================================
+// Analytics (Phase 5) — see "Phase 5 — Deterministic Analytics.md".
+// Every number below was already computed and merge-recombined by
+// Phase 4; nothing in this module (or ia_backend's analytics module)
+// computes a value. The LLM only ever selects/ranks/narrates.
+// ============================================================
+
+export type AnalyticsScopeType = "PROJECT" | "ACTIVITY";
+
+export interface AnalyticsScope {
+  type: AnalyticsScopeType;
+  projectId: string;
+  activityId: string | null;
+}
+
+export type AnalyticsExecutionStatus =
+  | "NOT_STARTED"
+  | "QUEUED"
+  | "RUNNING"
+  | "COMPLETED"
+  | "COMPLETED_WITH_WARNINGS"
+  | "FAILED"
+  | "STALE";
+
+export type KnowledgeIndicatorDeduplicationConfidence =
+  "deduplicated" | "not_deduplicated_across_sources" | "not_applicable";
+
+export interface EvidenceCatalogMetricProvenance {
+  knowledgeEntityId: string;
+  uploadMetadataId: string;
+  interpretationResultId: string;
+  sourceReference: string;
+}
+
+export interface EvidenceCatalogMetricEntry {
+  entryId: string;
+  entryType: "METRIC";
+  label: string;
+  description: string;
+  value: number;
+  unit: string | null;
+  deduplicationConfidence: KnowledgeIndicatorDeduplicationConfidence;
+  activityId: string;
+  provenance: EvidenceCatalogMetricProvenance;
+}
+
+export interface EvidenceCatalogThemeEntry {
+  entryId: string;
+  entryType: "QUALITATIVE_THEME";
+  label: string;
+  description: string;
+  quoteCount: number;
+  sourceActivityIds: string[];
+  sourceUploadMetadataIds: string[];
+}
+
+export type EvidenceCatalogEntry =
+  EvidenceCatalogMetricEntry | EvidenceCatalogThemeEntry;
+
+export interface EvidenceCatalogOmittedEntry {
+  knowledgeEntityId: string;
+  reason: string;
+}
+
+export interface EvidenceCatalog {
+  catalogVersion: string;
+  knowledgeModelVersion: number;
+  scope: AnalyticsScope;
+  entries: EvidenceCatalogEntry[];
+  omittedEntries: EvidenceCatalogOmittedEntry[];
+}
+
+export interface DashboardCurationNarrative {
+  text: string;
+  referencedEntryIds: string[];
+}
+
+export interface DashboardCuration {
+  featuredEntryIds: string[];
+  narrative: DashboardCurationNarrative[];
+  groundingStatus: "PASSED" | "FAILED";
+  groundingRetryCount: number;
+  curatorModelVersion: string;
+  fellBackToSelectionOnly: boolean;
+}
+
+export interface AnalyticsDataQuality {
+  recordsExcludedCount: number;
+  warnings: string[];
+}
+
+export interface AnalyticsExecutionRecord {
+  id: string;
+  organizationId: string;
+  projectId: string;
+  activityId: string | null;
+  scopeType: AnalyticsScopeType;
+  status: AnalyticsExecutionStatus;
+  startedAt: string | null;
+  completedAt: string | null;
+  errorCode: string | null;
+  errorMessage: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AnalyticsResultRecord {
+  id: string;
+  analyticsExecutionId: string;
+  organizationId: string;
+  projectId: string;
+  activityId: string | null;
+  scopeType: AnalyticsScopeType;
+  catalogVersion: string;
+  knowledgeModelVersion: number;
+  catalog: EvidenceCatalog;
+  curation: DashboardCuration;
+  dataQuality: AnalyticsDataQuality;
+  limitations: string[];
+  generatedAt: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AnalyticsQueryResponse {
+  execution: AnalyticsExecutionRecord | null;
+  result: AnalyticsResultRecord | null;
 }
 
 export class ApiError extends Error {
@@ -1076,25 +1208,36 @@ export const apiClient = {
       },
     );
   },
-  setSupportingQuoteStatus(
-    interpretationResultId: string,
-    supportingQuoteId: string,
-    status: InterpretationIndicatorStatus,
-  ): Promise<InterpretationResultRecord> {
-    return request(
-      `/interpretations/${interpretationResultId}/supporting-quotes/${supportingQuoteId}`,
-      {
-        method: "PATCH",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ status }),
-      },
-    );
-  },
   acknowledgeInterpretationReview(
     activityId: string,
   ): Promise<ActivitySummary> {
     return request(`/activities/${activityId}/interpretation-acknowledgment`, {
       method: "POST",
     });
+  },
+  generateProjectAnalytics(
+    projectId: string,
+  ): Promise<AnalyticsExecutionRecord> {
+    return request(`/projects/${projectId}/analytics/generate`, {
+      method: "POST",
+    });
+  },
+  getProjectAnalytics(projectId: string): Promise<AnalyticsQueryResponse> {
+    return request(`/projects/${projectId}/analytics`);
+  },
+  generateActivityAnalytics(
+    projectId: string,
+    activityId: string,
+  ): Promise<AnalyticsExecutionRecord> {
+    return request(
+      `/projects/${projectId}/activities/${activityId}/analytics/generate`,
+      { method: "POST" },
+    );
+  },
+  getActivityAnalytics(
+    projectId: string,
+    activityId: string,
+  ): Promise<AnalyticsQueryResponse> {
+    return request(`/projects/${projectId}/activities/${activityId}/analytics`);
   },
 };

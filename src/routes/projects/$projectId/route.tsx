@@ -7,7 +7,7 @@ import { useRequireAuth, useLogout } from "@/hooks/useAuth";
 import {
   useOrganizationWorkspaceQuery,
   useProjectQuery,
-} from "@/hooks/useGrantready";
+} from "@/hooks/useWorkspaceQueries";
 
 export const Route = createFileRoute("/projects/$projectId")({
   component: ProjectLayout,

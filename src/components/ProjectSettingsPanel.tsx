@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/workspaceUI";
-import { useUpdateProjectMutation } from "@/hooks/useGrantready";
+import { useUpdateProjectMutation } from "@/hooks/useWorkspaceQueries";
 import { resolveProjectSummaryText } from "@/lib/projectSummary";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { cn } from "@/lib/utils";

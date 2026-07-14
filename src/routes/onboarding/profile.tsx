@@ -3,7 +3,7 @@ import { PublicMarketingShell } from "@/components/publicMarketingShell";
 import { OrganizationSettingsPanel } from "@/components/organizationSettingsPanel";
 import { Button } from "@/components/ui/button";
 import { useRequireAuth } from "@/hooks/useAuth";
-import { useOrganizationWorkspaceQuery } from "@/hooks/useGrantready";
+import { useOrganizationWorkspaceQuery } from "@/hooks/useWorkspaceQueries";
 import { resolveActiveOrganizationId } from "@/lib/organizationSelection";
 import { useTranslation } from "react-i18next";
 

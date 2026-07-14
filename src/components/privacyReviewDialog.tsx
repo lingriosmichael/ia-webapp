@@ -4,13 +4,14 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { DialogSection, EntityDialog } from "@/components/entityDialog";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/workspaceUI";
 import {
   useActivityUploadsQuery,
   useApprovePrivacyReviewMutation,
   useJobQuery,
   usePrivacyReviewQuery,
-} from "@/hooks/useGrantready";
+} from "@/hooks/useWorkspaceQueries";
 import {
   ApiError,
   type ParsedRepresentationPreviewRecord,
@@ -37,6 +38,12 @@ function createDecisionKey(field: string, entityType: string) {
   return `${field}::${entityType}`;
 }
 
+const MINIMUM_REJECTION_REASON_LENGTH = 10;
+
+function hasValidRejectionReason(reason: string | undefined) {
+  return (reason?.trim().length ?? 0) >= MINIMUM_REJECTION_REASON_LENGTH;
+}
+
 export function PrivacyReviewDialog({
   open,
   onOpenChange,
@@ -56,6 +63,9 @@ export function PrivacyReviewDialog({
   const [fieldDecisionMap, setFieldDecisionMap] = useState<
     Record<string, PrivacyReviewDecisionValue>
   >({});
+  const [fieldReasonMap, setFieldReasonMap] = useState<Record<string, string>>(
+    {},
+  );
 
   const jobQuery = useJobQuery(processingJobId, open);
   const job = jobQuery.data;
@@ -92,11 +102,16 @@ export function PrivacyReviewDialog({
     job.status === "awaiting_privacy_review" &&
     review.status === "pending",
   );
-  const allDecisionsResolved = decisionFindings.every((finding) =>
-    Boolean(
-      fieldDecisionMap[createDecisionKey(finding.field, finding.entityType)],
-    ),
-  );
+  const allDecisionsResolved = decisionFindings.every((finding) => {
+    const key = createDecisionKey(finding.field, finding.entityType);
+    const decision = fieldDecisionMap[key];
+    if (!decision) {
+      return false;
+    }
+    return (
+      decision === "approved" || hasValidRejectionReason(fieldReasonMap[key])
+    );
+  });
   const canSubmit = canApproveReview && allDecisionsResolved;
 
   useEffect(() => {
@@ -106,16 +121,21 @@ export function PrivacyReviewDialog({
 
     if (!review) {
       setFieldDecisionMap({});
+      setFieldReasonMap({});
       return;
     }
 
     const nextFieldDecisionMap: Record<string, PrivacyReviewDecisionValue> = {};
+    const nextFieldReasonMap: Record<string, string> = {};
     for (const decision of review.decisions?.fieldDecisions ?? []) {
-      nextFieldDecisionMap[
-        createDecisionKey(decision.field, decision.entityType)
-      ] = decision.decision;
+      const key = createDecisionKey(decision.field, decision.entityType);
+      nextFieldDecisionMap[key] = decision.decision;
+      if (decision.reason) {
+        nextFieldReasonMap[key] = decision.reason;
+      }
     }
     setFieldDecisionMap(nextFieldDecisionMap);
+    setFieldReasonMap(nextFieldReasonMap);
   }, [review, open]);
 
   async function handleApprovePrivacyReview() {
@@ -127,14 +147,16 @@ export function PrivacyReviewDialog({
       await approvePrivacyReviewMutation.mutateAsync({
         processingJobId: job.id,
         decisions: {
-          fieldDecisions: decisionFindings.map((finding) => ({
-            field: finding.field,
-            entityType: finding.entityType,
-            decision:
-              fieldDecisionMap[
-                createDecisionKey(finding.field, finding.entityType)
-              ]!,
-          })),
+          fieldDecisions: decisionFindings.map((finding) => {
+            const key = createDecisionKey(finding.field, finding.entityType);
+            const decision = fieldDecisionMap[key]!;
+            return {
+              field: finding.field,
+              entityType: finding.entityType,
+              decision,
+              reason: decision === "rejected" ? fieldReasonMap[key] : undefined,
+            };
+          }),
         },
       });
       toast.success(t("projectWorkspace.evidence.privacyApprovalSuccess"));
@@ -269,6 +291,11 @@ export function PrivacyReviewDialog({
                             createDecisionKey(finding.field, finding.entityType)
                           ]
                         }
+                        reason={
+                          fieldReasonMap[
+                            createDecisionKey(finding.field, finding.entityType)
+                          ]
+                        }
                         disabled={!canApproveReview}
                         onDecide={(decision) =>
                           setFieldDecisionMap((current) => ({
@@ -277,6 +304,15 @@ export function PrivacyReviewDialog({
                               finding.field,
                               finding.entityType,
                             )]: decision,
+                          }))
+                        }
+                        onReasonChange={(reason) =>
+                          setFieldReasonMap((current) => ({
+                            ...current,
+                            [createDecisionKey(
+                              finding.field,
+                              finding.entityType,
+                            )]: reason,
                           }))
                         }
                       />
@@ -354,13 +390,17 @@ function FindingCard({ finding }: { finding: FindingSummaryItem }) {
 function DecisionFindingCard({
   finding,
   decision,
+  reason,
   disabled,
   onDecide,
+  onReasonChange,
 }: {
   finding: FindingSummaryItem;
   decision: PrivacyReviewDecisionValue | undefined;
+  reason: string | undefined;
   disabled: boolean;
   onDecide: (decision: PrivacyReviewDecisionValue) => void;
+  onReasonChange: (reason: string) => void;
 }) {
   const { t } = useTranslation();
   const verbKey = RECOMMENDATION_VERB_KEY_BY_ACTION[finding.recommendedAction];
@@ -413,9 +453,34 @@ function DecisionFindingCard({
       </p>
 
       {decision === "rejected" ? (
-        <p className="mt-2 text-sm font-medium text-destructive">
-          {t("projectWorkspace.evidence.rejectedFindingWarning")}
-        </p>
+        <div className="mt-2 space-y-2">
+          <p className="text-sm font-medium text-destructive">
+            {t("projectWorkspace.evidence.rejectedFindingWarning")}
+          </p>
+          <div>
+            <label
+              htmlFor={`rejection-reason-${finding.field}-${finding.entityType}`}
+              className="text-sm font-medium text-foreground"
+            >
+              {t("projectWorkspace.evidence.rejectionReasonLabel")}
+            </label>
+            <Textarea
+              id={`rejection-reason-${finding.field}-${finding.entityType}`}
+              className="mt-1"
+              disabled={disabled}
+              value={reason ?? ""}
+              placeholder={t(
+                "projectWorkspace.evidence.rejectionReasonPlaceholder",
+              )}
+              onChange={(event) => onReasonChange(event.target.value)}
+            />
+            {!hasValidRejectionReason(reason) ? (
+              <p className="mt-1 text-xs text-destructive">
+                {t("projectWorkspace.evidence.rejectionReasonTooShort")}
+              </p>
+            ) : null}
+          </div>
+        </div>
       ) : null}
 
       <div className="mt-4 flex flex-wrap gap-2">

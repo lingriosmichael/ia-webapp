@@ -8,7 +8,7 @@ import { useRequireAuth } from "@/hooks/useAuth";
 import {
   useCreateInvitationMutation,
   useOrganizationInvitationsQuery,
-} from "@/hooks/useGrantready";
+} from "@/hooks/useWorkspaceQueries";
 import { resolveActiveOrganizationId } from "@/lib/organizationSelection";
 import { resolveWorkspaceDestination } from "@/lib/workspaceRouting";
 import { ApiError } from "@/services/apiClient";

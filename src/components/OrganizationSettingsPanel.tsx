@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radioGroup";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/workspaceUI";
-import { useUpdateOrganizationMutation } from "@/hooks/useGrantready";
+import { useUpdateOrganizationMutation } from "@/hooks/useWorkspaceQueries";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { getOrganizationBranding } from "@/lib/organizationBranding";
 import { cn } from "@/lib/utils";
