@@ -12,6 +12,7 @@ import {
   useProjectQuery,
 } from "@/hooks/useWorkspaceQueries";
 import { deriveAnalyticsReadinessSummary } from "@/lib/interpretationWorkflow";
+import { useAnalyticsEmptyStateContent } from "@/hooks/useAnalyticsEmptyStateContent";
 import {
   AnalyticsEmptyState,
   AnalyticsErrorState,
@@ -49,6 +50,17 @@ function ActivityAnalyticsPage() {
   );
   const { t } = useTranslation();
   const hierarchy = useProjectHierarchy();
+  const interpretationResults = (
+    interpretationsQuery.data?.results ?? []
+  ).filter(
+    (interpretationResult) => interpretationResult.activityId === activityId,
+  );
+  const readiness = deriveAnalyticsReadinessSummary(interpretationResults);
+  const {
+    title: emptyStateTitle,
+    description: emptyStateDescription,
+    showCta: showOverviewCta,
+  } = useAnalyticsEmptyStateContent(readiness, "activityAnalytics");
 
   if (
     !auth.token ||
@@ -74,33 +86,10 @@ function ActivityAnalyticsPage() {
     execution: null,
     result: null,
   };
-  const interpretationResults = (interpretationsQuery.data?.results ?? []).filter(
-    (interpretationResult) => interpretationResult.activityId === activityId,
+  const isExecutionComplete = Boolean(
+    execution &&
+    ["COMPLETED", "COMPLETED_WITH_WARNINGS"].includes(execution.status),
   );
-  const readiness = deriveAnalyticsReadinessSummary(interpretationResults);
-
-  let emptyStateTitle = t("activityAnalytics.noVerifiedEvidenceTitle");
-  let emptyStateDescription = t("activityAnalytics.noVerifiedEvidenceDescription");
-  let showOverviewCta = true;
-
-  if (readiness.state === "awaiting_preparation") {
-    emptyStateTitle = t("activityAnalytics.awaitingPreparationTitle");
-    emptyStateDescription = t(
-      "activityAnalytics.awaitingPreparationDescription",
-      {
-        count: readiness.preparationBlockedCount,
-      },
-    );
-  } else if (readiness.state === "awaiting_analysis") {
-    emptyStateTitle = t("activityAnalytics.awaitingAnalysisTitle");
-    emptyStateDescription = t("activityAnalytics.awaitingAnalysisDescription", {
-      count: readiness.awaitingAnalysisCount,
-    });
-  } else if (readiness.state === "ready_to_generate") {
-    emptyStateTitle = t("activityAnalytics.readyToGenerateTitle");
-    emptyStateDescription = t("activityAnalytics.readyToGenerateDescription");
-    showOverviewCta = false;
-  }
 
   return (
     <>
@@ -133,19 +122,21 @@ function ActivityAnalyticsPage() {
             isRegenerating={generateMutation.isPending}
           />
 
-          {!result || result.catalog.entries.length === 0 ? (
+          {!isExecutionComplete ||
+          !result ||
+          result.catalog.entries.length === 0 ? (
             <AnalyticsEmptyState
               title={emptyStateTitle}
               description={emptyStateDescription}
               cta={
                 showOverviewCta ? (
-                <Link
-                  to="/projects/$projectId/activities"
-                  params={{ projectId }}
-                  className={analyticsCtaLinkClassName}
-                >
-                  {t("activityAnalytics.noVerifiedEvidenceCta")}
-                </Link>
+                  <Link
+                    to="/projects/$projectId/activities"
+                    params={{ projectId }}
+                    className={analyticsCtaLinkClassName}
+                  >
+                    {t("activityAnalytics.noVerifiedEvidenceCta")}
+                  </Link>
                 ) : undefined
               }
             />

@@ -9,6 +9,7 @@ import {
   useProjectInterpretationsQuery,
 } from "@/hooks/useWorkspaceQueries";
 import { deriveAnalyticsReadinessSummary } from "@/lib/interpretationWorkflow";
+import { useAnalyticsEmptyStateContent } from "@/hooks/useAnalyticsEmptyStateContent";
 import {
   AnalyticsEmptyState,
   analyticsCtaLinkClassName,
@@ -36,6 +37,13 @@ function ProjectAnalyticsPage() {
     Boolean(auth.token),
   );
   const generateMutation = useGenerateProjectAnalyticsMutation(projectId);
+  const interpretationResults = interpretationsQuery.data?.results ?? [];
+  const readiness = deriveAnalyticsReadinessSummary(interpretationResults);
+  const {
+    title: emptyStateTitle,
+    description: emptyStateDescription,
+    showCta: showInterpretationCta,
+  } = useAnalyticsEmptyStateContent(readiness, "projectAnalytics");
 
   if (!auth.token) {
     return (
@@ -71,28 +79,10 @@ function ProjectAnalyticsPage() {
     execution: null,
     result: null,
   };
-  const interpretationResults = interpretationsQuery.data?.results ?? [];
-  const readiness = deriveAnalyticsReadinessSummary(interpretationResults);
-
-  let emptyStateTitle = t("projectAnalytics.noVerifiedEvidenceTitle");
-  let emptyStateDescription = t("projectAnalytics.noVerifiedEvidenceDescription");
-  let showInterpretationCta = true;
-
-  if (readiness.state === "awaiting_preparation") {
-    emptyStateTitle = t("projectAnalytics.awaitingPreparationTitle");
-    emptyStateDescription = t("projectAnalytics.awaitingPreparationDescription", {
-      count: readiness.preparationBlockedCount,
-    });
-  } else if (readiness.state === "awaiting_analysis") {
-    emptyStateTitle = t("projectAnalytics.awaitingAnalysisTitle");
-    emptyStateDescription = t("projectAnalytics.awaitingAnalysisDescription", {
-      count: readiness.awaitingAnalysisCount,
-    });
-  } else if (readiness.state === "ready_to_generate") {
-    emptyStateTitle = t("projectAnalytics.readyToGenerateTitle");
-    emptyStateDescription = t("projectAnalytics.readyToGenerateDescription");
-    showInterpretationCta = false;
-  }
+  const isExecutionComplete = Boolean(
+    execution &&
+    ["COMPLETED", "COMPLETED_WITH_WARNINGS"].includes(execution.status),
+  );
 
   return (
     <ProjectWorkspaceShell description={t("projectAnalytics.subtitle")}>
@@ -104,19 +94,21 @@ function ProjectAnalyticsPage() {
           isRegenerating={generateMutation.isPending}
         />
 
-        {!result || result.catalog.entries.length === 0 ? (
+        {!isExecutionComplete ||
+        !result ||
+        result.catalog.entries.length === 0 ? (
           <AnalyticsEmptyState
             title={emptyStateTitle}
             description={emptyStateDescription}
             cta={
               showInterpretationCta ? (
-              <Link
-                to="/projects/$projectId/interpretation"
-                params={{ projectId }}
-                className={analyticsCtaLinkClassName}
-              >
-                {t("projectAnalytics.noVerifiedEvidenceCta")}
-              </Link>
+                <Link
+                  to="/projects/$projectId/interpretation"
+                  params={{ projectId }}
+                  className={analyticsCtaLinkClassName}
+                >
+                  {t("projectAnalytics.noVerifiedEvidenceCta")}
+                </Link>
               ) : undefined
             }
           />

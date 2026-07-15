@@ -569,7 +569,8 @@ const en = {
       datasetProfileTableSummary:
         "{{rows}} rows · {{columns}} columns · {{statusColumns}} likely status fields · {{dateColumns}} likely date fields",
       datasetPreparationTitle: "Dataset preparation",
-      datasetPreparationDecisionCount: "{{count}} recorded preparation decision",
+      datasetPreparationDecisionCount:
+        "{{count}} recorded preparation decision",
       datasetPreparationDecisionCount_other:
         "{{count}} recorded preparation decisions",
       datasetPreparationPendingSummary:

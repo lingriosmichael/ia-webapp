@@ -64,7 +64,6 @@ function ProjectActivitiesPage() {
         ...activity,
         uploadMetadataCount: workspaceActivity?.uploadMetadataCount ?? 0,
         processingJobCount: workspaceActivity?.processingJobCount ?? 0,
-        resultCount: workspaceActivity?.resultCount ?? 0,
       };
     },
   );

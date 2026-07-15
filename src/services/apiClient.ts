@@ -246,7 +246,6 @@ export interface UpdateActivityPayload {
 export interface WorkspaceActivity extends ActivitySummary {
   uploadMetadataCount: number;
   processingJobCount: number;
-  resultCount: number;
 }
 
 export interface WorkspaceProject extends ProjectSummary {
@@ -456,22 +455,6 @@ export interface ApprovePrivacyReviewPayload {
 export interface ApprovePrivacyReviewResponse {
   review: PrivacyReviewRecord;
   job: ProcessingJobRecord;
-}
-
-export interface ResultRecord {
-  id: string;
-  organizationId: string;
-  projectId: string;
-  activityId: string | null;
-  uploadMetadataId: string | null;
-  processingJobId: string | null;
-  resultType:
-    "semantic_summary" | "activity_snapshot" | "project_snapshot" | "other";
-  status: "pending" | "available" | "archived";
-  payload: Record<string, unknown> | null;
-  createdById: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface AuthResponse {
@@ -782,16 +765,10 @@ export interface PreparedDatasetSnapshot {
 }
 
 export type DeterministicAnalysisStatus =
-  | "not_applicable"
-  | "awaiting_preparation"
-  | "ready";
+  "not_applicable" | "awaiting_preparation" | "ready";
 
 export type DeterministicAnalysisMetricKind =
-  | "count"
-  | "count_distinct"
-  | "ratio"
-  | "distribution"
-  | "trend";
+  "count" | "count_distinct" | "ratio" | "distribution" | "trend";
 
 export interface DeterministicAnalysisMetric {
   metricKey: string;
@@ -1034,9 +1011,7 @@ export interface EvidenceCatalogOmittedEntry {
 export interface EvidenceCatalogQualitySignal {
   signalId: string;
   sourceType:
-    | "dataset_preparation"
-    | "deterministic_analysis"
-    | "catalog_assembly";
+    "dataset_preparation" | "deterministic_analysis" | "catalog_assembly";
   interpretationResultId: string;
   activityId: string | null;
   uploadMetadataId: string;
@@ -1460,9 +1435,6 @@ export const apiClient = {
   },
   listActivityJobs(activityId: string): Promise<ProcessingJobRecord[]> {
     return request(`/activities/${activityId}/jobs`);
-  },
-  listActivityResults(activityId: string): Promise<ResultRecord[]> {
-    return request(`/activities/${activityId}/results`);
   },
   uploadActivityFile(
     activityId: string,

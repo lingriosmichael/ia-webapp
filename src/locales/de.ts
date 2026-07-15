@@ -532,7 +532,8 @@ const de: TranslationDictionary = {
       dataTypeMixedLabel: "Gemischtes Dokument",
       dataTypeInsufficientLabel: "Unzureichende Extraktion",
       modalityStructuredQuantitativeLabel: "Quantitativer Datensatz",
-      modalityStructuredQualitativeLabel: "Strukturierter qualitativer Datensatz",
+      modalityStructuredQualitativeLabel:
+        "Strukturierter qualitativer Datensatz",
       modalityMixedDualTrackLabel: "Gemischte Dual-Track-Evidenz",
       modalityNarrativeQualitativeLabel: "Qualitative narrative Evidenz",
       modalityInsufficientLabel: "Unzureichende Extraktion",
@@ -606,8 +607,7 @@ const de: TranslationDictionary = {
       deterministicAnalysisMetricsLabel: "Metriken",
       deterministicAnalysisDistributionsLabel: "Verteilungen",
       deterministicAnalysisTrendsLabel: "Trends",
-      deterministicAnalysisCandidateIndicatorsLabel:
-        "Indikator-Kandidaten",
+      deterministicAnalysisCandidateIndicatorsLabel: "Indikator-Kandidaten",
       deterministicAnalysisPendingSummary:
         "Die deterministische Analyse erscheint hier, sobald die Vorbereitung abgeschlossen ist.",
       deterministicMetricColumn: "Metrik",

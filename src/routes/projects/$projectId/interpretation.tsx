@@ -237,7 +237,10 @@ function ProjectInterpretationPage() {
   );
   const totalReviewReadyResults = results.reduce(
     (total, result) =>
-      total + (result.questions.every((question) => question.status === "answered") ? 1 : 0),
+      total +
+      (result.questions.every((question) => question.status === "answered")
+        ? 1
+        : 0),
     0,
   );
   const totalPreparationAwaitingResults = results.reduce(
@@ -677,7 +680,9 @@ function DatasetProfileOverview({
           value={String(datasetProfile.tableCount)}
         />
         <SummaryMetric
-          label={t("projectWorkspace.interpretation.datasetProfileParagraphsLabel")}
+          label={t(
+            "projectWorkspace.interpretation.datasetProfileParagraphsLabel",
+          )}
           value={String(datasetProfile.paragraphCount)}
         />
         <SummaryMetric
@@ -744,9 +749,12 @@ function DatasetPreparationOverview({
           {t(getDatasetPreparationStatusLabelKey(datasetPreparation.status))}
         </Badge>
         <span className="text-sm text-muted-foreground">
-          {t("projectWorkspace.interpretation.datasetPreparationDecisionCount", {
-            count: decisionCount,
-          })}
+          {t(
+            "projectWorkspace.interpretation.datasetPreparationDecisionCount",
+            {
+              count: decisionCount,
+            },
+          )}
         </span>
       </div>
 
@@ -774,28 +782,31 @@ function DatasetPreparationOverview({
             >
               <div className="font-medium text-foreground">{table.name}</div>
               <div className="mt-1">
-                {t("projectWorkspace.interpretation.preparedDatasetTableSummary", {
-                  grain:
-                    table.selectedRowGrain ??
-                    t(
-                      "projectWorkspace.interpretation.preparedDatasetUnknownValue",
-                    ),
-                  identifier:
-                    table.identifierColumn ??
-                    t(
-                      "projectWorkspace.interpretation.preparedDatasetUnknownValue",
-                    ),
-                  status:
-                    table.primaryStatusColumn ??
-                    t(
-                      "projectWorkspace.interpretation.preparedDatasetUnknownValue",
-                    ),
-                  date:
-                    table.primaryDateColumn ??
-                    t(
-                      "projectWorkspace.interpretation.preparedDatasetUnknownValue",
-                    ),
-                })}
+                {t(
+                  "projectWorkspace.interpretation.preparedDatasetTableSummary",
+                  {
+                    grain:
+                      table.selectedRowGrain ??
+                      t(
+                        "projectWorkspace.interpretation.preparedDatasetUnknownValue",
+                      ),
+                    identifier:
+                      table.identifierColumn ??
+                      t(
+                        "projectWorkspace.interpretation.preparedDatasetUnknownValue",
+                      ),
+                    status:
+                      table.primaryStatusColumn ??
+                      t(
+                        "projectWorkspace.interpretation.preparedDatasetUnknownValue",
+                      ),
+                    date:
+                      table.primaryDateColumn ??
+                      t(
+                        "projectWorkspace.interpretation.preparedDatasetUnknownValue",
+                      ),
+                  },
+                )}
               </div>
             </div>
           ))}
@@ -853,7 +864,9 @@ function DeterministicAnalysisOverview({
             <TableHeader>
               <TableRow>
                 <TableHead>
-                  {t("projectWorkspace.interpretation.deterministicMetricColumn")}
+                  {t(
+                    "projectWorkspace.interpretation.deterministicMetricColumn",
+                  )}
                 </TableHead>
                 <TableHead>
                   {t(
@@ -861,7 +874,9 @@ function DeterministicAnalysisOverview({
                   )}
                 </TableHead>
                 <TableHead className="text-right">
-                  {t("projectWorkspace.interpretation.deterministicValueColumn")}
+                  {t(
+                    "projectWorkspace.interpretation.deterministicValueColumn",
+                  )}
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -1101,7 +1116,9 @@ function QualitativeFindingsList({
                 </Badge>
                 <Badge
                   variant={getAttentionBadgeVariant(
-                    getQualitativeFindingCategoryAttentionLevel(finding.category),
+                    getQualitativeFindingCategoryAttentionLevel(
+                      finding.category,
+                    ),
                   )}
                 >
                   {t(getQualitativeFindingCategoryLabelKey(finding.category))}
@@ -1275,7 +1292,10 @@ function InterpretationActivityGroup({
   );
   const activityReviewReadyCount = activityResults.reduce(
     (total, result) =>
-      total + (result.questions.every((question) => question.status === "answered") ? 1 : 0),
+      total +
+      (result.questions.every((question) => question.status === "answered")
+        ? 1
+        : 0),
     0,
   );
   // Mirrors the backend gate: acknowledgment is blocked only while
@@ -1448,13 +1468,11 @@ function DatasetInterpretationCard({
     activeInterpretationJob?.id,
     Boolean(activeInterpretationJob?.id),
   );
-  const evidenceModality = parsedRepresentationPreview?.evidenceModality ?? null;
-  const interpretationSupportState = getEvidenceSupportState(
-    evidenceModality,
-  );
-  const evidenceModalityLabelKey = getEvidenceModalityLabelKey(
-    evidenceModality,
-  );
+  const evidenceModality =
+    parsedRepresentationPreview?.evidenceModality ?? null;
+  const interpretationSupportState = getEvidenceSupportState(evidenceModality);
+  const evidenceModalityLabelKey =
+    getEvidenceModalityLabelKey(evidenceModality);
   const preparationDrivenPath = isPreparationDrivenModality(evidenceModality);
   const qualitativePath = isQualitativeModality(evidenceModality);
 

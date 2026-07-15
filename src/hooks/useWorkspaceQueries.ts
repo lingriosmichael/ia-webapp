@@ -28,7 +28,6 @@ import {
   type ProjectInterpretationOverview,
   type ProjectOverview,
   type ProjectSummary,
-  type ResultRecord,
   type SessionResponse,
   type StartInterpretationResponse,
   type UpdateProjectPayload,
@@ -50,8 +49,6 @@ export const activityUploadsQueryKey = (activityId: string) =>
   ["activity-uploads", activityId] as const;
 export const activityJobsQueryKey = (activityId: string) =>
   ["activity-jobs", activityId] as const;
-export const activityResultsQueryKey = (activityId: string) =>
-  ["activity-results", activityId] as const;
 export const jobQueryKey = (jobId: string) => ["job", jobId] as const;
 export const privacyReviewQueryKey = (processingJobId: string) =>
   ["privacy-review", processingJobId] as const;
@@ -161,14 +158,6 @@ export function useActivityJobsQuery(
     queryFn: () => apiClient.listActivityJobs(activityId),
     enabled,
     refetchInterval: refetchIntervalMs,
-  });
-}
-
-export function useActivityResultsQuery(activityId: string, enabled = true) {
-  return useQuery<ResultRecord[], ApiError>({
-    queryKey: activityResultsQueryKey(activityId),
-    queryFn: () => apiClient.listActivityResults(activityId),
-    enabled,
   });
 }
 
@@ -844,9 +833,6 @@ export function useDeleteActivityMutation(
       });
       queryClient.removeQueries({
         queryKey: activityJobsQueryKey(activityId),
-      });
-      queryClient.removeQueries({
-        queryKey: activityResultsQueryKey(activityId),
       });
       void queryClient.invalidateQueries({
         queryKey: projectActivitiesQueryKey(projectId),
