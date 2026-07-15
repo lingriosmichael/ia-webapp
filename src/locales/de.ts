@@ -615,6 +615,83 @@ const de: TranslationDictionary = {
       deterministicValueColumn: "Wert",
       quantitativeSynthesisPendingSummary:
         "Indikatoren bleiben ausgeblendet, bis die Vorbereitung abgeschlossen und die deterministische Analyse bereit ist.",
+      simplified: {
+        heroTitle: "Sie haben noch {{count}} offene Aufgabe.",
+        heroTitle_other: "Sie haben noch {{count}} offene Aufgaben.",
+        heroClearTitle: "Alles ist bereit für Ihre Freigabe.",
+        heroDescription:
+          "Hier sehen Sie nur, was als Nächstes zu tun ist. Offene Datenschutzprüfungen, Rückfragen und prüfbereite Ergebnisse werden klar getrennt angezeigt.",
+        statOpenTasks: "Offene Aufgaben",
+        statReadyForReview: "Bereit zur Prüfung",
+        statReviewed: "Geprüfte Aktivitäten",
+        openTasksTitle: "Was jetzt Ihre Aufmerksamkeit braucht",
+        openTasksEmptyTitle: "Aktuell gibt es keine offenen Aufgaben.",
+        openTasksEmptyReadyHint:
+          "{{count}} Aktivität wartet noch auf Ihre abschließende Prüfung.",
+        openTasksEmptyReadyHint_other:
+          "{{count}} Aktivitäten warten noch auf Ihre abschließende Prüfung.",
+        openTasksEmptyDescription:
+          "Sobald neue Fragen oder Datenschutzprüfungen entstehen, erscheinen sie hier gesammelt.",
+        privacyTaskDescription:
+          "Die Datei „{{fileName}}“ braucht noch eine Datenschutzprüfung, bevor die Interpretation fortgesetzt werden kann.",
+        activitiesTitle: "Aktivitäten und Datensätze",
+        activitySummary: {
+          privacyReview:
+            "Für diese Aktivität wartet noch {{count}} Datei auf Datenschutzprüfung.",
+          privacyReview_other:
+            "Für diese Aktivität warten noch {{count}} Dateien auf Datenschutzprüfung.",
+          processing:
+            "Die Interpretation läuft oder wird gerade aktualisiert.",
+          questions:
+            "{{count}} Rückfrage ist noch offen, bevor die Ergebnisse geprüft werden können.",
+          questions_other:
+            "{{count}} Rückfragen sind noch offen, bevor die Ergebnisse geprüft werden können.",
+          ready:
+            "Alles ist vorbereitet. Sie können die Ergebnisse jetzt prüfen.",
+          reviewed: "Diese Aktivität wurde bereits geprüft.",
+          notStarted:
+            "Die Interpretation wurde für diese Evidenz noch nicht gestartet.",
+        },
+        activityMeta: "{{uploads}} Dateien · {{interpreted}} interpretiert",
+        activityNoFiles:
+          "Für diese Aktivität wurde noch keine Evidenz hochgeladen.",
+        activityHideDetails: "Details ausblenden",
+        activityShowDetails: "Details anzeigen",
+        datasetSummary: {
+          privacyReview: "Diese Datei wartet auf Datenschutzprüfung.",
+          processing:
+            "Diese Datei wird gerade verarbeitet oder neu interpretiert.",
+          questions:
+            "{{count}} Rückfrage muss noch beantwortet werden.",
+          questions_other:
+            "{{count}} Rückfragen müssen noch beantwortet werden.",
+          reviewed:
+            "Diese Datei ist interpretiert und bereits im geprüften Stand enthalten.",
+          ready:
+            "Diese Datei ist interpretiert und bereit für Ihre Prüfung.",
+          notStarted:
+            "Diese Datei ist bereit, aber die Interpretation wurde noch nicht gestartet.",
+        },
+        indicatorSelectionTitle: "Vorgeschlagene KPIs",
+        indicatorSelectionDescription:
+          "Wählen Sie aus, welche Kennzahlen in die Analysen einfließen sollen. Änderungen setzen die Freigabe dieser Aktivität zurück.",
+        indicatorIncludedBadge: "In Analysen enthalten",
+        indicatorExcludedBadge: "Ausgeblendet",
+        indicatorIncludeAction: "In Analysen aufnehmen",
+        indicatorExcludeAction: "Aus Analysen ausblenden",
+        datasetMeta: "Version {{version}} · {{confidence}} % Zuverlässigkeit",
+        datasetHideDetails: "Technische Details ausblenden",
+        datasetShowDetails: "Technische Details anzeigen",
+        status: {
+          no_evidence: "Keine Evidenz",
+          privacy_review: "Datenschutzprüfung",
+          processing: "In Bearbeitung",
+          questions: "Fragen offen",
+          ready: "Bereit zur Prüfung",
+          reviewed: "Geprüft",
+          not_started: "Noch nicht gestartet",
+        },
+      },
     },
     analytics: {
       title: "Analysen",

@@ -601,6 +601,80 @@ const en = {
       deterministicValueColumn: "Value",
       quantitativeSynthesisPendingSummary:
         "Indicators stay hidden until preparation is complete and deterministic analysis is ready.",
+      simplified: {
+        heroTitle: "You still have {{count}} open task.",
+        heroTitle_other: "You still have {{count}} open tasks.",
+        heroClearTitle: "Everything is ready for your sign-off.",
+        heroDescription:
+          "This page now shows only what needs to happen next. Privacy reviews, follow-up questions, and review-ready results are separated clearly.",
+        statOpenTasks: "Open tasks",
+        statReadyForReview: "Ready for review",
+        statReviewed: "Reviewed activities",
+        openTasksTitle: "What needs your attention now",
+        openTasksEmptyTitle: "There are no open tasks right now.",
+        openTasksEmptyReadyHint:
+          "{{count}} activity is still waiting for your final review.",
+        openTasksEmptyReadyHint_other:
+          "{{count}} activities are still waiting for your final review.",
+        openTasksEmptyDescription:
+          "New questions or privacy reviews will appear here as soon as they need action.",
+        privacyTaskDescription:
+          "The file “{{fileName}}” still needs privacy review before interpretation can continue.",
+        activitiesTitle: "Activities and datasets",
+        activitySummary: {
+          privacyReview:
+            "{{count}} file in this activity is still waiting for privacy review.",
+          privacyReview_other:
+            "{{count}} files in this activity are still waiting for privacy review.",
+          processing:
+            "Interpretation is currently running or being refreshed.",
+          questions:
+            "{{count}} follow-up question is still open before the results can be reviewed.",
+          questions_other:
+            "{{count}} follow-up questions are still open before the results can be reviewed.",
+          ready: "Everything is prepared. You can review the results now.",
+          reviewed: "This activity has already been reviewed.",
+          notStarted:
+            "Interpretation has not been started for this evidence yet.",
+        },
+        activityMeta: "{{uploads}} files · {{interpreted}} interpreted",
+        activityNoFiles: "No evidence has been uploaded for this activity yet.",
+        activityHideDetails: "Hide details",
+        activityShowDetails: "Show details",
+        datasetSummary: {
+          privacyReview: "This file is waiting for privacy review.",
+          processing:
+            "This file is currently being processed or re-interpreted.",
+          questions:
+            "{{count}} follow-up question still needs an answer.",
+          questions_other:
+            "{{count}} follow-up questions still need answers.",
+          reviewed:
+            "This file has been interpreted and is already included in the reviewed state.",
+          ready: "This file has been interpreted and is ready for review.",
+          notStarted:
+            "This file is ready, but interpretation has not been started yet.",
+        },
+        indicatorSelectionTitle: "Suggested KPIs",
+        indicatorSelectionDescription:
+          "Choose which metrics should flow into analytics. Changing this resets the review status for this activity.",
+        indicatorIncludedBadge: "Included in analytics",
+        indicatorExcludedBadge: "Excluded",
+        indicatorIncludeAction: "Include in analytics",
+        indicatorExcludeAction: "Exclude from analytics",
+        datasetMeta: "Version {{version}} · {{confidence}}% confidence",
+        datasetHideDetails: "Hide technical details",
+        datasetShowDetails: "Show technical details",
+        status: {
+          no_evidence: "No evidence",
+          privacy_review: "Privacy review",
+          processing: "In progress",
+          questions: "Questions open",
+          ready: "Ready for review",
+          reviewed: "Reviewed",
+          not_started: "Not started",
+        },
+      },
     },
     analytics: {
       title: "Analytics",
