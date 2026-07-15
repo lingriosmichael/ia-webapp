@@ -447,16 +447,17 @@ const en = {
       metrics: {
         understanding: "Overall interpretation confidence",
         entities: "Entities detected",
-        indicators: "Indicators detected",
-        questions: "Questions remaining",
+        awaitingPreparation: "Datasets awaiting preparation",
+        readyForReview: "Datasets ready for review",
       },
       filesInterpretedStatus: "{{interpreted}} of {{total}} files interpreted",
       activitySummaryLine:
-        "{{files}} files · {{entities}} entities · {{indicators}} indicators",
+        "{{files}} files · {{preparation}} awaiting preparation · {{ready}} ready for review",
       acknowledgeAction: "Mark as reviewed",
       acknowledgePending: "Saving…",
       acknowledgedBadge: "✓ Reviewed on {{date}} by {{name}}",
       acknowledgedByUnknown: "someone",
+      reviewFlowTitle: "Review by dataset",
       understoodTitle: "Things I understand",
       understoodEmpty:
         'No interpretation results yet. Run "Interpret with AI" on an activity\'s evidence once its privacy review is approved.',
@@ -481,6 +482,7 @@ const en = {
         "Grounded in {{count}} narrative excerpts",
       indicatorsTitle: "Indicators",
       qualitativeFindingsTitle: "Qualitative findings",
+      qualitativeOutcomeReferenceLabel: "Anchored to",
       qualitativeLinkedQuotes: "{{count}} linked quote",
       qualitativeLinkedQuotes_other: "{{count}} linked quotes",
       rejectFindingAction: "Reject",
@@ -498,11 +500,37 @@ const en = {
         complicates: "Complicates indicator",
         context_only: "Context only",
       },
+      qualitativeFindingCategory: {
+        outcome_support: "Outcome support",
+        outcome_complication: "Outcome complication",
+        outcome_contradiction: "Outcome contradiction",
+        barrier: "Barrier",
+        enabler: "Enabler",
+        unintended_effect: "Unintended effect",
+        context_only: "Context only",
+      },
+      qualitativeOutcomeAnchorType: {
+        project_outcome: "Project outcome",
+        project_impact: "Project impact",
+        activity_objective: "Activity objective",
+        activity_success_indicator: "Activity success indicator",
+        unanchored: "Unanchored",
+      },
       dataTypeTabularLabel: "Structured table",
       dataTypeNarrativeLabel: "Narrative document",
       dataTypeMixedLabel: "Mixed document",
       dataTypeInsufficientLabel: "Insufficient extraction",
-      needHelpTitle: "Things I need your help with",
+      modalityStructuredQuantitativeLabel: "Quantitative dataset",
+      modalityStructuredQualitativeLabel: "Structured qualitative dataset",
+      modalityMixedDualTrackLabel: "Mixed dual-track evidence",
+      modalityNarrativeQualitativeLabel: "Qualitative narrative evidence",
+      modalityInsufficientLabel: "Insufficient extraction",
+      preparationQuestionsTitle: "Preparation questions",
+      preparationQuestionsEmpty: "No open dataset preparation questions.",
+      interpretationQuestionsTitle: "Interpretation questions",
+      interpretationQuestionsEmpty: "No open interpretation questions.",
+      questionDomainPreparationLabel: "Preparation",
+      questionDomainInterpretationLabel: "Interpretation",
       needHelpEmpty: "No open questions right now.",
       reviewedQuestionsTitle: "Reviewed questions",
       reviewedQuestionsSummary:
@@ -534,6 +562,44 @@ const en = {
       interpretError: "Interpretation could not be started. Please try again.",
       versionLabel: "Version {{number}}",
       reinterpretAction: "Re-run interpretation",
+      datasetProfileTitle: "Deterministic profile",
+      datasetProfileTablesLabel: "Tables",
+      datasetProfileParagraphsLabel: "Paragraphs",
+      datasetProfileIssuesLabel: "Profile issues",
+      datasetProfileTableSummary:
+        "{{rows}} rows · {{columns}} columns · {{statusColumns}} likely status fields · {{dateColumns}} likely date fields",
+      datasetPreparationTitle: "Dataset preparation",
+      datasetPreparationDecisionCount: "{{count}} recorded preparation decision",
+      datasetPreparationDecisionCount_other:
+        "{{count}} recorded preparation decisions",
+      datasetPreparationPendingSummary:
+        "{{count}} blocking preparation question is still unanswered.",
+      datasetPreparationPendingSummary_other:
+        "{{count}} blocking preparation questions are still unanswered.",
+      datasetPreparationReadySummary:
+        "Preparation decisions are recorded and this dataset can move forward deterministically.",
+      datasetPreparationStatus: {
+        not_applicable: "Not applicable",
+        not_started: "Not started",
+        awaiting_answers: "Awaiting answers",
+        ready_for_analysis: "Ready for deterministic analysis",
+        analysis_completed: "Deterministic analysis completed",
+      },
+      preparedDatasetTableSummary:
+        "Row grain: {{grain}} · Identifier: {{identifier}} · Status: {{status}} · Date: {{date}}",
+      preparedDatasetUnknownValue: "not set",
+      deterministicAnalysisTitle: "Deterministic analysis",
+      deterministicAnalysisMetricsLabel: "Metrics",
+      deterministicAnalysisDistributionsLabel: "Distributions",
+      deterministicAnalysisTrendsLabel: "Trends",
+      deterministicAnalysisCandidateIndicatorsLabel: "Candidate indicators",
+      deterministicAnalysisPendingSummary:
+        "Deterministic analysis will appear here once preparation is complete.",
+      deterministicMetricColumn: "Metric",
+      deterministicDescriptionColumn: "Description",
+      deterministicValueColumn: "Value",
+      quantitativeSynthesisPendingSummary:
+        "Indicators stay hidden until preparation is complete and deterministic analysis is ready.",
     },
     analytics: {
       title: "Analytics",
@@ -594,6 +660,19 @@ const en = {
     noVerifiedEvidenceTitle: "No verified evidence yet",
     noVerifiedEvidenceDescription:
       "This project has no verified structured evidence yet.",
+    awaitingPreparationTitle: "Finish dataset preparation first",
+    awaitingPreparationDescription:
+      "{{count}} dataset is still blocked on preparation questions. Complete review on the interpretation page before generating the dashboard.",
+    awaitingPreparationDescription_other:
+      "{{count}} datasets are still blocked on preparation questions. Complete review on the interpretation page before generating the dashboard.",
+    awaitingAnalysisTitle: "Deterministic analysis is still in progress",
+    awaitingAnalysisDescription:
+      "{{count}} prepared dataset still needs deterministic analysis before the dashboard can be assembled.",
+    awaitingAnalysisDescription_other:
+      "{{count}} prepared datasets still need deterministic analysis before the dashboard can be assembled.",
+    readyToGenerateTitle: "Dashboard is ready to generate",
+    readyToGenerateDescription:
+      "Preparation and deterministic analysis are in place. Generate analytics to assemble the dashboard view.",
     noVerifiedEvidenceCta: "Go to Interpretation",
   },
   projectInsights: {
@@ -1056,6 +1135,19 @@ const en = {
     noVerifiedEvidenceTitle: "No verified evidence yet",
     noVerifiedEvidenceDescription:
       "Analytics are not available yet because this activity has no verified structured evidence.",
+    awaitingPreparationTitle: "Finish dataset preparation first",
+    awaitingPreparationDescription:
+      "{{count}} dataset is still blocked on preparation questions for this activity.",
+    awaitingPreparationDescription_other:
+      "{{count}} datasets are still blocked on preparation questions for this activity.",
+    awaitingAnalysisTitle: "Deterministic analysis is still in progress",
+    awaitingAnalysisDescription:
+      "{{count}} prepared dataset still needs deterministic analysis before this dashboard can be assembled.",
+    awaitingAnalysisDescription_other:
+      "{{count}} prepared datasets still need deterministic analysis before this dashboard can be assembled.",
+    readyToGenerateTitle: "Dashboard is ready to generate",
+    readyToGenerateDescription:
+      "Preparation and deterministic analysis are in place. Generate analytics to assemble this activity dashboard.",
     noVerifiedEvidenceCta: "Go to Overview",
   },
   activityInsights: {

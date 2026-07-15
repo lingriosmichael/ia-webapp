@@ -457,17 +457,18 @@ const de: TranslationDictionary = {
       metrics: {
         understanding: "Gesamtvertrauen der Interpretation",
         entities: "Erkannte Entitäten",
-        indicators: "Erkannte Indikatoren",
-        questions: "Offene Fragen",
+        awaitingPreparation: "Datensätze mit offener Vorbereitung",
+        readyForReview: "Zur Prüfung bereite Datensätze",
       },
       filesInterpretedStatus:
         "{{interpreted}} von {{total}} Dateien interpretiert",
       activitySummaryLine:
-        "{{files}} Dateien · {{entities}} Entitäten · {{indicators}} Indikatoren",
+        "{{files}} Dateien · {{preparation}} mit offener Vorbereitung · {{ready}} prüfbereit",
       acknowledgeAction: "Als geprüft markieren",
       acknowledgePending: "Wird gespeichert…",
       acknowledgedBadge: "✓ Geprüft am {{date}} von {{name}}",
       acknowledgedByUnknown: "jemandem",
+      reviewFlowTitle: "Prüfung nach Datensatz",
       understoodTitle: "Was ich verstehe",
       understoodEmpty:
         "Noch keine Interpretationsergebnisse. Starten Sie „Mit KI interpretieren“ für die Evidenz einer Aktivität, sobald deren Datenschutzprüfung genehmigt ist.",
@@ -492,6 +493,7 @@ const de: TranslationDictionary = {
         "Basierend auf {{count}} narrativen Auszügen",
       indicatorsTitle: "Indikatoren",
       qualitativeFindingsTitle: "Qualitative Erkenntnisse",
+      qualitativeOutcomeReferenceLabel: "Verankert in",
       qualitativeLinkedQuotes: "{{count}} verknüpftes Zitat",
       qualitativeLinkedQuotes_other: "{{count}} verknüpfte Zitate",
       rejectFindingAction: "Ablehnen",
@@ -509,11 +511,37 @@ const de: TranslationDictionary = {
         complicates: "Relativiert Indikator",
         context_only: "Nur Kontext",
       },
+      qualitativeFindingCategory: {
+        outcome_support: "Outcome-Unterstützung",
+        outcome_complication: "Outcome-Einschränkung",
+        outcome_contradiction: "Outcome-Widerspruch",
+        barrier: "Barriere",
+        enabler: "Ermöglicher",
+        unintended_effect: "Unbeabsichtigter Effekt",
+        context_only: "Nur Kontext",
+      },
+      qualitativeOutcomeAnchorType: {
+        project_outcome: "Projekt-Outcome",
+        project_impact: "Projekt-Impact",
+        activity_objective: "Aktivitätsziel",
+        activity_success_indicator: "Aktivitäts-Erfolgsindikator",
+        unanchored: "Nicht verankert",
+      },
       dataTypeTabularLabel: "Strukturierte Tabelle",
       dataTypeNarrativeLabel: "Narratives Dokument",
       dataTypeMixedLabel: "Gemischtes Dokument",
       dataTypeInsufficientLabel: "Unzureichende Extraktion",
-      needHelpTitle: "Wobei ich Ihre Hilfe brauche",
+      modalityStructuredQuantitativeLabel: "Quantitativer Datensatz",
+      modalityStructuredQualitativeLabel: "Strukturierter qualitativer Datensatz",
+      modalityMixedDualTrackLabel: "Gemischte Dual-Track-Evidenz",
+      modalityNarrativeQualitativeLabel: "Qualitative narrative Evidenz",
+      modalityInsufficientLabel: "Unzureichende Extraktion",
+      preparationQuestionsTitle: "Vorbereitungsfragen",
+      preparationQuestionsEmpty: "Keine offenen Fragen zur Datenvorbereitung.",
+      interpretationQuestionsTitle: "Interpretationsfragen",
+      interpretationQuestionsEmpty: "Keine offenen Interpretationsfragen.",
+      questionDomainPreparationLabel: "Vorbereitung",
+      questionDomainInterpretationLabel: "Interpretation",
       needHelpEmpty: "Derzeit keine offenen Fragen.",
       reviewedQuestionsTitle: "Bereits geprüfte Fragen",
       reviewedQuestionsSummary:
@@ -547,6 +575,46 @@ const de: TranslationDictionary = {
         "Die Interpretation konnte nicht gestartet werden. Bitte erneut versuchen.",
       versionLabel: "Version {{number}}",
       reinterpretAction: "Interpretation erneut ausführen",
+      datasetProfileTitle: "Deterministisches Profil",
+      datasetProfileTablesLabel: "Tabellen",
+      datasetProfileParagraphsLabel: "Absätze",
+      datasetProfileIssuesLabel: "Profilhinweise",
+      datasetProfileTableSummary:
+        "{{rows}} Zeilen · {{columns}} Spalten · {{statusColumns}} wahrscheinliche Statusfelder · {{dateColumns}} wahrscheinliche Datumsfelder",
+      datasetPreparationTitle: "Datensatzvorbereitung",
+      datasetPreparationDecisionCount:
+        "{{count}} dokumentierte Vorbereitungsentscheidung",
+      datasetPreparationDecisionCount_other:
+        "{{count}} dokumentierte Vorbereitungsentscheidungen",
+      datasetPreparationPendingSummary:
+        "{{count}} blockierende Vorbereitungsfrage ist noch unbeantwortet.",
+      datasetPreparationPendingSummary_other:
+        "{{count}} blockierende Vorbereitungsfragen sind noch unbeantwortet.",
+      datasetPreparationReadySummary:
+        "Die Vorbereitungsentscheidungen sind dokumentiert und der Datensatz kann deterministisch weiterverarbeitet werden.",
+      datasetPreparationStatus: {
+        not_applicable: "Nicht anwendbar",
+        not_started: "Nicht begonnen",
+        awaiting_answers: "Wartet auf Antworten",
+        ready_for_analysis: "Bereit für deterministische Analyse",
+        analysis_completed: "Deterministische Analyse abgeschlossen",
+      },
+      preparedDatasetTableSummary:
+        "Zeilengranularität: {{grain}} · Identifikator: {{identifier}} · Status: {{status}} · Datum: {{date}}",
+      preparedDatasetUnknownValue: "nicht gesetzt",
+      deterministicAnalysisTitle: "Deterministische Analyse",
+      deterministicAnalysisMetricsLabel: "Metriken",
+      deterministicAnalysisDistributionsLabel: "Verteilungen",
+      deterministicAnalysisTrendsLabel: "Trends",
+      deterministicAnalysisCandidateIndicatorsLabel:
+        "Indikator-Kandidaten",
+      deterministicAnalysisPendingSummary:
+        "Die deterministische Analyse erscheint hier, sobald die Vorbereitung abgeschlossen ist.",
+      deterministicMetricColumn: "Metrik",
+      deterministicDescriptionColumn: "Beschreibung",
+      deterministicValueColumn: "Wert",
+      quantitativeSynthesisPendingSummary:
+        "Indikatoren bleiben ausgeblendet, bis die Vorbereitung abgeschlossen und die deterministische Analyse bereit ist.",
     },
     analytics: {
       title: "Analysen",
@@ -608,6 +676,19 @@ const de: TranslationDictionary = {
     noVerifiedEvidenceTitle: "Noch keine geprüfte Evidenz",
     noVerifiedEvidenceDescription:
       "Für dieses Projekt liegen noch keine geprüften Evidenzdaten vor.",
+    awaitingPreparationTitle: "Zuerst Datensatzvorbereitung abschließen",
+    awaitingPreparationDescription:
+      "{{count}} Datensatz ist noch durch Vorbereitungsfragen blockiert. Schließen Sie die Prüfung auf der Interpretationsseite ab, bevor das Dashboard erzeugt wird.",
+    awaitingPreparationDescription_other:
+      "{{count}} Datensätze sind noch durch Vorbereitungsfragen blockiert. Schließen Sie die Prüfung auf der Interpretationsseite ab, bevor das Dashboard erzeugt wird.",
+    awaitingAnalysisTitle: "Die deterministische Analyse läuft noch",
+    awaitingAnalysisDescription:
+      "{{count}} vorbereiteter Datensatz benötigt noch eine deterministische Analyse, bevor das Dashboard aufgebaut werden kann.",
+    awaitingAnalysisDescription_other:
+      "{{count}} vorbereitete Datensätze benötigen noch eine deterministische Analyse, bevor das Dashboard aufgebaut werden kann.",
+    readyToGenerateTitle: "Dashboard kann jetzt erzeugt werden",
+    readyToGenerateDescription:
+      "Vorbereitung und deterministische Analyse liegen vor. Erzeugen Sie jetzt die Analysen für die Dashboard-Ansicht.",
     noVerifiedEvidenceCta: "Zur Interpretation",
   },
   projectInsights: {
@@ -1080,6 +1161,19 @@ const de: TranslationDictionary = {
     noVerifiedEvidenceTitle: "Noch keine geprüfte Evidenz",
     noVerifiedEvidenceDescription:
       "Für diese Aktivität liegen noch keine geprüften, strukturierten Evidenzdaten vor.",
+    awaitingPreparationTitle: "Zuerst Datensatzvorbereitung abschließen",
+    awaitingPreparationDescription:
+      "{{count}} Datensatz dieser Aktivität ist noch durch Vorbereitungsfragen blockiert.",
+    awaitingPreparationDescription_other:
+      "{{count}} Datensätze dieser Aktivität sind noch durch Vorbereitungsfragen blockiert.",
+    awaitingAnalysisTitle: "Die deterministische Analyse läuft noch",
+    awaitingAnalysisDescription:
+      "{{count}} vorbereiteter Datensatz benötigt noch eine deterministische Analyse, bevor dieses Dashboard aufgebaut werden kann.",
+    awaitingAnalysisDescription_other:
+      "{{count}} vorbereitete Datensätze benötigen noch eine deterministische Analyse, bevor dieses Dashboard aufgebaut werden kann.",
+    readyToGenerateTitle: "Dashboard kann jetzt erzeugt werden",
+    readyToGenerateDescription:
+      "Vorbereitung und deterministische Analyse liegen vor. Erzeugen Sie jetzt die Analysen für dieses Aktivitäts-Dashboard.",
     noVerifiedEvidenceCta: "Zur Übersicht",
   },
   activityInsights: {

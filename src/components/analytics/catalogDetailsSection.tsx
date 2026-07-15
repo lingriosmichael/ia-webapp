@@ -38,6 +38,12 @@ export function CatalogDetailsSection({
                 <div className="truncate font-medium text-foreground">
                   {entry.label}
                 </div>
+                {entry.entryType === "QUALITATIVE_THEME" &&
+                  entry.outcomeReferences.length > 0 && (
+                    <div className="truncate text-[12px] text-muted-foreground">
+                      {entry.outcomeReferences[0]}
+                    </div>
+                  )}
                 <div className="text-[12px] text-muted-foreground">
                   {featuredSet.has(entry.entryId)
                     ? t("analytics.featured")

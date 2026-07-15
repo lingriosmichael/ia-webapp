@@ -357,6 +357,7 @@ export interface ParsedRepresentationRecord {
   processingJobId: string;
   fileType: "spreadsheet" | "document" | "unknown";
   interpretationDataType: InterpretationDataType;
+  evidenceModality: EvidenceModality;
   payload: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
@@ -366,6 +367,13 @@ export type InterpretationDataType =
   | "tabular_structured"
   | "text_narrative"
   | "mixed_structured_text"
+  | "insufficiently_extracted";
+
+export type EvidenceModality =
+  | "structured_quantitative"
+  | "structured_qualitative"
+  | "mixed_dual_track"
+  | "narrative_qualitative"
   | "insufficiently_extracted";
 
 export type PrivacyReviewDecisionValue = "approved" | "rejected";
@@ -387,6 +395,7 @@ export interface ParsedRepresentationPreviewParagraph {
 export interface ParsedRepresentationPreviewRecord {
   fileType: "spreadsheet" | "document" | "unknown";
   interpretationDataType: InterpretationDataType;
+  evidenceModality: EvidenceModality;
   sourceFileName: string | null;
   extension: string | null;
   contentType: string | null;
@@ -513,6 +522,20 @@ export type InterpretationQuotePrivacyMode =
   "verbatim_safe" | "redacted" | "paraphrased_only";
 export type InterpretationQualitativeFindingRelation =
   "reinforces" | "contradicts" | "complicates" | "context_only";
+export type InterpretationQualitativeFindingCategory =
+  | "outcome_support"
+  | "outcome_complication"
+  | "outcome_contradiction"
+  | "barrier"
+  | "enabler"
+  | "unintended_effect"
+  | "context_only";
+export type InterpretationQualitativeOutcomeAnchorType =
+  | "project_outcome"
+  | "project_impact"
+  | "activity_objective"
+  | "activity_success_indicator"
+  | "unanchored";
 
 export interface InterpretationIndicator {
   id: string;
@@ -556,20 +579,35 @@ export interface InterpretationQualitativeFinding {
   relatedEntityIds: string[];
   relatedIndicatorIds: string[];
   supportingQuoteIds: string[];
+  category: InterpretationQualitativeFindingCategory;
+  outcomeReference: string | null;
+  outcomeAnchorType: InterpretationQualitativeOutcomeAnchorType;
   relationToEvidence: InterpretationQualitativeFindingRelation;
   status: InterpretationIndicatorStatus;
 }
 
 export type InterpretationQuestionKind =
   "single_choice" | "free_text" | "merge_confirmation";
+export type InterpretationQuestionDomain = "preparation" | "interpretation";
+export type InterpretationQuestionCode =
+  | "normalization_merge"
+  | "row_grain"
+  | "duplicate_identifier_resolution"
+  | "primary_status_field"
+  | "positive_status_values"
+  | "primary_date_field";
 export type InterpretationQuestionStatus = "pending" | "answered";
 
 export interface InterpretationQuestion {
   id: string;
   prompt: string;
   kind: InterpretationQuestionKind;
+  questionDomain: InterpretationQuestionDomain;
   options: string[] | null;
   isBlocking: boolean;
+  questionCode: InterpretationQuestionCode | null;
+  targetTableName: string | null;
+  targetColumnName: string | null;
   status: InterpretationQuestionStatus;
   answeredValue: string | null;
   answeredById: string | null;
@@ -582,12 +620,291 @@ export interface InterpretationWarning {
   severity: "info" | "warning";
 }
 
+export type DatasetProfileColumnType =
+  | "identifier"
+  | "numeric"
+  | "date"
+  | "categorical"
+  | "free_text"
+  | "boolean"
+  | "unknown";
+
+export interface DatasetProfileValueCount {
+  value: string;
+  count: number;
+}
+
+export interface DatasetProfileNumericSummary {
+  min: number;
+  max: number;
+  mean: number;
+}
+
+export interface DatasetProfileDateSummary {
+  min: string;
+  max: string;
+}
+
+export interface DatasetProfileColumn {
+  name: string;
+  inferredType: DatasetProfileColumnType;
+  roleHints: string[];
+  nullPercentage: number;
+  distinctCount: number;
+  averageTextLength: number | null;
+  topValues: DatasetProfileValueCount[];
+  numericSummary: DatasetProfileNumericSummary | null;
+  dateSummary: DatasetProfileDateSummary | null;
+  duplicateNonNullValueCount: number;
+}
+
+export type DatasetProfileIssueCode =
+  | "duplicate_identifier"
+  | "missing_identifier"
+  | "row_grain_ambiguous"
+  | "multiple_date_columns"
+  | "multiple_status_columns"
+  | "status_values_need_definition";
+
+export interface DatasetProfileIssue {
+  code: DatasetProfileIssueCode;
+  severity: "info" | "warning";
+  tableName: string;
+  columnName: string | null;
+  message: string;
+}
+
+export interface DatasetProfileTable {
+  name: string;
+  rowCount: number;
+  columnCount: number;
+  likelyIdentifierColumns: string[];
+  likelyStatusColumns: string[];
+  likelyStageColumns: string[];
+  likelyDateColumns: string[];
+  likelyMeasureColumns: string[];
+  likelyFreeTextColumns: string[];
+  likelySubgroupColumns: string[];
+  columns: DatasetProfileColumn[];
+}
+
+export interface DatasetProfile {
+  tableCount: number;
+  paragraphCount: number;
+  tables: DatasetProfileTable[];
+  issues: DatasetProfileIssue[];
+}
+
 export interface InterpretationGoalCoverage {
   id: string;
   goalSummary: string;
   isSupportedByData: boolean;
   relatedIndicatorIds: string[];
   gapExplanation: string | null;
+}
+
+export type DatasetPreparationStatus =
+  | "not_applicable"
+  | "not_started"
+  | "awaiting_answers"
+  | "ready_for_analysis"
+  | "analysis_completed";
+
+export interface DatasetPreparationDecision {
+  questionId: string;
+  questionCode: InterpretationQuestionCode;
+  questionPrompt: string;
+  tableName: string | null;
+  columnName: string | null;
+  answeredValue: string;
+  answeredById: string | null;
+  answeredAt: string | null;
+}
+
+export interface DatasetPreparationDecisionSelection {
+  questionId: string;
+  tableName: string | null;
+  columnName: string | null;
+  value: string;
+}
+
+export interface DatasetPreparationDecisionSummary {
+  normalizationMerges: DatasetPreparationDecisionSelection[];
+  rowGrains: DatasetPreparationDecisionSelection[];
+  duplicateIdentifierResolutions: DatasetPreparationDecisionSelection[];
+  primaryStatusFields: DatasetPreparationDecisionSelection[];
+  positiveStatusDefinitions: DatasetPreparationDecisionSelection[];
+  primaryDateFields: DatasetPreparationDecisionSelection[];
+}
+
+export type PreparedDatasetColumnRole =
+  | "identifier"
+  | "primary_status"
+  | "primary_date"
+  | "measure"
+  | "subgroup"
+  | "free_text"
+  | "other";
+
+export type PreparedDatasetIdentifierHandling =
+  | "assume_unique"
+  | "allow_duplicate_rows_as_events"
+  | "deduplicate_by_identifier"
+  | "manual_review_required";
+
+export interface PreparedDatasetColumn {
+  name: string;
+  inferredType: DatasetProfileColumnType | null;
+  role: PreparedDatasetColumnRole;
+  positiveStatusValues: string[];
+  positiveStatusDefinitionText: string | null;
+  normalizationAccepted: boolean | null;
+}
+
+export interface PreparedDatasetTable {
+  name: string;
+  rowCount: number;
+  columnCount: number;
+  selectedRowGrain: string | null;
+  identifierColumn: string | null;
+  identifierHandling: PreparedDatasetIdentifierHandling | null;
+  primaryStatusColumn: string | null;
+  primaryDateColumn: string | null;
+  columns: PreparedDatasetColumn[];
+  notes: string[];
+}
+
+export interface PreparedDatasetSnapshot {
+  evidenceModality: EvidenceModality;
+  isReadyForDeterministicAnalysis: boolean;
+  unresolvedRequirements: string[];
+  tables: PreparedDatasetTable[];
+}
+
+export type DeterministicAnalysisStatus =
+  | "not_applicable"
+  | "awaiting_preparation"
+  | "ready";
+
+export type DeterministicAnalysisMetricKind =
+  | "count"
+  | "count_distinct"
+  | "ratio"
+  | "distribution"
+  | "trend";
+
+export interface DeterministicAnalysisMetric {
+  metricKey: string;
+  label: string;
+  description: string;
+  tableName: string;
+  sourceColumns: string[];
+  kind: DeterministicAnalysisMetricKind;
+  formula: string;
+  value: number | null;
+  unit: string | null;
+  components: Record<string, unknown>;
+}
+
+export interface DeterministicAnalysisDistributionBucket {
+  value: string;
+  count: number;
+  ratio: number | null;
+}
+
+export interface DeterministicAnalysisDistribution {
+  distributionKey: string;
+  label: string;
+  tableName: string;
+  columnName: string;
+  buckets: DeterministicAnalysisDistributionBucket[];
+}
+
+export interface DeterministicAnalysisTrendPoint {
+  period: string;
+  rowCount: number;
+  positiveCount: number | null;
+  positiveRatio: number | null;
+}
+
+export interface DeterministicAnalysisTrend {
+  trendKey: string;
+  label: string;
+  tableName: string;
+  dateColumnName: string;
+  positiveStatusColumnName: string | null;
+  points: DeterministicAnalysisTrendPoint[];
+}
+
+export interface DeterministicAnalysisSubgroupSegment {
+  value: string;
+  rowCount: number;
+  positiveCount: number | null;
+  positiveRatio: number | null;
+}
+
+export interface DeterministicAnalysisSubgroupBreakdown {
+  breakdownKey: string;
+  label: string;
+  tableName: string;
+  columnName: string;
+  segments: DeterministicAnalysisSubgroupSegment[];
+}
+
+export interface DeterministicAnalysisWarning {
+  code: string;
+  message: string;
+}
+
+export interface DeterministicAnalysisCandidateIndicator {
+  indicatorKey: string;
+  label: string;
+  description: string;
+  tableName: string;
+  formula: string;
+  value: number | null;
+  unit: string | null;
+  sourceColumns: string[];
+  groundingNote: string;
+}
+
+export interface DeterministicAnalysisRecord {
+  id: string;
+  organizationId: string;
+  projectId: string;
+  activityId: string | null;
+  uploadMetadataId: string;
+  privacySafeRepresentationId: string;
+  interpretationResultId: string;
+  datasetPreparationId: string;
+  status: DeterministicAnalysisStatus;
+  metrics: DeterministicAnalysisMetric[];
+  distributions: DeterministicAnalysisDistribution[];
+  trends: DeterministicAnalysisTrend[];
+  subgroupBreakdowns: DeterministicAnalysisSubgroupBreakdown[];
+  warnings: DeterministicAnalysisWarning[];
+  candidateIndicators: DeterministicAnalysisCandidateIndicator[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface DatasetPreparationRecord {
+  id: string;
+  organizationId: string;
+  projectId: string;
+  activityId: string | null;
+  uploadMetadataId: string;
+  privacySafeRepresentationId: string;
+  interpretationResultId: string;
+  status: DatasetPreparationStatus;
+  blockingQuestionCount: number;
+  answeredBlockingQuestionCount: number;
+  unansweredBlockingQuestionIds: string[];
+  decisions: DatasetPreparationDecision[];
+  decisionSummary: DatasetPreparationDecisionSummary;
+  preparedDataset: PreparedDatasetSnapshot | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface InterpretationResultRecord {
@@ -602,6 +919,7 @@ export interface InterpretationResultRecord {
   previousInterpretationResultId: string | null;
   datasetType: string;
   overallConfidence: number;
+  datasetProfile: DatasetProfile | null;
   entities: InterpretationEntity[];
   indicators: InterpretationIndicator[];
   relationships: InterpretationRelationship[];
@@ -610,6 +928,8 @@ export interface InterpretationResultRecord {
   questions: InterpretationQuestion[];
   warnings: InterpretationWarning[];
   goalAlignment: InterpretationGoalCoverage[];
+  datasetPreparation: DatasetPreparationRecord | null;
+  deterministicAnalysis: DeterministicAnalysisRecord | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -682,6 +1002,23 @@ export interface EvidenceCatalogThemeEntry {
   label: string;
   description: string;
   quoteCount: number;
+  categories: Array<
+    | "outcome_support"
+    | "outcome_complication"
+    | "outcome_contradiction"
+    | "barrier"
+    | "enabler"
+    | "unintended_effect"
+    | "context_only"
+  >;
+  outcomeReferences: string[];
+  outcomeAnchorTypes: Array<
+    | "project_outcome"
+    | "project_impact"
+    | "activity_objective"
+    | "activity_success_indicator"
+    | "unanchored"
+  >;
   sourceActivityIds: string[];
   sourceUploadMetadataIds: string[];
 }
@@ -694,12 +1031,26 @@ export interface EvidenceCatalogOmittedEntry {
   reason: string;
 }
 
+export interface EvidenceCatalogQualitySignal {
+  signalId: string;
+  sourceType:
+    | "dataset_preparation"
+    | "deterministic_analysis"
+    | "catalog_assembly";
+  interpretationResultId: string;
+  activityId: string | null;
+  uploadMetadataId: string;
+  severity: "info" | "warning";
+  message: string;
+}
+
 export interface EvidenceCatalog {
   catalogVersion: string;
   knowledgeModelVersion: number;
   scope: AnalyticsScope;
   entries: EvidenceCatalogEntry[];
   omittedEntries: EvidenceCatalogOmittedEntry[];
+  qualitySignals: EvidenceCatalogQualitySignal[];
 }
 
 export interface DashboardCurationNarrative {

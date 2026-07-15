@@ -8,7 +8,11 @@ export function DataQualityPanel({
   result: AnalyticsResultRecord;
 }) {
   const { t } = useTranslation();
-  const hasLimitations = result.limitations.length > 0;
+  const warnings =
+    result.dataQuality.warnings.length > 0
+      ? result.dataQuality.warnings
+      : result.limitations;
+  const hasLimitations = warnings.length > 0;
   const hasFallbackNotice = result.curation.fellBackToSelectionOnly;
 
   if (!hasLimitations && !hasFallbackNotice) {
@@ -27,7 +31,7 @@ export function DataQualityPanel({
       )}
       {hasLimitations && (
         <ul className="mt-2 list-inside list-disc space-y-1 text-[13px] text-muted-foreground">
-          {result.limitations.map((limitation, index) => (
+          {warnings.map((limitation, index) => (
             <li key={index}>{limitation}</li>
           ))}
         </ul>

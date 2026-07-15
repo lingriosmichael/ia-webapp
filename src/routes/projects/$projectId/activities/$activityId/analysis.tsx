@@ -8,8 +8,10 @@ import {
   useActivityAnalyticsQuery,
   useActivityQuery,
   useGenerateActivityAnalyticsMutation,
+  useProjectInterpretationsQuery,
   useProjectQuery,
 } from "@/hooks/useWorkspaceQueries";
+import { deriveAnalyticsReadinessSummary } from "@/lib/interpretationWorkflow";
 import {
   AnalyticsEmptyState,
   AnalyticsErrorState,
@@ -37,6 +39,10 @@ function ActivityAnalyticsPage() {
     activityId,
     Boolean(auth.token),
   );
+  const interpretationsQuery = useProjectInterpretationsQuery(
+    projectId,
+    Boolean(auth.token),
+  );
   const generateMutation = useGenerateActivityAnalyticsMutation(
     projectId,
     activityId,
@@ -48,12 +54,18 @@ function ActivityAnalyticsPage() {
     !auth.token ||
     projectQuery.isLoading ||
     activityQuery.isLoading ||
-    analyticsQuery.isLoading
+    analyticsQuery.isLoading ||
+    interpretationsQuery.isLoading
   ) {
     return <AnalyticsErrorState label={t("activityAnalytics.loading")} />;
   }
 
-  if (!projectQuery.data || !activityQuery.data || analyticsQuery.isError) {
+  if (
+    !projectQuery.data ||
+    !activityQuery.data ||
+    analyticsQuery.isError ||
+    interpretationsQuery.isError
+  ) {
     return <AnalyticsErrorState label={t("activityAnalytics.loadFailed")} />;
   }
 
@@ -62,6 +74,33 @@ function ActivityAnalyticsPage() {
     execution: null,
     result: null,
   };
+  const interpretationResults = (interpretationsQuery.data?.results ?? []).filter(
+    (interpretationResult) => interpretationResult.activityId === activityId,
+  );
+  const readiness = deriveAnalyticsReadinessSummary(interpretationResults);
+
+  let emptyStateTitle = t("activityAnalytics.noVerifiedEvidenceTitle");
+  let emptyStateDescription = t("activityAnalytics.noVerifiedEvidenceDescription");
+  let showOverviewCta = true;
+
+  if (readiness.state === "awaiting_preparation") {
+    emptyStateTitle = t("activityAnalytics.awaitingPreparationTitle");
+    emptyStateDescription = t(
+      "activityAnalytics.awaitingPreparationDescription",
+      {
+        count: readiness.preparationBlockedCount,
+      },
+    );
+  } else if (readiness.state === "awaiting_analysis") {
+    emptyStateTitle = t("activityAnalytics.awaitingAnalysisTitle");
+    emptyStateDescription = t("activityAnalytics.awaitingAnalysisDescription", {
+      count: readiness.awaitingAnalysisCount,
+    });
+  } else if (readiness.state === "ready_to_generate") {
+    emptyStateTitle = t("activityAnalytics.readyToGenerateTitle");
+    emptyStateDescription = t("activityAnalytics.readyToGenerateDescription");
+    showOverviewCta = false;
+  }
 
   return (
     <>
@@ -96,9 +135,10 @@ function ActivityAnalyticsPage() {
 
           {!result || result.catalog.entries.length === 0 ? (
             <AnalyticsEmptyState
-              title={t("activityAnalytics.noVerifiedEvidenceTitle")}
-              description={t("activityAnalytics.noVerifiedEvidenceDescription")}
+              title={emptyStateTitle}
+              description={emptyStateDescription}
               cta={
+                showOverviewCta ? (
                 <Link
                   to="/projects/$projectId/activities"
                   params={{ projectId }}
@@ -106,6 +146,7 @@ function ActivityAnalyticsPage() {
                 >
                   {t("activityAnalytics.noVerifiedEvidenceCta")}
                 </Link>
+                ) : undefined
               }
             />
           ) : (

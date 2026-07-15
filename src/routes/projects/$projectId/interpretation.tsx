@@ -41,14 +41,28 @@ import {
 } from "@/hooks/useWorkspaceQueries";
 import { useRequireAuth } from "@/hooks/useAuth";
 import {
+  canShowQuantitativeSynthesis,
+  getQuestionsByDomain,
+  isDeterministicAnalysisReady,
+  isPreparationDrivenModality,
+  isPreparationResolved,
+  isQualitativeModality,
+} from "@/lib/interpretationWorkflow";
+import {
   apiClient,
+  type DatasetPreparationRecord,
+  type DatasetProfile,
+  type DeterministicAnalysisRecord,
+  type EvidenceModality,
   type InterpretationEntity,
   type InterpretationIndicator,
   type InterpretationQualitativeFinding,
+  type InterpretationQualitativeFindingCategory,
   type InterpretationQualitativeFindingRelation,
+  type InterpretationQualitativeOutcomeAnchorType,
   type InterpretationQualitativeStage,
-  type InterpretationDataType,
   type InterpretationQuestion,
+  type InterpretationQuestionDomain,
   type InterpretationResultRecord,
   type InterpretationSupportingQuote,
   type InterpretationWarning,
@@ -69,33 +83,53 @@ function hasPendingBlockingQuestions(
   );
 }
 
-function getInterpretationSupportState(
-  interpretationDataType: InterpretationDataType | null | undefined,
+function getEvidenceSupportState(
+  evidenceModality: EvidenceModality | null | undefined,
 ): "supported" | "insufficiently_extracted" | "not_ready" {
-  if (!interpretationDataType) {
+  if (!evidenceModality) {
     return "not_ready";
   }
 
-  return interpretationDataType === "insufficiently_extracted"
+  return evidenceModality === "insufficiently_extracted"
     ? "insufficiently_extracted"
     : "supported";
 }
 
-function getInterpretationDataTypeLabelKey(
-  interpretationDataType: InterpretationDataType | null | undefined,
+function getEvidenceModalityLabelKey(
+  evidenceModality: EvidenceModality | null | undefined,
 ) {
-  switch (interpretationDataType) {
-    case "tabular_structured":
-      return "projectWorkspace.interpretation.dataTypeTabularLabel";
-    case "text_narrative":
-      return "projectWorkspace.interpretation.dataTypeNarrativeLabel";
-    case "mixed_structured_text":
-      return "projectWorkspace.interpretation.dataTypeMixedLabel";
+  switch (evidenceModality) {
+    case "structured_quantitative":
+      return "projectWorkspace.interpretation.modalityStructuredQuantitativeLabel";
+    case "structured_qualitative":
+      return "projectWorkspace.interpretation.modalityStructuredQualitativeLabel";
+    case "mixed_dual_track":
+      return "projectWorkspace.interpretation.modalityMixedDualTrackLabel";
+    case "narrative_qualitative":
+      return "projectWorkspace.interpretation.modalityNarrativeQualitativeLabel";
     case "insufficiently_extracted":
-      return "projectWorkspace.interpretation.dataTypeInsufficientLabel";
+      return "projectWorkspace.interpretation.modalityInsufficientLabel";
     default:
       return null;
   }
+}
+
+function getQuestionDomainLabelKey(
+  questionDomain: InterpretationQuestionDomain,
+) {
+  return questionDomain === "preparation"
+    ? "projectWorkspace.interpretation.questionDomainPreparationLabel"
+    : "projectWorkspace.interpretation.questionDomainInterpretationLabel";
+}
+
+function getDatasetPreparationStatusLabelKey(
+  status: DatasetPreparationRecord["status"],
+) {
+  return `projectWorkspace.interpretation.datasetPreparationStatus.${status}` as const;
+}
+
+function formatPercent(value: number) {
+  return `${Math.round(value)}%`;
 }
 
 function getQualitativeStageLabelKey(stage: InterpretationQualitativeStage) {
@@ -106,6 +140,18 @@ function getQualitativeFindingRelationLabelKey(
   relationToEvidence: InterpretationQualitativeFindingRelation,
 ) {
   return `projectWorkspace.interpretation.qualitativeFindingRelation.${relationToEvidence}` as const;
+}
+
+function getQualitativeFindingCategoryLabelKey(
+  category: InterpretationQualitativeFindingCategory,
+) {
+  return `projectWorkspace.interpretation.qualitativeFindingCategory.${category}` as const;
+}
+
+function getQualitativeOutcomeAnchorTypeLabelKey(
+  anchorType: InterpretationQualitativeOutcomeAnchorType,
+) {
+  return `projectWorkspace.interpretation.qualitativeOutcomeAnchorType.${anchorType}` as const;
 }
 
 type AttentionLevel = "neutral" | "caution" | "critical";
@@ -132,6 +178,19 @@ function getQualitativeFindingRelationAttentionLevel(
     return "critical";
   }
   return relationToEvidence === "complicates" ? "caution" : "neutral";
+}
+
+function getQualitativeFindingCategoryAttentionLevel(
+  category: InterpretationQualitativeFindingCategory,
+): AttentionLevel {
+  if (category === "outcome_contradiction") {
+    return "critical";
+  }
+  return category === "outcome_complication" ||
+    category === "barrier" ||
+    category === "unintended_effect"
+    ? "caution"
+    : "neutral";
 }
 
 function isPrivacyPreviewAvailable(job: ProcessingJobRecord | undefined) {
@@ -176,17 +235,30 @@ function ProjectInterpretationPage() {
     (total, result) => total + result.entities.length,
     0,
   );
-  const totalIndicators = results.reduce(
+  const totalReviewReadyResults = results.reduce(
     (total, result) =>
-      total +
-      result.indicators.filter((indicator) => indicator.status !== "rejected")
-        .length,
+      total + (result.questions.every((question) => question.status === "answered") ? 1 : 0),
     0,
   );
-  const pendingQuestions = results.flatMap((result) =>
-    result.questions
-      .filter((question) => question.status === "pending")
-      .map((question) => ({ result, question })),
+  const totalPreparationAwaitingResults = results.reduce(
+    (total, result) =>
+      total +
+      (result.datasetPreparation &&
+      result.datasetPreparation.status !== "not_applicable" &&
+      !isPreparationResolved(result.datasetPreparation)
+        ? 1
+        : 0),
+    0,
+  );
+  const pendingPreparationQuestions = results.flatMap((result) =>
+    getQuestionsByDomain(result.questions, "preparation", "pending").map(
+      (question) => ({ result, question }),
+    ),
+  );
+  const pendingInterpretationQuestions = results.flatMap((result) =>
+    getQuestionsByDomain(result.questions, "interpretation", "pending").map(
+      (question) => ({ result, question }),
+    ),
   );
   const answeredQuestions = results.flatMap((result) =>
     result.questions
@@ -229,11 +301,11 @@ function ProjectInterpretationPage() {
                     ).toLowerCase()}{" "}
                     · 0{" "}
                     {t(
-                      "projectWorkspace.interpretation.metrics.indicators",
+                      "projectWorkspace.interpretation.metrics.awaitingPreparation",
                     ).toLowerCase()}{" "}
                     · 0{" "}
                     {t(
-                      "projectWorkspace.interpretation.metrics.questions",
+                      "projectWorkspace.interpretation.metrics.readyForReview",
                     ).toLowerCase()}
                   </p>
                   <p className="mt-4 max-w-[40rem] text-sm leading-6 text-muted-foreground">
@@ -258,15 +330,15 @@ function ProjectInterpretationPage() {
                   />
                   <SummaryMetric
                     label={t(
-                      "projectWorkspace.interpretation.metrics.indicators",
+                      "projectWorkspace.interpretation.metrics.awaitingPreparation",
                     )}
-                    value={String(totalIndicators)}
+                    value={String(totalPreparationAwaitingResults)}
                   />
                   <SummaryMetric
                     label={t(
-                      "projectWorkspace.interpretation.metrics.questions",
+                      "projectWorkspace.interpretation.metrics.readyForReview",
                     )}
-                    value={String(pendingQuestions.length)}
+                    value={String(totalReviewReadyResults)}
                   />
                 </div>
                 <p className="mt-4 text-sm font-medium text-foreground">
@@ -281,7 +353,7 @@ function ProjectInterpretationPage() {
             <div className="space-y-4">
               <SectionTitle
                 icon={<Sparkles className="h-4 w-4 text-primary" />}
-                title={t("projectWorkspace.interpretation.understoodTitle")}
+                title={t("projectWorkspace.interpretation.reviewFlowTitle")}
               />
               {activities.length === 0 ? (
                 <Card className="p-5 text-sm text-muted-foreground">
@@ -315,14 +387,49 @@ function ProjectInterpretationPage() {
             <div className="space-y-4">
               <SectionTitle
                 icon={<CircleHelp className="h-4 w-4 text-primary" />}
-                title={t("projectWorkspace.interpretation.needHelpTitle")}
+                title={t(
+                  "projectWorkspace.interpretation.preparationQuestionsTitle",
+                )}
               />
-              {pendingQuestions.length === 0 ? (
+              {pendingPreparationQuestions.length === 0 ? (
                 <Card className="p-5 text-sm text-muted-foreground">
-                  {t("projectWorkspace.interpretation.needHelpEmpty")}
+                  {t(
+                    "projectWorkspace.interpretation.preparationQuestionsEmpty",
+                  )}
                 </Card>
               ) : (
-                pendingQuestions.map(({ result, question }) => (
+                pendingPreparationQuestions.map(({ result, question }) => (
+                  <QuestionCard
+                    key={question.id}
+                    activityName={
+                      activities.find(
+                        (activity) => activity.id === result.activityId,
+                      )?.name ?? result.datasetType
+                    }
+                    interpretationResultId={result.id}
+                    projectId={projectId}
+                    organizationId={workspaceProject?.organizationId}
+                    question={question}
+                  />
+                ))
+              )}
+            </div>
+
+            <div className="space-y-4">
+              <SectionTitle
+                icon={<CircleHelp className="h-4 w-4 text-primary" />}
+                title={t(
+                  "projectWorkspace.interpretation.interpretationQuestionsTitle",
+                )}
+              />
+              {pendingInterpretationQuestions.length === 0 ? (
+                <Card className="p-5 text-sm text-muted-foreground">
+                  {t(
+                    "projectWorkspace.interpretation.interpretationQuestionsEmpty",
+                  )}
+                </Card>
+              ) : (
+                pendingInterpretationQuestions.map(({ result, question }) => (
                   <QuestionCard
                     key={question.id}
                     activityName={
@@ -514,6 +621,281 @@ function EntitiesTable({ entities }: { entities: InterpretationEntity[] }) {
         </TableBody>
       </Table>
     </div>
+  );
+}
+
+function WorkflowSection({
+  title,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="rounded-xl border border-border/80 bg-secondary/10 p-4">
+      <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+        {title}
+      </div>
+      <div className="mt-3">{children}</div>
+    </div>
+  );
+}
+
+function formatDeterministicValue(
+  value: number | null,
+  unit: string | null,
+): string {
+  if (value === null) {
+    return "—";
+  }
+
+  if (unit === "percent") {
+    return formatPercent(value * 100);
+  }
+
+  return unit ? `${value} ${unit}` : String(value);
+}
+
+function DatasetProfileOverview({
+  datasetProfile,
+}: {
+  datasetProfile: DatasetProfile | null;
+}) {
+  const { t } = useTranslation();
+
+  if (!datasetProfile) {
+    return null;
+  }
+
+  return (
+    <WorkflowSection
+      title={t("projectWorkspace.interpretation.datasetProfileTitle")}
+    >
+      <div className="grid gap-3 md:grid-cols-3">
+        <SummaryMetric
+          label={t("projectWorkspace.interpretation.datasetProfileTablesLabel")}
+          value={String(datasetProfile.tableCount)}
+        />
+        <SummaryMetric
+          label={t("projectWorkspace.interpretation.datasetProfileParagraphsLabel")}
+          value={String(datasetProfile.paragraphCount)}
+        />
+        <SummaryMetric
+          label={t("projectWorkspace.interpretation.datasetProfileIssuesLabel")}
+          value={String(datasetProfile.issues.length)}
+        />
+      </div>
+
+      <div className="mt-4 space-y-2">
+        {datasetProfile.tables.slice(0, 3).map((table) => (
+          <div
+            key={table.name}
+            className="rounded-md border border-border bg-background px-3 py-2 text-sm text-muted-foreground"
+          >
+            <div className="font-medium text-foreground">{table.name}</div>
+            <div className="mt-1">
+              {t("projectWorkspace.interpretation.datasetProfileTableSummary", {
+                rows: table.rowCount,
+                columns: table.columnCount,
+                statusColumns: table.likelyStatusColumns.length,
+                dateColumns: table.likelyDateColumns.length,
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {datasetProfile.issues.length > 0 ? (
+        <ul className="mt-4 space-y-1.5">
+          {datasetProfile.issues.slice(0, 4).map((issue, index) => (
+            <li
+              key={`${issue.code}-${issue.tableName}-${issue.columnName ?? index}`}
+              className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900"
+            >
+              {issue.message}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </WorkflowSection>
+  );
+}
+
+function DatasetPreparationOverview({
+  datasetPreparation,
+}: {
+  datasetPreparation: DatasetPreparationRecord | null;
+}) {
+  const { t } = useTranslation();
+
+  if (!datasetPreparation) {
+    return null;
+  }
+
+  const preparedDataset = datasetPreparation.preparedDataset;
+  const decisionCount = datasetPreparation.decisions.length;
+
+  return (
+    <WorkflowSection
+      title={t("projectWorkspace.interpretation.datasetPreparationTitle")}
+    >
+      <div className="flex flex-wrap items-center gap-2">
+        <Badge variant="secondary">
+          {t(getDatasetPreparationStatusLabelKey(datasetPreparation.status))}
+        </Badge>
+        <span className="text-sm text-muted-foreground">
+          {t("projectWorkspace.interpretation.datasetPreparationDecisionCount", {
+            count: decisionCount,
+          })}
+        </span>
+      </div>
+
+      {datasetPreparation.unansweredBlockingQuestionIds.length > 0 ? (
+        <p className="mt-3 text-sm text-amber-900">
+          {t(
+            "projectWorkspace.interpretation.datasetPreparationPendingSummary",
+            {
+              count: datasetPreparation.unansweredBlockingQuestionIds.length,
+            },
+          )}
+        </p>
+      ) : (
+        <p className="mt-3 text-sm text-muted-foreground">
+          {t("projectWorkspace.interpretation.datasetPreparationReadySummary")}
+        </p>
+      )}
+
+      {preparedDataset ? (
+        <div className="mt-4 space-y-2">
+          {preparedDataset.tables.slice(0, 3).map((table) => (
+            <div
+              key={table.name}
+              className="rounded-md border border-border bg-background px-3 py-2 text-sm text-muted-foreground"
+            >
+              <div className="font-medium text-foreground">{table.name}</div>
+              <div className="mt-1">
+                {t("projectWorkspace.interpretation.preparedDatasetTableSummary", {
+                  grain:
+                    table.selectedRowGrain ??
+                    t(
+                      "projectWorkspace.interpretation.preparedDatasetUnknownValue",
+                    ),
+                  identifier:
+                    table.identifierColumn ??
+                    t(
+                      "projectWorkspace.interpretation.preparedDatasetUnknownValue",
+                    ),
+                  status:
+                    table.primaryStatusColumn ??
+                    t(
+                      "projectWorkspace.interpretation.preparedDatasetUnknownValue",
+                    ),
+                  date:
+                    table.primaryDateColumn ??
+                    t(
+                      "projectWorkspace.interpretation.preparedDatasetUnknownValue",
+                    ),
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : null}
+    </WorkflowSection>
+  );
+}
+
+function DeterministicAnalysisOverview({
+  deterministicAnalysis,
+}: {
+  deterministicAnalysis: DeterministicAnalysisRecord | null;
+}) {
+  const { t } = useTranslation();
+
+  if (!deterministicAnalysis) {
+    return null;
+  }
+
+  return (
+    <WorkflowSection
+      title={t("projectWorkspace.interpretation.deterministicAnalysisTitle")}
+    >
+      <div className="grid gap-3 md:grid-cols-4">
+        <SummaryMetric
+          label={t(
+            "projectWorkspace.interpretation.deterministicAnalysisMetricsLabel",
+          )}
+          value={String(deterministicAnalysis.metrics.length)}
+        />
+        <SummaryMetric
+          label={t(
+            "projectWorkspace.interpretation.deterministicAnalysisDistributionsLabel",
+          )}
+          value={String(deterministicAnalysis.distributions.length)}
+        />
+        <SummaryMetric
+          label={t(
+            "projectWorkspace.interpretation.deterministicAnalysisTrendsLabel",
+          )}
+          value={String(deterministicAnalysis.trends.length)}
+        />
+        <SummaryMetric
+          label={t(
+            "projectWorkspace.interpretation.deterministicAnalysisCandidateIndicatorsLabel",
+          )}
+          value={String(deterministicAnalysis.candidateIndicators.length)}
+        />
+      </div>
+
+      {deterministicAnalysis.metrics.length > 0 ? (
+        <div className="mt-4 overflow-hidden rounded-xl border border-border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>
+                  {t("projectWorkspace.interpretation.deterministicMetricColumn")}
+                </TableHead>
+                <TableHead>
+                  {t(
+                    "projectWorkspace.interpretation.deterministicDescriptionColumn",
+                  )}
+                </TableHead>
+                <TableHead className="text-right">
+                  {t("projectWorkspace.interpretation.deterministicValueColumn")}
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {deterministicAnalysis.metrics.slice(0, 5).map((metric) => (
+                <TableRow key={metric.metricKey}>
+                  <TableCell className="font-medium text-foreground">
+                    {metric.label}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {metric.description}
+                  </TableCell>
+                  <TableCell className="text-right text-foreground">
+                    {formatDeterministicValue(metric.value, metric.unit)}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      ) : null}
+
+      {deterministicAnalysis.warnings.length > 0 ? (
+        <div className="mt-4">
+          <WarningsList
+            warnings={deterministicAnalysis.warnings.map((warning, index) => ({
+              id: `${warning.code}-${index}`,
+              message: warning.message,
+              severity: "warning",
+            }))}
+          />
+        </div>
+      ) : null}
+    </WorkflowSection>
   );
 }
 
@@ -719,14 +1101,30 @@ function QualitativeFindingsList({
                 </Badge>
                 <Badge
                   variant={getAttentionBadgeVariant(
-                    getQualitativeFindingRelationAttentionLevel(
-                      finding.relationToEvidence,
-                    ),
+                    getQualitativeFindingCategoryAttentionLevel(finding.category),
                   )}
                 >
+                  {t(getQualitativeFindingCategoryLabelKey(finding.category))}
+                </Badge>
+                {finding.relatedIndicatorIds.length > 0 ? (
+                  <Badge
+                    variant={getAttentionBadgeVariant(
+                      getQualitativeFindingRelationAttentionLevel(
+                        finding.relationToEvidence,
+                      ),
+                    )}
+                  >
+                    {t(
+                      getQualitativeFindingRelationLabelKey(
+                        finding.relationToEvidence,
+                      ),
+                    )}
+                  </Badge>
+                ) : null}
+                <Badge variant="outline">
                   {t(
-                    getQualitativeFindingRelationLabelKey(
-                      finding.relationToEvidence,
+                    getQualitativeOutcomeAnchorTypeLabelKey(
+                      finding.outcomeAnchorType,
                     ),
                   )}
                 </Badge>
@@ -759,6 +1157,17 @@ function QualitativeFindingsList({
             <p className="mt-2 text-sm text-muted-foreground">
               {finding.reason}
             </p>
+            {finding.outcomeReference ? (
+              <div className="mt-2 rounded-md border border-border bg-background px-3 py-2 text-sm text-muted-foreground">
+                <span className="font-medium text-foreground">
+                  {t(
+                    "projectWorkspace.interpretation.qualitativeOutcomeReferenceLabel",
+                  )}
+                  :{" "}
+                </span>
+                {finding.outcomeReference}
+              </div>
+            ) : null}
             {linkedQuotes.length > 0 ? (
               <div className="mt-3 space-y-2">
                 {linkedQuotes.slice(0, 2).map((quote) => (
@@ -854,11 +1263,19 @@ function InterpretationActivityGroup({
     (total, result) => total + result.entities.length,
     0,
   );
-  const activityIndicatorCount = activityResults.reduce(
+  const activityPreparationAwaitingCount = activityResults.reduce(
     (total, result) =>
       total +
-      result.indicators.filter((indicator) => indicator.status !== "rejected")
-        .length,
+      (result.datasetPreparation &&
+      result.datasetPreparation.status !== "not_applicable" &&
+      !isPreparationResolved(result.datasetPreparation)
+        ? 1
+        : 0),
+    0,
+  );
+  const activityReviewReadyCount = activityResults.reduce(
+    (total, result) =>
+      total + (result.questions.every((question) => question.status === "answered") ? 1 : 0),
     0,
   );
   // Mirrors the backend gate: acknowledgment is blocked only while
@@ -872,8 +1289,8 @@ function InterpretationActivityGroup({
     uploads.every((upload) => {
       const latestEvidenceJob = latestEvidenceJobByUploadId.get(upload.id);
       const preview = previewByUploadId.get(upload.id);
-      const interpretationSupportState = getInterpretationSupportState(
-        preview?.interpretationDataType,
+      const interpretationSupportState = getEvidenceSupportState(
+        preview?.evidenceModality,
       );
       return (
         latestEvidenceJob?.status === "completed" &&
@@ -916,7 +1333,8 @@ function InterpretationActivityGroup({
             {t("projectWorkspace.interpretation.activitySummaryLine", {
               files: uploads.length,
               entities: activityEntityCount,
-              indicators: activityIndicatorCount,
+              preparation: activityPreparationAwaitingCount,
+              ready: activityReviewReadyCount,
             })}
           </button>
           {activity.interpretationAcknowledgedAt ? (
@@ -1030,14 +1448,15 @@ function DatasetInterpretationCard({
     activeInterpretationJob?.id,
     Boolean(activeInterpretationJob?.id),
   );
-  const interpretationDataType =
-    parsedRepresentationPreview?.interpretationDataType ?? null;
-  const interpretationSupportState = getInterpretationSupportState(
-    interpretationDataType,
+  const evidenceModality = parsedRepresentationPreview?.evidenceModality ?? null;
+  const interpretationSupportState = getEvidenceSupportState(
+    evidenceModality,
   );
-  const interpretationDataTypeLabelKey = getInterpretationDataTypeLabelKey(
-    interpretationDataType,
+  const evidenceModalityLabelKey = getEvidenceModalityLabelKey(
+    evidenceModality,
   );
+  const preparationDrivenPath = isPreparationDrivenModality(evidenceModality);
+  const qualitativePath = isQualitativeModality(evidenceModality);
 
   useEffect(() => {
     const syncedStatus = activeJobSyncQuery.data?.status;
@@ -1078,9 +1497,9 @@ function DatasetInterpretationCard({
               {Math.round(result.overallConfidence * 100)}%
             </span>
             <div className="flex flex-wrap items-center gap-2">
-              {interpretationDataTypeLabelKey ? (
+              {evidenceModalityLabelKey ? (
                 <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
-                  {t(interpretationDataTypeLabelKey)}
+                  {t(evidenceModalityLabelKey)}
                 </Badge>
               ) : null}
               <Button
@@ -1100,11 +1519,35 @@ function DatasetInterpretationCard({
             <WarningsList warnings={result.warnings} />
           ) : null}
 
+          {preparationDrivenPath ? (
+            <>
+              <DatasetProfileOverview datasetProfile={result.datasetProfile} />
+              <DatasetPreparationOverview
+                datasetPreparation={result.datasetPreparation}
+              />
+              {result.deterministicAnalysis ? (
+                <DeterministicAnalysisOverview
+                  deterministicAnalysis={result.deterministicAnalysis}
+                />
+              ) : null}
+
+              {!result.deterministicAnalysis ||
+              !isDeterministicAnalysisReady(result.deterministicAnalysis) ? (
+                <Card className="border-primary/15 bg-primary-soft/20 p-4 text-sm text-muted-foreground">
+                  {t(
+                    "projectWorkspace.interpretation.deterministicAnalysisPendingSummary",
+                  )}
+                </Card>
+              ) : null}
+            </>
+          ) : null}
+
           {result.entities.length > 0 ? (
             <EntitiesTable entities={result.entities} />
           ) : null}
 
-          {result.indicators.length > 0 ? (
+          {result.indicators.length > 0 &&
+          canShowQuantitativeSynthesis(result, evidenceModality) ? (
             <div>
               <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
                 {t("projectWorkspace.interpretation.indicatorsTitle")}
@@ -1118,7 +1561,17 @@ function DatasetInterpretationCard({
             </div>
           ) : null}
 
-          {result.qualitativeFindings.length > 0 ? (
+          {preparationDrivenPath &&
+          result.indicators.length > 0 &&
+          !canShowQuantitativeSynthesis(result, evidenceModality) ? (
+            <Card className="border-primary/15 bg-primary-soft/20 p-4 text-sm text-muted-foreground">
+              {t(
+                "projectWorkspace.interpretation.quantitativeSynthesisPendingSummary",
+              )}
+            </Card>
+          ) : null}
+
+          {qualitativePath && result.qualitativeFindings.length > 0 ? (
             <div>
               <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
                 {t("projectWorkspace.interpretation.qualitativeFindingsTitle")}
@@ -1136,9 +1589,9 @@ function DatasetInterpretationCard({
       ) : (
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            {interpretationDataTypeLabelKey ? (
+            {evidenceModalityLabelKey ? (
               <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
-                {t(interpretationDataTypeLabelKey)}
+                {t(evidenceModalityLabelKey)}
               </Badge>
             ) : null}
             {interpretationSupportState === "supported" ? (
@@ -1222,6 +1675,9 @@ function QuestionCard({
         <div className="text-sm font-semibold tracking-tight text-foreground">
           {activityName}
         </div>
+        <Badge variant="outline" className="px-1.5 py-0 text-[10px]">
+          {t(getQuestionDomainLabelKey(question.questionDomain))}
+        </Badge>
         <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
           {question.isBlocking
             ? t("projectWorkspace.interpretation.questionRequiredLabel")
