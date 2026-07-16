@@ -363,32 +363,40 @@ const en = {
       reviewUnknownActivity: "Unknown activity",
       detectedFindingsTitle: "Detected findings",
       detectedFindingsDescription:
-        "{{count}} findings detected. {{decisions}} item(s) still require an explicit review decision.",
+        "{{count}} findings detected. {{decisions}} item(s) still require an explicit transformation choice.",
       decisionRequired: "Decision required",
       gdprNoticeIntro:
-        "We found personal or sensitive data in this dataset that may not comply with GDPR. For each item below, decide whether Impact Atlas should apply the recommended adjustment automatically.",
+        "We found personal or sensitive data in this dataset. For each item below, choose how Impact Atlas should transform it before the dataset continues into privacy-safe processing.",
       recommendationSentence:
         "We recommend that Impact Atlas {{verb}} this {{entityType}} data before the dataset is used further.",
       recommendationSentenceWithExample:
         'We recommend that Impact Atlas {{verb}} this {{entityType}} data before the dataset is used further. Example value: "{{example}}".',
-      recommendationVerbHash: "pseudonymize it by hashing",
+      recommendationVerbKeep: "keep",
+      recommendationVerbTokenize: "replace it with a stable pseudonymous token",
+      recommendationVerbGeneralize: "reduce it to a broader non-specific value",
       recommendationVerbRemove: "remove",
       recommendationVerbRestrict: "redact the risky parts of",
-      approveFinding: "Accept recommended adjustment",
-      rejectFinding: "Reject recommendation",
-      findingApprovedBadge: "Adjustment accepted",
-      findingRejectedBadge: "Recommendation rejected",
-      rejectedFindingWarning:
-        "Impact Atlas will leave this data unchanged, so the GDPR risk remains in the dataset.",
-      rejectionReasonLabel: "Reason for overriding this finding (required)",
-      rejectionReasonPlaceholder:
-        'Explain why this finding should not be redacted, e.g. "this PERSON match is a project name, not a real name."',
-      rejectionReasonTooShort:
+      recommendedActionBadge: "Recommended",
+      keepOverrideWarning:
+        "Impact Atlas will keep this data unchanged. Explain why that is appropriate despite the recommendation.",
+      overrideFindingWarning:
+        "You selected a different transformation than the recommendation. Explain why this override is appropriate.",
+      overrideReasonLabel: "Reason for this override (required)",
+      overrideReasonPlaceholder:
+        'Explain why this alternate transformation is appropriate, e.g. "this PERSON match is a project name, not a real person."',
+      overrideReasonTooShort:
         "Please provide a more detailed reason (at least 10 characters).",
       reviewDecisionsIncomplete:
-        "Accept or reject every recommended adjustment above before continuing.",
+        "Choose a transformation for every flagged finding above before continuing.",
       reviewApprovalLocked:
         "Approval is only available while the job is waiting for privacy review.",
+      transformation: {
+        keep: "Keep",
+        tokenize: "Tokenize",
+        generalize: "Generalize",
+        remove: "Remove",
+        restrict: "Restrict",
+      },
       reviewUnavailableTitle: "Privacy review unavailable",
       reviewUnavailableDescription:
         "This processing job could not be loaded or is no longer available for review.",
@@ -699,7 +707,9 @@ const en = {
     aiCurated: "AI-curated",
     notDeduplicatedNote: "Sum across sources — not a deduplicated count.",
     narrativeTitle: "What the data suggests",
-    fullCatalogTitle: "See full catalog",
+    fullCatalogTitle: "Explore more metrics",
+    barChartSectionTitle: "Additional metrics in bar charts",
+    qualitativeSignalsTitle: "Additional qualitative signals",
     featured: "Featured on this dashboard",
     notFeatured: "Not featured this time",
     omittedTitle: "Not yet calculable",
@@ -793,7 +803,7 @@ const en = {
       "Collect mentor-side session logs to triangulate participant outcomes.",
     ],
     privacy: [
-      "Personal identifiers (participant_name, email) were hashed before AI interpretation.",
+      "Personal identifiers (participant_name, email) were tokenized before AI interpretation.",
       "Sensitive free-text (case_notes) was removed before analysis.",
       "Quasi identifiers (age_group, district) were generalised to reduce re-identification risk.",
     ],
@@ -1089,7 +1099,7 @@ const en = {
       outcome: "Outcome data",
     },
     transformationLabels: {
-      hashed: "Hash",
+      hashed: "Tokenize",
       removed: "Remove",
       generalised: "Generalise",
       kept: "Keep",
@@ -1323,7 +1333,7 @@ const en = {
       outcome: "Outcome",
     },
     transformation: {
-      hashed: "Hashed",
+      hashed: "Tokenized",
       removed: "Removed",
       generalised: "Generalised",
       kept: "Kept",

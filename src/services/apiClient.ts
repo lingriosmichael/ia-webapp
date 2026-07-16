@@ -375,7 +375,12 @@ export type EvidenceModality =
   | "narrative_qualitative"
   | "insufficiently_extracted";
 
-export type PrivacyReviewDecisionValue = "approved" | "rejected";
+export type PrivacyReviewDecisionValue =
+  | "keep"
+  | "tokenize"
+  | "generalize"
+  | "remove"
+  | "restrict";
 
 export interface ParsedRepresentationPreviewTable {
   name: string;
@@ -407,8 +412,8 @@ export interface ParsedRepresentationPreviewRecord {
 
 // What this client sends when approving a review. decidedById/decidedAt are
 // never sent from here — the backend stamps those itself from the
-// authenticated caller. `reason` is required by the backend whenever
-// decision is "rejected" (overriding a privacy finding must be justified).
+// authenticated caller. `reason` is required by the backend whenever the
+// selected action overrides the recommended action for that finding.
 export interface PrivacyReviewFieldDecisionInput {
   field: string;
   entityType: string;
@@ -784,7 +789,7 @@ export interface DeterministicAnalysisMetric {
 }
 
 export interface DeterministicAnalysisDistributionBucket {
-  value: string;
+  value: string | null;
   count: number;
   ratio: number | null;
 }
@@ -814,7 +819,7 @@ export interface DeterministicAnalysisTrend {
 }
 
 export interface DeterministicAnalysisSubgroupSegment {
-  value: string;
+  value: string | null;
   rowCount: number;
   positiveCount: number | null;
   positiveRatio: number | null;
@@ -831,6 +836,54 @@ export interface DeterministicAnalysisSubgroupBreakdown {
 export interface DeterministicAnalysisWarning {
   code: string;
   message: string;
+}
+
+export interface DeterministicAnalysisCategoricalCrosstabCell {
+  valueA: string | null;
+  valueB: string | null;
+  count: number;
+  ratio: number | null;
+}
+
+export interface DeterministicAnalysisCategoricalCrosstab {
+  crosstabKey: string;
+  label: string;
+  tableName: string;
+  columnAName: string;
+  columnBName: string;
+  cells: DeterministicAnalysisCategoricalCrosstabCell[];
+}
+
+export interface DeterministicAnalysisNumericCategoryGroup {
+  categoryValue: string | null;
+  count: number;
+  min: number | null;
+  max: number | null;
+  mean: number | null;
+  median: number | null;
+  standardDeviation: number | null;
+  q1: number | null;
+  q3: number | null;
+}
+
+export interface DeterministicAnalysisNumericCategorySummary {
+  summaryKey: string;
+  label: string;
+  tableName: string;
+  numericColumnName: string;
+  categoryColumnName: string;
+  groups: DeterministicAnalysisNumericCategoryGroup[];
+}
+
+export interface DeterministicAnalysisNumericCorrelation {
+  correlationKey: string;
+  label: string;
+  tableName: string;
+  columnAName: string;
+  columnBName: string;
+  completePairCount: number;
+  pearson: number | null;
+  spearman: number | null;
 }
 
 export interface DeterministicAnalysisCandidateIndicator {
@@ -859,6 +912,9 @@ export interface DeterministicAnalysisRecord {
   distributions: DeterministicAnalysisDistribution[];
   trends: DeterministicAnalysisTrend[];
   subgroupBreakdowns: DeterministicAnalysisSubgroupBreakdown[];
+  categoricalCrosstabs: DeterministicAnalysisCategoricalCrosstab[];
+  numericCategorySummaries: DeterministicAnalysisNumericCategorySummary[];
+  numericCorrelations: DeterministicAnalysisNumericCorrelation[];
   warnings: DeterministicAnalysisWarning[];
   candidateIndicators: DeterministicAnalysisCandidateIndicator[];
   createdAt: string;

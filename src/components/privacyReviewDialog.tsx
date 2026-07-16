@@ -29,19 +29,53 @@ type FindingSummaryItem = {
 };
 
 const RECOMMENDATION_VERB_KEY_BY_ACTION: Record<string, string> = {
-  hash: "projectWorkspace.evidence.recommendationVerbHash",
+  keep: "projectWorkspace.evidence.recommendationVerbKeep",
+  tokenize: "projectWorkspace.evidence.recommendationVerbTokenize",
+  generalize: "projectWorkspace.evidence.recommendationVerbGeneralize",
   remove: "projectWorkspace.evidence.recommendationVerbRemove",
   restrict: "projectWorkspace.evidence.recommendationVerbRestrict",
 };
+
+function getRecommendationVerb(
+  action: string,
+  t: ReturnType<typeof useTranslation>["t"],
+) {
+  const verbKey = RECOMMENDATION_VERB_KEY_BY_ACTION[action];
+  return verbKey ? t(verbKey) : action;
+}
 
 function createDecisionKey(field: string, entityType: string) {
   return `${field}::${entityType}`;
 }
 
-const MINIMUM_REJECTION_REASON_LENGTH = 10;
+const MINIMUM_OVERRIDE_REASON_LENGTH = 10;
 
-function hasValidRejectionReason(reason: string | undefined) {
-  return (reason?.trim().length ?? 0) >= MINIMUM_REJECTION_REASON_LENGTH;
+function hasValidOverrideReason(reason: string | undefined) {
+  return (reason?.trim().length ?? 0) >= MINIMUM_OVERRIDE_REASON_LENGTH;
+}
+
+function getActionOptions(
+  finding: FindingSummaryItem,
+): PrivacyReviewDecisionValue[] {
+  const optionsByRecommendedAction: Record<
+    string,
+    PrivacyReviewDecisionValue[]
+  > = {
+    tokenize: ["tokenize", "remove", "keep"],
+    generalize: ["generalize", "remove", "keep"],
+    remove: ["remove", "tokenize", "keep"],
+    restrict: ["restrict", "remove", "keep"],
+    keep: ["keep"],
+  };
+
+  return optionsByRecommendedAction[finding.recommendedAction] ?? ["keep"];
+}
+
+function getActionLabel(
+  action: PrivacyReviewDecisionValue,
+  t: ReturnType<typeof useTranslation>["t"],
+) {
+  return t(`projectWorkspace.evidence.transformation.${action}`);
 }
 
 export function PrivacyReviewDialog({
@@ -109,7 +143,8 @@ export function PrivacyReviewDialog({
       return false;
     }
     return (
-      decision === "approved" || hasValidRejectionReason(fieldReasonMap[key])
+      decision === finding.recommendedAction ||
+      hasValidOverrideReason(fieldReasonMap[key])
     );
   });
   const canSubmit = canApproveReview && allDecisionsResolved;
@@ -154,7 +189,10 @@ export function PrivacyReviewDialog({
               field: finding.field,
               entityType: finding.entityType,
               decision,
-              reason: decision === "rejected" ? fieldReasonMap[key] : undefined,
+              reason:
+                decision !== finding.recommendedAction
+                  ? fieldReasonMap[key]
+                  : undefined,
             };
           }),
         },
@@ -367,6 +405,7 @@ function MetaCard({ label, value }: { label: string; value: string }) {
 
 function FindingCard({ finding }: { finding: FindingSummaryItem }) {
   const { t } = useTranslation();
+  const verb = getRecommendationVerb(finding.recommendedAction, t);
 
   return (
     <div className="rounded-xl border border-border bg-secondary/20 p-4">
@@ -380,7 +419,7 @@ function FindingCard({ finding }: { finding: FindingSummaryItem }) {
         {t("projectWorkspace.evidence.privacyFindingSummary", {
           entityType: finding.entityType,
           count: finding.count,
-          action: finding.recommendedAction,
+          action: verb,
         })}
       </div>
     </div>
@@ -403,8 +442,9 @@ function DecisionFindingCard({
   onReasonChange: (reason: string) => void;
 }) {
   const { t } = useTranslation();
-  const verbKey = RECOMMENDATION_VERB_KEY_BY_ACTION[finding.recommendedAction];
-  const verb = verbKey ? t(verbKey) : finding.recommendedAction;
+  const verb = getRecommendationVerb(finding.recommendedAction, t);
+  const actionOptions = getActionOptions(finding);
+  const isOverride = Boolean(decision && decision !== finding.recommendedAction);
 
   return (
     <div className="rounded-xl border border-border bg-secondary/20 p-4">
@@ -420,16 +460,12 @@ function DecisionFindingCard({
         {decision ? (
           <span
             className={
-              decision === "approved"
-                ? "rounded-full border border-primary/25 bg-primary-soft px-3 py-1 text-xs font-medium text-primary"
-                : "rounded-full border border-destructive/25 bg-destructive/10 px-3 py-1 text-xs font-medium text-destructive"
+              isOverride
+                ? "rounded-full border border-destructive/25 bg-destructive/10 px-3 py-1 text-xs font-medium text-destructive"
+                : "rounded-full border border-primary/25 bg-primary-soft px-3 py-1 text-xs font-medium text-primary"
             }
           >
-            {t(
-              decision === "approved"
-                ? "projectWorkspace.evidence.findingApprovedBadge"
-                : "projectWorkspace.evidence.findingRejectedBadge",
-            )}
+            {getActionLabel(decision, t)}
           </span>
         ) : (
           <span className="rounded-full border border-primary/25 bg-primary-soft px-3 py-1 text-xs font-medium text-primary">
@@ -452,57 +488,70 @@ function DecisionFindingCard({
             })}
       </p>
 
-      {decision === "rejected" ? (
+      <div className="mt-4 flex flex-wrap gap-2">
+        {actionOptions.map((action) => {
+          const isRecommended = action === finding.recommendedAction;
+          const isSelected = action === decision;
+          return (
+            <Button
+              key={action}
+              type="button"
+              size="sm"
+              variant={isSelected ? "default" : "outline"}
+              disabled={disabled}
+              onClick={() => onDecide(action)}
+            >
+              {getActionLabel(action, t)}
+              {isRecommended ? (
+                <span className="ml-2 text-[10px] uppercase tracking-[0.08em]">
+                  {t("projectWorkspace.evidence.recommendedActionBadge")}
+                </span>
+              ) : null}
+            </Button>
+          );
+        })}
+      </div>
+
+      {isOverride ? (
         <div className="mt-2 space-y-2">
-          <p className="text-sm font-medium text-destructive">
-            {t("projectWorkspace.evidence.rejectedFindingWarning")}
+          <p
+            className={
+              decision === "keep"
+                ? "text-sm font-medium text-destructive"
+                : "text-sm font-medium text-foreground"
+            }
+          >
+            {t(
+              decision === "keep"
+                ? "projectWorkspace.evidence.keepOverrideWarning"
+                : "projectWorkspace.evidence.overrideFindingWarning",
+            )}
           </p>
           <div>
             <label
-              htmlFor={`rejection-reason-${finding.field}-${finding.entityType}`}
+              htmlFor={`override-reason-${finding.field}-${finding.entityType}`}
               className="text-sm font-medium text-foreground"
             >
-              {t("projectWorkspace.evidence.rejectionReasonLabel")}
+              {t("projectWorkspace.evidence.overrideReasonLabel")}
             </label>
             <Textarea
-              id={`rejection-reason-${finding.field}-${finding.entityType}`}
+              id={`override-reason-${finding.field}-${finding.entityType}`}
               className="mt-1"
               disabled={disabled}
               value={reason ?? ""}
               placeholder={t(
-                "projectWorkspace.evidence.rejectionReasonPlaceholder",
+                "projectWorkspace.evidence.overrideReasonPlaceholder",
               )}
               onChange={(event) => onReasonChange(event.target.value)}
             />
-            {!hasValidRejectionReason(reason) ? (
+            {!hasValidOverrideReason(reason) ? (
               <p className="mt-1 text-xs text-destructive">
-                {t("projectWorkspace.evidence.rejectionReasonTooShort")}
+                {t("projectWorkspace.evidence.overrideReasonTooShort")}
               </p>
             ) : null}
           </div>
         </div>
       ) : null}
-
-      <div className="mt-4 flex flex-wrap gap-2">
-        <Button
-          type="button"
-          size="sm"
-          variant={decision === "approved" ? "default" : "outline"}
-          disabled={disabled}
-          onClick={() => onDecide("approved")}
-        >
-          {t("projectWorkspace.evidence.approveFinding")}
-        </Button>
-        <Button
-          type="button"
-          size="sm"
-          variant={decision === "rejected" ? "destructive" : "outline"}
-          disabled={disabled}
-          onClick={() => onDecide("rejected")}
-        >
-          {t("projectWorkspace.evidence.rejectFinding")}
-        </Button>
-      </div>
     </div>
   );
 }

@@ -370,34 +370,44 @@ const de: TranslationDictionary = {
       reviewUnknownActivity: "Unbekannte Aktivität",
       detectedFindingsTitle: "Erkannte Befunde",
       detectedFindingsDescription:
-        "{{count}} Befunde erkannt. Für {{decisions}} Eintrag(e) ist noch eine explizite Prüfentscheidung erforderlich.",
+        "{{count}} Befunde erkannt. Für {{decisions}} Eintrag(e) ist noch eine explizite Transformationsauswahl erforderlich.",
       decisionRequired: "Entscheidung erforderlich",
       gdprNoticeIntro:
-        "Wir haben in diesem Datensatz personenbezogene oder sensible Daten gefunden, die möglicherweise nicht DSGVO-konform sind. Entscheiden Sie für jeden Punkt unten, ob Impact Atlas die empfohlene Anpassung automatisch anwenden soll.",
+        "Wir haben in diesem Datensatz personenbezogene oder sensible Daten gefunden. Wählen Sie für jeden Punkt unten, wie Impact Atlas diese Daten transformieren soll, bevor der Datensatz datenschutzsicher weiterverarbeitet wird.",
       recommendationSentence:
         "Wir empfehlen, dass Impact Atlas diese {{entityType}}-Daten {{verb}}, bevor der Datensatz weiterverwendet wird.",
       recommendationSentenceWithExample:
         "Wir empfehlen, dass Impact Atlas diese {{entityType}}-Daten {{verb}}, bevor der Datensatz weiterverwendet wird. Beispielwert: „{{example}}“.",
-      recommendationVerbHash: "durch Hashing pseudonymisiert",
+      recommendationVerbKeep: "beibehält",
+      recommendationVerbTokenize:
+        "durch ein stabiles pseudonymes Kürzel ersetzt",
+      recommendationVerbGeneralize:
+        "auf einen breiteren, nicht spezifischen Wert verallgemeinert",
       recommendationVerbRemove: "entfernen",
       recommendationVerbRestrict:
         "an den sensiblen Stellen bereinigt oder schwärzt",
-      approveFinding: "Empfohlene Anpassung akzeptieren",
-      rejectFinding: "Empfehlung ablehnen",
-      findingApprovedBadge: "Anpassung akzeptiert",
-      findingRejectedBadge: "Empfehlung abgelehnt",
-      rejectedFindingWarning:
-        "Impact Atlas lässt diese Daten unverändert, daher bleibt das DSGVO-Risiko im Datensatz bestehen.",
-      rejectionReasonLabel:
-        "Begründung für das Verwerfen dieses Befunds (erforderlich)",
-      rejectionReasonPlaceholder:
-        "Erklären Sie, warum dieser Befund nicht redigiert werden sollte, z. B. „diese PERSON-Übereinstimmung ist ein Projektname, kein echter Name.“",
-      rejectionReasonTooShort:
+      recommendedActionBadge: "Empfohlen",
+      keepOverrideWarning:
+        "Impact Atlas würde diese Daten unverändert beibehalten. Begründen Sie, warum das trotz der Empfehlung angemessen ist.",
+      overrideFindingWarning:
+        "Sie haben eine andere Transformation als empfohlen gewählt. Begründen Sie, warum diese Abweichung angemessen ist.",
+      overrideReasonLabel:
+        "Begründung für diese Abweichung (erforderlich)",
+      overrideReasonPlaceholder:
+        "Erklären Sie, warum diese alternative Transformation passend ist, z. B. „diese PERSON-Übereinstimmung ist ein Projektname, keine reale Person.“",
+      overrideReasonTooShort:
         "Bitte geben Sie eine ausführlichere Begründung an (mindestens 10 Zeichen).",
       reviewDecisionsIncomplete:
-        "Akzeptieren oder verwerfen Sie jede empfohlene Anpassung oben, bevor Sie fortfahren.",
+        "Wählen Sie für jeden markierten Befund oben eine Transformation, bevor Sie fortfahren.",
       reviewApprovalLocked:
         "Die Freigabe ist nur möglich, solange der Job auf die Datenschutzprüfung wartet.",
+      transformation: {
+        keep: "Beibehalten",
+        tokenize: "Tokenisieren",
+        generalize: "Verallgemeinern",
+        remove: "Entfernen",
+        restrict: "Schwärzen",
+      },
       reviewUnavailableTitle: "Datenschutzprüfung nicht verfügbar",
       reviewUnavailableDescription:
         "Dieser Verarbeitungsjob konnte nicht geladen werden oder steht nicht mehr zur Prüfung bereit.",
@@ -717,7 +727,9 @@ const de: TranslationDictionary = {
     notDeduplicatedNote:
       "Summe über mehrere Quellen — keine deduplizierte Zählung.",
     narrativeTitle: "Was die Daten nahelegen",
-    fullCatalogTitle: "Vollständigen Katalog anzeigen",
+    fullCatalogTitle: "Weitere Kennzahlen erkunden",
+    barChartSectionTitle: "Zusätzliche Kennzahlen als Balkendiagramme",
+    qualitativeSignalsTitle: "Weitere qualitative Signale",
     featured: "In diesem Dashboard hervorgehoben",
     notFeatured: "Diesmal nicht hervorgehoben",
     omittedTitle: "Noch nicht berechenbar",
@@ -813,7 +825,7 @@ const de: TranslationDictionary = {
       "Erheben Sie Sitzungsprotokolle der Mentorinnen und Mentoren, um Ergebnisse aus mehreren Blickwinkeln abzusichern.",
     ],
     privacy: [
-      "Personenbezogene Merkmale (participant_name, email) wurden vor der KI-Interpretation gehasht.",
+      "Personenbezogene Merkmale (participant_name, email) wurden vor der KI-Interpretation tokenisiert.",
       "Sensibler Freitext (case_notes) wurde vor der Analyse entfernt.",
       "Quasi-Identifier (age_group, district) wurden verallgemeinert, um das Re-Identifikationsrisiko zu senken.",
     ],
@@ -1113,7 +1125,7 @@ const de: TranslationDictionary = {
       outcome: "Wirkungsdaten",
     },
     transformationLabels: {
-      hashed: "Hashen",
+      hashed: "Tokenisieren",
       removed: "Entfernen",
       generalised: "Verallgemeinern",
       kept: "Behalten",
@@ -1351,7 +1363,7 @@ const de: TranslationDictionary = {
       outcome: "Ergebnis",
     },
     transformation: {
-      hashed: "Gehasht",
+      hashed: "Tokenisiert",
       removed: "Entfernt",
       generalised: "Verallgemeinert",
       kept: "Beibehalten",

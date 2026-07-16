@@ -18,7 +18,6 @@ import { AnalyticsStatusBanner } from "@/components/analytics/analyticsStatusBan
 import { MetricGrid } from "@/components/analytics/metricGrid";
 import { ConnectiveNarrativeCallout } from "@/components/analytics/connectiveNarrativeCallout";
 import { CatalogDetailsSection } from "@/components/analytics/catalogDetailsSection";
-import { DataQualityPanel } from "@/components/analytics/dataQualityPanel";
 
 export const Route = createFileRoute("/projects/$projectId/analytics")({
   component: ProjectAnalyticsPage,
@@ -123,7 +122,6 @@ function ProjectAnalyticsPage() {
               catalog={result.catalog}
               featuredEntryIds={result.curation.featuredEntryIds}
             />
-            <DataQualityPanel result={result} />
           </>
         )}
       </div>
