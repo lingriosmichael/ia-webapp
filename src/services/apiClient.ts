@@ -376,11 +376,7 @@ export type EvidenceModality =
   | "insufficiently_extracted";
 
 export type PrivacyReviewDecisionValue =
-  | "keep"
-  | "tokenize"
-  | "generalize"
-  | "remove"
-  | "restrict";
+  "keep" | "tokenize" | "generalize" | "remove" | "restrict";
 
 export interface ParsedRepresentationPreviewTable {
   name: string;

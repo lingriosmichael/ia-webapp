@@ -391,8 +391,7 @@ const de: TranslationDictionary = {
         "Impact Atlas würde diese Daten unverändert beibehalten. Begründen Sie, warum das trotz der Empfehlung angemessen ist.",
       overrideFindingWarning:
         "Sie haben eine andere Transformation als empfohlen gewählt. Begründen Sie, warum diese Abweichung angemessen ist.",
-      overrideReasonLabel:
-        "Begründung für diese Abweichung (erforderlich)",
+      overrideReasonLabel: "Begründung für diese Abweichung (erforderlich)",
       overrideReasonPlaceholder:
         "Erklären Sie, warum diese alternative Transformation passend ist, z. B. „diese PERSON-Übereinstimmung ist ein Projektname, keine reale Person.“",
       overrideReasonTooShort:
@@ -650,8 +649,7 @@ const de: TranslationDictionary = {
             "Für diese Aktivität wartet noch {{count}} Datei auf Datenschutzprüfung.",
           privacyReview_other:
             "Für diese Aktivität warten noch {{count}} Dateien auf Datenschutzprüfung.",
-          processing:
-            "Die Interpretation läuft oder wird gerade aktualisiert.",
+          processing: "Die Interpretation läuft oder wird gerade aktualisiert.",
           questions:
             "{{count}} Rückfrage ist noch offen, bevor die Ergebnisse geprüft werden können.",
           questions_other:
@@ -671,14 +669,12 @@ const de: TranslationDictionary = {
           privacyReview: "Diese Datei wartet auf Datenschutzprüfung.",
           processing:
             "Diese Datei wird gerade verarbeitet oder neu interpretiert.",
-          questions:
-            "{{count}} Rückfrage muss noch beantwortet werden.",
+          questions: "{{count}} Rückfrage muss noch beantwortet werden.",
           questions_other:
             "{{count}} Rückfragen müssen noch beantwortet werden.",
           reviewed:
             "Diese Datei ist interpretiert und bereits im geprüften Stand enthalten.",
-          ready:
-            "Diese Datei ist interpretiert und bereit für Ihre Prüfung.",
+          ready: "Diese Datei ist interpretiert und bereit für Ihre Prüfung.",
           notStarted:
             "Diese Datei ist bereit, aber die Interpretation wurde noch nicht gestartet.",
         },

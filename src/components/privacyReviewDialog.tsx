@@ -444,7 +444,9 @@ function DecisionFindingCard({
   const { t } = useTranslation();
   const verb = getRecommendationVerb(finding.recommendedAction, t);
   const actionOptions = getActionOptions(finding);
-  const isOverride = Boolean(decision && decision !== finding.recommendedAction);
+  const isOverride = Boolean(
+    decision && decision !== finding.recommendedAction,
+  );
 
   return (
     <div className="rounded-xl border border-border bg-secondary/20 p-4">

@@ -22,7 +22,8 @@ export function CatalogDetailsSection({
     (entry) => !featuredSet.has(entry.entryId),
   );
   const secondaryMetrics = secondaryEntries.filter(
-    (entry): entry is EvidenceCatalogMetricEntry => entry.entryType === "METRIC",
+    (entry): entry is EvidenceCatalogMetricEntry =>
+      entry.entryType === "METRIC",
   );
   const secondaryThemes = secondaryEntries.filter(
     (entry) => entry.entryType === "QUALITATIVE_THEME",
@@ -30,10 +31,7 @@ export function CatalogDetailsSection({
   const maximumValueByUnit = secondaryMetrics.reduce<Record<string, number>>(
     (accumulator, entry) => {
       const unitKey = entry.unit ?? "count";
-      accumulator[unitKey] = Math.max(
-        entry.value,
-        accumulator[unitKey] ?? 0,
-      );
+      accumulator[unitKey] = Math.max(entry.value, accumulator[unitKey] ?? 0);
       return accumulator;
     },
     {},

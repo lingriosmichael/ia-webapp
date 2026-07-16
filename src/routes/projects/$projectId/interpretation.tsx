@@ -32,9 +32,7 @@ import {
   useStartInterpretationMutation,
 } from "@/hooks/useWorkspaceQueries";
 import { useRequireAuth } from "@/hooks/useAuth";
-import {
-  getQuestionsByDomain,
-} from "@/lib/interpretationWorkflow";
+import { getQuestionsByDomain } from "@/lib/interpretationWorkflow";
 import {
   apiClient,
   type EvidenceModality,
@@ -259,7 +257,9 @@ function ProjectInterpretationPage() {
         return null;
       }
 
-      const upload = uploads.find((item) => item.id === pendingJob.uploadMetadataId);
+      const upload = uploads.find(
+        (item) => item.id === pendingJob.uploadMetadataId,
+      );
       return {
         activityId: activity.id,
         activityName: activity.name,
@@ -412,7 +412,9 @@ function InterpretationStatusHero({
         </p>
         <div className="mt-5 grid gap-3 md:grid-cols-3">
           <SummaryMetric
-            label={t("projectWorkspace.interpretation.simplified.statOpenTasks")}
+            label={t(
+              "projectWorkspace.interpretation.simplified.statOpenTasks",
+            )}
             value={String(openTaskCount)}
           />
           <SummaryMetric
@@ -727,7 +729,12 @@ function InterpretationActivityGroup({
     activityResults.length === uploads.length &&
     !pendingPrivacyReview &&
     !hasUnresolvedActionableQuestion;
-  const status = getActivityResultStatus(activity, uploads, jobs, activityResults);
+  const status = getActivityResultStatus(
+    activity,
+    uploads,
+    jobs,
+    activityResults,
+  );
   const summary =
     status === "no_evidence"
       ? t("projectWorkspace.interpretation.noEvidenceYet")
@@ -826,9 +833,11 @@ function InterpretationActivityGroup({
               }
               className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground"
             >
-              {isExpanded
-                ? <ChevronDown className="h-5 w-5" />
-                : <ChevronRight className="h-5 w-5" />}
+              {isExpanded ? (
+                <ChevronDown className="h-5 w-5" />
+              ) : (
+                <ChevronRight className="h-5 w-5" />
+              )}
             </button>
           ) : null}
         </div>
@@ -841,7 +850,9 @@ function InterpretationActivityGroup({
               key={upload.id}
               activityId={activity.id}
               activityName={activity.name}
-              activityAcknowledged={activity.interpretationAcknowledgedAt !== null}
+              activityAcknowledged={
+                activity.interpretationAcknowledgedAt !== null
+              }
               projectId={projectId}
               organizationId={organizationId}
               parsedRepresentationPreview={previewByUploadId.get(upload.id)}
@@ -996,7 +1007,8 @@ function DatasetInterpretationCard({
                       ? t(
                           "projectWorkspace.interpretation.simplified.datasetSummary.ready",
                         )
-                      : interpretationSupportState === "insufficiently_extracted"
+                      : interpretationSupportState ===
+                          "insufficiently_extracted"
                         ? t(
                             "projectWorkspace.interpretation.interpretInsufficientExtraction",
                           )
@@ -1019,7 +1031,8 @@ function DatasetInterpretationCard({
               {t("projectWorkspace.interpretation.reviewPrivacyAction")}
             </Button>
           ) : null}
-          {!isAwaitingPrivacyReview && interpretationSupportState === "supported" ? (
+          {!isAwaitingPrivacyReview &&
+          interpretationSupportState === "supported" ? (
             <Button
               variant="outline"
               size="sm"
@@ -1079,7 +1092,9 @@ function IndicatorSelectionSection({
     <div className="space-y-3">
       <div>
         <div className="text-sm font-semibold tracking-tight text-foreground">
-          {t("projectWorkspace.interpretation.simplified.indicatorSelectionTitle")}
+          {t(
+            "projectWorkspace.interpretation.simplified.indicatorSelectionTitle",
+          )}
         </div>
         <p className="mt-1 text-sm text-muted-foreground">
           {t(
@@ -1148,11 +1163,7 @@ function IndicatorSelectionSection({
   );
 }
 
-function ActivityStatusBadge({
-  status,
-}: {
-  status: ActivityWorkflowStatus;
-}) {
+function ActivityStatusBadge({ status }: { status: ActivityWorkflowStatus }) {
   const { t } = useTranslation();
 
   if (status === "ready" || status === "reviewed") {

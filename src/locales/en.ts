@@ -634,8 +634,7 @@ const en = {
             "{{count}} file in this activity is still waiting for privacy review.",
           privacyReview_other:
             "{{count}} files in this activity are still waiting for privacy review.",
-          processing:
-            "Interpretation is currently running or being refreshed.",
+          processing: "Interpretation is currently running or being refreshed.",
           questions:
             "{{count}} follow-up question is still open before the results can be reviewed.",
           questions_other:
@@ -653,10 +652,8 @@ const en = {
           privacyReview: "This file is waiting for privacy review.",
           processing:
             "This file is currently being processed or re-interpreted.",
-          questions:
-            "{{count}} follow-up question still needs an answer.",
-          questions_other:
-            "{{count}} follow-up questions still need answers.",
+          questions: "{{count}} follow-up question still needs an answer.",
+          questions_other: "{{count}} follow-up questions still need answers.",
           reviewed:
             "This file has been interpreted and is already included in the reviewed state.",
           ready: "This file has been interpreted and is ready for review.",
