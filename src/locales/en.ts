@@ -185,11 +185,11 @@ const en = {
     sidebarProject: "Project",
     sidebarOverview: "Overview",
     sidebarAnalytics: "Analytics",
-    sidebarInsights: "Insights",
+    sidebarInsights: "AI knowledge",
     sidebarActivities: "Activities",
     sidebarBrief: "Activity Brief",
     sidebarUpload: "Upload",
-    viewInsights: "View insights",
+    viewInsights: "Open AI knowledge",
     eyebrow: "Project",
     noDescription: "No project goal captured yet.",
     readOnlyBannerTitle: "Viewing as Organization Admin",
@@ -209,7 +209,7 @@ const en = {
     dashboard: {
       health: "Project health",
       evidenceCompleteness: "Evidence completeness",
-      insightsGenerated: "AI insights generated",
+      insightsGenerated: "AI knowledge ready",
       lastEvidenceUpload: "Last evidence upload",
       whatNeedsAttention: "What needs attention",
       recentActivity: "Recent activity",
@@ -220,23 +220,23 @@ const en = {
         attention: "Needs attention",
       },
       healthDescriptions: {
-        strong: "Evidence is uploaded, and insights are already available.",
+        strong: "Evidence is uploaded, and AI knowledge is already available.",
         progress:
           "Evidence has started flowing and AI processing is still underway.",
         attention:
-          "This project still needs evidence uploads or review before insights are ready.",
+          "This project still needs evidence uploads or review before AI knowledge is ready.",
       },
       completenessValue: "{{withEvidence}}/{{total}} activities",
       completenessDelta: "{{percent}}% already have evidence",
       insightsDelta: "{{count}} pending",
-      insightsReadyDelta: "Ready to review",
-      noInsightsDelta: "No insights generated yet",
+      insightsReadyDelta: "Ready to open",
+      noInsightsDelta: "No AI knowledge ready yet",
       noUploadValue: "None yet",
       noUploadDelta: "Upload evidence to start the pipeline",
       attentionItems: {
         noEvidence: "No evidence has been uploaded yet.",
         partialEvidence: "{{count}} activities still need evidence uploads.",
-        pendingInsights: "{{count}} insight jobs are still running.",
+        pendingInsights: "{{count}} AI knowledge runs are still in progress.",
         failedJobs: "{{count}} processing jobs need attention.",
         healthy:
           "Every activity has evidence, and no issues need review right now.",
@@ -246,7 +246,7 @@ const en = {
         dataset_uploaded: "Dataset uploaded",
         job_completed: "Processing completed",
         job_failed: "Processing needs review",
-        insight_generated: "AI insights generated",
+        insight_generated: "AI knowledge generated",
       },
       recentActivityActivitySuffix: "for {{name}}",
     },
@@ -254,7 +254,7 @@ const en = {
     emptyStateDescription:
       "Activities are workshops, trainings, mentoring sessions, or other interventions where you upload evidence.",
     emptyStateSupporting:
-      "Create the first activity to keep uploads, analytics, and insights separate for each intervention.",
+      "Create the first activity to keep uploads, analytics, and AI knowledge separate for each intervention.",
     emptyStateAction: "Create your first activity",
     addAnotherActivity: "Add another activity",
     activityNamePlaceholder: "Activity name",
@@ -280,7 +280,7 @@ const en = {
       evidence: "Evidence",
       interpretation: "Interpretation",
       analytics: "Analytics",
-      insights: "Insights",
+      insights: "AI knowledge",
       comingSoon: "Soon",
     },
     overview: {
@@ -337,14 +337,14 @@ const en = {
       privacyApprovalFailed: "Privacy review could not be approved.",
       privacyReviewTitle: "Privacy review",
       privacyReviewDescription:
-        "Confirm how detected personal and sensitive information should be handled before Impact Atlas continues with the privacy-safe representation.",
+        "Confirm how detected names and addresses should be handled before Impact Atlas continues with the privacy-safe representation.",
       loadingPrivacyReview: "Loading privacy review…",
       noPrivacyFindings: "No privacy findings available yet.",
       privacyFindingSummary:
         "{{entityType}} detected {{count}} time(s). Recommended action: {{action}}.",
       analysisDialogAnalyzingTitle: "Analyzing your file…",
       analysisDialogAnalyzingDescription:
-        "Impact Atlas is parsing the file and checking for personal or sensitive information. You can close this and keep working — it'll keep running in the background.",
+        "Impact Atlas is parsing the file and checking for names and addresses. You can close this and keep working — it'll keep running in the background.",
       analysisDialogReadyTitle: "Ready for privacy review",
       analysisDialogReadyDescription:
         "Impact Atlas finished analyzing this file. Review the detected findings before it continues.",
@@ -366,7 +366,7 @@ const en = {
         "{{count}} findings detected. {{decisions}} item(s) still require an explicit transformation choice.",
       decisionRequired: "Decision required",
       gdprNoticeIntro:
-        "We found personal or sensitive data in this dataset. For each item below, choose how Impact Atlas should transform it before the dataset continues into privacy-safe processing.",
+        "We found names or addresses in this dataset. For each item below, choose how Impact Atlas should transform it before the dataset continues into privacy-safe processing.",
       recommendationSentence:
         "We recommend that Impact Atlas {{verb}} this {{entityType}} data before the dataset is used further.",
       recommendationSentenceWithExample:
@@ -378,7 +378,11 @@ const en = {
       recommendationVerbRestrict: "redact the risky parts of",
       recommendedActionBadge: "Recommended",
       keepOverrideWarning:
-        "Impact Atlas will keep this data unchanged. Explain why that is appropriate despite the recommendation.",
+        "Impact Atlas will keep this data unchanged. If you refuse tokenization, you must confirm that you understand this decision and agree to the applicable terms and conditions.",
+      keepUnchangedAcknowledgementLabel:
+        "I am intentionally refusing the recommended tokenization and confirm that I accept responsibility for this decision and agree to Impact Atlas terms and conditions.",
+      keepUnchangedAcknowledgementRequired:
+        "Confirm this warning if you want to keep the data unchanged.",
       overrideFindingWarning:
         "You selected a different transformation than the recommendation. Explain why this override is appropriate.",
       overrideReasonLabel: "Reason for this override (required)",
@@ -610,73 +614,53 @@ const en = {
       quantitativeSynthesisPendingSummary:
         "Indicators stay hidden until preparation is complete and deterministic analysis is ready.",
       simplified: {
-        heroTitle: "You still have {{count}} open task.",
-        heroTitle_other: "You still have {{count}} open tasks.",
-        heroClearTitle: "Everything is ready for your sign-off.",
+        pageTitle: "AI knowledge",
+        heroTitle: "One AI knowledge flow per activity.",
         heroDescription:
-          "This page now shows only what needs to happen next. Privacy reviews, follow-up questions, and review-ready results are separated clearly.",
-        statOpenTasks: "Open tasks",
-        statReadyForReview: "Ready for review",
-        statReviewed: "Reviewed activities",
-        openTasksTitle: "What needs your attention now",
-        openTasksEmptyTitle: "There are no open tasks right now.",
-        openTasksEmptyReadyHint:
-          "{{count}} activity is still waiting for your final review.",
-        openTasksEmptyReadyHint_other:
-          "{{count}} activities are still waiting for your final review.",
-        openTasksEmptyDescription:
-          "New questions or privacy reviews will appear here as soon as they need action.",
-        privacyTaskDescription:
-          "The file “{{fileName}}” still needs privacy review before interpretation can continue.",
-        activitiesTitle: "Activities and datasets",
+          "Add evidence to an activity, run one AI analysis, and then open one AI knowledge view for the activity as a whole.",
+        statActivities: "Activities",
+        statReady: "AI knowledge ready",
+        statAttention: "Need attention",
+        activitiesTitle: "Activities",
         activitySummary: {
           privacyReview:
             "{{count}} file in this activity is still waiting for privacy review.",
           privacyReview_other:
             "{{count}} files in this activity are still waiting for privacy review.",
-          processing: "Interpretation is currently running or being refreshed.",
+          processing:
+            "AI analysis is currently running across this activity's evidence.",
           questions:
-            "{{count}} follow-up question is still open before the results can be reviewed.",
+            "{{count}} clarification question is still open before AI knowledge can be completed.",
           questions_other:
-            "{{count}} follow-up questions are still open before the results can be reviewed.",
-          ready: "Everything is prepared. You can review the results now.",
-          reviewed: "This activity has already been reviewed.",
-          notStarted:
-            "Interpretation has not been started for this evidence yet.",
+            "{{count}} clarification questions are still open before AI knowledge can be completed.",
+          ready: "AI knowledge can now be generated for this activity.",
+          reviewed: "AI knowledge is available for this activity.",
+          notStarted: "AI analysis has not been started for this activity yet.",
         },
         activityMeta: "{{uploads}} files · {{interpreted}} interpreted",
         activityNoFiles: "No evidence has been uploaded for this activity yet.",
-        activityHideDetails: "Hide details",
-        activityShowDetails: "Show details",
-        datasetSummary: {
-          privacyReview: "This file is waiting for privacy review.",
-          processing:
-            "This file is currently being processed or re-interpreted.",
-          questions: "{{count}} follow-up question still needs an answer.",
-          questions_other: "{{count}} follow-up questions still need answers.",
-          reviewed:
-            "This file has been interpreted and is already included in the reviewed state.",
-          ready: "This file has been interpreted and is ready for review.",
-          notStarted:
-            "This file is ready, but interpretation has not been started yet.",
-        },
-        indicatorSelectionTitle: "Suggested KPIs",
-        indicatorSelectionDescription:
-          "Choose which metrics should flow into analytics. Changing this resets the review status for this activity.",
-        indicatorIncludedBadge: "Included in analytics",
-        indicatorExcludedBadge: "Excluded",
-        indicatorIncludeAction: "Include in analytics",
-        indicatorExcludeAction: "Exclude from analytics",
-        datasetMeta: "Version {{version}} · {{confidence}}% confidence",
-        datasetHideDetails: "Hide technical details",
-        datasetShowDetails: "Show technical details",
+        questionsTitle: "Clarification questions",
+        actionRunning: "Analyzing…",
+        actionRunKnowledge: "Analyze with AI",
+        actionRefreshKnowledge: "Refresh AI knowledge",
+        actionOpenKnowledge: "Open AI knowledge",
+        actionOpeningKnowledge: "Opening AI knowledge…",
+        knowledgeDialogTitle: "AI knowledge",
+        knowledgeDialogDescription:
+          "Impact Atlas combined the interpreted evidence of this activity into one activity-level knowledge view.",
+        knowledgeDialogLoading: "Loading AI knowledge…",
+        knowledgeDialogError: "AI knowledge could not be loaded.",
+        knowledgeDialogMeta:
+          "{{count}} insights from {{evidenceCount}} evidence files",
+        knowledgeDialogEmpty:
+          "No activity-level AI knowledge is available yet.",
         status: {
           no_evidence: "No evidence",
           privacy_review: "Privacy review",
           processing: "In progress",
           questions: "Questions open",
-          ready: "Ready for review",
-          reviewed: "Reviewed",
+          ready: "Ready",
+          reviewed: "Available",
           not_started: "Not started",
         },
       },
@@ -731,6 +715,45 @@ const en = {
       STALE:
         "New or changed verified evidence is available since the last calculation.",
     },
+    dashboard: {
+      eyebrow: "Configurable dashboard",
+      title: "Evidence dashboard",
+      exportLabel: "Export",
+      exportJson: "Export JSON",
+      exportText: "Export text",
+      exportSuccess: "Dashboard export created.",
+      exportFailed: "Dashboard export could not be created.",
+      compatibilityFallback: "Legacy analytics record",
+      showCustomizer: "Customize widgets",
+      hideCustomizer: "Hide customizer",
+      restoreRecommended: "Restore recommended layout",
+      customizerTitle: "Visible widgets",
+      customizerDescription:
+        "Show, hide, and reorder widgets to match how this project should be reviewed.",
+      savingLayout: "Saving layout…",
+      hiddenBadge: "Hidden",
+      visibleBadge: "Visible",
+      hiddenWidgetsTitle: "{{count}} hidden widget",
+      hiddenWidgetsTitle_other: "{{count}} hidden widgets",
+      summaryEyebrow: "Plain-language view",
+      comparisonTitle: "Comparable metrics",
+      timelineTitle: "Timeline",
+      rankTitle: "Strongest segments",
+      themesTitle: "Qualitative signals",
+      goalLinked: "Goal-linked: {{value}}",
+      usageTitle: "Dashboard usage",
+      usageDescription:
+        "Internal telemetry from this dashboard view, based on persisted widget interactions.",
+      usageViews: "Views",
+      usageHidden: "Hidden",
+      usageShown: "Shown",
+      usageReordered: "Reordered",
+      usageRestored: "Restored",
+      usageLastViewed: "Last viewed: {{value}}",
+      usageLastUpdated: "Last interaction: {{value}}",
+      usageNoDate: "No data yet",
+      usageEmpty: "No dashboard interactions have been recorded yet.",
+    },
   },
   projectAnalytics: {
     loading: "Loading analytics…",
@@ -738,15 +761,15 @@ const en = {
     eyebrow: "Programme Analytics",
     title: "Analytics",
     subtitle:
-      "Analytics are based exclusively on verified, structured evidence.",
-    noVerifiedEvidenceTitle: "No verified evidence yet",
+      "Analytics are based exclusively on privacy-safe, structured evidence.",
+    noVerifiedEvidenceTitle: "No suitable evidence yet",
     noVerifiedEvidenceDescription:
-      "This project has no verified structured evidence yet.",
-    awaitingPreparationTitle: "Finish dataset preparation first",
+      "This project does not yet have structured evidence that is ready for analytics generation.",
+    awaitingPreparationTitle: "Resolve interpretation questions first",
     awaitingPreparationDescription:
-      "{{count}} dataset is still blocked on preparation questions. Complete review on the interpretation page before generating the dashboard.",
+      "{{count}} dataset is still blocked on preparation questions. Answer the remaining questions on the interpretation page before generating the dashboard.",
     awaitingPreparationDescription_other:
-      "{{count}} datasets are still blocked on preparation questions. Complete review on the interpretation page before generating the dashboard.",
+      "{{count}} datasets are still blocked on preparation questions. Answer the remaining questions on the interpretation page before generating the dashboard.",
     awaitingAnalysisTitle: "Deterministic analysis is still in progress",
     awaitingAnalysisDescription:
       "{{count}} prepared dataset still needs deterministic analysis before the dashboard can be assembled.",
@@ -756,60 +779,39 @@ const en = {
     readyToGenerateDescription:
       "Preparation and deterministic analysis are in place. Generate analytics to assemble the dashboard view.",
     noVerifiedEvidenceCta: "Go to Interpretation",
+    dashboard: {
+      summaryEyebrow: "Plain-language view",
+      summaryTitle: "What stands out in this project",
+      comparisonTitle: "Comparable metrics",
+      comparisonDescription:
+        "A fixed comparison of deterministic metrics that share the same unit.",
+      timelineTitle: "Timeline",
+      rankTitle: "Strongest segments",
+      themesTitle: "Qualitative signals",
+      themesDescription:
+        "The most repeated themes carried into the project knowledge model.",
+      latestValue: "Latest value: {{value}}",
+    },
   },
   projectInsights: {
-    loading: "Loading insights…",
-    loadFailed: "Insights could not be loaded.",
-    crumbsProjects: "Projects",
-    crumbsInsights: "Insights",
-    eyebrow: "AI Insights",
-    title: "Placeholder insights view",
+    loading: "Loading AI knowledge…",
+    loadFailed: "AI knowledge could not be loaded.",
     description:
-      "The project and {{count}} activities are live from the backend. The narrative insights below remain mocked until the Python interpretation service is integrated.",
-    executiveSummaryTitle: "Executive Summary",
-    executiveSummary:
-      "The Mentoring Programme Q3 2026 is performing on track. Attendance remains strong across all workshops, and confidence scores improved by an average of 2.3 points across the 12-week cycle. Mentor matching is highly successful, but long-term outcomes beyond programme close are not yet measured.",
-    keyFindingsTitle: "Key Findings",
-    interestingPatternsTitle: "Interesting Patterns",
-    interestingPatternsDescription: "Signals worth a closer look",
-    evidenceGapsTitle: "Evidence Gaps",
-    evidenceGapsDescription: "What your current data cannot yet answer",
-    recommendationsTitle: "Recommendations",
-    privacyTitle: "Privacy Summary",
-    privacyDescription:
-      "How your evidence will be prepared before AI interpretation",
-    keyFindings: [
-      "Attendance remains strong across all workshops, averaging 82% over 12 weeks.",
-      "Confidence improved significantly after programme completion (+2.3 points on a 10-point scale).",
-      "Mentor matching is successful at 91%, with only 5 unmatched participants at week 12.",
-      "Older participants (18+) complete the programme at a higher rate than the 14–15 group.",
-    ],
-    interestingPatterns: [
-      "Attendance decreases after week four, suggesting an engagement dip mid-cycle.",
-      "Districts with in-person mentor training show 8% higher completion than online-only districts.",
-      "Confidence uplift accelerates between weeks 3 and 6, then plateaus.",
-    ],
-    evidenceGaps: [
-      "Long-term outcomes (3, 6, 12 months post-programme) are not yet measured.",
-      "Mentor-side feedback is not collected in the current dataset.",
-      "Reasons for drop-off after week 4 are not captured.",
-    ],
-    recommendations: [
-      "Introduce a lightweight mid-cycle check-in at week 4 to address the engagement dip.",
-      "Add a 3-month post-programme follow-up survey to track sustained confidence.",
-      "Collect mentor-side session logs to triangulate participant outcomes.",
-    ],
-    privacy: [
-      "Personal identifiers (participant_name, email) were tokenized before AI interpretation.",
-      "Sensitive free-text (case_notes) was removed before analysis.",
-      "Quasi identifiers (age_group, district) were generalised to reduce re-identification risk.",
-    ],
+      "Impact Atlas combines available activity AI knowledge into one project-level AI knowledge view.",
+    meta: "{{count}} insights from {{activityCount}} activities and {{evidenceCount}} evidence files",
+    empty: "No project-level AI knowledge is available yet.",
+    activitiesTitle: "Included activities",
+    activityEvidenceCount: "{{count}} interpreted evidence files",
+    notReadyTitle: "Project AI knowledge is not ready yet",
+    notReadyDescription:
+      "A project view appears after at least one activity has a saved AI knowledge view. Right now {{count}} activities still need work on the interpretation page.",
+    notReadyCta: "Go to Interpretation",
   },
   activityTabs: {
     brief: "Overview",
     schema: "Data Review",
     analytics: "Analysis",
-    insights: "Insights",
+    insights: "AI knowledge",
     settings: "Settings",
   },
   activityBrief: {
@@ -880,13 +882,13 @@ const en = {
         attention: "Issue detected",
       },
       aiStatusDescription:
-        "{{reviewCount}} review item visible · {{insights}} insights currently available",
+        "{{reviewCount}} review item visible · {{insights}} AI knowledge items currently available",
     },
     uploader: {
       eyebrow: "Add evidence",
       title: "Bring monitoring data into this activity",
       description:
-        "Upload one CSV, Excel, PDF, or DOCX file and Impact Atlas will guide you through review, analysis, and insights from here.",
+        "Upload one CSV, Excel, PDF, or DOCX file and Impact Atlas will guide you through review, analysis, and AI knowledge from here.",
       cta: "Upload evidence",
       remove: "Remove",
     },
@@ -951,13 +953,13 @@ const en = {
       datasets: "Datasets",
       dataReview: "Data Review",
       analysis: "Analysis",
-      insights: "Insights",
+      insights: "AI knowledge",
       qualityIssues: "Data quality",
       latestFile: "Latest file",
       noFile: "No file uploaded yet",
       reviewValue: "{{count}} item needs review",
       analysisValue: "{{status}}",
-      insightsValue: "{{count}} insights available",
+      insightsValue: "{{count}} AI knowledge items available",
       notYetAvailable: "Not yet available",
     },
   },
@@ -1214,14 +1216,14 @@ const en = {
     crumb: "Analysis",
     eyebrow: "Evidence Analysis",
     title: "Analysis",
-    noVerifiedEvidenceTitle: "No verified evidence yet",
+    noVerifiedEvidenceTitle: "No suitable evidence yet",
     noVerifiedEvidenceDescription:
-      "Analytics are not available yet because this activity has no verified structured evidence.",
-    awaitingPreparationTitle: "Finish dataset preparation first",
+      "Analytics are not available yet because this activity has no structured evidence ready for analytics generation.",
+    awaitingPreparationTitle: "Resolve interpretation questions first",
     awaitingPreparationDescription:
-      "{{count}} dataset is still blocked on preparation questions for this activity.",
+      "{{count}} dataset is still blocked on preparation questions for this activity. Answer the remaining questions on the interpretation page.",
     awaitingPreparationDescription_other:
-      "{{count}} datasets are still blocked on preparation questions for this activity.",
+      "{{count}} datasets are still blocked on preparation questions for this activity. Answer the remaining questions on the interpretation page.",
     awaitingAnalysisTitle: "Deterministic analysis is still in progress",
     awaitingAnalysisDescription:
       "{{count}} prepared dataset still needs deterministic analysis before this dashboard can be assembled.",
@@ -1233,44 +1235,17 @@ const en = {
     noVerifiedEvidenceCta: "Go to Overview",
   },
   activityInsights: {
-    loading: "Loading activity insights…",
-    loadFailed: "Activity insights could not be loaded.",
-    crumb: "Insights",
-    eyebrow: "AI Insights",
-    title: "Read the story inside the evidence",
+    loading: "Loading AI knowledge…",
+    loadFailed: "AI knowledge could not be loaded.",
+    crumb: "AI knowledge",
+    eyebrow: "Activity AI knowledge",
+    title: "Read the activity as one knowledge view",
     description:
-      "Insights help NGO teams move from evidence to interpretation, recommendations, and next actions.",
-    emptyTitle: "No insights available yet",
-    emptyDescription:
-      "Upload a dataset and complete data review to unlock AI-generated insights.",
-    emptyCta: "Go to Overview",
-    noGoalsTitle: "Add goals to unlock this check",
-    noGoalsDescription:
-      "Set this activity's goals and outcome indicators to see whether your uploaded data actually supports measuring them.",
-    noGoalsCta: "Go to Overview",
-    noAnalysisTitle: "No analysis run yet",
-    noAnalysisDescription:
-      "Upload evidence and run an analysis for this activity to see how well your data supports its stated goals.",
-    noAnalysisCta: "Go to Overview",
-    noCoverageDescription:
-      "The analysis didn't surface any goal coverage information for this dataset yet.",
-    coveredTitle: "Covered by your data",
-    coveredEmpty:
-      "None of your stated goals are currently supported by the uploaded data.",
-    notCoveredTitle: "Not covered by your data",
-    notCoveredEmpty:
-      "Nothing to flag — your data supports every goal it was checked against.",
-    summary: {
-      generated: "Generated insights",
-      keyFindings: "Key findings",
-      privacyChecks: "Privacy checks",
-    },
-    executiveSummaryTitle: "Executive summary",
-    keyFindingsTitle: "Key findings",
-    recommendationsTitle: "Recommendations",
-    privacyBoundaryTitle: "Privacy boundary",
-    privacyBoundaryDescription:
-      "Personal identifiers are reduced before analysis so the insight layer focuses on programme evidence rather than exposed participant data.",
+      "Impact Atlas combines the interpreted evidence of this activity into one narrative AI knowledge view.",
+    notReadyTitle: "AI knowledge is not ready yet",
+    notReadyDescription:
+      "Return to the interpretation page to finish privacy review, answer clarification questions, or run AI analysis for this activity.",
+    notReadyCta: "Go to Interpretation",
   },
   activitySettings: {
     loading: "Loading activity settings…",
@@ -1398,7 +1373,7 @@ const en = {
       "Projects are created from the projects page. That page holds the full project list for this workspace.",
     emptyManagerTitle: "Welcome to {{organization}}",
     emptyManagerDescription:
-      "Start by creating your first project. Projects help you organize evidence across activities, uploads, analytics, and insights.",
+      "Start by creating your first project. Projects help you organize evidence across activities, uploads, analytics, and AI knowledge.",
     emptyAction: "Create your first project",
     myProjects: "My projects",
     continueWorking: "Continue working",
@@ -1515,7 +1490,7 @@ const en = {
     primaryAction: "Create project",
     emptyTitle: "No projects in this workspace yet",
     emptyDescription:
-      "Once projects are created, this page becomes the main place to open them and move into activities, uploads, analytics, and insights.",
+      "Once projects are created, this page becomes the main place to open them and move into activities, uploads, analytics, and AI knowledge.",
     noDescription: "No project goal captured yet.",
     activities: "activities",
   },
@@ -1527,7 +1502,7 @@ const en = {
     eyebrow: "Activities",
     title: "Activities across my projects",
     description:
-      "Open any activity you own to continue uploading evidence or reviewing insights.",
+      "Open any activity you own to continue uploading evidence or reviewing AI knowledge.",
     noDescription: "No activity description yet.",
     openActivity: "Open activity",
   },
@@ -1568,7 +1543,7 @@ const en = {
       "Subscription management can be added here later without changing the project and activity model.",
   },
   projectPage: {
-    viewInsights: "View insights",
+    viewInsights: "Open AI knowledge",
     activitiesTitle: "Activities",
     activitiesDescription: "Each activity owns its own upload and job history.",
     noActivitiesTitle: "No activities yet",
@@ -1603,7 +1578,7 @@ const en = {
     requiredMonth: "Please select a month.",
     dangerTitle: "Delete project",
     dangerDescription:
-      "Deleting a project permanently removes all activities, uploads, jobs, review outputs, analyses, and insights linked to it.",
+      "Deleting a project permanently removes all activities, uploads, jobs, review outputs, analyses, and AI knowledge linked to it.",
     deleteAction: "Delete project",
     notSet: "Not set",
     sections: {
@@ -1643,7 +1618,7 @@ const en = {
       jobs: "all processing jobs",
       reviews: "all data review results",
       analyses: "all analyses",
-      insights: "all insights",
+      insights: "all AI knowledge",
     },
   },
   dialogs: {

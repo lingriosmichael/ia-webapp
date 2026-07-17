@@ -549,13 +549,6 @@ function EvidenceFileRow({
           ) : null}
         </div>
       </div>
-
-      {job?.errorMessage ? (
-        <div className="mt-3 rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
-          {job.errorMessage}
-        </div>
-      ) : null}
-
       <AnalysisProgressDialog
         open={progressDialogOpen}
         onOpenChange={setProgressDialogOpen}

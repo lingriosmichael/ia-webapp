@@ -118,19 +118,40 @@ export function deriveAnalyticsReadinessSummary(
       "pending",
     );
 
-    return (
-      pendingPreparationQuestions.some((question) => question.isBlocking) ||
-      (result.datasetPreparation?.status !== undefined &&
-        !isPreparationResolved(result.datasetPreparation))
-    );
+    return pendingPreparationQuestions.some((question) => question.isBlocking);
   }).length;
 
   const awaitingAnalysisCount = quantitativeResults.filter((result) => {
-    if (!isPreparationResolved(result.datasetPreparation)) {
+    const pendingPreparationQuestions = getQuestionsByDomain(
+      result.questions,
+      "preparation",
+      "pending",
+    );
+    const hasBlockingPreparationQuestion = pendingPreparationQuestions.some(
+      (question) => question.isBlocking,
+    );
+
+    if (hasBlockingPreparationQuestion) {
       return false;
     }
 
-    return !isDeterministicAnalysisReady(result.deterministicAnalysis);
+    if (!isPreparationResolved(result.datasetPreparation)) {
+      return true;
+    }
+
+    // Older interpretation runs can legitimately have no deterministic
+    // analysis artifact yet even though there are no open questions left.
+    // That absence should not block the analytics route behind a stale
+    // "still running" message; the user can regenerate analytics from the
+    // latest persisted interpretation state directly.
+    if (!result.deterministicAnalysis) {
+      return false;
+    }
+
+    return (
+      result.deterministicAnalysis.status !== "not_applicable" &&
+      !isDeterministicAnalysisReady(result.deterministicAnalysis)
+    );
   }).length;
 
   if (preparationBlockedCount > 0) {

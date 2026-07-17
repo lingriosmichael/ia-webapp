@@ -4,12 +4,15 @@ import { ActivityTabs } from "@/components/activityTabs";
 import { PageHeader, PageContainer, TopBar } from "@/components/workspaceUI";
 import { useProjectHierarchy } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
+import { useActivityAnalyticsDashboardInteractionTracking } from "@/hooks/useAnalyticsDashboardInteractionTracking";
 import {
   useActivityAnalyticsQuery,
   useActivityQuery,
   useGenerateActivityAnalyticsMutation,
   useProjectInterpretationsQuery,
   useProjectQuery,
+  useResetActivityAnalyticsLayoutMutation,
+  useUpdateActivityAnalyticsLayoutMutation,
 } from "@/hooks/useWorkspaceQueries";
 import { deriveAnalyticsReadinessSummary } from "@/lib/interpretationWorkflow";
 import { useAnalyticsEmptyStateContent } from "@/hooks/useAnalyticsEmptyStateContent";
@@ -19,9 +22,8 @@ import {
   analyticsCtaLinkClassName,
 } from "@/components/analytics/analyticsEmptyState";
 import { AnalyticsStatusBanner } from "@/components/analytics/analyticsStatusBanner";
-import { MetricGrid } from "@/components/analytics/metricGrid";
-import { ConnectiveNarrativeCallout } from "@/components/analytics/connectiveNarrativeCallout";
-import { CatalogDetailsSection } from "@/components/analytics/catalogDetailsSection";
+import { ConfigurableAnalyticsDashboard } from "@/components/analytics/configurableAnalyticsDashboard";
+import { apiClient } from "@/services/apiClient";
 
 export const Route = createFileRoute(
   "/projects/$projectId/activities/$activityId/analysis",
@@ -29,7 +31,7 @@ export const Route = createFileRoute(
   component: ActivityAnalyticsPage,
 });
 
-function ActivityAnalyticsPage() {
+export function ActivityAnalyticsPage() {
   const { projectId, activityId } = Route.useParams();
   const auth = useRequireAuth();
   const projectQuery = useProjectQuery(projectId, Boolean(auth.token));
@@ -47,6 +49,14 @@ function ActivityAnalyticsPage() {
     projectId,
     activityId,
   );
+  const updateLayoutMutation = useUpdateActivityAnalyticsLayoutMutation(
+    projectId,
+    activityId,
+  );
+  const resetLayoutMutation = useResetActivityAnalyticsLayoutMutation(
+    projectId,
+    activityId,
+  );
   const { t } = useTranslation();
   const hierarchy = useProjectHierarchy();
   const interpretationResults = (
@@ -60,6 +70,11 @@ function ActivityAnalyticsPage() {
     description: emptyStateDescription,
     showCta: showOverviewCta,
   } = useAnalyticsEmptyStateContent(readiness, "activityAnalytics");
+  useActivityAnalyticsDashboardInteractionTracking(
+    projectId,
+    activityId,
+    Boolean(auth.token),
+  );
 
   if (
     !auth.token ||
@@ -85,6 +100,11 @@ function ActivityAnalyticsPage() {
     execution: null,
     result: null,
   };
+  const layoutPreference = analyticsQuery.data?.layoutPreference ?? null;
+  const dashboardCompatibilitySource =
+    analyticsQuery.data?.dashboardCompatibilitySource ?? null;
+  const dashboardUsageSummary =
+    analyticsQuery.data?.dashboardUsageSummary ?? null;
   const isExecutionComplete = Boolean(
     execution &&
     ["COMPLETED", "COMPLETED_WITH_WARNINGS"].includes(execution.status),
@@ -140,19 +160,23 @@ function ActivityAnalyticsPage() {
               }
             />
           ) : (
-            <>
-              <MetricGrid
-                entries={result.catalog.entries}
-                featuredEntryIds={result.curation.featuredEntryIds}
-              />
-              <ConnectiveNarrativeCallout
-                narrative={result.curation.narrative}
-              />
-              <CatalogDetailsSection
-                catalog={result.catalog}
-                featuredEntryIds={result.curation.featuredEntryIds}
-              />
-            </>
+            <ConfigurableAnalyticsDashboard
+              result={result}
+              layoutPreference={layoutPreference}
+              dashboardCompatibilitySource={dashboardCompatibilitySource}
+              dashboardUsageSummary={dashboardUsageSummary}
+              onSaveLayout={(payload) => updateLayoutMutation.mutate(payload)}
+              onResetLayout={() => resetLayoutMutation.mutate()}
+              onExport={(payload) =>
+                apiClient.downloadActivityAnalyticsExport(
+                  projectId,
+                  activityId,
+                  payload,
+                )
+              }
+              isSavingLayout={updateLayoutMutation.isPending}
+              isResettingLayout={resetLayoutMutation.isPending}
+            />
           )}
         </div>
       </PageContainer>

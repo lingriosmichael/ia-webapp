@@ -1,29 +1,24 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { Link } from "@tanstack/react-router";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
 import { useRequireAuth } from "@/hooks/useAuth";
+import { useProjectAnalyticsDashboardInteractionTracking } from "@/hooks/useAnalyticsDashboardInteractionTracking";
 import {
   useGenerateProjectAnalyticsMutation,
   useProjectAnalyticsQuery,
   useProjectInterpretationsQuery,
+  useResetProjectAnalyticsLayoutMutation,
+  useUpdateProjectAnalyticsLayoutMutation,
 } from "@/hooks/useWorkspaceQueries";
-import { deriveAnalyticsReadinessSummary } from "@/lib/interpretationWorkflow";
-import { useAnalyticsEmptyStateContent } from "@/hooks/useAnalyticsEmptyStateContent";
-import {
-  AnalyticsEmptyState,
-  analyticsCtaLinkClassName,
-} from "@/components/analytics/analyticsEmptyState";
 import { AnalyticsStatusBanner } from "@/components/analytics/analyticsStatusBanner";
-import { MetricGrid } from "@/components/analytics/metricGrid";
-import { ConnectiveNarrativeCallout } from "@/components/analytics/connectiveNarrativeCallout";
-import { CatalogDetailsSection } from "@/components/analytics/catalogDetailsSection";
+import { ConfigurableAnalyticsDashboard } from "@/components/analytics/configurableAnalyticsDashboard";
+import { apiClient } from "@/services/apiClient";
 
 export const Route = createFileRoute("/projects/$projectId/analytics")({
   component: ProjectAnalyticsPage,
 });
 
-function ProjectAnalyticsPage() {
+export function ProjectAnalyticsPage() {
   const { projectId } = Route.useParams();
   const auth = useRequireAuth();
   const { t } = useTranslation();
@@ -36,13 +31,13 @@ function ProjectAnalyticsPage() {
     Boolean(auth.token),
   );
   const generateMutation = useGenerateProjectAnalyticsMutation(projectId);
-  const interpretationResults = interpretationsQuery.data?.results ?? [];
-  const readiness = deriveAnalyticsReadinessSummary(interpretationResults);
-  const {
-    title: emptyStateTitle,
-    description: emptyStateDescription,
-    showCta: showInterpretationCta,
-  } = useAnalyticsEmptyStateContent(readiness, "projectAnalytics");
+  const updateLayoutMutation =
+    useUpdateProjectAnalyticsLayoutMutation(projectId);
+  const resetLayoutMutation = useResetProjectAnalyticsLayoutMutation(projectId);
+  useProjectAnalyticsDashboardInteractionTracking(
+    projectId,
+    Boolean(auth.token),
+  );
 
   if (!auth.token) {
     return (
@@ -78,6 +73,11 @@ function ProjectAnalyticsPage() {
     execution: null,
     result: null,
   };
+  const layoutPreference = analyticsQuery.data?.layoutPreference ?? null;
+  const dashboardCompatibilitySource =
+    analyticsQuery.data?.dashboardCompatibilitySource ?? null;
+  const dashboardUsageSummary =
+    analyticsQuery.data?.dashboardUsageSummary ?? null;
   const isExecutionComplete = Boolean(
     execution &&
     ["COMPLETED", "COMPLETED_WITH_WARNINGS"].includes(execution.status),
@@ -93,37 +93,21 @@ function ProjectAnalyticsPage() {
           isRegenerating={generateMutation.isPending}
         />
 
-        {!isExecutionComplete ||
-        !result ||
-        result.catalog.entries.length === 0 ? (
-          <AnalyticsEmptyState
-            title={emptyStateTitle}
-            description={emptyStateDescription}
-            cta={
-              showInterpretationCta ? (
-                <Link
-                  to="/projects/$projectId/interpretation"
-                  params={{ projectId }}
-                  className={analyticsCtaLinkClassName}
-                >
-                  {t("projectAnalytics.noVerifiedEvidenceCta")}
-                </Link>
-              ) : undefined
+        {isExecutionComplete && result && result.catalog.entries.length > 0 ? (
+          <ConfigurableAnalyticsDashboard
+            result={result}
+            layoutPreference={layoutPreference}
+            dashboardCompatibilitySource={dashboardCompatibilitySource}
+            dashboardUsageSummary={dashboardUsageSummary}
+            onSaveLayout={(payload) => updateLayoutMutation.mutate(payload)}
+            onResetLayout={() => resetLayoutMutation.mutate()}
+            onExport={(payload) =>
+              apiClient.downloadProjectAnalyticsExport(projectId, payload)
             }
+            isSavingLayout={updateLayoutMutation.isPending}
+            isResettingLayout={resetLayoutMutation.isPending}
           />
-        ) : (
-          <>
-            <MetricGrid
-              entries={result.catalog.entries}
-              featuredEntryIds={result.curation.featuredEntryIds}
-            />
-            <ConnectiveNarrativeCallout narrative={result.curation.narrative} />
-            <CatalogDetailsSection
-              catalog={result.catalog}
-              featuredEntryIds={result.curation.featuredEntryIds}
-            />
-          </>
-        )}
+        ) : null}
       </div>
     </ProjectWorkspaceShell>
   );

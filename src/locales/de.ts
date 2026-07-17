@@ -188,11 +188,11 @@ const de: TranslationDictionary = {
     sidebarProject: "Projekt",
     sidebarOverview: "Übersicht",
     sidebarAnalytics: "Analysen",
-    sidebarInsights: "Erkenntnisse",
+    sidebarInsights: "AI knowledge",
     sidebarActivities: "Aktivitäten",
     sidebarBrief: "Aktivitätsübersicht",
     sidebarUpload: "Hochladen",
-    viewInsights: "Erkenntnisse anzeigen",
+    viewInsights: "AI knowledge öffnen",
     eyebrow: "Projekt",
     noDescription: "Noch kein Projektziel hinterlegt.",
     readOnlyBannerTitle: "Ansicht als Organisationsadministration",
@@ -212,7 +212,7 @@ const de: TranslationDictionary = {
     dashboard: {
       health: "Projektstatus",
       evidenceCompleteness: "Evidenz-Vollständigkeit",
-      insightsGenerated: "KI-Erkenntnisse",
+      insightsGenerated: "AI knowledge bereit",
       lastEvidenceUpload: "Letzter Evidenz-Upload",
       whatNeedsAttention: "Was Aufmerksamkeit braucht",
       recentActivity: "Letzte Aktivität",
@@ -224,24 +224,24 @@ const de: TranslationDictionary = {
       },
       healthDescriptions: {
         strong:
-          "Evidenz wurde hochgeladen und Erkenntnisse sind bereits verfügbar.",
+          "Evidenz wurde hochgeladen und AI knowledge ist bereits verfügbar.",
         progress:
           "Die ersten Nachweise sind da und die KI-Verarbeitung läuft noch.",
         attention:
-          "Dieses Projekt braucht noch Uploads oder Prüfung, bevor Erkenntnisse bereitstehen.",
+          "Dieses Projekt braucht noch Uploads oder Prüfung, bevor AI knowledge bereitsteht.",
       },
       completenessValue: "{{withEvidence}}/{{total}} Aktivitäten",
       completenessDelta: "{{percent}} % haben bereits Evidenz",
       insightsDelta: "{{count}} ausstehend",
-      insightsReadyDelta: "Bereit zur Prüfung",
-      noInsightsDelta: "Noch keine Erkenntnisse erzeugt",
+      insightsReadyDelta: "Bereit zum Öffnen",
+      noInsightsDelta: "Noch kein AI knowledge bereit",
       noUploadValue: "Noch keiner",
       noUploadDelta: "Laden Sie Evidenz hoch, um die Pipeline zu starten",
       attentionItems: {
         noEvidence: "Es wurde noch keine Evidenz hochgeladen.",
         partialEvidence:
           "{{count}} Aktivitäten benötigen noch Evidenz-Uploads.",
-        pendingInsights: "{{count}} Erkenntnis-Jobs laufen noch.",
+        pendingInsights: "{{count}} AI knowledge Läufe sind noch in Arbeit.",
         failedJobs: "{{count}} Verarbeitungsjobs benötigen Aufmerksamkeit.",
         healthy:
           "Jede Aktivität hat Evidenz, und derzeit gibt es keine offenen Probleme.",
@@ -251,7 +251,7 @@ const de: TranslationDictionary = {
         dataset_uploaded: "Datensatz hochgeladen",
         job_completed: "Verarbeitung abgeschlossen",
         job_failed: "Verarbeitung benötigt Prüfung",
-        insight_generated: "KI-Erkenntnisse erzeugt",
+        insight_generated: "AI knowledge erzeugt",
       },
       recentActivityActivitySuffix: "für {{name}}",
     },
@@ -259,7 +259,7 @@ const de: TranslationDictionary = {
     emptyStateDescription:
       "Aktivitäten sind Workshops, Trainings, Mentoring-Sessions oder andere Maßnahmen, zu denen Sie Evidenz hochladen.",
     emptyStateSupporting:
-      "Legen Sie die erste Aktivität an, um Uploads, Analysen und Erkenntnisse pro Maßnahme getrennt zu verwalten.",
+      "Legen Sie die erste Aktivität an, um Uploads, Analysen und AI knowledge pro Maßnahme getrennt zu verwalten.",
     emptyStateAction: "Erste Aktivität erstellen",
     addAnotherActivity: "Weitere Aktivität hinzufügen",
     activityNamePlaceholder: "Aktivitätsname",
@@ -286,7 +286,7 @@ const de: TranslationDictionary = {
       evidence: "Evidenz",
       interpretation: "Interpretation",
       analytics: "Analysen",
-      insights: "Erkenntnisse",
+      insights: "AI knowledge",
       comingSoon: "Bald",
     },
     overview: {
@@ -344,14 +344,14 @@ const de: TranslationDictionary = {
         "Datenschutzprüfung konnte nicht freigegeben werden.",
       privacyReviewTitle: "Datenschutzprüfung",
       privacyReviewDescription:
-        "Bestätigen Sie, wie erkannte personenbezogene oder sensible Informationen behandelt werden sollen, bevor Impact Atlas mit der datenschutzsicheren Repräsentation fortfährt.",
+        "Bestätigen Sie, wie erkannte Namen und Adressen behandelt werden sollen, bevor Impact Atlas mit der datenschutzsicheren Repräsentation fortfährt.",
       loadingPrivacyReview: "Datenschutzprüfung wird geladen…",
       noPrivacyFindings: "Es liegen noch keine Datenschutzbefunde vor.",
       privacyFindingSummary:
         "{{entityType}} wurde {{count}}-mal erkannt. Empfohlene Aktion: {{action}}.",
       analysisDialogAnalyzingTitle: "Ihre Datei wird analysiert…",
       analysisDialogAnalyzingDescription:
-        "Impact Atlas liest die Datei ein und prüft auf personenbezogene oder sensible Informationen. Sie können dieses Fenster schließen und weiterarbeiten — die Analyse läuft im Hintergrund weiter.",
+        "Impact Atlas liest die Datei ein und prüft auf Namen und Adressen. Sie können dieses Fenster schließen und weiterarbeiten — die Analyse läuft im Hintergrund weiter.",
       analysisDialogReadyTitle: "Bereit zur Datenschutzprüfung",
       analysisDialogReadyDescription:
         "Impact Atlas hat die Analyse dieser Datei abgeschlossen. Prüfen Sie die erkannten Befunde, bevor es weitergeht.",
@@ -373,7 +373,7 @@ const de: TranslationDictionary = {
         "{{count}} Befunde erkannt. Für {{decisions}} Eintrag(e) ist noch eine explizite Transformationsauswahl erforderlich.",
       decisionRequired: "Entscheidung erforderlich",
       gdprNoticeIntro:
-        "Wir haben in diesem Datensatz personenbezogene oder sensible Daten gefunden. Wählen Sie für jeden Punkt unten, wie Impact Atlas diese Daten transformieren soll, bevor der Datensatz datenschutzsicher weiterverarbeitet wird.",
+        "Wir haben in diesem Datensatz Namen oder Adressen gefunden. Wählen Sie für jeden Punkt unten, wie Impact Atlas diese Daten transformieren soll, bevor der Datensatz datenschutzsicher weiterverarbeitet wird.",
       recommendationSentence:
         "Wir empfehlen, dass Impact Atlas diese {{entityType}}-Daten {{verb}}, bevor der Datensatz weiterverwendet wird.",
       recommendationSentenceWithExample:
@@ -388,7 +388,11 @@ const de: TranslationDictionary = {
         "an den sensiblen Stellen bereinigt oder schwärzt",
       recommendedActionBadge: "Empfohlen",
       keepOverrideWarning:
-        "Impact Atlas würde diese Daten unverändert beibehalten. Begründen Sie, warum das trotz der Empfehlung angemessen ist.",
+        "Impact Atlas würde diese Daten unverändert beibehalten. Wenn Sie die Tokenisierung ablehnen, müssen Sie bestätigen, dass Sie sich dieser Entscheidung bewusst sind und den Nutzungsbedingungen zustimmen.",
+      keepUnchangedAcknowledgementLabel:
+        "Ich lehne die empfohlene Tokenisierung bewusst ab und bestätige, dass ich für diese Entscheidung verantwortlich bin und die Nutzungsbedingungen von Impact Atlas akzeptiere.",
+      keepUnchangedAcknowledgementRequired:
+        "Bestätigen Sie diese Warnung, wenn Sie die Daten unverändert beibehalten möchten.",
       overrideFindingWarning:
         "Sie haben eine andere Transformation als empfohlen gewählt. Begründen Sie, warum diese Abweichung angemessen ist.",
       overrideReasonLabel: "Begründung für diese Abweichung (erforderlich)",
@@ -625,76 +629,55 @@ const de: TranslationDictionary = {
       quantitativeSynthesisPendingSummary:
         "Indikatoren bleiben ausgeblendet, bis die Vorbereitung abgeschlossen und die deterministische Analyse bereit ist.",
       simplified: {
-        heroTitle: "Sie haben noch {{count}} offene Aufgabe.",
-        heroTitle_other: "Sie haben noch {{count}} offene Aufgaben.",
-        heroClearTitle: "Alles ist bereit für Ihre Freigabe.",
+        pageTitle: "AI knowledge",
+        heroTitle: "Ein KI-Wissensfluss pro Aktivität.",
         heroDescription:
-          "Hier sehen Sie nur, was als Nächstes zu tun ist. Offene Datenschutzprüfungen, Rückfragen und prüfbereite Ergebnisse werden klar getrennt angezeigt.",
-        statOpenTasks: "Offene Aufgaben",
-        statReadyForReview: "Bereit zur Prüfung",
-        statReviewed: "Geprüfte Aktivitäten",
-        openTasksTitle: "Was jetzt Ihre Aufmerksamkeit braucht",
-        openTasksEmptyTitle: "Aktuell gibt es keine offenen Aufgaben.",
-        openTasksEmptyReadyHint:
-          "{{count}} Aktivität wartet noch auf Ihre abschließende Prüfung.",
-        openTasksEmptyReadyHint_other:
-          "{{count}} Aktivitäten warten noch auf Ihre abschließende Prüfung.",
-        openTasksEmptyDescription:
-          "Sobald neue Fragen oder Datenschutzprüfungen entstehen, erscheinen sie hier gesammelt.",
-        privacyTaskDescription:
-          "Die Datei „{{fileName}}“ braucht noch eine Datenschutzprüfung, bevor die Interpretation fortgesetzt werden kann.",
-        activitiesTitle: "Aktivitäten und Datensätze",
+          "Fügen Sie Evidenz zu einer Aktivität hinzu, starten Sie eine einzige KI-Analyse und öffnen Sie danach eine gemeinsame AI knowledge Ansicht für die gesamte Aktivität.",
+        statActivities: "Aktivitäten",
+        statReady: "AI knowledge bereit",
+        statAttention: "Braucht Aufmerksamkeit",
+        activitiesTitle: "Aktivitäten",
         activitySummary: {
           privacyReview:
             "Für diese Aktivität wartet noch {{count}} Datei auf Datenschutzprüfung.",
           privacyReview_other:
             "Für diese Aktivität warten noch {{count}} Dateien auf Datenschutzprüfung.",
-          processing: "Die Interpretation läuft oder wird gerade aktualisiert.",
+          processing:
+            "Die KI-Analyse läuft gerade über die Evidenz dieser Aktivität.",
           questions:
-            "{{count}} Rückfrage ist noch offen, bevor die Ergebnisse geprüft werden können.",
+            "{{count}} Klärungsfrage ist noch offen, bevor AI knowledge fertig werden kann.",
           questions_other:
-            "{{count}} Rückfragen sind noch offen, bevor die Ergebnisse geprüft werden können.",
-          ready:
-            "Alles ist vorbereitet. Sie können die Ergebnisse jetzt prüfen.",
-          reviewed: "Diese Aktivität wurde bereits geprüft.",
+            "{{count}} Klärungsfragen sind noch offen, bevor AI knowledge fertig werden kann.",
+          ready: "AI knowledge kann jetzt für diese Aktivität erzeugt werden.",
+          reviewed: "AI knowledge ist für diese Aktivität verfügbar.",
           notStarted:
-            "Die Interpretation wurde für diese Evidenz noch nicht gestartet.",
+            "Die KI-Analyse wurde für diese Aktivität noch nicht gestartet.",
         },
         activityMeta: "{{uploads}} Dateien · {{interpreted}} interpretiert",
         activityNoFiles:
           "Für diese Aktivität wurde noch keine Evidenz hochgeladen.",
-        activityHideDetails: "Details ausblenden",
-        activityShowDetails: "Details anzeigen",
-        datasetSummary: {
-          privacyReview: "Diese Datei wartet auf Datenschutzprüfung.",
-          processing:
-            "Diese Datei wird gerade verarbeitet oder neu interpretiert.",
-          questions: "{{count}} Rückfrage muss noch beantwortet werden.",
-          questions_other:
-            "{{count}} Rückfragen müssen noch beantwortet werden.",
-          reviewed:
-            "Diese Datei ist interpretiert und bereits im geprüften Stand enthalten.",
-          ready: "Diese Datei ist interpretiert und bereit für Ihre Prüfung.",
-          notStarted:
-            "Diese Datei ist bereit, aber die Interpretation wurde noch nicht gestartet.",
-        },
-        indicatorSelectionTitle: "Vorgeschlagene KPIs",
-        indicatorSelectionDescription:
-          "Wählen Sie aus, welche Kennzahlen in die Analysen einfließen sollen. Änderungen setzen die Freigabe dieser Aktivität zurück.",
-        indicatorIncludedBadge: "In Analysen enthalten",
-        indicatorExcludedBadge: "Ausgeblendet",
-        indicatorIncludeAction: "In Analysen aufnehmen",
-        indicatorExcludeAction: "Aus Analysen ausblenden",
-        datasetMeta: "Version {{version}} · {{confidence}} % Zuverlässigkeit",
-        datasetHideDetails: "Technische Details ausblenden",
-        datasetShowDetails: "Technische Details anzeigen",
+        questionsTitle: "Klärungsfragen",
+        actionRunning: "Wird analysiert…",
+        actionRunKnowledge: "KI analysieren",
+        actionRefreshKnowledge: "AI knowledge aktualisieren",
+        actionOpenKnowledge: "AI knowledge öffnen",
+        actionOpeningKnowledge: "AI knowledge wird geöffnet…",
+        knowledgeDialogTitle: "AI knowledge",
+        knowledgeDialogDescription:
+          "Impact Atlas hat die interpretierte Evidenz dieser Aktivität zu einem gemeinsamen Wissensstand auf Aktivitätsebene zusammengeführt.",
+        knowledgeDialogLoading: "AI knowledge wird geladen…",
+        knowledgeDialogError: "AI knowledge konnte nicht geladen werden.",
+        knowledgeDialogMeta:
+          "{{count}} Erkenntnisse aus {{evidenceCount}} Evidenzdateien",
+        knowledgeDialogEmpty:
+          "Für diese Aktivität ist noch keine AI knowledge Ansicht verfügbar.",
         status: {
           no_evidence: "Keine Evidenz",
           privacy_review: "Datenschutzprüfung",
           processing: "In Bearbeitung",
           questions: "Fragen offen",
-          ready: "Bereit zur Prüfung",
-          reviewed: "Geprüft",
+          ready: "Bereit",
+          reviewed: "Verfügbar",
           not_started: "Noch nicht gestartet",
         },
       },
@@ -750,6 +733,46 @@ const de: TranslationDictionary = {
       STALE:
         "Seit der letzten Berechnung wurden neue oder geänderte Evidenzdaten bestätigt.",
     },
+    dashboard: {
+      eyebrow: "Konfigurierbares Dashboard",
+      title: "Evidenz-Dashboard",
+      exportLabel: "Export",
+      exportJson: "JSON exportieren",
+      exportText: "Text exportieren",
+      exportSuccess: "Dashboard-Export erstellt.",
+      exportFailed: "Dashboard-Export konnte nicht erstellt werden.",
+      compatibilityFallback: "Alte Analyse-Aufzeichnung",
+      showCustomizer: "Widgets anpassen",
+      hideCustomizer: "Anpassung schließen",
+      restoreRecommended: "Empfohlenes Layout wiederherstellen",
+      customizerTitle: "Sichtbare Widgets",
+      customizerDescription:
+        "Blenden Sie Widgets ein oder aus und ordnen Sie sie passend zur Review-Ansicht dieses Projekts neu an.",
+      savingLayout: "Layout wird gespeichert…",
+      hiddenBadge: "Ausgeblendet",
+      visibleBadge: "Sichtbar",
+      hiddenWidgetsTitle: "{{count}} ausgeblendetes Widget",
+      hiddenWidgetsTitle_other: "{{count}} ausgeblendete Widgets",
+      summaryEyebrow: "In Klartext",
+      comparisonTitle: "Vergleichbare Kennzahlen",
+      timelineTitle: "Zeitverlauf",
+      rankTitle: "Stärkste Segmente",
+      themesTitle: "Qualitative Signale",
+      goalLinked: "Mit Ziel verknüpft: {{value}}",
+      usageTitle: "Dashboard-Nutzung",
+      usageDescription:
+        "Interne Telemetrie aus dieser Dashboard-Ansicht auf Basis gespeicherter Widget-Interaktionen.",
+      usageViews: "Aufrufe",
+      usageHidden: "Ausgeblendet",
+      usageShown: "Eingeblendet",
+      usageReordered: "Neu sortiert",
+      usageRestored: "Zurückgesetzt",
+      usageLastViewed: "Zuletzt geöffnet: {{value}}",
+      usageLastUpdated: "Letzte Interaktion: {{value}}",
+      usageNoDate: "Noch keine Daten",
+      usageEmpty:
+        "Für dieses Dashboard wurden noch keine Interaktionen erfasst.",
+    },
   },
   projectAnalytics: {
     loading: "Analysen werden geladen…",
@@ -757,15 +780,15 @@ const de: TranslationDictionary = {
     eyebrow: "Programm-Analysen",
     title: "Analysen",
     subtitle:
-      "Die Analysen basieren ausschließlich auf geprüften und strukturierten Evidenzdaten.",
-    noVerifiedEvidenceTitle: "Noch keine geprüfte Evidenz",
+      "Die Analysen basieren ausschließlich auf datenschutzsicher verarbeiteten und strukturierten Evidenzdaten.",
+    noVerifiedEvidenceTitle: "Noch keine geeignete Evidenz",
     noVerifiedEvidenceDescription:
-      "Für dieses Projekt liegen noch keine geprüften Evidenzdaten vor.",
-    awaitingPreparationTitle: "Zuerst Datensatzvorbereitung abschließen",
+      "Für dieses Projekt liegen noch keine strukturierten Evidenzdaten vor, aus denen bereits Analysen erzeugt werden können.",
+    awaitingPreparationTitle: "Zuerst offene Interpretationsfragen klären",
     awaitingPreparationDescription:
-      "{{count}} Datensatz ist noch durch Vorbereitungsfragen blockiert. Schließen Sie die Prüfung auf der Interpretationsseite ab, bevor das Dashboard erzeugt wird.",
+      "{{count}} Datensatz ist noch durch Vorbereitungsfragen blockiert. Beantworten Sie die offenen Fragen auf der Interpretationsseite, bevor das Dashboard erzeugt wird.",
     awaitingPreparationDescription_other:
-      "{{count}} Datensätze sind noch durch Vorbereitungsfragen blockiert. Schließen Sie die Prüfung auf der Interpretationsseite ab, bevor das Dashboard erzeugt wird.",
+      "{{count}} Datensätze sind noch durch Vorbereitungsfragen blockiert. Beantworten Sie die offenen Fragen auf der Interpretationsseite, bevor das Dashboard erzeugt wird.",
     awaitingAnalysisTitle: "Die deterministische Analyse läuft noch",
     awaitingAnalysisDescription:
       "{{count}} vorbereiteter Datensatz benötigt noch eine deterministische Analyse, bevor das Dashboard aufgebaut werden kann.",
@@ -775,62 +798,39 @@ const de: TranslationDictionary = {
     readyToGenerateDescription:
       "Vorbereitung und deterministische Analyse liegen vor. Erzeugen Sie jetzt die Analysen für die Dashboard-Ansicht.",
     noVerifiedEvidenceCta: "Zur Interpretation",
+    dashboard: {
+      summaryEyebrow: "In Klartext",
+      summaryTitle: "Was in diesem Projekt auffällt",
+      comparisonTitle: "Vergleichbare Kennzahlen",
+      comparisonDescription:
+        "Eine feste Gegenüberstellung deterministischer Kennzahlen mit derselben Einheit.",
+      timelineTitle: "Zeitverlauf",
+      rankTitle: "Stärkste Segmente",
+      themesTitle: "Qualitative Signale",
+      themesDescription:
+        "Die am häufigsten wiederkehrenden Themen aus dem Project Knowledge Model.",
+      latestValue: "Neuester Wert: {{value}}",
+    },
   },
   projectInsights: {
-    loading: "Erkenntnisse werden geladen…",
-    loadFailed: "Erkenntnisse konnten nicht geladen werden.",
-    crumbsProjects: "Projekte",
-    crumbsInsights: "Erkenntnisse",
-    eyebrow: "KI-Erkenntnisse",
-    title: "Platzhalteransicht für Erkenntnisse",
+    loading: "AI knowledge wird geladen…",
+    loadFailed: "AI knowledge konnte nicht geladen werden.",
     description:
-      "Das Projekt und {{count}} Aktivitäten kommen live aus dem Backend. Die folgenden narrativen Erkenntnisse bleiben simuliert, bis der Python-Interpretationsservice integriert ist.",
-    executiveSummaryTitle: "Kurzfassung",
-    executiveSummary:
-      "Das Mentoring-Programm Q3 2026 liegt im Plan. Die Teilnahme bleibt über alle Workshops hinweg stabil und die Vertrauenswerte haben sich über den 12-Wochen-Zyklus im Durchschnitt um 2,3 Punkte verbessert. Die Mentor-Zuordnung ist sehr erfolgreich, langfristige Ergebnisse nach Programmende werden jedoch noch nicht gemessen.",
-    keyFindingsTitle: "Wesentliche Erkenntnisse",
-    interestingPatternsTitle: "Auffällige Muster",
-    interestingPatternsDescription:
-      "Signale, die genauer betrachtet werden sollten",
-    evidenceGapsTitle: "Evidenzlücken",
-    evidenceGapsDescription:
-      "Was Ihre aktuellen Daten noch nicht beantworten können",
-    recommendationsTitle: "Empfehlungen",
-    privacyTitle: "Datenschutz-Zusammenfassung",
-    privacyDescription:
-      "Wie Ihre Nachweise vor der KI-Interpretation vorbereitet werden",
-    keyFindings: [
-      "Die Teilnahme bleibt über alle Workshops hinweg stabil und liegt über 12 Wochen im Schnitt bei 82 %.",
-      "Das Vertrauen hat sich nach Programmabschluss deutlich verbessert (+2,3 Punkte auf einer 10-Punkte-Skala).",
-      "Die Mentor-Zuordnung ist mit 91 % sehr erfolgreich; in Woche 12 sind nur 5 Teilnehmende ohne Zuordnung.",
-      "Ältere Teilnehmende (18+) schließen das Programm häufiger ab als die Gruppe 14–15 Jahre.",
-    ],
-    interestingPatterns: [
-      "Nach Woche vier sinkt die Teilnahme, was auf ein Motivationsloch in der Mitte des Zyklus hindeutet.",
-      "Bezirke mit Präsenztraining für Mentorinnen und Mentoren zeigen eine um 8 % höhere Abschlussquote als rein digitale Bezirke.",
-      "Der Vertrauenszuwachs beschleunigt sich zwischen Woche 3 und 6 und flacht danach ab.",
-    ],
-    evidenceGaps: [
-      "Langfristige Ergebnisse (3, 6, 12 Monate nach Programmende) werden noch nicht gemessen.",
-      "Rückmeldungen von Mentorinnen und Mentoren werden im aktuellen Datensatz nicht erhoben.",
-      "Gründe für den Rückgang nach Woche 4 werden nicht erfasst.",
-    ],
-    recommendations: [
-      "Führen Sie in Woche 4 einen kurzen Zwischencheck ein, um das Motivationsloch früh zu adressieren.",
-      "Ergänzen Sie eine Nachbefragung 3 Monate nach Programmende, um nachhaltiges Vertrauen zu messen.",
-      "Erheben Sie Sitzungsprotokolle der Mentorinnen und Mentoren, um Ergebnisse aus mehreren Blickwinkeln abzusichern.",
-    ],
-    privacy: [
-      "Personenbezogene Merkmale (participant_name, email) wurden vor der KI-Interpretation tokenisiert.",
-      "Sensibler Freitext (case_notes) wurde vor der Analyse entfernt.",
-      "Quasi-Identifier (age_group, district) wurden verallgemeinert, um das Re-Identifikationsrisiko zu senken.",
-    ],
+      "Impact Atlas bündelt die verfügbare AI knowledge aus Aktivitäten in einer gemeinsamen project-level AI knowledge Ansicht.",
+    meta: "{{count}} Erkenntnisse aus {{activityCount}} Aktivitäten und {{evidenceCount}} Evidenzdateien",
+    empty: "Noch kein project-level AI knowledge verfügbar.",
+    activitiesTitle: "Einbezogene Aktivitäten",
+    activityEvidenceCount: "{{count}} interpretierte Evidenzdateien",
+    notReadyTitle: "Project AI knowledge ist noch nicht bereit",
+    notReadyDescription:
+      "Die Projektansicht erscheint, sobald mindestens eine Aktivität eine verfügbare AI knowledge Ansicht hat. Aktuell brauchen noch {{count}} Aktivitäten Arbeit auf der Interpretationsseite.",
+    notReadyCta: "Zur Interpretation",
   },
   activityTabs: {
     brief: "Übersicht",
     schema: "Datenprüfung",
     analytics: "Analyse",
-    insights: "Erkenntnisse",
+    insights: "AI knowledge",
     settings: "Einstellungen",
   },
   activityBrief: {
@@ -904,13 +904,13 @@ const de: TranslationDictionary = {
         attention: "Problem erkannt",
       },
       aiStatusDescription:
-        "{{reviewCount}} Prüfpunkte sichtbar · {{insights}} Erkenntnisse derzeit verfügbar",
+        "{{reviewCount}} Prüfpunkte sichtbar · {{insights}} AI knowledge Einträge derzeit verfügbar",
     },
     uploader: {
       eyebrow: "Evidenz hinzufügen",
       title: "Monitoring-Daten in diese Aktivität bringen",
       description:
-        "Laden Sie eine CSV-, Excel-, PDF- oder DOCX-Datei hoch. Impact Atlas führt Sie von hier aus durch Prüfung, Analyse und Erkenntnisse.",
+        "Laden Sie eine CSV-, Excel-, PDF- oder DOCX-Datei hoch. Impact Atlas führt Sie von hier aus durch Prüfung, Analyse und AI knowledge.",
       cta: "Evidenz hochladen",
       remove: "Entfernen",
     },
@@ -976,13 +976,13 @@ const de: TranslationDictionary = {
       datasets: "Datensätze",
       dataReview: "Datenprüfung",
       analysis: "Analyse",
-      insights: "Erkenntnisse",
+      insights: "AI knowledge",
       qualityIssues: "Datenqualität",
       latestFile: "Neueste Datei",
       noFile: "Noch keine Datei hochgeladen",
       reviewValue: "{{count}} Punkt zur Prüfung",
       analysisValue: "{{status}}",
-      insightsValue: "{{count}} Erkenntnisse verfügbar",
+      insightsValue: "{{count}} AI knowledge Einträge verfügbar",
       notYetAvailable: "Noch nicht verfügbar",
     },
   },
@@ -1243,14 +1243,14 @@ const de: TranslationDictionary = {
     crumb: "Analyse",
     eyebrow: "Evidenzanalyse",
     title: "Analyse",
-    noVerifiedEvidenceTitle: "Noch keine geprüfte Evidenz",
+    noVerifiedEvidenceTitle: "Noch keine geeignete Evidenz",
     noVerifiedEvidenceDescription:
-      "Für diese Aktivität liegen noch keine geprüften, strukturierten Evidenzdaten vor.",
-    awaitingPreparationTitle: "Zuerst Datensatzvorbereitung abschließen",
+      "Für diese Aktivität liegen noch keine strukturierten Evidenzdaten vor, aus denen bereits Analysen erzeugt werden können.",
+    awaitingPreparationTitle: "Zuerst offene Interpretationsfragen klären",
     awaitingPreparationDescription:
-      "{{count}} Datensatz dieser Aktivität ist noch durch Vorbereitungsfragen blockiert.",
+      "{{count}} Datensatz dieser Aktivität ist noch durch Vorbereitungsfragen blockiert. Beantworten Sie die offenen Fragen auf der Interpretationsseite.",
     awaitingPreparationDescription_other:
-      "{{count}} Datensätze dieser Aktivität sind noch durch Vorbereitungsfragen blockiert.",
+      "{{count}} Datensätze dieser Aktivität sind noch durch Vorbereitungsfragen blockiert. Beantworten Sie die offenen Fragen auf der Interpretationsseite.",
     awaitingAnalysisTitle: "Die deterministische Analyse läuft noch",
     awaitingAnalysisDescription:
       "{{count}} vorbereiteter Datensatz benötigt noch eine deterministische Analyse, bevor dieses Dashboard aufgebaut werden kann.",
@@ -1262,44 +1262,17 @@ const de: TranslationDictionary = {
     noVerifiedEvidenceCta: "Zur Übersicht",
   },
   activityInsights: {
-    loading: "Aktivitätserkenntnisse werden geladen…",
-    loadFailed: "Aktivitätserkenntnisse konnten nicht geladen werden.",
-    crumb: "Erkenntnisse",
-    eyebrow: "KI-Erkenntnisse",
-    title: "Die Geschichte in Ihren Evidenzdaten lesen",
+    loading: "AI knowledge wird geladen…",
+    loadFailed: "AI knowledge konnte nicht geladen werden.",
+    crumb: "AI knowledge",
+    eyebrow: "Activity AI knowledge",
+    title: "Die Aktivität als gemeinsamen Wissensstand lesen",
     description:
-      "Erkenntnisse helfen NGO-Teams dabei, von Evidenz zu Interpretation, Empfehlungen und nächsten Schritten zu gelangen.",
-    emptyTitle: "Noch keine Erkenntnisse verfügbar",
-    emptyDescription:
-      "Laden Sie einen Datensatz hoch und schließen Sie die Datenprüfung ab, um KI-generierte Erkenntnisse zu erhalten.",
-    emptyCta: "Zur Übersicht",
-    noGoalsTitle: "Ziele hinzufügen, um diese Prüfung freizuschalten",
-    noGoalsDescription:
-      "Hinterlegen Sie die Ziele und Outcome-Indikator(en) dieser Aktivität, um zu sehen, ob Ihre hochgeladenen Daten deren Messung tatsächlich unterstützen.",
-    noGoalsCta: "Zur Übersicht",
-    noAnalysisTitle: "Noch keine Analyse durchgeführt",
-    noAnalysisDescription:
-      "Laden Sie Evidenzdaten hoch und führen Sie eine Analyse für diese Aktivität durch, um zu sehen, wie gut Ihre Daten die gesetzten Ziele unterstützen.",
-    noAnalysisCta: "Zur Übersicht",
-    noCoverageDescription:
-      "Die Analyse hat für diesen Datensatz noch keine Informationen zur Zielabdeckung geliefert.",
-    coveredTitle: "Durch Ihre Daten abgedeckt",
-    coveredEmpty:
-      "Keines Ihrer festgelegten Ziele wird derzeit durch die hochgeladenen Daten unterstützt.",
-    notCoveredTitle: "Nicht durch Ihre Daten abgedeckt",
-    notCoveredEmpty:
-      "Nichts zu melden — Ihre Daten unterstützen jedes geprüfte Ziel.",
-    summary: {
-      generated: "Erstellte Erkenntnisse",
-      keyFindings: "Zentrale Erkenntnisse",
-      privacyChecks: "Datenschutzprüfungen",
-    },
-    executiveSummaryTitle: "Management-Zusammenfassung",
-    keyFindingsTitle: "Zentrale Erkenntnisse",
-    recommendationsTitle: "Empfehlungen",
-    privacyBoundaryTitle: "Datenschutzgrenze",
-    privacyBoundaryDescription:
-      "Personenbezogene Merkmale werden vor der Analyse reduziert, sodass sich die Erkenntnisebene auf Programmevidenz statt auf offengelegte Teilnehmendendaten konzentriert.",
+      "Impact Atlas führt die interpretierte Evidenz dieser Aktivität zu einem narrativen KI-Wissensstand auf Aktivitätsebene zusammen.",
+    notReadyTitle: "AI knowledge ist noch nicht bereit",
+    notReadyDescription:
+      "Gehen Sie zur Interpretationsseite zurück, um Datenschutzprüfungen abzuschließen, Klärungsfragen zu beantworten oder die KI-Analyse für diese Aktivität zu starten.",
+    notReadyCta: "Zur Interpretation",
   },
   activitySettings: {
     loading: "Aktivitätseinstellungen werden geladen…",
@@ -1429,7 +1402,7 @@ const de: TranslationDictionary = {
       "Projekte werden auf der Projektseite angelegt. Dort verwalten Sie die vollständige Projektliste Ihres Workspaces.",
     emptyManagerTitle: "Willkommen bei {{organization}}",
     emptyManagerDescription:
-      "Starten Sie mit Ihrem ersten Projekt. Projekte strukturieren Evidenz über Aktivitäten, Uploads, Analysen und Erkenntnisse hinweg.",
+      "Starten Sie mit Ihrem ersten Projekt. Projekte strukturieren Evidenz über Aktivitäten, Uploads, Analysen und AI knowledge hinweg.",
     emptyAction: "Erstes Projekt erstellen",
     myProjects: "Meine Projekte",
     continueWorking: "Weiterarbeiten",
@@ -1548,7 +1521,7 @@ const de: TranslationDictionary = {
     primaryAction: "Projekt erstellen",
     emptyTitle: "Noch keine Projekte in diesem Workspace",
     emptyDescription:
-      "Sobald Projekte angelegt sind, werden sie hier als zentrale Einstiegspunkte für Aktivitäten, Uploads, Analysen und Erkenntnisse angezeigt.",
+      "Sobald Projekte angelegt sind, werden sie hier als zentrale Einstiegspunkte für Aktivitäten, Uploads, Analysen und AI knowledge angezeigt.",
     noDescription: "Noch kein Projektziel hinterlegt.",
     activities: "Aktivitäten",
   },
@@ -1560,7 +1533,7 @@ const de: TranslationDictionary = {
     eyebrow: "Aktivitäten",
     title: "Aktivitäten über meine Projekte hinweg",
     description:
-      "Öffnen Sie eine Ihrer Aktivitäten, um Nachweise hochzuladen oder Erkenntnisse weiterzuverfolgen.",
+      "Öffnen Sie eine Ihrer Aktivitäten, um Nachweise hochzuladen oder AI knowledge weiterzuverfolgen.",
     noDescription: "Noch keine Aktivitätsbeschreibung vorhanden.",
     openActivity: "Aktivität öffnen",
   },
@@ -1601,7 +1574,7 @@ const de: TranslationDictionary = {
       "Das Abonnementmanagement kann später hier ergänzt werden, ohne das Projekt- und Aktivitätsmodell zu verändern.",
   },
   projectPage: {
-    viewInsights: "Erkenntnisse anzeigen",
+    viewInsights: "AI knowledge öffnen",
     activitiesTitle: "Aktivitäten",
     activitiesDescription:
       "Jede Aktivität besitzt ihre eigene Upload- und Job-Historie.",
@@ -1637,7 +1610,7 @@ const de: TranslationDictionary = {
     requiredMonth: "Bitte wählen Sie einen Monat aus.",
     dangerTitle: "Projekt löschen",
     dangerDescription:
-      "Beim Löschen eines Projekts werden alle verknüpften Aktivitäten, Uploads, Jobs, Prüfergebnisse, Analysen und Erkenntnisse dauerhaft entfernt.",
+      "Beim Löschen eines Projekts werden alle verknüpften Aktivitäten, Uploads, Jobs, Prüfergebnisse, Analysen und AI knowledge dauerhaft entfernt.",
     deleteAction: "Projekt löschen",
     notSet: "Nicht gesetzt",
     sections: {
@@ -1678,7 +1651,7 @@ const de: TranslationDictionary = {
       jobs: "alle Verarbeitungsjobs",
       reviews: "alle Ergebnisse der Datenprüfung",
       analyses: "alle Analysen",
-      insights: "alle Erkenntnisse",
+      insights: "alle AI knowledge Inhalte",
     },
   },
   dialogs: {

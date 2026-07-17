@@ -2,13 +2,16 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { sessionQueryKey } from "@/hooks/useAuth";
 import {
+  type AnalyticsDashboardInteractionPayload,
   type AnalyticsExecutionRecord,
+  type AnalyticsDashboardPreferenceRecord,
   type AnalyticsQueryResponse,
   type AnswerInterpretationQuestionPayload,
   type ApprovePrivacyReviewResponse,
   ApiError,
   apiClient,
   type ActivitySummary,
+  type ActivityAiKnowledgeRecord,
   type CreateActivityPayload,
   type CreateOrganizationPayload,
   type CreateProjectPayload,
@@ -25,11 +28,14 @@ import {
   type ProcessingJobRecord,
   type PrivacyReviewDecisionsInput,
   type PrivacyReviewRecord,
+  type ProjectAiKnowledgeRecord,
   type ProjectInterpretationOverview,
   type ProjectOverview,
   type ProjectSummary,
   type SessionResponse,
+  type StartActivityInterpretationResponse,
   type StartInterpretationResponse,
+  type UpdateAnalyticsDashboardPreferencePayload,
   type UpdateProjectPayload,
   type UpdateActivityPayload,
   type UploadMetadataRecord,
@@ -43,12 +49,16 @@ export const projectOverviewQueryKey = (projectId: string) =>
   ["project-overview", projectId] as const;
 export const projectActivitiesQueryKey = (projectId: string) =>
   ["project-activities", projectId] as const;
+export const projectAiKnowledgeQueryKey = (projectId: string) =>
+  ["project-ai-knowledge", projectId] as const;
 export const activityQueryKey = (activityId: string) =>
   ["activity", activityId] as const;
 export const activityUploadsQueryKey = (activityId: string) =>
   ["activity-uploads", activityId] as const;
 export const activityJobsQueryKey = (activityId: string) =>
   ["activity-jobs", activityId] as const;
+export const activityAiKnowledgeQueryKey = (activityId: string) =>
+  ["activity-ai-knowledge", activityId] as const;
 export const jobQueryKey = (jobId: string) => ["job", jobId] as const;
 export const privacyReviewQueryKey = (processingJobId: string) =>
   ["privacy-review", processingJobId] as const;
@@ -132,6 +142,14 @@ export function useProjectActivitiesQuery(projectId: string, enabled = true) {
   });
 }
 
+export function useProjectAiKnowledgeQuery(projectId: string, enabled = true) {
+  return useQuery<ProjectAiKnowledgeRecord, ApiError>({
+    queryKey: projectAiKnowledgeQueryKey(projectId),
+    queryFn: () => apiClient.getProjectAiKnowledge(projectId),
+    enabled,
+  });
+}
+
 export function useActivityQuery(activityId: string, enabled = true) {
   return useQuery<ActivitySummary, ApiError>({
     queryKey: activityQueryKey(activityId),
@@ -158,6 +176,55 @@ export function useActivityJobsQuery(
     queryFn: () => apiClient.listActivityJobs(activityId),
     enabled,
     refetchInterval: refetchIntervalMs,
+  });
+}
+
+export function useActivityAiKnowledgeQuery(
+  activityId: string,
+  enabled = true,
+) {
+  return useQuery<ActivityAiKnowledgeRecord, ApiError>({
+    queryKey: activityAiKnowledgeQueryKey(activityId),
+    queryFn: () => apiClient.getActivityAiKnowledge(activityId),
+    enabled,
+    staleTime: Number.POSITIVE_INFINITY,
+  });
+}
+
+export function useGenerateActivityAiKnowledgeMutation(
+  activityId: string,
+  projectId?: string,
+  organizationId?: string,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation<ActivityAiKnowledgeRecord, ApiError>({
+    mutationFn: () => apiClient.generateActivityAiKnowledge(activityId),
+    onSuccess: (knowledge) => {
+      queryClient.setQueryData(
+        activityAiKnowledgeQueryKey(activityId),
+        knowledge,
+      );
+      void queryClient.invalidateQueries({
+        queryKey: activityQueryKey(activityId),
+      });
+      if (projectId) {
+        void queryClient.invalidateQueries({
+          queryKey: projectInterpretationsQueryKey(projectId),
+        });
+        void queryClient.invalidateQueries({
+          queryKey: projectOverviewQueryKey(projectId),
+        });
+        void queryClient.invalidateQueries({
+          queryKey: projectActivitiesQueryKey(projectId),
+        });
+      }
+      if (organizationId) {
+        void queryClient.invalidateQueries({
+          queryKey: workspaceQueryKey(organizationId),
+        });
+      }
+    },
   });
 }
 
@@ -518,6 +585,12 @@ export function useUploadActivityFileMutation(
       void queryClient.invalidateQueries({
         queryKey: activityUploadsQueryKey(activityId),
       });
+      void queryClient.invalidateQueries({
+        queryKey: activityJobsQueryKey(activityId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: activityAiKnowledgeQueryKey(activityId),
+      });
       if (projectId) {
         void queryClient.invalidateQueries({
           queryKey: projectOverviewQueryKey(projectId),
@@ -527,6 +600,12 @@ export function useUploadActivityFileMutation(
         });
         void queryClient.invalidateQueries({
           queryKey: projectQueryKey(projectId),
+        });
+        void queryClient.invalidateQueries({
+          queryKey: projectInterpretationsQueryKey(projectId),
+        });
+        void queryClient.invalidateQueries({
+          queryKey: projectAiKnowledgeQueryKey(projectId),
         });
       }
       if (organizationId) {
@@ -552,6 +631,12 @@ export function useDeleteEvidenceMutation(
       void queryClient.invalidateQueries({
         queryKey: activityUploadsQueryKey(activityId),
       });
+      void queryClient.invalidateQueries({
+        queryKey: activityJobsQueryKey(activityId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: activityAiKnowledgeQueryKey(activityId),
+      });
       if (projectId) {
         void queryClient.invalidateQueries({
           queryKey: projectOverviewQueryKey(projectId),
@@ -561,6 +646,12 @@ export function useDeleteEvidenceMutation(
         });
         void queryClient.invalidateQueries({
           queryKey: projectQueryKey(projectId),
+        });
+        void queryClient.invalidateQueries({
+          queryKey: projectInterpretationsQueryKey(projectId),
+        });
+        void queryClient.invalidateQueries({
+          queryKey: projectAiKnowledgeQueryKey(projectId),
         });
       }
       if (organizationId) {
@@ -663,6 +754,39 @@ export function useStartInterpretationMutation(
     },
     onSuccess: ({ job }) => {
       queryClient.setQueryData(jobQueryKey(job.id), job);
+      void queryClient.invalidateQueries({
+        queryKey: activityJobsQueryKey(activityId),
+      });
+      if (projectId) {
+        void queryClient.invalidateQueries({
+          queryKey: projectInterpretationsQueryKey(projectId),
+        });
+      }
+    },
+  });
+}
+
+export function useStartActivityInterpretationMutation(
+  activityId: string,
+  projectId?: string,
+) {
+  const queryClient = useQueryClient();
+  const { i18n } = useTranslation();
+
+  return useMutation<StartActivityInterpretationResponse, ApiError>({
+    mutationFn: () => {
+      const language =
+        (i18n.resolvedLanguage ?? i18n.language).toLowerCase().slice(0, 2) ===
+        "en"
+          ? "en"
+          : "de";
+
+      return apiClient.startActivityInterpretation(activityId, { language });
+    },
+    onSuccess: ({ jobs }) => {
+      for (const job of jobs) {
+        queryClient.setQueryData(jobQueryKey(job.id), job);
+      }
       void queryClient.invalidateQueries({
         queryKey: activityJobsQueryKey(activityId),
       });
@@ -806,6 +930,9 @@ export function useAcknowledgeInterpretationReviewMutation(
       void queryClient.invalidateQueries({
         queryKey: activityQueryKey(activityId),
       });
+      void queryClient.invalidateQueries({
+        queryKey: activityAiKnowledgeQueryKey(activityId),
+      });
       if (organizationId) {
         void queryClient.invalidateQueries({
           queryKey: workspaceQueryKey(organizationId),
@@ -899,5 +1026,103 @@ export function useGenerateActivityAnalyticsMutation(
         queryKey: activityAnalyticsQueryKey(activityId),
       });
     },
+  });
+}
+
+export function useUpdateProjectAnalyticsLayoutMutation(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    AnalyticsDashboardPreferenceRecord,
+    ApiError,
+    UpdateAnalyticsDashboardPreferencePayload
+  >({
+    mutationFn: (payload) =>
+      apiClient.updateProjectAnalyticsLayout(projectId, payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: projectAnalyticsQueryKey(projectId),
+      });
+    },
+  });
+}
+
+export function useResetProjectAnalyticsLayoutMutation(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<{ success: true }, ApiError, void>({
+    mutationFn: () => apiClient.resetProjectAnalyticsLayout(projectId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: projectAnalyticsQueryKey(projectId),
+      });
+    },
+  });
+}
+
+export function useTrackProjectAnalyticsInteractionMutation(projectId: string) {
+  return useMutation<
+    { success: true },
+    ApiError,
+    AnalyticsDashboardInteractionPayload
+  >({
+    mutationFn: (payload) =>
+      apiClient.trackProjectAnalyticsInteraction(projectId, payload),
+  });
+}
+
+export function useUpdateActivityAnalyticsLayoutMutation(
+  projectId: string,
+  activityId: string,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    AnalyticsDashboardPreferenceRecord,
+    ApiError,
+    UpdateAnalyticsDashboardPreferencePayload
+  >({
+    mutationFn: (payload) =>
+      apiClient.updateActivityAnalyticsLayout(projectId, activityId, payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: activityAnalyticsQueryKey(activityId),
+      });
+    },
+  });
+}
+
+export function useResetActivityAnalyticsLayoutMutation(
+  projectId: string,
+  activityId: string,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation<{ success: true }, ApiError, void>({
+    mutationFn: () =>
+      apiClient.resetActivityAnalyticsLayout(projectId, activityId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: activityAnalyticsQueryKey(activityId),
+      });
+    },
+  });
+}
+
+export function useTrackActivityAnalyticsInteractionMutation(
+  projectId: string,
+  activityId: string,
+) {
+  return useMutation<
+    { success: true },
+    ApiError,
+    AnalyticsDashboardInteractionPayload
+  >({
+    mutationFn: (payload) =>
+      apiClient.trackActivityAnalyticsInteraction(
+        projectId,
+        activityId,
+        payload,
+      ),
   });
 }

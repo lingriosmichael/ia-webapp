@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 interface ProjectTab {
@@ -17,7 +16,6 @@ interface ProjectTab {
   label: string;
   icon: ReactNode;
   exact?: boolean;
-  comingSoon?: boolean;
 }
 
 export function ProjectTabs({
@@ -55,13 +53,11 @@ export function ProjectTabs({
       to: "/projects/$projectId/analytics",
       label: t("projectWorkspace.tabs.analytics"),
       icon: <BarChart3 className="h-4 w-4" />,
-      comingSoon: true,
     },
     {
       to: "/projects/$projectId/insights",
       label: t("projectWorkspace.tabs.insights"),
       icon: <Sparkles className="h-4 w-4" />,
-      comingSoon: true,
     },
   ];
 
@@ -86,11 +82,6 @@ export function ProjectTabs({
         >
           {tab.icon}
           {tab.label}
-          {tab.comingSoon ? (
-            <Badge variant="secondary" className="h-5 px-1.5 py-0 text-[10px]">
-              {t("projectWorkspace.tabs.comingSoon")}
-            </Badge>
-          ) : null}
         </Link>
       ))}
     </nav>

@@ -130,6 +130,7 @@ export interface ActivitySummary {
   interpretationAcknowledgedAt: string | null;
   interpretationAcknowledgedById: string | null;
   interpretationAcknowledgedByName: string | null;
+  aiKnowledgeGeneratedAt?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -408,13 +409,14 @@ export interface ParsedRepresentationPreviewRecord {
 
 // What this client sends when approving a review. decidedById/decidedAt are
 // never sent from here — the backend stamps those itself from the
-// authenticated caller. `reason` is required by the backend whenever the
-// selected action overrides the recommended action for that finding.
+// authenticated caller. Keeping detected personal data unchanged requires an
+// explicit acknowledgement flag in the current privacy-review flow.
 export interface PrivacyReviewFieldDecisionInput {
   field: string;
   entityType: string;
   decision: PrivacyReviewDecisionValue;
   reason?: string;
+  keepUnchangedAcknowledged?: boolean;
 }
 
 // What the backend actually persists and returns — the input plus a real
@@ -971,6 +973,60 @@ export interface StartInterpretationResponse {
   job: ProcessingJobRecord;
 }
 
+export interface StartActivityInterpretationResponse {
+  jobs: ProcessingJobRecord[];
+  startedCount: number;
+  skippedCount: number;
+}
+
+export type ActivityAiKnowledgeInsightSourceType =
+  | "goal_alignment"
+  | "qualitative_finding"
+  | "indicator"
+  | "distribution_signal";
+
+export interface ActivityAiKnowledgeInsight {
+  id: string;
+  sourceType: ActivityAiKnowledgeInsightSourceType;
+  text: string;
+  isGoalRelevant: boolean;
+  sourceUploadMetadataIds: string[];
+}
+
+export interface ActivityAiKnowledgeRecord {
+  activityId: string;
+  projectId: string;
+  activityName: string;
+  interpretedEvidenceCount: number;
+  totalEvidenceCount: number;
+  generatedAt: string | null;
+  summaryText: string;
+  insights: ActivityAiKnowledgeInsight[];
+}
+
+export interface ProjectAiKnowledgeActivity {
+  activityId: string;
+  activityName: string;
+  interpretedEvidenceCount: number;
+}
+
+export interface ProjectAiKnowledgeInsight extends ActivityAiKnowledgeInsight {
+  activityId: string;
+  activityName: string;
+}
+
+export interface ProjectAiKnowledgeRecord {
+  projectId: string;
+  projectName: string;
+  acknowledgedActivityCount: number;
+  totalActivityCount: number;
+  interpretedEvidenceCount: number;
+  generatedAt: string | null;
+  summaryText: string;
+  insights: ProjectAiKnowledgeInsight[];
+  activities: ProjectAiKnowledgeActivity[];
+}
+
 export interface StartInterpretationPayload {
   language: "de" | "en";
 }
@@ -1094,6 +1150,187 @@ export interface DashboardCuration {
   fellBackToSelectionOnly: boolean;
 }
 
+export interface AnalyticsDashboardGoalLinkage {
+  outcomeReferences: string[];
+  successIndicators: string[];
+  matchedProjectGoalPhrases: string[];
+}
+
+export interface AnalyticsDashboardQualityFlag {
+  sourceType:
+    "dataset_preparation" | "deterministic_analysis" | "catalog_assembly";
+  severity: "info" | "warning";
+  message: string;
+}
+
+export type AnalyticsDashboardWidgetKind =
+  | "kpi"
+  | "summary"
+  | "horizontal_bar"
+  | "line_series"
+  | "category_rank"
+  | "theme_list";
+
+export interface AnalyticsDashboardWidgetBase {
+  widgetId: string;
+  kind: AnalyticsDashboardWidgetKind;
+  title: string;
+  subtitle: string | null;
+  description: string;
+  sourceActivityIds: string[];
+  sourceUploadMetadataIds: string[];
+  goalLinkage: AnalyticsDashboardGoalLinkage;
+  qualityFlags: AnalyticsDashboardQualityFlag[];
+}
+
+export interface AnalyticsDashboardKpiWidget extends AnalyticsDashboardWidgetBase {
+  kind: "kpi";
+  entryId: string;
+  label: string;
+  description: string;
+  value: number;
+  unit: string | null;
+  deduplicationConfidence: KnowledgeIndicatorDeduplicationConfidence;
+}
+
+export interface AnalyticsDashboardSummaryWidget extends AnalyticsDashboardWidgetBase {
+  kind: "summary";
+  paragraphs: string[];
+  referencedEntryIds: string[];
+}
+
+export interface AnalyticsDashboardHorizontalBarItem {
+  id: string;
+  label: string;
+  description: string;
+  value: number;
+  unit: string | null;
+  entryId: string | null;
+}
+
+export interface AnalyticsDashboardHorizontalBarWidget extends AnalyticsDashboardWidgetBase {
+  kind: "horizontal_bar";
+  unit: string | null;
+  items: AnalyticsDashboardHorizontalBarItem[];
+}
+
+export interface AnalyticsDashboardLineSeriesPoint {
+  label: string;
+  value: number;
+}
+
+export interface AnalyticsDashboardLineSeriesWidget extends AnalyticsDashboardWidgetBase {
+  kind: "line_series";
+  label: string;
+  tableName: string;
+  activityId: string | null;
+  unit: "count" | "ratio";
+  points: AnalyticsDashboardLineSeriesPoint[];
+}
+
+export interface AnalyticsDashboardCategoryRankItem {
+  id: string;
+  label: string;
+  value: number;
+}
+
+export interface AnalyticsDashboardCategoryRankWidget extends AnalyticsDashboardWidgetBase {
+  kind: "category_rank";
+  label: string;
+  tableName: string;
+  activityId: string | null;
+  unit: "count" | "ratio";
+  items: AnalyticsDashboardCategoryRankItem[];
+}
+
+export interface AnalyticsDashboardThemeListItem {
+  entryId: string;
+  label: string;
+  description: string;
+  quoteCount: number;
+  outcomeReference: string | null;
+}
+
+export interface AnalyticsDashboardThemeListWidget extends AnalyticsDashboardWidgetBase {
+  kind: "theme_list";
+  items: AnalyticsDashboardThemeListItem[];
+}
+
+export type AnalyticsDashboardWidget =
+  | AnalyticsDashboardKpiWidget
+  | AnalyticsDashboardSummaryWidget
+  | AnalyticsDashboardHorizontalBarWidget
+  | AnalyticsDashboardLineSeriesWidget
+  | AnalyticsDashboardCategoryRankWidget
+  | AnalyticsDashboardThemeListWidget;
+
+export interface AnalyticsDashboardLayoutDefinition {
+  orderedWidgetIds: string[];
+  hiddenWidgetIds: string[];
+}
+
+export interface AnalyticsDashboard {
+  schemaVersion: string;
+  availableWidgets: AnalyticsDashboardWidget[];
+  defaultLayout: AnalyticsDashboardLayoutDefinition;
+}
+
+export interface AnalyticsDashboardPreferenceRecord {
+  id: string;
+  organizationId: string;
+  projectId: string;
+  activityId: string | null;
+  scopeType: AnalyticsScopeType;
+  dashboardSchemaVersion: string;
+  orderedWidgetIds: string[];
+  hiddenWidgetIds: string[];
+  updatedById: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AnalyticsDashboardUsageSummary {
+  resultId: string;
+  totalEvents: number;
+  dashboardViewCount: number;
+  widgetHideCount: number;
+  widgetShowCount: number;
+  layoutReorderCount: number;
+  layoutRestoreCount: number;
+  lastOccurredAt: string | null;
+  lastViewedAt: string | null;
+}
+
+export interface UpdateAnalyticsDashboardPreferencePayload {
+  dashboardSchemaVersion: string;
+  orderedWidgetIds: string[];
+  hiddenWidgetIds: string[];
+}
+
+export type AnalyticsDashboardCompatibilitySource =
+  "generated" | "compatibility_fallback";
+export type AnalyticsDashboardInteractionType =
+  | "dashboard_viewed"
+  | "widget_hidden"
+  | "widget_shown"
+  | "layout_reordered"
+  | "layout_restored";
+
+export interface AnalyticsDashboardInteractionPayload {
+  resultId: string;
+  interactionType: AnalyticsDashboardInteractionType;
+  dashboardSchemaVersion: string;
+  dashboardCompatibilitySource: AnalyticsDashboardCompatibilitySource;
+  orderedWidgetIds: string[];
+  hiddenWidgetIds: string[];
+  visibleWidgetIds: string[];
+  widgetId: string | null;
+}
+
+export interface AnalyticsDashboardExportRequestPayload extends UpdateAnalyticsDashboardPreferencePayload {
+  format: "json" | "text";
+}
+
 export interface AnalyticsDataQuality {
   recordsExcludedCount: number;
   warnings: string[];
@@ -1125,6 +1362,7 @@ export interface AnalyticsResultRecord {
   knowledgeModelVersion: number;
   catalog: EvidenceCatalog;
   curation: DashboardCuration;
+  dashboard: AnalyticsDashboard | null;
   dataQuality: AnalyticsDataQuality;
   limitations: string[];
   generatedAt: string;
@@ -1135,6 +1373,9 @@ export interface AnalyticsResultRecord {
 export interface AnalyticsQueryResponse {
   execution: AnalyticsExecutionRecord | null;
   result: AnalyticsResultRecord | null;
+  layoutPreference: AnalyticsDashboardPreferenceRecord | null;
+  dashboardCompatibilitySource: AnalyticsDashboardCompatibilitySource | null;
+  dashboardUsageSummary: AnalyticsDashboardUsageSummary | null;
 }
 
 export class ApiError extends Error {
@@ -1531,10 +1772,35 @@ export const apiClient = {
       body: JSON.stringify(payload),
     });
   },
+  startActivityInterpretation(
+    activityId: string,
+    payload: StartInterpretationPayload,
+  ): Promise<StartActivityInterpretationResponse> {
+    return request(`/activities/${activityId}/interpret`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  },
   getProjectInterpretations(
     projectId: string,
   ): Promise<ProjectInterpretationOverview> {
     return request(`/projects/${projectId}/interpretation`);
+  },
+  getProjectAiKnowledge(projectId: string): Promise<ProjectAiKnowledgeRecord> {
+    return request(`/projects/${projectId}/ai-knowledge`);
+  },
+  getActivityAiKnowledge(
+    activityId: string,
+  ): Promise<ActivityAiKnowledgeRecord> {
+    return request(`/activities/${activityId}/ai-knowledge`);
+  },
+  generateActivityAiKnowledge(
+    activityId: string,
+  ): Promise<ActivityAiKnowledgeRecord> {
+    return request(`/activities/${activityId}/ai-knowledge`, {
+      method: "POST",
+    });
   },
   getInterpretation(
     interpretationResultId: string,
@@ -1600,6 +1866,41 @@ export const apiClient = {
   getProjectAnalytics(projectId: string): Promise<AnalyticsQueryResponse> {
     return request(`/projects/${projectId}/analytics`);
   },
+  updateProjectAnalyticsLayout(
+    projectId: string,
+    payload: UpdateAnalyticsDashboardPreferencePayload,
+  ): Promise<AnalyticsDashboardPreferenceRecord> {
+    return request(`/projects/${projectId}/analytics/layout`, {
+      method: "PUT",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  },
+  resetProjectAnalyticsLayout(projectId: string): Promise<{ success: true }> {
+    return request(`/projects/${projectId}/analytics/layout`, {
+      method: "DELETE",
+    });
+  },
+  trackProjectAnalyticsInteraction(
+    projectId: string,
+    payload: AnalyticsDashboardInteractionPayload,
+  ): Promise<{ success: true }> {
+    return request(`/projects/${projectId}/analytics/events`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  },
+  downloadProjectAnalyticsExport(
+    projectId: string,
+    payload: AnalyticsDashboardExportRequestPayload,
+  ): Promise<Blob> {
+    return requestBlob(`/projects/${projectId}/analytics/export`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  },
   generateActivityAnalytics(
     projectId: string,
     activityId: string,
@@ -1614,5 +1915,58 @@ export const apiClient = {
     activityId: string,
   ): Promise<AnalyticsQueryResponse> {
     return request(`/projects/${projectId}/activities/${activityId}/analytics`);
+  },
+  updateActivityAnalyticsLayout(
+    projectId: string,
+    activityId: string,
+    payload: UpdateAnalyticsDashboardPreferencePayload,
+  ): Promise<AnalyticsDashboardPreferenceRecord> {
+    return request(
+      `/projects/${projectId}/activities/${activityId}/analytics/layout`,
+      {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      },
+    );
+  },
+  resetActivityAnalyticsLayout(
+    projectId: string,
+    activityId: string,
+  ): Promise<{ success: true }> {
+    return request(
+      `/projects/${projectId}/activities/${activityId}/analytics/layout`,
+      {
+        method: "DELETE",
+      },
+    );
+  },
+  trackActivityAnalyticsInteraction(
+    projectId: string,
+    activityId: string,
+    payload: AnalyticsDashboardInteractionPayload,
+  ): Promise<{ success: true }> {
+    return request(
+      `/projects/${projectId}/activities/${activityId}/analytics/events`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      },
+    );
+  },
+  downloadActivityAnalyticsExport(
+    projectId: string,
+    activityId: string,
+    payload: AnalyticsDashboardExportRequestPayload,
+  ): Promise<Blob> {
+    return requestBlob(
+      `/projects/${projectId}/activities/${activityId}/analytics/export`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      },
+    );
   },
 };

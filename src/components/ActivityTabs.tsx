@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 interface Tab {
@@ -20,7 +19,6 @@ interface Tab {
     | "/projects/$projectId/activities/$activityId/settings";
   label: string;
   icon: ReactNode;
-  comingSoon?: boolean;
   params: { projectId: string } | { projectId: string; activityId: string };
 }
 
@@ -46,21 +44,18 @@ export function ActivityTabs({
       to: "/projects/$projectId/activities/$activityId/data-review",
       label: t("activityTabs.schema"),
       icon: <LayoutGrid className="h-3.5 w-3.5" />,
-      comingSoon: true,
       params: { projectId, activityId },
     },
     {
       to: "/projects/$projectId/activities/$activityId/analysis",
       label: t("activityTabs.analytics"),
       icon: <BarChart3 className="h-3.5 w-3.5" />,
-      comingSoon: true,
       params: { projectId, activityId },
     },
     {
       to: "/projects/$projectId/activities/$activityId/insights",
       label: t("activityTabs.insights"),
       icon: <Sparkles className="h-3.5 w-3.5" />,
-      comingSoon: true,
       params: { projectId, activityId },
     },
     {
@@ -91,11 +86,6 @@ export function ActivityTabs({
         >
           {tItem.icon}
           {tItem.label}
-          {tItem.comingSoon ? (
-            <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
-              {t("projectWorkspace.tabs.comingSoon")}
-            </Badge>
-          ) : null}
         </Link>
       ))}
     </nav>

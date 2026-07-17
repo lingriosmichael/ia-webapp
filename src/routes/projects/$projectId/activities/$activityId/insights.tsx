@@ -1,20 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CheckCircle2, XCircle } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
+import { ActivityAiKnowledgeContent } from "@/components/activityAiKnowledgeContent";
 import { ActivityTabs } from "@/components/activityTabs";
 import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
-import { Badge } from "@/components/ui/badge";
 import { useProjectHierarchy } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
 import {
+  useAcknowledgeInterpretationReviewMutation,
+  useActivityAiKnowledgeQuery,
   useActivityQuery,
-  useProjectInterpretationsQuery,
-  useProjectQuery,
 } from "@/hooks/useWorkspaceQueries";
-import type {
-  InterpretationGoalCoverage,
-  InterpretationIndicator,
-} from "@/services/apiClient";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute(
   "/projects/$projectId/activities/$activityId/insights",
@@ -25,35 +21,38 @@ export const Route = createFileRoute(
 function ActivityInsightsPage() {
   const { projectId, activityId } = Route.useParams();
   const auth = useRequireAuth();
-  const projectQuery = useProjectQuery(projectId, Boolean(auth.token));
-  const activityQuery = useActivityQuery(activityId, Boolean(auth.token));
-  const interpretationsQuery = useProjectInterpretationsQuery(
-    projectId,
-    Boolean(auth.token),
-  );
   const { t } = useTranslation();
   const hierarchy = useProjectHierarchy();
+  const activityQuery = useActivityQuery(activityId, Boolean(auth.token));
+  const knowledgeQuery = useActivityAiKnowledgeQuery(
+    activityId,
+    Boolean(auth.token),
+  );
+  const acknowledgeMutation =
+    useAcknowledgeInterpretationReviewMutation(activityId);
 
-  if (
-    !auth.token ||
-    projectQuery.isLoading ||
-    activityQuery.isLoading ||
-    interpretationsQuery.isLoading
-  ) {
+  useEffect(() => {
+    if (
+      !activityQuery.data ||
+      activityQuery.data.interpretationAcknowledgedAt ||
+      !knowledgeQuery.data ||
+      acknowledgeMutation.isPending
+    ) {
+      return;
+    }
+
+    acknowledgeMutation.mutate();
+  }, [acknowledgeMutation, activityQuery.data, knowledgeQuery.data]);
+
+  if (!auth.token || activityQuery.isLoading) {
     return <CenteredState label={t("activityInsights.loading")} />;
   }
 
-  if (!projectQuery.data || !activityQuery.data) {
+  if (!activityQuery.data) {
     return <CenteredState label={t("activityInsights.loadFailed")} />;
   }
 
   const activity = activityQuery.data;
-  const hasStatedGoals = Boolean(
-    activity.objectives?.trim() || activity.successIndicators?.trim(),
-  );
-  const result = interpretationsQuery.data?.results.find(
-    (candidate) => candidate.activityId === activityId,
-  );
 
   return (
     <>
@@ -67,10 +66,11 @@ function ActivityInsightsPage() {
           { label: t("activityInsights.crumb") },
         ]}
       />
-      <div className="mx-auto w-full max-w-6xl px-8 py-8">
+      <div className="mx-auto w-full max-w-5xl px-8 py-8">
         <PageHeader
           eyebrow={t("activityInsights.eyebrow")}
-          title={t("activityInsights.title")}
+          title={activity.name}
+          description={t("activityInsights.description")}
         />
         <ActivityTabs
           projectId={projectId}
@@ -78,25 +78,21 @@ function ActivityInsightsPage() {
           className="mt-6"
         />
 
-        {!hasStatedGoals ? (
+        {knowledgeQuery.isLoading ? (
+          <Card className="mt-6 p-6 text-sm text-muted-foreground">
+            {t("activityInsights.loading")}
+          </Card>
+        ) : knowledgeQuery.isError || !knowledgeQuery.data ? (
           <EmptyStateCard
-            title={t("activityInsights.noGoalsTitle")}
-            description={t("activityInsights.noGoalsDescription")}
-            ctaLabel={t("activityInsights.noGoalsCta")}
-            projectId={projectId}
-          />
-        ) : !result ? (
-          <EmptyStateCard
-            title={t("activityInsights.noAnalysisTitle")}
-            description={t("activityInsights.noAnalysisDescription")}
-            ctaLabel={t("activityInsights.noAnalysisCta")}
+            title={t("activityInsights.notReadyTitle")}
+            description={t("activityInsights.notReadyDescription")}
+            ctaLabel={t("activityInsights.notReadyCta")}
             projectId={projectId}
           />
         ) : (
-          <GoalCoverageSections
-            coverage={result.goalAlignment}
-            indicators={result.indicators}
-          />
+          <Card className="mt-6 border-border/70 p-6">
+            <ActivityAiKnowledgeContent knowledge={knowledgeQuery.data} />
+          </Card>
         )}
       </div>
     </>
@@ -124,7 +120,7 @@ function EmptyStateCard({
           {description}
         </p>
         <Link
-          to="/projects/$projectId/activities"
+          to="/projects/$projectId/interpretation"
           params={{ projectId }}
           className="mt-5 inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
         >
@@ -132,84 +128,6 @@ function EmptyStateCard({
         </Link>
       </div>
     </Card>
-  );
-}
-
-function GoalCoverageSections({
-  coverage,
-  indicators,
-}: {
-  coverage: InterpretationGoalCoverage[];
-  indicators: InterpretationIndicator[];
-}) {
-  const { t } = useTranslation();
-  const indicatorNameById = new Map(
-    indicators.map((indicator) => [indicator.id, indicator.name]),
-  );
-
-  const covered = coverage.filter((entry) => entry.isSupportedByData);
-  const notCovered = coverage.filter((entry) => !entry.isSupportedByData);
-
-  if (coverage.length === 0) {
-    return (
-      <Card className="mt-6 p-6 text-sm text-muted-foreground">
-        {t("activityInsights.noCoverageDescription")}
-      </Card>
-    );
-  }
-
-  return (
-    <div className="mt-6 space-y-6">
-      <section className="space-y-3">
-        <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
-          <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-          {t("activityInsights.coveredTitle")}
-        </div>
-        {covered.length === 0 ? (
-          <Card className="p-5 text-sm text-muted-foreground">
-            {t("activityInsights.coveredEmpty")}
-          </Card>
-        ) : (
-          covered.map((entry) => (
-            <Card key={entry.id} className="p-5">
-              <p className="text-sm font-medium text-foreground">
-                {entry.goalSummary}
-              </p>
-              <div className="mt-2 flex flex-wrap gap-1.5">
-                {entry.relatedIndicatorIds.map((indicatorId) => (
-                  <Badge key={indicatorId} variant="outline">
-                    {indicatorNameById.get(indicatorId) ?? indicatorId}
-                  </Badge>
-                ))}
-              </div>
-            </Card>
-          ))
-        )}
-      </section>
-
-      <section className="space-y-3">
-        <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
-          <XCircle className="h-4 w-4 text-destructive" />
-          {t("activityInsights.notCoveredTitle")}
-        </div>
-        {notCovered.length === 0 ? (
-          <Card className="p-5 text-sm text-muted-foreground">
-            {t("activityInsights.notCoveredEmpty")}
-          </Card>
-        ) : (
-          notCovered.map((entry) => (
-            <Card key={entry.id} className="p-5">
-              <p className="text-sm font-medium text-foreground">
-                {entry.goalSummary}
-              </p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                {entry.gapExplanation}
-              </p>
-            </Card>
-          ))
-        )}
-      </section>
-    </div>
   );
 }
 

@@ -1,10 +1,10 @@
-import { AlertTriangle, FileText, ShieldAlert } from "lucide-react";
+import { AlertTriangle, ShieldAlert } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { DialogSection, EntityDialog } from "@/components/entityDialog";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Card } from "@/components/workspaceUI";
 import {
   useActivityUploadsQuery,
@@ -14,7 +14,6 @@ import {
 } from "@/hooks/useWorkspaceQueries";
 import {
   ApiError,
-  type ParsedRepresentationPreviewRecord,
   type PrivacyReviewDecisionValue,
   type PrivacyReviewRecord,
 } from "@/services/apiClient";
@@ -48,27 +47,13 @@ function createDecisionKey(field: string, entityType: string) {
   return `${field}::${entityType}`;
 }
 
-const MINIMUM_OVERRIDE_REASON_LENGTH = 10;
-
-function hasValidOverrideReason(reason: string | undefined) {
-  return (reason?.trim().length ?? 0) >= MINIMUM_OVERRIDE_REASON_LENGTH;
-}
-
 function getActionOptions(
   finding: FindingSummaryItem,
 ): PrivacyReviewDecisionValue[] {
-  const optionsByRecommendedAction: Record<
-    string,
-    PrivacyReviewDecisionValue[]
-  > = {
-    tokenize: ["tokenize", "remove", "keep"],
-    generalize: ["generalize", "remove", "keep"],
-    remove: ["remove", "tokenize", "keep"],
-    restrict: ["restrict", "remove", "keep"],
-    keep: ["keep"],
-  };
-
-  return optionsByRecommendedAction[finding.recommendedAction] ?? ["keep"];
+  if (finding.recommendedAction === "keep") {
+    return ["keep", "tokenize"];
+  }
+  return ["tokenize", "keep"];
 }
 
 function getActionLabel(
@@ -97,9 +82,8 @@ export function PrivacyReviewDialog({
   const [fieldDecisionMap, setFieldDecisionMap] = useState<
     Record<string, PrivacyReviewDecisionValue>
   >({});
-  const [fieldReasonMap, setFieldReasonMap] = useState<Record<string, string>>(
-    {},
-  );
+  const [fieldKeepAcknowledgementMap, setFieldKeepAcknowledgementMap] =
+    useState<Record<string, boolean>>({});
 
   const jobQuery = useJobQuery(processingJobId, open);
   const job = jobQuery.data;
@@ -142,9 +126,10 @@ export function PrivacyReviewDialog({
     if (!decision) {
       return false;
     }
-    return (
-      decision === finding.recommendedAction ||
-      hasValidOverrideReason(fieldReasonMap[key])
+    return !(
+      decision === "keep" &&
+      finding.recommendedAction !== "keep" &&
+      fieldKeepAcknowledgementMap[key] !== true
     );
   });
   const canSubmit = canApproveReview && allDecisionsResolved;
@@ -156,21 +141,21 @@ export function PrivacyReviewDialog({
 
     if (!review) {
       setFieldDecisionMap({});
-      setFieldReasonMap({});
+      setFieldKeepAcknowledgementMap({});
       return;
     }
 
     const nextFieldDecisionMap: Record<string, PrivacyReviewDecisionValue> = {};
-    const nextFieldReasonMap: Record<string, string> = {};
+    const nextFieldKeepAcknowledgementMap: Record<string, boolean> = {};
     for (const decision of review.decisions?.fieldDecisions ?? []) {
       const key = createDecisionKey(decision.field, decision.entityType);
       nextFieldDecisionMap[key] = decision.decision;
-      if (decision.reason) {
-        nextFieldReasonMap[key] = decision.reason;
+      if (decision.keepUnchangedAcknowledged === true) {
+        nextFieldKeepAcknowledgementMap[key] = true;
       }
     }
     setFieldDecisionMap(nextFieldDecisionMap);
-    setFieldReasonMap(nextFieldReasonMap);
+    setFieldKeepAcknowledgementMap(nextFieldKeepAcknowledgementMap);
   }, [review, open]);
 
   async function handleApprovePrivacyReview() {
@@ -189,9 +174,9 @@ export function PrivacyReviewDialog({
               field: finding.field,
               entityType: finding.entityType,
               decision,
-              reason:
-                decision !== finding.recommendedAction
-                  ? fieldReasonMap[key]
+              keepUnchangedAcknowledged:
+                decision === "keep"
+                  ? fieldKeepAcknowledgementMap[key] === true
                   : undefined,
             };
           }),
@@ -329,10 +314,10 @@ export function PrivacyReviewDialog({
                             createDecisionKey(finding.field, finding.entityType)
                           ]
                         }
-                        reason={
-                          fieldReasonMap[
+                        keepUnchangedAcknowledged={
+                          fieldKeepAcknowledgementMap[
                             createDecisionKey(finding.field, finding.entityType)
-                          ]
+                          ] === true
                         }
                         disabled={!canApproveReview}
                         onDecide={(decision) =>
@@ -344,13 +329,13 @@ export function PrivacyReviewDialog({
                             )]: decision,
                           }))
                         }
-                        onReasonChange={(reason) =>
-                          setFieldReasonMap((current) => ({
+                        onKeepUnchangedAcknowledgementChange={(acknowledged) =>
+                          setFieldKeepAcknowledgementMap((current) => ({
                             ...current,
                             [createDecisionKey(
                               finding.field,
                               finding.entityType,
-                            )]: reason,
+                            )]: acknowledged,
                           }))
                         }
                       />
@@ -374,17 +359,6 @@ export function PrivacyReviewDialog({
                 {t("projectWorkspace.evidence.reviewDecisionsIncomplete")}
               </p>
             ) : null}
-          </DialogSection>
-
-          <DialogSection
-            title={t("projectWorkspace.evidence.parsedRepresentationTitle")}
-            description={t(
-              "projectWorkspace.evidence.parsedRepresentationDescription",
-            )}
-          >
-            <ParsedRepresentationPreviewPanel
-              preview={review?.parsedRepresentationPreview ?? null}
-            />
           </DialogSection>
         </>
       )}
@@ -429,24 +403,23 @@ function FindingCard({ finding }: { finding: FindingSummaryItem }) {
 function DecisionFindingCard({
   finding,
   decision,
-  reason,
+  keepUnchangedAcknowledged,
   disabled,
   onDecide,
-  onReasonChange,
+  onKeepUnchangedAcknowledgementChange,
 }: {
   finding: FindingSummaryItem;
   decision: PrivacyReviewDecisionValue | undefined;
-  reason: string | undefined;
+  keepUnchangedAcknowledged: boolean;
   disabled: boolean;
   onDecide: (decision: PrivacyReviewDecisionValue) => void;
-  onReasonChange: (reason: string) => void;
+  onKeepUnchangedAcknowledgementChange: (acknowledged: boolean) => void;
 }) {
   const { t } = useTranslation();
   const verb = getRecommendationVerb(finding.recommendedAction, t);
   const actionOptions = getActionOptions(finding);
-  const isOverride = Boolean(
-    decision && decision !== finding.recommendedAction,
-  );
+  const isKeepOverride =
+    decision === "keep" && finding.recommendedAction !== "keep";
 
   return (
     <div className="rounded-xl border border-border bg-secondary/20 p-4">
@@ -462,7 +435,7 @@ function DecisionFindingCard({
         {decision ? (
           <span
             className={
-              isOverride
+              isKeepOverride
                 ? "rounded-full border border-destructive/25 bg-destructive/10 px-3 py-1 text-xs font-medium text-destructive"
                 : "rounded-full border border-primary/25 bg-primary-soft px-3 py-1 text-xs font-medium text-primary"
             }
@@ -514,143 +487,34 @@ function DecisionFindingCard({
         })}
       </div>
 
-      {isOverride ? (
+      {isKeepOverride ? (
         <div className="mt-2 space-y-2">
-          <p
-            className={
-              decision === "keep"
-                ? "text-sm font-medium text-destructive"
-                : "text-sm font-medium text-foreground"
-            }
-          >
-            {t(
-              decision === "keep"
-                ? "projectWorkspace.evidence.keepOverrideWarning"
-                : "projectWorkspace.evidence.overrideFindingWarning",
-            )}
+          <p className="text-sm font-medium text-destructive">
+            {t("projectWorkspace.evidence.keepOverrideWarning")}
           </p>
-          <div>
-            <label
-              htmlFor={`override-reason-${finding.field}-${finding.entityType}`}
-              className="text-sm font-medium text-foreground"
-            >
-              {t("projectWorkspace.evidence.overrideReasonLabel")}
-            </label>
-            <Textarea
-              id={`override-reason-${finding.field}-${finding.entityType}`}
-              className="mt-1"
+          <label
+            htmlFor={`keep-acknowledgement-${finding.field}-${finding.entityType}`}
+            className="flex items-start gap-3 rounded-xl border border-destructive/25 bg-destructive/5 px-4 py-3 text-sm leading-6 text-foreground"
+          >
+            <Checkbox
+              id={`keep-acknowledgement-${finding.field}-${finding.entityType}`}
+              checked={keepUnchangedAcknowledged}
               disabled={disabled}
-              value={reason ?? ""}
-              placeholder={t(
-                "projectWorkspace.evidence.overrideReasonPlaceholder",
-              )}
-              onChange={(event) => onReasonChange(event.target.value)}
+              onCheckedChange={(checked) =>
+                onKeepUnchangedAcknowledgementChange(checked === true)
+              }
             />
-            {!hasValidOverrideReason(reason) ? (
-              <p className="mt-1 text-xs text-destructive">
-                {t("projectWorkspace.evidence.overrideReasonTooShort")}
-              </p>
-            ) : null}
-          </div>
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
-function ParsedRepresentationPreviewPanel({
-  preview,
-}: {
-  preview: ParsedRepresentationPreviewRecord | null;
-}) {
-  const { t } = useTranslation();
-
-  if (!preview) {
-    return (
-      <p className="text-sm text-muted-foreground">
-        {t("projectWorkspace.evidence.noParsedRepresentation")}
-      </p>
-    );
-  }
-
-  return (
-    <div className="space-y-4">
-      <div className="grid gap-3 md:grid-cols-2">
-        <MetaCard
-          label={t("projectWorkspace.evidence.parsedFileType")}
-          value={preview.fileType}
-        />
-        <MetaCard
-          label={t("projectWorkspace.evidence.parsedTableCount")}
-          value={String(preview.tableCount)}
-        />
-      </div>
-
-      {preview.tables.length > 0 ? (
-        <div className="space-y-3">
-          {preview.tables.map((table, index) => (
-            <div
-              key={`table-${index}`}
-              className="rounded-xl border border-border bg-secondary/20 p-4"
-            >
-              <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                <FileText className="h-4 w-4 text-primary" />
-                {table.name ??
-                  t("projectWorkspace.evidence.parsedTableFallback", {
-                    index: index + 1,
-                  })}
-              </div>
-              <div className="mt-2 flex flex-wrap gap-4 text-sm text-muted-foreground">
-                <span>
-                  {t("projectWorkspace.evidence.parsedRowCount")}:{" "}
-                  {table.rowCount}
-                </span>
-                <span>
-                  {t("projectWorkspace.evidence.parsedColumnCount")}:{" "}
-                  {table.columnCount}
-                </span>
-              </div>
-              <div className="mt-3 text-sm text-muted-foreground">
-                {t("projectWorkspace.evidence.parsedColumnsLabel")}:{" "}
-                {table.columns.join(", ") ||
-                  t("projectWorkspace.evidence.parsedNone")}
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : null}
-
-      {preview.paragraphs.length > 0 ? (
-        <div className="rounded-xl border border-border bg-secondary/20 p-4">
-          <div className="text-sm font-semibold text-foreground">
-            {t("projectWorkspace.evidence.parsedParagraphSummaryTitle")}
-          </div>
-          <div className="mt-3 space-y-3">
-            {preview.paragraphs.map((paragraph) => (
-              <div
-                key={`paragraph-${paragraph.index}`}
-                className="rounded-lg border border-border bg-background px-3 py-3 text-sm text-muted-foreground"
-              >
-                <div className="font-medium text-foreground">
-                  {t("projectWorkspace.evidence.parsedParagraphLabel", {
-                    index: paragraph.index + 1,
-                  })}
-                </div>
-                <div className="mt-1 flex flex-wrap gap-4">
-                  <span>
-                    {t("projectWorkspace.evidence.parsedCharacterCount")}:{" "}
-                    {paragraph.characterCount}
-                  </span>
-                  {paragraph.page !== null ? (
-                    <span>
-                      {t("projectWorkspace.evidence.parsedPageLabel")}:{" "}
-                      {paragraph.page}
-                    </span>
-                  ) : null}
-                </div>
-              </div>
-            ))}
-          </div>
+            <span>
+              {t("projectWorkspace.evidence.keepUnchangedAcknowledgementLabel")}
+            </span>
+          </label>
+          {!keepUnchangedAcknowledged ? (
+            <p className="text-xs text-destructive">
+              {t(
+                "projectWorkspace.evidence.keepUnchangedAcknowledgementRequired",
+              )}
+            </p>
+          ) : null}
         </div>
       ) : null}
     </div>
