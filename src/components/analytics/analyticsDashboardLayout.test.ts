@@ -241,4 +241,95 @@ describe("analyticsDashboardLayout", () => {
       "category-rank-safe",
     ]);
   });
+
+  it("keeps deterministic distribution bars when replacement charts exist", () => {
+    const result = makeResult();
+    result.dashboard = {
+      schemaVersion: "dashboard-v2",
+      availableWidgets: [
+        {
+          widgetId: "horizontal-bar-safe-distribution",
+          kind: "horizontal_bar",
+          title: "Recommendation distribution",
+          subtitle: "responses",
+          description:
+            "A deterministic category distribution from structured evidence.",
+          sourceActivityIds: ["activity-1"],
+          sourceUploadMetadataIds: ["upload-1"],
+          goalLinkage: {
+            outcomeReferences: [],
+            successIndicators: [],
+            matchedProjectGoalPhrases: [],
+          },
+          qualityFlags: [],
+          unit: "count",
+          items: [
+            {
+              id: "item-1",
+              label: "Suitable",
+              description: "Recommendation distribution",
+              value: 12,
+              unit: "count",
+              entryId: null,
+            },
+            {
+              id: "item-2",
+              label: "Unsuitable",
+              description: "Recommendation distribution",
+              value: 4,
+              unit: "count",
+              entryId: null,
+            },
+          ],
+        },
+        {
+          widgetId: "category-rank-safe",
+          kind: "category_rank",
+          title: "Applications by district",
+          subtitle: null,
+          description: "Safer grouped chart.",
+          sourceActivityIds: ["activity-1"],
+          sourceUploadMetadataIds: ["upload-1"],
+          goalLinkage: {
+            outcomeReferences: [],
+            successIndicators: [],
+            matchedProjectGoalPhrases: [],
+          },
+          qualityFlags: [],
+          label: "Applications by district",
+          tableName: "Sheet 1",
+          activityId: "activity-1",
+          unit: "count",
+          items: [
+            {
+              id: "segment-1",
+              label: "Mitte",
+              value: 8,
+            },
+            {
+              id: "segment-2",
+              label: "Pankow",
+              value: 4,
+            },
+          ],
+        },
+      ],
+      defaultLayout: {
+        orderedWidgetIds: [
+          "horizontal-bar-safe-distribution",
+          "category-rank-safe",
+        ],
+        hiddenWidgetIds: [],
+      },
+    };
+
+    const resolved = resolveAnalyticsDashboard({
+      result,
+      dashboardCompatibilitySource: "generated",
+    });
+
+    expect(
+      resolved.dashboard.availableWidgets.map((widget) => widget.widgetId),
+    ).toEqual(["horizontal-bar-safe-distribution", "category-rank-safe"]);
+  });
 });

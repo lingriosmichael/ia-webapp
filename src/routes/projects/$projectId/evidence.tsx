@@ -426,6 +426,13 @@ function EvidenceFileRow({
       job.status,
     ),
   );
+  const shouldAutoOpenPrivacyReview = Boolean(
+    progressDialogOpen &&
+      job &&
+      ["awaiting_privacy_review", "transforming", "completed"].includes(
+        job.status,
+      ),
+  );
   const canAnalyse =
     activity.permissions.canUploadEvidence &&
     upload.status === "uploaded" &&
@@ -459,6 +466,15 @@ function EvidenceFileRow({
       );
     }
   }
+
+  useEffect(() => {
+    if (!shouldAutoOpenPrivacyReview) {
+      return;
+    }
+
+    setProgressDialogOpen(false);
+    setReviewDialogOpen(true);
+  }, [shouldAutoOpenPrivacyReview]);
 
   function openPrivacyReview() {
     if (!job) {
@@ -553,7 +569,6 @@ function EvidenceFileRow({
         open={progressDialogOpen}
         onOpenChange={setProgressDialogOpen}
         job={job}
-        onReviewPrivacy={() => setReviewDialogOpen(true)}
       />
       <PrivacyReviewDialog
         open={reviewDialogOpen}
