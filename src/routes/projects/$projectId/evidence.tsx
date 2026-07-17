@@ -428,10 +428,10 @@ function EvidenceFileRow({
   );
   const shouldAutoOpenPrivacyReview = Boolean(
     progressDialogOpen &&
-      job &&
-      ["awaiting_privacy_review", "transforming", "completed"].includes(
-        job.status,
-      ),
+    job &&
+    ["awaiting_privacy_review", "transforming", "completed"].includes(
+      job.status,
+    ),
   );
   const canAnalyse =
     activity.permissions.canUploadEvidence &&
