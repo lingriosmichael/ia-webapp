@@ -9,8 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UeberUnsRouteImport } from './routes/ueber-uns'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ImpressumRouteImport } from './routes/impressum'
+import { Route as DatenschutzRouteImport } from './routes/datenschutz'
+import { Route as AgbRouteImport } from './routes/agb'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OnboardingWorkspaceRouteImport } from './routes/onboarding/workspace'
 import { Route as OnboardingWelcomeRouteImport } from './routes/onboarding/welcome'
@@ -43,6 +47,11 @@ import { Route as ProjectsProjectIdActivitiesActivityIdAnalyticsRouteImport } fr
 import { Route as ProjectsProjectIdActivitiesActivityIdAnalysisRouteImport } from './routes/projects/$projectId/activities/$activityId/analysis'
 import { Route as ProjectsProjectIdActivitiesActivityIdDataReviewIndexRouteImport } from './routes/projects/$projectId/activities/$activityId/data-review/index'
 
+const UeberUnsRoute = UeberUnsRouteImport.update({
+  id: '/ueber-uns',
+  path: '/ueber-uns',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -51,6 +60,21 @@ const RegisterRoute = RegisterRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ImpressumRoute = ImpressumRouteImport.update({
+  id: '/impressum',
+  path: '/impressum',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DatenschutzRoute = DatenschutzRouteImport.update({
+  id: '/datenschutz',
+  path: '/datenschutz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgbRoute = AgbRouteImport.update({
+  id: '/agb',
+  path: '/agb',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -234,8 +258,12 @@ const ProjectsProjectIdActivitiesActivityIdDataReviewIndexRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/agb': typeof AgbRoute
+  '/datenschutz': typeof DatenschutzRoute
+  '/impressum': typeof ImpressumRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/ueber-uns': typeof UeberUnsRoute
   '/organizations/$organizationId': typeof OrganizationsOrganizationIdRouteRouteWithChildren
   '/projects/$projectId': typeof ProjectsProjectIdRouteRouteWithChildren
   '/onboarding/invite': typeof OnboardingInviteRoute
@@ -269,8 +297,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/agb': typeof AgbRoute
+  '/datenschutz': typeof DatenschutzRoute
+  '/impressum': typeof ImpressumRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/ueber-uns': typeof UeberUnsRoute
   '/onboarding/invite': typeof OnboardingInviteRoute
   '/onboarding/profile': typeof OnboardingProfileRoute
   '/onboarding/welcome': typeof OnboardingWelcomeRoute
@@ -303,8 +335,12 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/agb': typeof AgbRoute
+  '/datenschutz': typeof DatenschutzRoute
+  '/impressum': typeof ImpressumRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/ueber-uns': typeof UeberUnsRoute
   '/organizations/$organizationId': typeof OrganizationsOrganizationIdRouteRouteWithChildren
   '/projects/$projectId': typeof ProjectsProjectIdRouteRouteWithChildren
   '/onboarding/invite': typeof OnboardingInviteRoute
@@ -340,8 +376,12 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/agb'
+    | '/datenschutz'
+    | '/impressum'
     | '/login'
     | '/register'
+    | '/ueber-uns'
     | '/organizations/$organizationId'
     | '/projects/$projectId'
     | '/onboarding/invite'
@@ -375,8 +415,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/agb'
+    | '/datenschutz'
+    | '/impressum'
     | '/login'
     | '/register'
+    | '/ueber-uns'
     | '/onboarding/invite'
     | '/onboarding/profile'
     | '/onboarding/welcome'
@@ -408,8 +452,12 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/agb'
+    | '/datenschutz'
+    | '/impressum'
     | '/login'
     | '/register'
+    | '/ueber-uns'
     | '/organizations/$organizationId'
     | '/projects/$projectId'
     | '/onboarding/invite'
@@ -444,8 +492,12 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AgbRoute: typeof AgbRoute
+  DatenschutzRoute: typeof DatenschutzRoute
+  ImpressumRoute: typeof ImpressumRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
+  UeberUnsRoute: typeof UeberUnsRoute
   OrganizationsOrganizationIdRouteRoute: typeof OrganizationsOrganizationIdRouteRouteWithChildren
   ProjectsProjectIdRouteRoute: typeof ProjectsProjectIdRouteRouteWithChildren
   OnboardingInviteRoute: typeof OnboardingInviteRoute
@@ -457,6 +509,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/ueber-uns': {
+      id: '/ueber-uns'
+      path: '/ueber-uns'
+      fullPath: '/ueber-uns'
+      preLoaderRoute: typeof UeberUnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register': {
       id: '/register'
       path: '/register'
@@ -469,6 +528,27 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/impressum': {
+      id: '/impressum'
+      path: '/impressum'
+      fullPath: '/impressum'
+      preLoaderRoute: typeof ImpressumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/datenschutz': {
+      id: '/datenschutz'
+      path: '/datenschutz'
+      fullPath: '/datenschutz'
+      preLoaderRoute: typeof DatenschutzRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agb': {
+      id: '/agb'
+      path: '/agb'
+      fullPath: '/agb'
+      preLoaderRoute: typeof AgbRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -792,8 +872,12 @@ const ProjectsProjectIdRouteRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AgbRoute: AgbRoute,
+  DatenschutzRoute: DatenschutzRoute,
+  ImpressumRoute: ImpressumRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
+  UeberUnsRoute: UeberUnsRoute,
   OrganizationsOrganizationIdRouteRoute:
     OrganizationsOrganizationIdRouteRouteWithChildren,
   ProjectsProjectIdRouteRoute: ProjectsProjectIdRouteRouteWithChildren,

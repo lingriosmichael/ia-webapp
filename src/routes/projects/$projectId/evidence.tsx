@@ -62,7 +62,7 @@ function isEvidenceReviewed(
   return activity.interpretationAcknowledgedAt !== null && uploadCount > 0;
 }
 
-export default function ProjectEvidencePage() {
+function ProjectEvidencePage() {
   const { projectId } = Route.useParams();
   const { workspace } = useProjectWorkspacePage();
   const workspaceProject = useCurrentWorkspaceProject();

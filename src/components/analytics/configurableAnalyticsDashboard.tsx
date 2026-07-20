@@ -34,6 +34,7 @@ import { toast } from "sonner";
 import {
   Bar,
   CartesianGrid,
+  Cell,
   Line,
   LineChart,
   ResponsiveContainer,
@@ -50,6 +51,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdownMenu";
 import { Card } from "@/components/workspaceUI";
+import { resolveCategoryLabels } from "@/lib/analyticsCategoryLabel";
 import { cn } from "@/lib/utils";
 import type {
   AnalyticsDashboard,
@@ -82,6 +84,24 @@ const MIN_HORIZONTAL_BAR_CHART_HEIGHT = 280;
 const HORIZONTAL_BAR_ROW_HEIGHT = 56;
 const MIN_HORIZONTAL_BAR_Y_AXIS_WIDTH = 150;
 const MAX_HORIZONTAL_BAR_Y_AXIS_WIDTH = 240;
+
+// Bar shade constants below must stay in sync with the OKLCH triples
+// defined for --chart-1 / --chart-3 in src/styles.css.
+const HORIZONTAL_BAR_BASE_COLOR = { l: 0.55, c: 0.22, h: 295 };
+const CATEGORY_RANK_BASE_COLOR = { l: 0.7, c: 0.16, h: 180 };
+const MIN_BAR_LIGHTNESS = 0.4;
+const MAX_BAR_LIGHTNESS = 0.82;
+
+function getSequentialBarShade(
+  base: { l: number; c: number; h: number },
+  index: number,
+  count: number,
+): string {
+  const position = count <= 1 ? 0 : index / (count - 1);
+  const lightness =
+    MIN_BAR_LIGHTNESS + position * (MAX_BAR_LIGHTNESS - MIN_BAR_LIGHTNESS);
+  return `oklch(${lightness} ${base.c} ${base.h})`;
+}
 
 function wrapChartLabel(
   label: string,
@@ -510,7 +530,11 @@ export function ConfigurableAnalyticsDashboard({
         >
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-12">
             {layoutState.visibleWidgets.map((widget) => (
-              <SortableDashboardCard key={widget.widgetId} widget={widget}>
+              <SortableDashboardCard
+                key={widget.widgetId}
+                widget={widget}
+                onHide={handleToggleWidget}
+              >
                 <AnalyticsWidgetCard widget={widget} language={i18n.language} />
               </SortableDashboardCard>
             ))}
@@ -641,11 +665,14 @@ function UsageStat({ label, value }: { label: string; value: string }) {
 
 function SortableDashboardCard({
   widget,
+  onHide,
   children,
 }: {
   widget: AnalyticsDashboardWidget;
+  onHide: (widgetId: string) => void;
   children: ReactNode;
 }) {
+  const { t } = useTranslation();
   const {
     attributes,
     listeners,
@@ -664,7 +691,7 @@ function SortableDashboardCard({
       }}
       className={cn(
         "min-w-0",
-        widget.kind === "summary"
+        widget.kind === "summary" || widget.kind === "theme_list"
           ? "md:col-span-2 xl:col-span-12"
           : widget.kind === "kpi"
             ? "xl:col-span-3"
@@ -672,7 +699,15 @@ function SortableDashboardCard({
         isDragging ? "z-20 opacity-90" : "",
       )}
     >
-      <div className="mb-2 flex justify-end">
+      <div className="mb-2 flex justify-end gap-1">
+        <button
+          type="button"
+          onClick={() => onHide(widget.widgetId)}
+          aria-label={t("analytics.dashboard.hideWidget")}
+          className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-secondary"
+        >
+          <EyeOff className="h-3.5 w-3.5" />
+        </button>
         <button
           type="button"
           className="inline-flex cursor-grab items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-secondary"
@@ -847,8 +882,12 @@ function HorizontalBarWidgetCard({
   widget: AnalyticsDashboardHorizontalBarWidget;
   language: string;
 }) {
-  const data = widget.items.map((item) => ({
-    name: item.label,
+  const resolvedLabels = resolveCategoryLabels(
+    widget.items.map((item) => item.label),
+  );
+  const data = widget.items.map((item, index) => ({
+    id: item.id,
+    name: resolvedLabels[index],
     value: widget.unit === "ratio" ? item.value * 100 : item.value,
   }));
   const labels = data.map((item) => item.name);
@@ -889,11 +928,18 @@ function HorizontalBarWidgetCard({
                 )
               }
             />
-            <Bar
-              dataKey="value"
-              fill="var(--color-chart-1)"
-              radius={[0, 6, 6, 0]}
-            />
+            <Bar dataKey="value" radius={[0, 6, 6, 0]}>
+              {data.map((entry, index) => (
+                <Cell
+                  key={entry.id}
+                  fill={getSequentialBarShade(
+                    HORIZONTAL_BAR_BASE_COLOR,
+                    index,
+                    data.length,
+                  )}
+                />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -956,8 +1002,12 @@ function CategoryRankWidgetCard({
   widget: AnalyticsDashboardCategoryRankWidget;
   language: string;
 }) {
-  const data = widget.items.map((item) => ({
-    name: item.label,
+  const resolvedLabels = resolveCategoryLabels(
+    widget.items.map((item) => item.label),
+  );
+  const data = widget.items.map((item, index) => ({
+    id: item.id,
+    name: resolvedLabels[index],
     value: widget.unit === "ratio" ? item.value * 100 : item.value,
   }));
 
@@ -983,11 +1033,18 @@ function CategoryRankWidgetCard({
                 )
               }
             />
-            <Bar
-              dataKey="value"
-              fill="var(--color-chart-3)"
-              radius={[6, 6, 0, 0]}
-            />
+            <Bar dataKey="value" radius={[6, 6, 0, 0]}>
+              {data.map((entry, index) => (
+                <Cell
+                  key={entry.id}
+                  fill={getSequentialBarShade(
+                    CATEGORY_RANK_BASE_COLOR,
+                    index,
+                    data.length,
+                  )}
+                />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>

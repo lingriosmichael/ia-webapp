@@ -33,28 +33,183 @@ const en = {
     backToHome: "Back to home",
   },
   landing: {
-    badge: "AI-supported impact analysis",
-    title: "Organizations, projects, and activities before AI processing.",
-    description:
-      "Start with the workflow your team will actually use: onboard an organization, create projects, track activities, upload evidence, and store job metadata on a real backend. Impact Atlas automatically interprets your project data and turns evidence into meaningful analyses, visualizations, and reports for sound decisions, effective communication, and reliable funder reporting.",
     createWorkspace: "Create workspace",
-    useExistingAccount: "Use existing account",
-    features: {
-      organizations: {
-        title: "Organizations",
-        description:
-          "Each account starts inside an organization workspace with scoped access and ownership. The AI identifies content and connections across your project data.",
+    header: {
+      navHowItWorks: "How it works",
+      navPilotProgram: "Pilot programme",
+      navFaq: "FAQ",
+      navAboutUs: "About us",
+    },
+    hero: {
+      pilotBadge: "Pilot phase from August 2024",
+      freeBadge: "Free participation",
+      titleLine1: "Less time on funder reports.",
+      titleLine2: "More clarity on ",
+      titleHighlight: "your impact.",
+      description:
+        "Impact Atlas brings project data, evidence, and impact information together in one place, so your team writes reports faster and sees more clearly what your work achieves.",
+      ctaPrimary: "View pilot programme",
+      ctaSecondary: "Book a 15-minute call",
+      trustItems: [
+        "Reuse your existing data",
+        "Personal onboarding",
+        "No technical setup",
+      ],
+      mockupAlt:
+        "Impact Atlas dashboard preview showing a mentoring programme's overview, its recent activities, and an impact insights panel with a 79% relationship-capital score.",
+    },
+    problem: {
+      title: "Does this sound familiar?",
+      items: [
+        {
+          title: "Information scattered everywhere",
+          description:
+            "Project data, evidence, and documents sit across different file systems, folders, emails, and the nearest USB stick.",
+        },
+        {
+          title: "Reports take too long",
+          description:
+            "Too much time goes into collecting data, formatting it, and chasing answers — just to capture what the work actually achieved.",
+        },
+        {
+          title: "Unclear impact",
+          description:
+            "It's hard to see what your work is actually achieving, and which results genuinely make a difference.",
+        },
+      ],
+    },
+    howItWorks: {
+      title: "How Impact Atlas helps",
+      steps: [
+        {
+          title: "Collect",
+          description:
+            "Gather project data and evidence automatically, instead of organizing it yourself by hand.",
+        },
+        {
+          title: "Understand",
+          description:
+            "Understand and analyze the data. Make impact visible — with clear metrics and insights.",
+        },
+        {
+          title: "Report",
+          description:
+            "Create and share reports. Fast, well-founded, and precise — tailored to what your funders need.",
+        },
+      ],
+    },
+    trustBar: {
+      items: [
+        "Built for NGOs",
+        "GDPR-compliant",
+        "Hosted in the EU",
+        "Your data belongs to you",
+      ],
+    },
+    pilotProgram: {
+      title: "Our pilot programme",
+      whatYouGet: {
+        title: "What you get",
+        items: [
+          "Access to Impact Atlas during the 2024 pilot phase",
+          "Personal onboarding and walkthrough",
+          "Support from our team of experts",
+          "Regular check-ins & feedback rounds",
+        ],
       },
-      projects: {
-        title: "Projects",
-        description:
-          "Projects become the funding or programme containers where evidence work is organized. Automatically calculated metrics and clear visualizations show actual project progress.",
+      whatYouBring: {
+        title: "What you bring",
+        items: [
+          "An existing project or programme",
+          "Results and evidence you already have",
+          "Willingness to collaborate and share feedback",
+        ],
       },
-      activities: {
-        title: "Activities",
-        description:
-          "Activities sit under projects and become the target for uploads, jobs, and result history. Prepare impact evidence and reports efficiently for funders, partners, and public communications.",
+      goodToKnow: {
+        title: "Good to know",
+        items: [
+          "Free participation",
+          "About 2–3 hours of time per month",
+          "Runtime: August – September 2024",
+          "Spots are limited",
+        ],
       },
+      afterPilot: {
+        title: "After the pilot",
+        items: [
+          "You get an evaluation with insights",
+          "Joint feedback for optimization",
+          "Access to Impact Atlas on special terms (optional)",
+        ],
+      },
+    },
+    cta: {
+      titleBefore: "Ready for ",
+      titleHighlight1: "less effort",
+      titleMiddle: " and ",
+      titleHighlight2: "more impact",
+      titleAfter: "?",
+      description:
+        "Book a no-obligation call now. We'll show you how Impact Atlas takes work off your team's plate and makes your impact visible.",
+      primary: "Request a call",
+      secondary: "More about the pilot programme",
+    },
+    faq: {
+      title: "Frequently asked questions",
+      items: [
+        {
+          question:
+            "How much effort does taking part in the pilot programme mean?",
+          answer:
+            "Plan for about 2–3 hours per month during the pilot runtime — mainly onboarding, check-ins, and feedback rounds.",
+        },
+        {
+          question: "What data can we use with Impact Atlas?",
+          answer:
+            "Your existing project or programme data and evidence — Impact Atlas is built to reuse what you already have, not to require new data collection.",
+        },
+        {
+          question: "Is our organization legally bound by joining?",
+          answer:
+            "No. Participation is free and non-binding, and you can stop at any point during or after the pilot.",
+        },
+        {
+          question: "How much setup work is involved?",
+          answer:
+            "None on your side technically — we provide personal onboarding and walk you through everything as part of the pilot.",
+        },
+        {
+          question:
+            "What happens if we don't want to continue after the pilot?",
+          answer:
+            "Nothing — there's no obligation to continue. If you'd like to keep using Impact Atlas, you can optionally do so on special pilot terms.",
+        },
+      ],
+    },
+    footer: {
+      tagline: "Less effort. More impact.",
+      impressum: "Imprint",
+      datenschutz: "Privacy policy",
+      agb: "Terms",
+      rights: "Impact Atlas. All rights reserved.",
+    },
+  },
+  legal: {
+    impressum: {
+      title: "Imprint",
+      placeholder: "Placeholder — imprint content to be added.",
+    },
+    datenschutz: {
+      title: "Privacy policy",
+      placeholder: "Placeholder — privacy policy content to be added.",
+    },
+    agb: {
+      title: "Terms & conditions",
+      placeholder: "Placeholder — terms & conditions content to be added.",
+    },
+    ueberUns: {
+      title: "About us",
+      placeholder: "Placeholder — about-us content to be added.",
     },
   },
   auth: {
@@ -731,6 +886,7 @@ const en = {
       customizerDescription:
         "Show, hide, and reorder widgets to match how this project should be reviewed.",
       savingLayout: "Saving layout…",
+      hideWidget: "Hide widget",
       hiddenBadge: "Hidden",
       visibleBadge: "Visible",
       hiddenWidgetsTitle: "{{count}} hidden widget",

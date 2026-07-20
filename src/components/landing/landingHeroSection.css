@@ -1,0 +1,83 @@
+.hero-visual {
+  position: relative;
+  isolation: isolate;
+}
+
+.hero-visual::before {
+  content: "";
+  position: absolute;
+  inset: 8% 2%;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(124, 58, 237, 0.15) 0%,
+    rgba(167, 139, 250, 0.09) 45%,
+    transparent 75%
+  );
+  filter: blur(36px);
+  transform: scale(1.08);
+  pointer-events: none;
+}
+
+.hero-visual img {
+  display: block;
+  width: 100%;
+  height: auto;
+
+  -webkit-mask-image: radial-gradient(
+    ellipse farthest-side at center,
+    black 0%,
+    black 68%,
+    rgba(0, 0, 0, 0.9) 78%,
+    rgba(0, 0, 0, 0.35) 91%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse farthest-side at center,
+    black 0%,
+    black 68%,
+    rgba(0, 0, 0, 0.9) 78%,
+    rgba(0, 0, 0, 0.35) 91%,
+    transparent 100%
+  );
+
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+/* Smaller screens: less screen real estate around the visual, so a strong
+   glow/fade reads as murky rather than premium — soften both. */
+@media (max-width: 1023px) {
+  .hero-visual::before {
+    inset: 12% 6%;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(124, 58, 237, 0.1) 0%,
+      rgba(167, 139, 250, 0.06) 45%,
+      transparent 70%
+    );
+    filter: blur(24px);
+    transform: scale(1.04);
+  }
+
+  .hero-visual img {
+    -webkit-mask-image: radial-gradient(
+      ellipse farthest-side at center,
+      black 0%,
+      black 74%,
+      rgba(0, 0, 0, 0.9) 84%,
+      rgba(0, 0, 0, 0.45) 94%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      ellipse farthest-side at center,
+      black 0%,
+      black 74%,
+      rgba(0, 0, 0, 0.9) 84%,
+      rgba(0, 0, 0, 0.45) 94%,
+      transparent 100%
+    );
+  }
+}

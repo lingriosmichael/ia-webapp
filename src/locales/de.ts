@@ -35,28 +35,182 @@ const de: TranslationDictionary = {
     backToHome: "Zur Startseite",
   },
   landing: {
-    badge: "KI-gestützte Wirkungsanalyse",
-    title: "Organisationen, Projekte und Aktivitäten vor der KI-Verarbeitung.",
-    description:
-      "Starten Sie mit dem tatsächlichen Arbeitsablauf Ihres Teams: Organisation anlegen, Projekte erstellen, Aktivitäten verwalten, Nachweise hochladen und Job-Metadaten in einem echten Backend speichern. Impact Atlas interpretiert Ihre Projektdaten automatisch und verwandelt Nachweise in aussagekräftige Analysen, Visualisierungen und Berichte - für fundierte Entscheidungen, eine wirkungsvolle Kommunikation und belastbare Förderberichte.",
     createWorkspace: "Workspace erstellen",
-    useExistingAccount: "Vorhandenes Konto nutzen",
-    features: {
-      organizations: {
-        title: "Organisationen",
-        description:
-          "Jedes Konto startet in einem Organisations-Workspace mit klaren Rollen und Zugriffsrechten. Die KI erkennt Inhalte und Zusammenhänge in Ihren Projektdaten.",
+    header: {
+      navHowItWorks: "So funktioniert's",
+      navPilotProgram: "Pilotprogramm",
+      navFaq: "FAQ",
+      navAboutUs: "Über uns",
+    },
+    hero: {
+      pilotBadge: "Pilotphase ab August 2024",
+      freeBadge: "Kostenfreie Teilnahme",
+      titleLine1: "Weniger Zeit für Förderberichte.",
+      titleLine2: "Mehr Klarheit über ",
+      titleHighlight: "Ihre Wirkung.",
+      description:
+        "Impact Atlas bringt Projektdaten, Nachweise und Wirkungsinformationen an einem Ort zusammen. So erstellt Ihr Team Berichte schneller und erkennt leichter, was Ihre Arbeit bewirkt.",
+      ctaPrimary: "Pilotprogramm ansehen",
+      ctaSecondary: "15-minütigen Gespräch vereinbaren",
+      trustItems: [
+        "Bestehende Daten weiterverwenden",
+        "Persönliches Onboarding",
+        "Keine technische Einrichtung",
+      ],
+      mockupAlt:
+        "Impact Atlas Dashboard-Vorschau mit der Übersicht eines Mentoring-Programms, seinen jüngsten Aktivitäten und einem Wirkungs-Insights-Panel mit einem Beziehungskapital-Wert von 79%.",
+    },
+    problem: {
+      title: "Kommt Ihnen das bekannt vor?",
+      items: [
+        {
+          title: "Informationen verstreut",
+          description:
+            "Projektdaten, Nachweise und Dokumente liegen in verschiedenen Dateisystemen/Ordnern, Mails & auf dem nächsten Stick.",
+        },
+        {
+          title: "Berichte dauern zu lange",
+          description:
+            "Zu viel Zeit für Datensammlung, Formatierung und Rückfragen – oft nur, um festzuhalten, was wirklich wichtige Arbeit ist.",
+        },
+        {
+          title: "Unklare Wirkung",
+          description:
+            "Es ist schwer zu erkennen, was Ihre Arbeit bewirkt und welche Ergebnisse wirklich einen Unterschied machen.",
+        },
+      ],
+    },
+    howItWorks: {
+      title: "So hilft Impact Atlas",
+      steps: [
+        {
+          title: "Sammeln",
+          description:
+            "Projektdaten und Nachweise automatisch sammeln – anstatt zeitaufwendig selbst organisieren.",
+        },
+        {
+          title: "Verstehen",
+          description:
+            "Daten verstehen und auswerten. Wirkungen sichtbar machen – mit klaren Kennzahlen und Insights.",
+        },
+        {
+          title: "Berichten",
+          description:
+            "Berichte erstellen und teilen. Schnell, fundiert und präzise – auf die Bedürfnisse Ihrer Förderer abgestimmt.",
+        },
+      ],
+    },
+    trustBar: {
+      items: [
+        "Entwickelt für NGOs",
+        "DSGVO-konform",
+        "Hosting in der EU",
+        "Ihre Daten gehören Ihnen",
+      ],
+    },
+    pilotProgram: {
+      title: "Unser Pilotprogramm",
+      whatYouGet: {
+        title: "Das erhalten Sie",
+        items: [
+          "Zugang zu Impact Atlas während der Pilotphase 2024",
+          "Persönliches Onboarding und Erklärung",
+          "Unterstützung durch unser Expert:innen-Team",
+          "Regelmäßiger Austausch & Feedbackrunden",
+        ],
       },
-      projects: {
-        title: "Projekte",
-        description:
-          "Projekte bilden die Förder- oder Programmstruktur, in der die Evidenzarbeit organisiert wird. Automatisch berechnete Kennzahlen und verständliche Visualisierungen zeigen den tatsächlichen Projektfortschritt.",
+      whatYouBring: {
+        title: "Das bringen Sie mit",
+        items: [
+          "Ein bestehendes Projekt/Programm",
+          "Bereits vorhandene Ergebnisse und Nachweise",
+          "Bereitschaft zur Zusammenarbeit und zum Austausch von Feedback",
+        ],
       },
-      activities: {
-        title: "Aktivitäten",
-        description:
-          "Aktivitäten gehören zu Projekten und sind der Anker für Uploads, Jobs und Ergebnisverläufe. Bereiten Sie Wirkungsnachweise und Berichte effizient für Fördernde, Partner und die öffentliche Kommunikation auf.",
+      goodToKnow: {
+        title: "Wichtig zu wissen",
+        items: [
+          "Kostenfreie Teilnahme",
+          "Ca. 2-3 Stunden Zeitaufwand pro Monat",
+          "Laufzeit: August – September 2024",
+          "Plätze sind begrenzt",
+        ],
       },
+      afterPilot: {
+        title: "Nach dem Pilot",
+        items: [
+          "Sie erhalten eine Auswertung mit Insights",
+          "Gemeinsames Feedback zur Optimierung",
+          "Zugang zu Impact Atlas zu Sonderkonditionen (optional)",
+        ],
+      },
+    },
+    cta: {
+      titleBefore: "Bereit für ",
+      titleHighlight1: "weniger Aufwand",
+      titleMiddle: " und ",
+      titleHighlight2: "mehr Wirkung",
+      titleAfter: "?",
+      description:
+        "Vereinbaren Sie jetzt ein unverbindliches Gespräch. Wir zeigen Ihnen, wie Impact Atlas Ihr Team entlastet und Ihre Wirkung sichtbar macht.",
+      primary: "Gespräch anfragen",
+      secondary: "Mehr über das Pilotprogramm",
+    },
+    faq: {
+      title: "Häufige Fragen",
+      items: [
+        {
+          question: "Wie viel Aufwand bedeutet die Teilnahme am Pilotprogramm?",
+          answer:
+            "Rechnen Sie mit ca. 2–3 Stunden pro Monat während der Laufzeit des Pilotprogramms – vor allem für Onboarding, Austausch und Feedbackrunden.",
+        },
+        {
+          question: "Welche Daten können wir mit Impact Atlas nutzen?",
+          answer:
+            "Ihre bestehenden Projekt- bzw. Programmdaten und Nachweise – Impact Atlas ist darauf ausgelegt, das weiterzuverwenden, was Sie bereits haben, statt neue Datensammlung zu erfordern.",
+        },
+        {
+          question: "Ist meine Organisation rechtlich gebunden?",
+          answer:
+            "Nein. Die Teilnahme ist kostenfrei und unverbindlich, Sie können jederzeit während oder nach dem Pilotprogramm aussteigen.",
+        },
+        {
+          question: "Wie aufwendig ist die Einrichtung?",
+          answer:
+            "Auf Ihrer Seite technisch gesehen gar nicht – wir übernehmen ein persönliches Onboarding und begleiten Sie durch das gesamte Pilotprogramm.",
+        },
+        {
+          question:
+            "Was passiert, wenn wir nach dem Pilot nicht weiter nutzen möchten?",
+          answer:
+            "Nichts – es besteht keine Verpflichtung zur Weiternutzung. Wenn Sie Impact Atlas weiter nutzen möchten, können Sie dies optional zu Sonderkonditionen aus dem Pilotprogramm tun.",
+        },
+      ],
+    },
+    footer: {
+      tagline: "Weniger Aufwand. Mehr Wirkung.",
+      impressum: "Impressum",
+      datenschutz: "Datenschutz",
+      agb: "AGB",
+      rights: "Impact Atlas. Alle Rechte vorbehalten.",
+    },
+  },
+  legal: {
+    impressum: {
+      title: "Impressum",
+      placeholder: "Platzhalter – Impressum-Inhalt wird noch ergänzt.",
+    },
+    datenschutz: {
+      title: "Datenschutz",
+      placeholder: "Platzhalter – Datenschutzinhalt wird noch ergänzt.",
+    },
+    agb: {
+      title: "AGB",
+      placeholder: "Platzhalter – AGB-Inhalt wird noch ergänzt.",
+    },
+    ueberUns: {
+      title: "Über uns",
+      placeholder: "Platzhalter – Inhalt zu „Über uns“ wird noch ergänzt.",
     },
   },
   auth: {
@@ -749,6 +903,7 @@ const de: TranslationDictionary = {
       customizerDescription:
         "Blenden Sie Widgets ein oder aus und ordnen Sie sie passend zur Review-Ansicht dieses Projekts neu an.",
       savingLayout: "Layout wird gespeichert…",
+      hideWidget: "Widget ausblenden",
       hiddenBadge: "Ausgeblendet",
       visibleBadge: "Sichtbar",
       hiddenWidgetsTitle: "{{count}} ausgeblendetes Widget",

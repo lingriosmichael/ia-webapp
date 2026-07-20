@@ -5,6 +5,11 @@ import type { AnalyticsQueryResponse } from "@/services/apiClient";
 
 const routeState = vi.hoisted(() => ({
   auth: { token: "token" },
+  projectQuery: { isLoading: false, data: { id: "project-1" } },
+  activityQuery: {
+    isLoading: false,
+    data: { id: "activity-1", name: "Mentoring activity" },
+  },
   analyticsQuery: {
     isLoading: false,
     isError: false,
@@ -13,15 +18,12 @@ const routeState = vi.hoisted(() => ({
   interpretationsQuery: {
     isLoading: false,
     isError: false,
-    data: { results: [] as Array<{ activityId: string | null }> },
+    data: { results: [{ activityId: "activity-1" }] },
   },
 }));
 
 vi.mock("@tanstack/react-router", () => ({
-  createFileRoute: () => () => ({
-    component: null,
-    useParams: () => ({ projectId: "project-1" }),
-  }),
+  useParams: () => ({ projectId: "project-1", activityId: "activity-1" }),
   Link: ({ children }: { children: ReactNode }) => <a>{children}</a>,
 }));
 
@@ -29,11 +31,12 @@ vi.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key: string) =>
       ({
-        "projectAnalytics.loading": "Loading analytics…",
-        "projectAnalytics.loadFailed": "Analytics could not be loaded.",
-        "projectAnalytics.subtitle":
-          "Analytics are based exclusively on verified, structured evidence.",
-        "projectAnalytics.noVerifiedEvidenceCta": "Go to Interpretation",
+        "activityAnalytics.loading": "Loading analytics…",
+        "activityAnalytics.loadFailed": "Analytics could not be loaded.",
+        "activityAnalytics.eyebrow": "Activity analytics",
+        "activityAnalytics.title": "Analysis",
+        "activityAnalytics.crumb": "Analysis",
+        "activityAnalytics.noVerifiedEvidenceCta": "Back to Activities",
       })[key] ?? key,
   }),
 }));
@@ -43,21 +46,23 @@ vi.mock("@/hooks/useAuth", () => ({
 }));
 
 vi.mock("@/hooks/useAnalyticsDashboardInteractionTracking", () => ({
-  useProjectAnalyticsDashboardInteractionTracking: () => undefined,
+  useActivityAnalyticsDashboardInteractionTracking: () => undefined,
 }));
 
 vi.mock("@/hooks/useWorkspaceQueries", () => ({
-  useProjectAnalyticsQuery: () => routeState.analyticsQuery,
+  useProjectQuery: () => routeState.projectQuery,
+  useActivityQuery: () => routeState.activityQuery,
+  useActivityAnalyticsQuery: () => routeState.analyticsQuery,
   useProjectInterpretationsQuery: () => routeState.interpretationsQuery,
-  useGenerateProjectAnalyticsMutation: () => ({
+  useGenerateActivityAnalyticsMutation: () => ({
     mutate: () => undefined,
     isPending: false,
   }),
-  useUpdateProjectAnalyticsLayoutMutation: () => ({
+  useUpdateActivityAnalyticsLayoutMutation: () => ({
     mutate: () => undefined,
     isPending: false,
   }),
-  useResetProjectAnalyticsLayoutMutation: () => ({
+  useResetActivityAnalyticsLayoutMutation: () => ({
     mutate: () => undefined,
     isPending: false,
   }),
@@ -70,15 +75,32 @@ vi.mock("@/lib/interpretationWorkflow", () => ({
 vi.mock("@/hooks/useAnalyticsEmptyStateContent", () => ({
   useAnalyticsEmptyStateContent: () => ({
     title: "No verified evidence yet",
-    description: "This project has no verified structured evidence yet.",
+    description: "This activity has no verified structured evidence yet.",
     showCta: true,
   }),
 }));
 
-vi.mock("@/components/project/projectWorkspaceShell", () => ({
-  ProjectWorkspaceShell: ({ children }: { children: ReactNode }) => (
-    <div>Project shell {children}</div>
+vi.mock("@/contexts/projectWorkspaceContext", () => ({
+  useProjectHierarchy: () => ({
+    organizationCrumb: { label: "Org" },
+    projectsCrumb: { label: "Projects" },
+    projectCrumb: { label: "Project" },
+    activitiesLabel: "Activities",
+  }),
+}));
+
+vi.mock("@/components/workspaceUI", () => ({
+  TopBar: ({ children }: { children?: ReactNode }) => (
+    <div>Top bar {children}</div>
   ),
+  PageContainer: ({ children }: { children: ReactNode }) => (
+    <div>{children}</div>
+  ),
+  PageHeader: ({ title }: { title: string }) => <div>{title}</div>,
+}));
+
+vi.mock("@/components/activityTabs", () => ({
+  ActivityTabs: () => <div>Activity tabs</div>,
 }));
 
 vi.mock("@/components/analytics/analyticsEmptyState", () => ({
@@ -86,16 +108,15 @@ vi.mock("@/components/analytics/analyticsEmptyState", () => ({
   AnalyticsEmptyState: ({
     title,
     description,
-    cta,
   }: {
     title: string;
     description: string;
-    cta?: ReactNode;
   }) => (
     <div>
-      Empty state {title} {description} {cta}
+      Empty state {title} {description}
     </div>
   ),
+  AnalyticsErrorState: ({ label }: { label: ReactNode }) => <div>{label}</div>,
 }));
 
 vi.mock("@/components/analytics/analyticsStatusBanner", () => ({
@@ -103,10 +124,10 @@ vi.mock("@/components/analytics/analyticsStatusBanner", () => ({
 }));
 
 vi.mock("@/components/analytics/configurableAnalyticsDashboard", () => ({
-  ConfigurableAnalyticsDashboard: () => <div>Dashboard rendered</div>,
+  ConfigurableAnalyticsDashboard: () => <div>Activity dashboard rendered</div>,
 }));
 
-import { ProjectAnalyticsPage } from "./analytics";
+import { ActivityAnalyticsPage } from "./activityAnalyticsPage";
 
 function makeAnalyticsResponse(entryCount: number): AnalyticsQueryResponse {
   return {
@@ -114,8 +135,8 @@ function makeAnalyticsResponse(entryCount: number): AnalyticsQueryResponse {
       id: "execution-1",
       organizationId: "org-1",
       projectId: "project-1",
-      activityId: null,
-      scopeType: "PROJECT",
+      activityId: "activity-1",
+      scopeType: "ACTIVITY",
       status: "COMPLETED",
       startedAt: "2026-07-16T10:00:00.000Z",
       completedAt: "2026-07-16T10:01:00.000Z",
@@ -129,14 +150,18 @@ function makeAnalyticsResponse(entryCount: number): AnalyticsQueryResponse {
       analyticsExecutionId: "execution-1",
       organizationId: "org-1",
       projectId: "project-1",
-      activityId: null,
-      scopeType: "PROJECT",
+      activityId: "activity-1",
+      scopeType: "ACTIVITY",
       catalogVersion: "3.0",
       knowledgeModelVersion: 1,
       catalog: {
         catalogVersion: "3.0",
         knowledgeModelVersion: 1,
-        scope: { type: "PROJECT", projectId: "project-1", activityId: null },
+        scope: {
+          type: "ACTIVITY",
+          projectId: "project-1",
+          activityId: "activity-1",
+        },
         entries: Array.from({ length: entryCount }, (_, index) => ({
           entryId: `metric-${index}`,
           entryType: "METRIC" as const,
@@ -181,9 +206,14 @@ function makeAnalyticsResponse(entryCount: number): AnalyticsQueryResponse {
   };
 }
 
-describe("Project analytics route smoke", () => {
+describe("Activity analytics route smoke", () => {
   beforeEach(() => {
     routeState.auth = { token: "token" };
+    routeState.projectQuery = { isLoading: false, data: { id: "project-1" } };
+    routeState.activityQuery = {
+      isLoading: false,
+      data: { id: "activity-1", name: "Mentoring activity" },
+    };
     routeState.analyticsQuery = {
       isLoading: false,
       isError: false,
@@ -192,22 +222,22 @@ describe("Project analytics route smoke", () => {
     routeState.interpretationsQuery = {
       isLoading: false,
       isError: false,
-      data: { results: [] },
+      data: { results: [{ activityId: "activity-1" }] },
     };
   });
 
-  it("renders the dashboard when a completed analytics result exists", () => {
-    const markup = renderToStaticMarkup(<ProjectAnalyticsPage />);
-    expect(markup).toContain("Dashboard rendered");
+  it("renders the activity dashboard when a completed analytics result exists", () => {
+    const markup = renderToStaticMarkup(<ActivityAnalyticsPage />);
+    expect(markup).toContain("Activity dashboard rendered");
     expect(markup).toContain("Status banner");
   });
 
-  it("renders the empty state when no catalog entries are available", () => {
+  it("renders the empty state when the activity has no catalog entries", () => {
     routeState.analyticsQuery.data = makeAnalyticsResponse(0);
 
-    const markup = renderToStaticMarkup(<ProjectAnalyticsPage />);
+    const markup = renderToStaticMarkup(<ActivityAnalyticsPage />);
 
     expect(markup).toContain("Empty state");
-    expect(markup).not.toContain("Dashboard rendered");
+    expect(markup).not.toContain("Activity dashboard rendered");
   });
 });
