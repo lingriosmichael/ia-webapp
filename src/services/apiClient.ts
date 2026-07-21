@@ -1004,91 +1004,6 @@ export interface ActivityAiKnowledgeRecord {
   insights: ActivityAiKnowledgeInsight[];
 }
 
-// Report Readiness Check ("Berichtscheck") — mirrors ia_backend's
-// src/modules/analytics/analyticsContracts.ts ReportReadinessCheck* types.
-export type EvidenceStrength = "weak" | "moderate" | "strong";
-
-export interface ReportReadinessFinding {
-  statement: string;
-  sourceEntryIds: string[];
-  sourceLabels: string[];
-  kind: "observed_fact" | "interpretation";
-  caveat: string | null;
-  evidenceStrength: EvidenceStrength | null;
-}
-
-export interface ReportReadinessGapFinding {
-  gap: string;
-  whyItMattersForReporting: string;
-  relatedOmittedEntryIds: string[];
-}
-
-export type ReportReadinessDeviationSignalType =
-  "contradiction" | "low_confidence" | "sharp_cross_activity_difference";
-
-export interface ReportReadinessDeviationFinding {
-  observation: string;
-  signalType: ReportReadinessDeviationSignalType;
-  sourceEntryIds: string[];
-  sourceLabels: string[];
-  suggestedQuestionForTeam: string;
-  evidenceStrength: EvidenceStrength | null;
-}
-
-export type ReportReadinessLevel =
-  "not_ready" | "partially_ready" | "ready_with_caveats" | "ready";
-
-export interface ReportReadinessOverallReadiness {
-  level: ReportReadinessLevel;
-  rationale: string;
-}
-
-export interface ReportReadinessEvidenceSummaryRow {
-  area: string;
-  whatWeKnow: string;
-  sourceEntryIds: string[];
-  sourceLabels: string[];
-  confidence: EvidenceStrength | null;
-  mainGap: string;
-}
-
-export interface ReportReadinessHonestStory {
-  narrative: string;
-  sourceEntryIds: string[];
-  sourceLabels: string[];
-}
-
-export interface ReportReadinessActionItem {
-  action: string;
-  reason: string;
-}
-
-export type ReportReadinessActionPriority =
-  "critical_before_reporting" | "needed_this_cycle";
-
-export interface ReportReadinessPriorityActionItem {
-  action: string;
-  reason: string;
-  priority: ReportReadinessActionPriority;
-}
-
-export interface ReportReadinessCheckRecord {
-  overallReadiness: ReportReadinessOverallReadiness;
-  evidenceSummary: ReportReadinessEvidenceSummaryRow[];
-  confidentlyReportable: ReportReadinessFinding[];
-  reportableWithCaveats: ReportReadinessFinding[];
-  missingOrWeakEvidence: ReportReadinessGapFinding[];
-  deviationsRequiringExplanation: ReportReadinessDeviationFinding[];
-  honestEmergingStory: ReportReadinessHonestStory;
-  actionsBeforeReporting: ReportReadinessPriorityActionItem[];
-  improvementsForNextPeriod: ReportReadinessActionItem[];
-  groundingStatus: "PASSED" | "FAILED";
-  groundingRetryCount: number;
-  reportReadinessModelVersion: string;
-  fellBackToSelectionOnly: boolean;
-  generatedAt: string;
-}
-
 export interface StartInterpretationPayload {
   language: "de" | "en";
 }
@@ -1848,18 +1763,6 @@ export const apiClient = {
     projectId: string,
   ): Promise<ProjectInterpretationOverview> {
     return request(`/projects/${projectId}/interpretation`);
-  },
-  getReportReadinessCheck(
-    projectId: string,
-  ): Promise<ReportReadinessCheckRecord> {
-    return request(`/projects/${projectId}/report-readiness-check`);
-  },
-  generateReportReadinessCheck(
-    projectId: string,
-  ): Promise<ReportReadinessCheckRecord> {
-    return request(`/projects/${projectId}/report-readiness-check`, {
-      method: "POST",
-    });
   },
   getActivityAiKnowledge(
     activityId: string,

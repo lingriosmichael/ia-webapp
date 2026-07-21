@@ -440,7 +440,6 @@ const de: TranslationDictionary = {
       evidence: "Evidenz",
       interpretation: "Interpretation",
       analytics: "Analysen",
-      insights: "Berichtscheck",
       comingSoon: "Bald",
     },
     overview: {
@@ -866,82 +865,6 @@ const de: TranslationDictionary = {
       themesDescription:
         "Die am häufigsten wiederkehrenden Themen aus dem Project Knowledge Model.",
       latestValue: "Neuester Wert: {{value}}",
-    },
-  },
-  reportReadinessCheck: {
-    subtitle:
-      "Was die verfügbaren Nachweise dieses Projekt verantwortungsvoll aussagen lassen, vor der Berichterstattung an einen Fördergeber.",
-    loading: "Berichtscheck wird geladen…",
-    loadFailed: "Berichtscheck konnte nicht geladen werden.",
-    neverRun: "Es wurde noch kein Berichtscheck erstellt.",
-    neverRunDescription:
-      "Führe einen Berichtscheck aus, um zu sehen, wie berichtsbereit dieses Projekt auf Basis der bisher gesammelten Nachweise ist.",
-    lastGenerated: "Zuletzt erstellt am {{date}}",
-    run: "Berichtscheck durchführen",
-    rerun: "Berichtscheck erneut durchführen",
-    running: "Wird durchgeführt…",
-    retry: "Erneut versuchen",
-    generateFailedToast: "Berichtscheck konnte nicht erstellt werden.",
-    groundingFailed:
-      "Die automatische Prüfung ist wiederholt fehlgeschlagen — manuelle Durchsicht empfohlen",
-    evidenceStrength: {
-      weak: "Schwache Evidenz",
-      moderate: "Mittlere Evidenz",
-      strong: "Starke Evidenz",
-      unrated: "Nicht separat bewertet",
-    },
-    kind: {
-      observed_fact: "Beobachtete Tatsache",
-      interpretation: "Interpretation",
-    },
-    signalType: {
-      contradiction: "Widersprüchliche Nachweise",
-      low_confidence: "Aussage mit geringer Konfidenz",
-      sharp_cross_activity_difference:
-        "Unerwarteter Unterschied zwischen Aktivitäten",
-    },
-    level: {
-      not_ready: "Nicht bereit",
-      partially_ready: "Teilweise bereit",
-      ready_with_caveats: "Bereit, mit Einschränkungen",
-      ready: "Bereit",
-    },
-    caveatLabel: "Einschränkung",
-    sourceLabel: "Quelle",
-    whyItMattersLabel: "Warum das für die Berichterstattung wichtig ist",
-    suggestedQuestionLabel: "Frage an das Projektteam",
-    priority: {
-      critical_before_reporting: "Kritisch vor der Berichterstattung",
-      needed_this_cycle: "Nötig in diesem Zyklus",
-    },
-    evidenceSummaryColumns: {
-      area: "Bereich",
-      whatWeKnow: "Was wir wissen",
-      confidence: "Konfidenz",
-      mainGap: "Hauptlücke",
-    },
-    sections: {
-      evidenceSummary: "Nachweis-Übersicht",
-      confidentlyReportable: "Kann mit Zuversicht berichtet werden",
-      reportableWithCaveats: "Berichtbar mit Einschränkungen oder Vorbehalten",
-      missingOrWeakEvidence: "Fehlende, schwache oder ungeprüfte Nachweise",
-      deviationsRequiringExplanation:
-        "Bedarf einer Erklärung durch das Projektteam",
-      honestEmergingStory: "Gesamteinschätzung",
-      actionsBeforeReporting: "Maßnahmen vor der Berichterstattung",
-      improvementsForNextPeriod:
-        "Verbesserungen für den nächsten Berichtszeitraum",
-    },
-    empty: {
-      confidentlyReportable:
-        "Noch nichts konnte mit Zuversicht bestätigt werden.",
-      reportableWithCaveats: "Keine Befunde benötigten eine Einschränkung.",
-      missingOrWeakEvidence: "Keine Evidenzlücken wurden identifiziert.",
-      deviationsRequiringExplanation:
-        "Keine Unstimmigkeiten wurden festgestellt.",
-      actionsBeforeReporting:
-        "Keine Maßnahmen vor der Berichterstattung wurden markiert.",
-      improvementsForNextPeriod: "Keine Verbesserungen wurden vorgeschlagen.",
     },
   },
   activityTabs: {
@@ -1734,7 +1657,9 @@ const de: TranslationDictionary = {
       "Beim Löschen eines Projekts werden alle verknüpften Aktivitäten, Uploads, Jobs, Prüfergebnisse, Analysen und AI knowledge dauerhaft entfernt.",
     deleteAction: "Projekt löschen",
     notSet: "Nicht gesetzt",
+    noProjectDescription: "Noch kein Projektprofil hinterlegt.",
     sections: {
+      description: "Beschreibung",
       fundingContext: "Förderkontext",
       projectContext: "Projektkontext",
     },

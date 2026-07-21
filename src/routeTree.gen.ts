@@ -26,7 +26,6 @@ import { Route as ProjectsProjectIdIndexRouteImport } from './routes/projects/$p
 import { Route as OrganizationsOrganizationIdIndexRouteImport } from './routes/organizations/$organizationId/index'
 import { Route as ProjectsProjectIdSettingsRouteImport } from './routes/projects/$projectId/settings'
 import { Route as ProjectsProjectIdInterpretationRouteImport } from './routes/projects/$projectId/interpretation'
-import { Route as ProjectsProjectIdInsightsRouteImport } from './routes/projects/$projectId/insights'
 import { Route as ProjectsProjectIdEvidenceRouteImport } from './routes/projects/$projectId/evidence'
 import { Route as ProjectsProjectIdAnalyticsRouteImport } from './routes/projects/$projectId/analytics'
 import { Route as ProjectsProjectIdActivitiesRouteImport } from './routes/projects/$projectId/activities'
@@ -134,12 +133,6 @@ const ProjectsProjectIdInterpretationRoute =
   ProjectsProjectIdInterpretationRouteImport.update({
     id: '/interpretation',
     path: '/interpretation',
-    getParentRoute: () => ProjectsProjectIdRouteRoute,
-  } as any)
-const ProjectsProjectIdInsightsRoute =
-  ProjectsProjectIdInsightsRouteImport.update({
-    id: '/insights',
-    path: '/insights',
     getParentRoute: () => ProjectsProjectIdRouteRoute,
   } as any)
 const ProjectsProjectIdEvidenceRoute =
@@ -280,7 +273,6 @@ export interface FileRoutesByFullPath {
   '/projects/$projectId/activities': typeof ProjectsProjectIdActivitiesRouteWithChildren
   '/projects/$projectId/analytics': typeof ProjectsProjectIdAnalyticsRoute
   '/projects/$projectId/evidence': typeof ProjectsProjectIdEvidenceRoute
-  '/projects/$projectId/insights': typeof ProjectsProjectIdInsightsRoute
   '/projects/$projectId/interpretation': typeof ProjectsProjectIdInterpretationRoute
   '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
   '/organizations/$organizationId/': typeof OrganizationsOrganizationIdIndexRoute
@@ -317,7 +309,6 @@ export interface FileRoutesByTo {
   '/projects/$projectId/activities': typeof ProjectsProjectIdActivitiesRouteWithChildren
   '/projects/$projectId/analytics': typeof ProjectsProjectIdAnalyticsRoute
   '/projects/$projectId/evidence': typeof ProjectsProjectIdEvidenceRoute
-  '/projects/$projectId/insights': typeof ProjectsProjectIdInsightsRoute
   '/projects/$projectId/interpretation': typeof ProjectsProjectIdInterpretationRoute
   '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
   '/organizations/$organizationId': typeof OrganizationsOrganizationIdIndexRoute
@@ -357,7 +348,6 @@ export interface FileRoutesById {
   '/projects/$projectId/activities': typeof ProjectsProjectIdActivitiesRouteWithChildren
   '/projects/$projectId/analytics': typeof ProjectsProjectIdAnalyticsRoute
   '/projects/$projectId/evidence': typeof ProjectsProjectIdEvidenceRoute
-  '/projects/$projectId/insights': typeof ProjectsProjectIdInsightsRoute
   '/projects/$projectId/interpretation': typeof ProjectsProjectIdInterpretationRoute
   '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
   '/organizations/$organizationId/': typeof OrganizationsOrganizationIdIndexRoute
@@ -398,7 +388,6 @@ export interface FileRouteTypes {
     | '/projects/$projectId/activities'
     | '/projects/$projectId/analytics'
     | '/projects/$projectId/evidence'
-    | '/projects/$projectId/insights'
     | '/projects/$projectId/interpretation'
     | '/projects/$projectId/settings'
     | '/organizations/$organizationId/'
@@ -435,7 +424,6 @@ export interface FileRouteTypes {
     | '/projects/$projectId/activities'
     | '/projects/$projectId/analytics'
     | '/projects/$projectId/evidence'
-    | '/projects/$projectId/insights'
     | '/projects/$projectId/interpretation'
     | '/projects/$projectId/settings'
     | '/organizations/$organizationId'
@@ -474,7 +462,6 @@ export interface FileRouteTypes {
     | '/projects/$projectId/activities'
     | '/projects/$projectId/analytics'
     | '/projects/$projectId/evidence'
-    | '/projects/$projectId/insights'
     | '/projects/$projectId/interpretation'
     | '/projects/$projectId/settings'
     | '/organizations/$organizationId/'
@@ -626,13 +613,6 @@ declare module '@tanstack/react-router' {
       path: '/interpretation'
       fullPath: '/projects/$projectId/interpretation'
       preLoaderRoute: typeof ProjectsProjectIdInterpretationRouteImport
-      parentRoute: typeof ProjectsProjectIdRouteRoute
-    }
-    '/projects/$projectId/insights': {
-      id: '/projects/$projectId/insights'
-      path: '/insights'
-      fullPath: '/projects/$projectId/insights'
-      preLoaderRoute: typeof ProjectsProjectIdInsightsRouteImport
       parentRoute: typeof ProjectsProjectIdRouteRoute
     }
     '/projects/$projectId/evidence': {
@@ -847,7 +827,6 @@ interface ProjectsProjectIdRouteRouteChildren {
   ProjectsProjectIdActivitiesRoute: typeof ProjectsProjectIdActivitiesRouteWithChildren
   ProjectsProjectIdAnalyticsRoute: typeof ProjectsProjectIdAnalyticsRoute
   ProjectsProjectIdEvidenceRoute: typeof ProjectsProjectIdEvidenceRoute
-  ProjectsProjectIdInsightsRoute: typeof ProjectsProjectIdInsightsRoute
   ProjectsProjectIdInterpretationRoute: typeof ProjectsProjectIdInterpretationRoute
   ProjectsProjectIdSettingsRoute: typeof ProjectsProjectIdSettingsRoute
   ProjectsProjectIdIndexRoute: typeof ProjectsProjectIdIndexRoute
@@ -859,7 +838,6 @@ const ProjectsProjectIdRouteRouteChildren: ProjectsProjectIdRouteRouteChildren =
       ProjectsProjectIdActivitiesRouteWithChildren,
     ProjectsProjectIdAnalyticsRoute: ProjectsProjectIdAnalyticsRoute,
     ProjectsProjectIdEvidenceRoute: ProjectsProjectIdEvidenceRoute,
-    ProjectsProjectIdInsightsRoute: ProjectsProjectIdInsightsRoute,
     ProjectsProjectIdInterpretationRoute: ProjectsProjectIdInterpretationRoute,
     ProjectsProjectIdSettingsRoute: ProjectsProjectIdSettingsRoute,
     ProjectsProjectIdIndexRoute: ProjectsProjectIdIndexRoute,

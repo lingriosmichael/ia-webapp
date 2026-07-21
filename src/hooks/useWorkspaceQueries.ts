@@ -27,7 +27,6 @@ import {
   type ProcessingJobRecord,
   type PrivacyReviewDecisionsInput,
   type PrivacyReviewRecord,
-  type ReportReadinessCheckRecord,
   type ProjectInterpretationOverview,
   type ProjectOverview,
   type ProjectSummary,
@@ -48,8 +47,6 @@ export const projectOverviewQueryKey = (projectId: string) =>
   ["project-overview", projectId] as const;
 export const projectActivitiesQueryKey = (projectId: string) =>
   ["project-activities", projectId] as const;
-export const reportReadinessCheckQueryKey = (projectId: string) =>
-  ["report-readiness-check", projectId] as const;
 export const activityQueryKey = (activityId: string) =>
   ["activity", activityId] as const;
 export const activityUploadsQueryKey = (activityId: string) =>
@@ -138,37 +135,6 @@ export function useProjectActivitiesQuery(projectId: string, enabled = true) {
     queryKey: projectActivitiesQueryKey(projectId),
     queryFn: () => apiClient.listProjectActivities(projectId),
     enabled,
-  });
-}
-
-export function useReportReadinessCheckQuery(
-  projectId: string,
-  enabled = true,
-) {
-  return useQuery<ReportReadinessCheckRecord, ApiError>({
-    queryKey: reportReadinessCheckQueryKey(projectId),
-    queryFn: () => apiClient.getReportReadinessCheck(projectId),
-    enabled,
-    staleTime: Number.POSITIVE_INFINITY,
-    // The backend throws a 409 "not ready yet" for the completely ordinary
-    // first-visit case (no check has been generated for this project yet),
-    // not a transient failure — retrying it three times by default just
-    // delays the page settling by ~7s for no benefit.
-    retry: false,
-  });
-}
-
-export function useGenerateReportReadinessCheckMutation(projectId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation<ReportReadinessCheckRecord, ApiError>({
-    mutationFn: () => apiClient.generateReportReadinessCheck(projectId),
-    onSuccess: (result) => {
-      queryClient.setQueryData(reportReadinessCheckQueryKey(projectId), result);
-      void queryClient.invalidateQueries({
-        queryKey: projectOverviewQueryKey(projectId),
-      });
-    },
   });
 }
 

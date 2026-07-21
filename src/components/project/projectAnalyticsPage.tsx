@@ -93,7 +93,7 @@ export function ProjectAnalyticsPage() {
   );
 
   return (
-    <ProjectWorkspaceShell description={t("projectAnalytics.subtitle")}>
+    <ProjectWorkspaceShell>
       <div className="space-y-5">
         <AnalyticsStatusBanner
           execution={execution}

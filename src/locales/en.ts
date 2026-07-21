@@ -435,7 +435,6 @@ const en = {
       evidence: "Evidence",
       interpretation: "Interpretation",
       analytics: "Analytics",
-      insights: "Report Readiness Check",
       comingSoon: "Soon",
     },
     overview: {
@@ -851,77 +850,6 @@ const en = {
       themesDescription:
         "The most repeated themes carried into the project knowledge model.",
       latestValue: "Latest value: {{value}}",
-    },
-  },
-  reportReadinessCheck: {
-    subtitle:
-      "What the available evidence allows this project to say responsibly, before reporting to a funder.",
-    loading: "Loading Report Readiness Check…",
-    loadFailed: "Report Readiness Check could not be loaded.",
-    neverRun: "No Report Readiness Check has been generated yet.",
-    neverRunDescription:
-      "Run a Report Readiness Check to see how ready this project is for reporting, based on the evidence collected so far.",
-    lastGenerated: "Last generated {{date}}",
-    run: "Run Report Readiness Check",
-    rerun: "Re-run Report Readiness Check",
-    running: "Running…",
-    retry: "Retry",
-    generateFailedToast: "Report Readiness Check could not be generated.",
-    groundingFailed:
-      "Automated verification failed repeatedly — manual review recommended",
-    evidenceStrength: {
-      weak: "Weak evidence",
-      moderate: "Moderate evidence",
-      strong: "Strong evidence",
-      unrated: "Not independently rated",
-    },
-    kind: {
-      observed_fact: "Observed fact",
-      interpretation: "Interpretation",
-    },
-    signalType: {
-      contradiction: "Contradicting evidence",
-      low_confidence: "Low-confidence claim",
-      sharp_cross_activity_difference:
-        "Unexpected difference across activities",
-    },
-    level: {
-      not_ready: "Not ready",
-      partially_ready: "Partially ready",
-      ready_with_caveats: "Ready, with caveats",
-      ready: "Ready",
-    },
-    caveatLabel: "Caveat",
-    sourceLabel: "Source",
-    whyItMattersLabel: "Why this matters for reporting",
-    suggestedQuestionLabel: "Question for the project team",
-    priority: {
-      critical_before_reporting: "Critical before reporting",
-      needed_this_cycle: "Needed this cycle",
-    },
-    evidenceSummaryColumns: {
-      area: "Area",
-      whatWeKnow: "What we know",
-      confidence: "Confidence",
-      mainGap: "Main gap",
-    },
-    sections: {
-      evidenceSummary: "Evidence summary",
-      confidentlyReportable: "Can be reported with confidence",
-      reportableWithCaveats: "Reportable with limitations or caveats",
-      missingOrWeakEvidence: "Missing, weak, or unverified evidence",
-      deviationsRequiringExplanation: "Needs explanation from the project team",
-      honestEmergingStory: "Overall assessment",
-      actionsBeforeReporting: "Actions to complete before reporting",
-      improvementsForNextPeriod: "Improvements for the next reporting period",
-    },
-    empty: {
-      confidentlyReportable: "Nothing could be confirmed with confidence yet.",
-      reportableWithCaveats: "No findings needed a caveat.",
-      missingOrWeakEvidence: "No evidence gaps were identified.",
-      deviationsRequiringExplanation: "No inconsistencies were identified.",
-      actionsBeforeReporting: "No actions were flagged before reporting.",
-      improvementsForNextPeriod: "No improvements were suggested.",
     },
   },
   activityTabs: {
@@ -1701,7 +1629,9 @@ const en = {
       "Deleting a project permanently removes all activities, uploads, jobs, review outputs, analyses, and AI knowledge linked to it.",
     deleteAction: "Delete project",
     notSet: "Not set",
+    noProjectDescription: "No project profile captured yet.",
     sections: {
+      description: "Description",
       fundingContext: "Funding context",
       projectContext: "Project context",
     },

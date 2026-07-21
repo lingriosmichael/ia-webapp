@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import {
   BarChart3,
-  ClipboardCheck,
   ClipboardList,
   Database,
   FolderKanban,
@@ -53,11 +52,6 @@ export function ProjectTabs({
       to: "/projects/$projectId/analytics",
       label: t("projectWorkspace.tabs.analytics"),
       icon: <BarChart3 className="h-4 w-4" />,
-    },
-    {
-      to: "/projects/$projectId/insights",
-      label: t("projectWorkspace.tabs.insights"),
-      icon: <ClipboardCheck className="h-4 w-4" />,
     },
   ];
 
