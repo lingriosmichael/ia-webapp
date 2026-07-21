@@ -43,6 +43,7 @@ import {
   YAxis,
   BarChart,
 } from "recharts";
+import type { ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -918,14 +919,16 @@ function HorizontalBarWidgetCard({
               tick={<MultilineYAxisTick />}
             />
             <Tooltip
-              formatter={(value: number) =>
-                formatMetricValue(
-                  {
-                    value: widget.unit === "ratio" ? value / 100 : value,
-                    unit: widget.unit,
-                  },
-                  language,
-                )
+              formatter={(value: ValueType | undefined) =>
+                typeof value === "number"
+                  ? formatMetricValue(
+                      {
+                        value: widget.unit === "ratio" ? value / 100 : value,
+                        unit: widget.unit,
+                      },
+                      language,
+                    )
+                  : ""
               }
             />
             <Bar dataKey="value" radius={[0, 6, 6, 0]}>
@@ -971,14 +974,16 @@ function LineSeriesWidgetCard({
             <XAxis dataKey="label" tickLine={false} axisLine={false} />
             <YAxis tickLine={false} axisLine={false} />
             <Tooltip
-              formatter={(value: number) =>
-                formatMetricValue(
-                  {
-                    value: widget.unit === "ratio" ? value / 100 : value,
-                    unit: widget.unit,
-                  },
-                  language,
-                )
+              formatter={(value: ValueType | undefined) =>
+                typeof value === "number"
+                  ? formatMetricValue(
+                      {
+                        value: widget.unit === "ratio" ? value / 100 : value,
+                        unit: widget.unit,
+                      },
+                      language,
+                    )
+                  : ""
               }
             />
             <Line
@@ -1023,14 +1028,16 @@ function CategoryRankWidgetCard({
             <XAxis dataKey="name" tickLine={false} axisLine={false} />
             <YAxis tickLine={false} axisLine={false} />
             <Tooltip
-              formatter={(value: number) =>
-                formatMetricValue(
-                  {
-                    value: widget.unit === "ratio" ? value / 100 : value,
-                    unit: widget.unit,
-                  },
-                  language,
-                )
+              formatter={(value: ValueType | undefined) =>
+                typeof value === "number"
+                  ? formatMetricValue(
+                      {
+                        value: widget.unit === "ratio" ? value / 100 : value,
+                        unit: widget.unit,
+                      },
+                      language,
+                    )
+                  : ""
               }
             />
             <Bar dataKey="value" radius={[6, 6, 0, 0]}>

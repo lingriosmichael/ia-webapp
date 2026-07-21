@@ -1,13 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
-import { useRequireAuth } from "@/hooks/useAuth";
+import { ReportReadinessCheckPage } from "@/components/project/reportReadinessCheckPage";
 
 export const Route = createFileRoute("/projects/$projectId/insights")({
-  component: ProjectInsightsPage,
+  component: ReportReadinessCheckPage,
 });
-
-function ProjectInsightsPage() {
-  useRequireAuth();
-
-  return <ProjectWorkspaceShell>{null}</ProjectWorkspaceShell>;
-}

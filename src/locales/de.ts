@@ -440,7 +440,7 @@ const de: TranslationDictionary = {
       evidence: "Evidenz",
       interpretation: "Interpretation",
       analytics: "Analysen",
-      insights: "AI knowledge",
+      insights: "Berichtscheck",
       comingSoon: "Bald",
     },
     overview: {
@@ -618,104 +618,10 @@ const de: TranslationDictionary = {
       unknownUploader: "Unbekannter Nutzer",
     },
     interpretation: {
-      title: "Interpretation",
-      description:
-        "Prüfen Sie, wie Impact Atlas hochgeladene Evidenz versteht, wo die Zuordnung belastbar ist und wo noch Klärung nötig bleibt.",
-      metrics: {
-        understanding: "Gesamtvertrauen der Interpretation",
-        entities: "Erkannte Entitäten",
-        awaitingPreparation: "Datensätze mit offener Vorbereitung",
-        readyForReview: "Zur Prüfung bereite Datensätze",
-      },
-      filesInterpretedStatus:
-        "{{interpreted}} von {{total}} Dateien interpretiert",
-      activitySummaryLine:
-        "{{files}} Dateien · {{preparation}} mit offener Vorbereitung · {{ready}} prüfbereit",
-      acknowledgeAction: "Als geprüft markieren",
-      acknowledgePending: "Wird gespeichert…",
-      acknowledgedBadge: "✓ Geprüft am {{date}} von {{name}}",
-      acknowledgedByUnknown: "jemandem",
-      reviewFlowTitle: "Prüfung nach Datensatz",
-      understoodTitle: "Was ich verstehe",
       understoodEmpty:
         "Noch keine Interpretationsergebnisse. Starten Sie „Mit KI interpretieren“ für die Evidenz einer Aktivität, sobald deren Datenschutzprüfung genehmigt ist.",
-      entitySampleValuesLabel: "Beispielwerte",
-      entitySampleValuesEmpty: "Keine Beispielwerte verfügbar.",
-      entityFieldColumn: "Feld",
-      entityInterpretationColumn: "KI-Interpretation",
-      indicatorNameColumn: "Indikator",
-      indicatorRelevanceLabel: "Relevanz",
-      indicatorRelevanceStage: {
-        output: "Output",
-        outcome: "Outcome",
-        impact: "Impact",
-      },
-      indicatorActionColumn: "Aktion",
-      highlyRecommended: "Sehr empfohlen — passt zu einem Ziel",
-      extraNotStatedGoal: "Zusatz — nicht an ein Ziel gebunden",
-      rejectIndicatorAction: "Ablehnen",
-      restoreIndicatorAction: "Wiederherstellen",
-      indicatorNarrativeGrounding: "Basierend auf {{count}} narrativem Auszug",
-      indicatorNarrativeGrounding_other:
-        "Basierend auf {{count}} narrativen Auszügen",
-      indicatorsTitle: "Indikatoren",
-      qualitativeFindingsTitle: "Qualitative Erkenntnisse",
-      qualitativeOutcomeReferenceLabel: "Verankert in",
-      qualitativeLinkedQuotes: "{{count}} verknüpftes Zitat",
-      qualitativeLinkedQuotes_other: "{{count}} verknüpfte Zitate",
-      rejectFindingAction: "Ablehnen",
-      restoreFindingAction: "Wiederherstellen",
-      qualitativeStage: {
-        output: "Output",
-        outcome: "Outcome",
-        impact: "Impact",
-        context: "Kontext",
-        risk: "Risiko",
-      },
-      qualitativeFindingRelation: {
-        reinforces: "Bestärkt Indikator",
-        contradicts: "Widerspricht Indikator",
-        complicates: "Relativiert Indikator",
-        context_only: "Nur Kontext",
-      },
-      qualitativeFindingCategory: {
-        outcome_support: "Outcome-Unterstützung",
-        outcome_complication: "Outcome-Einschränkung",
-        outcome_contradiction: "Outcome-Widerspruch",
-        barrier: "Barriere",
-        enabler: "Ermöglicher",
-        unintended_effect: "Unbeabsichtigter Effekt",
-        context_only: "Nur Kontext",
-      },
-      qualitativeOutcomeAnchorType: {
-        project_outcome: "Projekt-Outcome",
-        project_impact: "Projekt-Impact",
-        activity_objective: "Aktivitätsziel",
-        activity_success_indicator: "Aktivitäts-Erfolgsindikator",
-        unanchored: "Nicht verankert",
-      },
-      dataTypeTabularLabel: "Strukturierte Tabelle",
-      dataTypeNarrativeLabel: "Narratives Dokument",
-      dataTypeMixedLabel: "Gemischtes Dokument",
-      dataTypeInsufficientLabel: "Unzureichende Extraktion",
-      modalityStructuredQuantitativeLabel: "Quantitativer Datensatz",
-      modalityStructuredQualitativeLabel:
-        "Strukturierter qualitativer Datensatz",
-      modalityMixedDualTrackLabel: "Gemischte Dual-Track-Evidenz",
-      modalityNarrativeQualitativeLabel: "Qualitative narrative Evidenz",
-      modalityInsufficientLabel: "Unzureichende Extraktion",
-      preparationQuestionsTitle: "Vorbereitungsfragen",
-      preparationQuestionsEmpty: "Keine offenen Fragen zur Datenvorbereitung.",
-      interpretationQuestionsTitle: "Interpretationsfragen",
-      interpretationQuestionsEmpty: "Keine offenen Interpretationsfragen.",
       questionDomainPreparationLabel: "Vorbereitung",
       questionDomainInterpretationLabel: "Interpretation",
-      needHelpEmpty: "Derzeit keine offenen Fragen.",
-      reviewedQuestionsTitle: "Bereits geprüfte Fragen",
-      reviewedQuestionsSummary:
-        "{{count}} beantwortete Frage kann bei Bedarf erneut geprüft oder bearbeitet werden.",
-      reviewedQuestionsSummary_other:
-        "{{count}} beantwortete Fragen können bei Bedarf erneut geprüft oder bearbeitet werden.",
       questionAnsweredLabel: "Beantwortet: {{value}}",
       questionRequiredLabel: "Für die Prüfung erforderlich",
       questionOptionalLabel: "Optional",
@@ -725,63 +631,8 @@ const de: TranslationDictionary = {
       questionFreeTextPlaceholder: "Antwort eingeben…",
       questionSubmit: "Absenden",
       questionSubmitting: "Wird gesendet…",
-      privacyTitle: "Offene Datenschutzprüfungen",
-      privacyPendingDescription:
-        "Die Datei {{fileName}} wartet noch auf die Datenschutzprüfung, bevor die Interpretation fortgesetzt werden kann.",
-      privacyUnknownFile: "Unbekannte Datei",
       reviewPrivacyAction: "Datenschutz prüfen",
-      noPrivacyReviews:
-        "Aktuell blockiert keine Datei die Interpretation wegen einer offenen Datenschutzprüfung.",
       noEvidenceYet: "Noch keine Evidenz hochgeladen.",
-      interpretAction: "Mit KI interpretieren",
-      interpretPending: "Wird interpretiert…",
-      interpretUnavailable:
-        "Wartet auf den Abschluss der datenschutzsicheren Verarbeitung, bevor diese Evidenz interpretiert werden kann.",
-      interpretInsufficientExtraction:
-        "Die Datei konnte geparst werden, aber es wurden nicht genug strukturierte oder narrative Inhalte für eine verlässliche Interpretation extrahiert.",
-      interpretError:
-        "Die Interpretation konnte nicht gestartet werden. Bitte erneut versuchen.",
-      versionLabel: "Version {{number}}",
-      reinterpretAction: "Interpretation erneut ausführen",
-      datasetProfileTitle: "Deterministisches Profil",
-      datasetProfileTablesLabel: "Tabellen",
-      datasetProfileParagraphsLabel: "Absätze",
-      datasetProfileIssuesLabel: "Profilhinweise",
-      datasetProfileTableSummary:
-        "{{rows}} Zeilen · {{columns}} Spalten · {{statusColumns}} wahrscheinliche Statusfelder · {{dateColumns}} wahrscheinliche Datumsfelder",
-      datasetPreparationTitle: "Datensatzvorbereitung",
-      datasetPreparationDecisionCount:
-        "{{count}} dokumentierte Vorbereitungsentscheidung",
-      datasetPreparationDecisionCount_other:
-        "{{count}} dokumentierte Vorbereitungsentscheidungen",
-      datasetPreparationPendingSummary:
-        "{{count}} blockierende Vorbereitungsfrage ist noch unbeantwortet.",
-      datasetPreparationPendingSummary_other:
-        "{{count}} blockierende Vorbereitungsfragen sind noch unbeantwortet.",
-      datasetPreparationReadySummary:
-        "Die Vorbereitungsentscheidungen sind dokumentiert und der Datensatz kann deterministisch weiterverarbeitet werden.",
-      datasetPreparationStatus: {
-        not_applicable: "Nicht anwendbar",
-        not_started: "Nicht begonnen",
-        awaiting_answers: "Wartet auf Antworten",
-        ready_for_analysis: "Bereit für deterministische Analyse",
-        analysis_completed: "Deterministische Analyse abgeschlossen",
-      },
-      preparedDatasetTableSummary:
-        "Zeilengranularität: {{grain}} · Identifikator: {{identifier}} · Status: {{status}} · Datum: {{date}}",
-      preparedDatasetUnknownValue: "nicht gesetzt",
-      deterministicAnalysisTitle: "Deterministische Analyse",
-      deterministicAnalysisMetricsLabel: "Metriken",
-      deterministicAnalysisDistributionsLabel: "Verteilungen",
-      deterministicAnalysisTrendsLabel: "Trends",
-      deterministicAnalysisCandidateIndicatorsLabel: "Indikator-Kandidaten",
-      deterministicAnalysisPendingSummary:
-        "Die deterministische Analyse erscheint hier, sobald die Vorbereitung abgeschlossen ist.",
-      deterministicMetricColumn: "Metrik",
-      deterministicDescriptionColumn: "Beschreibung",
-      deterministicValueColumn: "Wert",
-      quantitativeSynthesisPendingSummary:
-        "Indikatoren bleiben ausgeblendet, bis die Vorbereitung abgeschlossen und die deterministische Analyse bereit ist.",
       simplified: {
         pageTitle: "AI knowledge",
         heroTitle: "Ein KI-Wissensfluss pro Aktivität.",
@@ -967,19 +818,81 @@ const de: TranslationDictionary = {
       latestValue: "Neuester Wert: {{value}}",
     },
   },
-  projectInsights: {
-    loading: "AI knowledge wird geladen…",
-    loadFailed: "AI knowledge konnte nicht geladen werden.",
-    description:
-      "Impact Atlas bündelt die verfügbare AI knowledge aus Aktivitäten in einer gemeinsamen project-level AI knowledge Ansicht.",
-    meta: "{{count}} Erkenntnisse aus {{activityCount}} Aktivitäten und {{evidenceCount}} Evidenzdateien",
-    empty: "Noch kein project-level AI knowledge verfügbar.",
-    activitiesTitle: "Einbezogene Aktivitäten",
-    activityEvidenceCount: "{{count}} interpretierte Evidenzdateien",
-    notReadyTitle: "Project AI knowledge ist noch nicht bereit",
-    notReadyDescription:
-      "Die Projektansicht erscheint, sobald mindestens eine Aktivität eine verfügbare AI knowledge Ansicht hat. Aktuell brauchen noch {{count}} Aktivitäten Arbeit auf der Interpretationsseite.",
-    notReadyCta: "Zur Interpretation",
+  reportReadinessCheck: {
+    subtitle:
+      "Was die verfügbaren Nachweise dieses Projekt verantwortungsvoll aussagen lassen, vor der Berichterstattung an einen Fördergeber.",
+    loading: "Berichtscheck wird geladen…",
+    loadFailed: "Berichtscheck konnte nicht geladen werden.",
+    neverRun: "Es wurde noch kein Berichtscheck erstellt.",
+    neverRunDescription:
+      "Führe einen Berichtscheck aus, um zu sehen, wie berichtsbereit dieses Projekt auf Basis der bisher gesammelten Nachweise ist.",
+    lastGenerated: "Zuletzt erstellt am {{date}}",
+    run: "Berichtscheck durchführen",
+    rerun: "Berichtscheck erneut durchführen",
+    running: "Wird durchgeführt…",
+    retry: "Erneut versuchen",
+    generateFailedToast: "Berichtscheck konnte nicht erstellt werden.",
+    groundingFailed:
+      "Die automatische Prüfung ist wiederholt fehlgeschlagen — manuelle Durchsicht empfohlen",
+    evidenceStrength: {
+      weak: "Schwache Evidenz",
+      moderate: "Mittlere Evidenz",
+      strong: "Starke Evidenz",
+      unrated: "Nicht separat bewertet",
+    },
+    kind: {
+      observed_fact: "Beobachtete Tatsache",
+      interpretation: "Interpretation",
+    },
+    signalType: {
+      contradiction: "Widersprüchliche Nachweise",
+      low_confidence: "Aussage mit geringer Konfidenz",
+      sharp_cross_activity_difference:
+        "Unerwarteter Unterschied zwischen Aktivitäten",
+    },
+    level: {
+      not_ready: "Nicht bereit",
+      partially_ready: "Teilweise bereit",
+      ready_with_caveats: "Bereit, mit Einschränkungen",
+      ready: "Bereit",
+    },
+    caveatLabel: "Einschränkung",
+    sourceLabel: "Quelle",
+    whyItMattersLabel: "Warum das für die Berichterstattung wichtig ist",
+    suggestedQuestionLabel: "Frage an das Projektteam",
+    priority: {
+      critical_before_reporting: "Kritisch vor der Berichterstattung",
+      needed_this_cycle: "Nötig in diesem Zyklus",
+    },
+    evidenceSummaryColumns: {
+      area: "Bereich",
+      whatWeKnow: "Was wir wissen",
+      confidence: "Konfidenz",
+      mainGap: "Hauptlücke",
+    },
+    sections: {
+      evidenceSummary: "Nachweis-Übersicht",
+      confidentlyReportable: "Kann mit Zuversicht berichtet werden",
+      reportableWithCaveats: "Berichtbar mit Einschränkungen oder Vorbehalten",
+      missingOrWeakEvidence: "Fehlende, schwache oder ungeprüfte Nachweise",
+      deviationsRequiringExplanation:
+        "Bedarf einer Erklärung durch das Projektteam",
+      honestEmergingStory: "Gesamteinschätzung",
+      actionsBeforeReporting: "Maßnahmen vor der Berichterstattung",
+      improvementsForNextPeriod:
+        "Verbesserungen für den nächsten Berichtszeitraum",
+    },
+    empty: {
+      confidentlyReportable:
+        "Noch nichts konnte mit Zuversicht bestätigt werden.",
+      reportableWithCaveats: "Keine Befunde benötigten eine Einschränkung.",
+      missingOrWeakEvidence: "Keine Evidenzlücken wurden identifiziert.",
+      deviationsRequiringExplanation:
+        "Keine Unstimmigkeiten wurden festgestellt.",
+      actionsBeforeReporting:
+        "Keine Maßnahmen vor der Berichterstattung wurden markiert.",
+      improvementsForNextPeriod: "Keine Verbesserungen wurden vorgeschlagen.",
+    },
   },
   activityTabs: {
     brief: "Übersicht",

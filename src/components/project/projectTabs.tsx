@@ -1,10 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import {
   BarChart3,
+  ClipboardCheck,
   ClipboardList,
   Database,
   FolderKanban,
-  Sparkles,
   WandSparkles,
 } from "lucide-react";
 import type { ReactNode } from "react";
@@ -57,7 +57,7 @@ export function ProjectTabs({
     {
       to: "/projects/$projectId/insights",
       label: t("projectWorkspace.tabs.insights"),
-      icon: <Sparkles className="h-4 w-4" />,
+      icon: <ClipboardCheck className="h-4 w-4" />,
     },
   ];
 

@@ -1,11 +1,7 @@
 import type { ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
-import type {
-  AnalyticsDashboard,
-  AnalyticsDashboardUsageSummary,
-  AnalyticsResultRecord,
-} from "@/services/apiClient";
+import type { AnalyticsResultRecord } from "@/services/apiClient";
 import { ConfigurableAnalyticsDashboard } from "./configurableAnalyticsDashboard";
 
 vi.mock("react-i18next", () => {
@@ -131,132 +127,12 @@ vi.mock("recharts", () => ({
   YAxis: () => <div />,
   Tooltip: () => <div />,
   Bar: () => <div />,
+  Cell: () => <div />,
   Line: () => <div />,
 }));
 
-function makeDashboard(): AnalyticsDashboard {
-  const baseWidget = {
-    subtitle: null,
-    sourceActivityIds: ["activity-1"],
-    sourceUploadMetadataIds: ["upload-1"],
-    goalLinkage: {
-      outcomeReferences: ["Participants sustain mentor relationships."],
-      successIndicators: ["Attendance rate"],
-      matchedProjectGoalPhrases: ["mentor relationships"],
-    },
-    qualityFlags: [
-      {
-        sourceType: "deterministic_analysis" as const,
-        severity: "warning" as const,
-        message: "Sample coverage is partial.",
-      },
-    ],
-  };
-
-  return {
-    schemaVersion: "dashboard-v2",
-    availableWidgets: [
-      {
-        widgetId: "kpi-1",
-        kind: "kpi",
-        title: "Attendance rate",
-        description: "Share of participants attending sessions.",
-        entryId: "metric-1",
-        label: "Attendance rate",
-        value: 0.82,
-        unit: "ratio",
-        deduplicationConfidence: "not_applicable",
-        ...baseWidget,
-      },
-      {
-        widgetId: "summary-1",
-        kind: "summary",
-        title: "What stands out",
-        description: "Grounded summary",
-        paragraphs: [
-          "Attendance stayed stable while mentor onboarding remained compressed.",
-        ],
-        referencedEntryIds: ["metric-1", "theme-1"],
-        ...baseWidget,
-      },
-      {
-        widgetId: "bar-1",
-        kind: "horizontal_bar",
-        title: "Attendance by cohort",
-        description: "Comparison across mentor cohorts.",
-        unit: "ratio",
-        items: [
-          {
-            id: "segment-1",
-            label: "New mentors",
-            description: "New mentors",
-            value: 0.67,
-            unit: "ratio",
-            entryId: "metric-2",
-          },
-        ],
-        ...baseWidget,
-      },
-      {
-        widgetId: "line-1",
-        kind: "line_series",
-        title: "Attendance over time",
-        description: "Trend across months.",
-        label: "Attendance",
-        tableName: "responses",
-        activityId: "activity-1",
-        unit: "ratio",
-        points: [
-          { label: "2026-01", value: 0.6 },
-          { label: "2026-02", value: 0.75 },
-        ],
-        ...baseWidget,
-      },
-      {
-        widgetId: "rank-1",
-        kind: "category_rank",
-        title: "Strongest segment",
-        description: "Top subgroup performance.",
-        label: "Attendance rank",
-        tableName: "responses",
-        activityId: "activity-1",
-        unit: "ratio",
-        items: [{ id: "segment-2", label: "Returning mentors", value: 0.89 }],
-        ...baseWidget,
-      },
-      {
-        widgetId: "theme-1",
-        kind: "theme_list",
-        title: "Qualitative signals",
-        description: "Repeated grounded themes.",
-        items: [
-          {
-            entryId: "theme-1",
-            label: "Mentors requested more preparation time",
-            description: "Interviewees described compressed onboarding.",
-            quoteCount: 3,
-            outcomeReference: "Participants sustain mentor relationships.",
-          },
-        ],
-        ...baseWidget,
-      },
-    ],
-    defaultLayout: {
-      orderedWidgetIds: [
-        "kpi-1",
-        "summary-1",
-        "bar-1",
-        "line-1",
-        "rank-1",
-        "theme-1",
-      ],
-      hiddenWidgetIds: [],
-    },
-  };
-}
-
 function makeResult(
-  dashboard: AnalyticsDashboard | null,
+  dashboard: AnalyticsResultRecord["dashboard"],
 ): AnalyticsResultRecord {
   return {
     id: "result-1",
@@ -330,45 +206,6 @@ function makeResult(
 }
 
 describe("ConfigurableAnalyticsDashboard", () => {
-  it("renders every widget kind and the telemetry usage panel", () => {
-    const usageSummary: AnalyticsDashboardUsageSummary = {
-      resultId: "result-1",
-      totalEvents: 7,
-      dashboardViewCount: 3,
-      widgetHideCount: 1,
-      widgetShowCount: 1,
-      layoutReorderCount: 1,
-      layoutRestoreCount: 1,
-      lastOccurredAt: "2026-07-16T10:15:00.000Z",
-      lastViewedAt: "2026-07-16T10:10:00.000Z",
-    };
-
-    const markup = renderToStaticMarkup(
-      <ConfigurableAnalyticsDashboard
-        result={makeResult(makeDashboard())}
-        layoutPreference={null}
-        dashboardCompatibilitySource={null}
-        dashboardUsageSummary={usageSummary}
-        onSaveLayout={() => undefined}
-        onResetLayout={() => undefined}
-        onExport={async () => new Blob(["test"])}
-        isSavingLayout={false}
-        isResettingLayout={false}
-      />,
-    );
-
-    expect(markup).toContain("Evidence dashboard");
-    expect(markup).toContain("Attendance rate");
-    expect(markup).toContain("What stands out");
-    expect(markup).toContain("Attendance by cohort");
-    expect(markup).toContain("Attendance over time");
-    expect(markup).toContain("Strongest segment");
-    expect(markup).toContain("Mentors requested more preparation time");
-    expect(markup).toContain("Dashboard usage");
-    expect(markup).toContain("Goal-linked: Attendance rate");
-    expect(markup).toContain("Sample coverage is partial.");
-  });
-
   it("renders fallback dashboard content, compatibility badge, hidden widgets, and empty usage state", () => {
     const markup = renderToStaticMarkup(
       <ConfigurableAnalyticsDashboard

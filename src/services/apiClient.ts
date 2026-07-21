@@ -1004,27 +1004,89 @@ export interface ActivityAiKnowledgeRecord {
   insights: ActivityAiKnowledgeInsight[];
 }
 
-export interface ProjectAiKnowledgeActivity {
-  activityId: string;
-  activityName: string;
-  interpretedEvidenceCount: number;
+// Report Readiness Check ("Berichtscheck") — mirrors ia_backend's
+// src/modules/analytics/analyticsContracts.ts ReportReadinessCheck* types.
+export type EvidenceStrength = "weak" | "moderate" | "strong";
+
+export interface ReportReadinessFinding {
+  statement: string;
+  sourceEntryIds: string[];
+  sourceLabels: string[];
+  kind: "observed_fact" | "interpretation";
+  caveat: string | null;
+  evidenceStrength: EvidenceStrength | null;
 }
 
-export interface ProjectAiKnowledgeInsight extends ActivityAiKnowledgeInsight {
-  activityId: string;
-  activityName: string;
+export interface ReportReadinessGapFinding {
+  gap: string;
+  whyItMattersForReporting: string;
+  relatedOmittedEntryIds: string[];
 }
 
-export interface ProjectAiKnowledgeRecord {
-  projectId: string;
-  projectName: string;
-  acknowledgedActivityCount: number;
-  totalActivityCount: number;
-  interpretedEvidenceCount: number;
-  generatedAt: string | null;
-  summaryText: string;
-  insights: ProjectAiKnowledgeInsight[];
-  activities: ProjectAiKnowledgeActivity[];
+export type ReportReadinessDeviationSignalType =
+  "contradiction" | "low_confidence" | "sharp_cross_activity_difference";
+
+export interface ReportReadinessDeviationFinding {
+  observation: string;
+  signalType: ReportReadinessDeviationSignalType;
+  sourceEntryIds: string[];
+  sourceLabels: string[];
+  suggestedQuestionForTeam: string;
+  evidenceStrength: EvidenceStrength | null;
+}
+
+export type ReportReadinessLevel =
+  "not_ready" | "partially_ready" | "ready_with_caveats" | "ready";
+
+export interface ReportReadinessOverallReadiness {
+  level: ReportReadinessLevel;
+  rationale: string;
+}
+
+export interface ReportReadinessEvidenceSummaryRow {
+  area: string;
+  whatWeKnow: string;
+  sourceEntryIds: string[];
+  sourceLabels: string[];
+  confidence: EvidenceStrength | null;
+  mainGap: string;
+}
+
+export interface ReportReadinessHonestStory {
+  narrative: string;
+  sourceEntryIds: string[];
+  sourceLabels: string[];
+}
+
+export interface ReportReadinessActionItem {
+  action: string;
+  reason: string;
+}
+
+export type ReportReadinessActionPriority =
+  "critical_before_reporting" | "needed_this_cycle";
+
+export interface ReportReadinessPriorityActionItem {
+  action: string;
+  reason: string;
+  priority: ReportReadinessActionPriority;
+}
+
+export interface ReportReadinessCheckRecord {
+  overallReadiness: ReportReadinessOverallReadiness;
+  evidenceSummary: ReportReadinessEvidenceSummaryRow[];
+  confidentlyReportable: ReportReadinessFinding[];
+  reportableWithCaveats: ReportReadinessFinding[];
+  missingOrWeakEvidence: ReportReadinessGapFinding[];
+  deviationsRequiringExplanation: ReportReadinessDeviationFinding[];
+  honestEmergingStory: ReportReadinessHonestStory;
+  actionsBeforeReporting: ReportReadinessPriorityActionItem[];
+  improvementsForNextPeriod: ReportReadinessActionItem[];
+  groundingStatus: "PASSED" | "FAILED";
+  groundingRetryCount: number;
+  reportReadinessModelVersion: string;
+  fellBackToSelectionOnly: boolean;
+  generatedAt: string;
 }
 
 export interface StartInterpretationPayload {
@@ -1787,8 +1849,17 @@ export const apiClient = {
   ): Promise<ProjectInterpretationOverview> {
     return request(`/projects/${projectId}/interpretation`);
   },
-  getProjectAiKnowledge(projectId: string): Promise<ProjectAiKnowledgeRecord> {
-    return request(`/projects/${projectId}/ai-knowledge`);
+  getReportReadinessCheck(
+    projectId: string,
+  ): Promise<ReportReadinessCheckRecord> {
+    return request(`/projects/${projectId}/report-readiness-check`);
+  },
+  generateReportReadinessCheck(
+    projectId: string,
+  ): Promise<ReportReadinessCheckRecord> {
+    return request(`/projects/${projectId}/report-readiness-check`, {
+      method: "POST",
+    });
   },
   getActivityAiKnowledge(
     activityId: string,
@@ -1818,34 +1889,6 @@ export const apiClient = {
         method: "PATCH",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(payload),
-      },
-    );
-  },
-  setIndicatorStatus(
-    interpretationResultId: string,
-    indicatorId: string,
-    status: InterpretationIndicatorStatus,
-  ): Promise<InterpretationResultRecord> {
-    return request(
-      `/interpretations/${interpretationResultId}/indicators/${indicatorId}`,
-      {
-        method: "PATCH",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ status }),
-      },
-    );
-  },
-  setQualitativeFindingStatus(
-    interpretationResultId: string,
-    qualitativeFindingId: string,
-    status: InterpretationIndicatorStatus,
-  ): Promise<InterpretationResultRecord> {
-    return request(
-      `/interpretations/${interpretationResultId}/qualitative-findings/${qualitativeFindingId}`,
-      {
-        method: "PATCH",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ status }),
       },
     );
   },

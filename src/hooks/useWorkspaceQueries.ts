@@ -19,7 +19,6 @@ import {
   type DeleteEvidenceResponse,
   type DeleteProjectPayload,
   type DeleteProjectResponse,
-  type InterpretationIndicatorStatus,
   type InterpretationResultRecord,
   type InvitationAcceptanceSummary,
   type InvitationSummary,
@@ -28,7 +27,7 @@ import {
   type ProcessingJobRecord,
   type PrivacyReviewDecisionsInput,
   type PrivacyReviewRecord,
-  type ProjectAiKnowledgeRecord,
+  type ReportReadinessCheckRecord,
   type ProjectInterpretationOverview,
   type ProjectOverview,
   type ProjectSummary,
@@ -49,8 +48,8 @@ export const projectOverviewQueryKey = (projectId: string) =>
   ["project-overview", projectId] as const;
 export const projectActivitiesQueryKey = (projectId: string) =>
   ["project-activities", projectId] as const;
-export const projectAiKnowledgeQueryKey = (projectId: string) =>
-  ["project-ai-knowledge", projectId] as const;
+export const reportReadinessCheckQueryKey = (projectId: string) =>
+  ["report-readiness-check", projectId] as const;
 export const activityQueryKey = (activityId: string) =>
   ["activity", activityId] as const;
 export const activityUploadsQueryKey = (activityId: string) =>
@@ -142,11 +141,34 @@ export function useProjectActivitiesQuery(projectId: string, enabled = true) {
   });
 }
 
-export function useProjectAiKnowledgeQuery(projectId: string, enabled = true) {
-  return useQuery<ProjectAiKnowledgeRecord, ApiError>({
-    queryKey: projectAiKnowledgeQueryKey(projectId),
-    queryFn: () => apiClient.getProjectAiKnowledge(projectId),
+export function useReportReadinessCheckQuery(
+  projectId: string,
+  enabled = true,
+) {
+  return useQuery<ReportReadinessCheckRecord, ApiError>({
+    queryKey: reportReadinessCheckQueryKey(projectId),
+    queryFn: () => apiClient.getReportReadinessCheck(projectId),
     enabled,
+    staleTime: Number.POSITIVE_INFINITY,
+    // The backend throws a 409 "not ready yet" for the completely ordinary
+    // first-visit case (no check has been generated for this project yet),
+    // not a transient failure — retrying it three times by default just
+    // delays the page settling by ~7s for no benefit.
+    retry: false,
+  });
+}
+
+export function useGenerateReportReadinessCheckMutation(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<ReportReadinessCheckRecord, ApiError>({
+    mutationFn: () => apiClient.generateReportReadinessCheck(projectId),
+    onSuccess: (result) => {
+      queryClient.setQueryData(reportReadinessCheckQueryKey(projectId), result);
+      void queryClient.invalidateQueries({
+        queryKey: projectOverviewQueryKey(projectId),
+      });
+    },
   });
 }
 
@@ -604,9 +626,6 @@ export function useUploadActivityFileMutation(
         void queryClient.invalidateQueries({
           queryKey: projectInterpretationsQueryKey(projectId),
         });
-        void queryClient.invalidateQueries({
-          queryKey: projectAiKnowledgeQueryKey(projectId),
-        });
       }
       if (organizationId) {
         void queryClient.invalidateQueries({
@@ -649,9 +668,6 @@ export function useDeleteEvidenceMutation(
         });
         void queryClient.invalidateQueries({
           queryKey: projectInterpretationsQueryKey(projectId),
-        });
-        void queryClient.invalidateQueries({
-          queryKey: projectAiKnowledgeQueryKey(projectId),
         });
       }
       if (organizationId) {
@@ -837,84 +853,6 @@ export function useAnswerInterpretationQuestionMutation(
       }
     },
   });
-}
-
-function useSetInterpretationItemStatusMutation<
-  TVariables extends { status: InterpretationIndicatorStatus },
->(
-  interpretationResultId: string,
-  projectId: string | undefined,
-  organizationId: string | undefined,
-  mutationFn: (variables: TVariables) => Promise<InterpretationResultRecord>,
-) {
-  const queryClient = useQueryClient();
-
-  return useMutation<InterpretationResultRecord, ApiError, TVariables>({
-    mutationFn,
-    onSuccess: (result) => {
-      queryClient.setQueryData(
-        interpretationQueryKey(interpretationResultId),
-        result,
-      );
-      if (projectId) {
-        void queryClient.invalidateQueries({
-          queryKey: projectInterpretationsQueryKey(projectId),
-        });
-        void queryClient.invalidateQueries({
-          queryKey: projectOverviewQueryKey(projectId),
-        });
-      }
-      if (organizationId) {
-        void queryClient.invalidateQueries({
-          queryKey: workspaceQueryKey(organizationId),
-        });
-      }
-    },
-  });
-}
-
-export function useSetIndicatorStatusMutation(
-  interpretationResultId: string,
-  projectId?: string,
-  organizationId?: string,
-) {
-  return useSetInterpretationItemStatusMutation(
-    interpretationResultId,
-    projectId,
-    organizationId,
-    ({
-      indicatorId,
-      status,
-    }: {
-      indicatorId: string;
-      status: InterpretationIndicatorStatus;
-    }) =>
-      apiClient.setIndicatorStatus(interpretationResultId, indicatorId, status),
-  );
-}
-
-export function useSetQualitativeFindingStatusMutation(
-  interpretationResultId: string,
-  projectId?: string,
-  organizationId?: string,
-) {
-  return useSetInterpretationItemStatusMutation(
-    interpretationResultId,
-    projectId,
-    organizationId,
-    ({
-      qualitativeFindingId,
-      status,
-    }: {
-      qualitativeFindingId: string;
-      status: InterpretationIndicatorStatus;
-    }) =>
-      apiClient.setQualitativeFindingStatus(
-        interpretationResultId,
-        qualitativeFindingId,
-        status,
-      ),
-  );
 }
 
 export function useAcknowledgeInterpretationReviewMutation(

@@ -1,5 +1,6 @@
 import { Link, useParams } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import { ActivityTabs } from "@/components/activityTabs";
 import { PageHeader, PageContainer, TopBar } from "@/components/workspaceUI";
 import { useProjectHierarchy } from "@/contexts/projectWorkspaceContext";
@@ -23,7 +24,7 @@ import {
 } from "@/components/analytics/analyticsEmptyState";
 import { AnalyticsStatusBanner } from "@/components/analytics/analyticsStatusBanner";
 import { ConfigurableAnalyticsDashboard } from "@/components/analytics/configurableAnalyticsDashboard";
-import { apiClient } from "@/services/apiClient";
+import { apiClient, ApiError } from "@/services/apiClient";
 
 export function ActivityAnalyticsPage() {
   const { projectId, activityId } = useParams({
@@ -71,6 +72,18 @@ export function ActivityAnalyticsPage() {
     activityId,
     Boolean(auth.token),
   );
+
+  async function handleRegenerate() {
+    try {
+      await generateMutation.mutateAsync();
+    } catch (error) {
+      toast.error(
+        error instanceof ApiError
+          ? error.message
+          : t("analytics.status.FAILED"),
+      );
+    }
+  }
 
   if (
     !auth.token ||
@@ -133,7 +146,7 @@ export function ActivityAnalyticsPage() {
           <AnalyticsStatusBanner
             execution={execution}
             result={result}
-            onRegenerate={() => generateMutation.mutate()}
+            onRegenerate={handleRegenerate}
             isRegenerating={generateMutation.isPending}
           />
 
