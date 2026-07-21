@@ -744,6 +744,13 @@ const de: TranslationDictionary = {
       exportLabel: "Export",
       exportJson: "JSON exportieren",
       exportText: "Text exportieren",
+      exportDocumentTitle: "Impact Atlas Dashboard-Export",
+      exportDocumentScopeLabel: "Bereich",
+      exportDocumentProjectLabel: "Projekt",
+      exportDocumentActivityLabel: "Aktivität",
+      exportDocumentSchemaLabel: "Schema",
+      exportDocumentCompatibilitySourceLabel: "Kompatibilitätsquelle",
+      exportDocumentWarningsTitle: "Hinweise zur Datenqualität",
       exportSuccess: "Dashboard-Export erstellt.",
       exportFailed: "Dashboard-Export konnte nicht erstellt werden.",
       compatibilityFallback: "Alte Analyse-Aufzeichnung",
@@ -759,6 +766,49 @@ const de: TranslationDictionary = {
       visibleBadge: "Sichtbar",
       hiddenWidgetsTitle: "{{count}} ausgeblendetes Widget",
       hiddenWidgetsTitle_other: "{{count}} ausgeblendete Widgets",
+      fallbackSummaryTitle: "In Klartext",
+      fallbackSummaryDescription:
+        "Eine fundierte Zusammenfassung auf Basis des deterministischen Evidenzkatalogs.",
+      fallbackThemesDescription:
+        "Wiederkehrende Themen aus dem aktuellen Katalog.",
+      hiddenWidgetsDescription:
+        "Halten Sie diesen Bereich kompakt und prüfen Sie ausgeblendete Widgets in einer klareren Übersicht mit Labels, Kontext und Einblenden-Aktion.",
+      hiddenWidgetsPreview: "Zuletzt ausgeblendet",
+      hiddenWidgetsManage: "Ausgeblendete Widgets durchsuchen",
+      hiddenWidgetsManagerTitle: "{{count}} ausgeblendete Widgets",
+      hiddenWidgetsManagerDescription:
+        "Suchen und prüfen Sie ausgeblendete Widgets nach Widget-Typ, bevor Sie sie wieder ins Dashboard holen.",
+      hiddenWidgetsSearchPlaceholder:
+        "Nach Titel, Untertitel oder Beschreibung suchen…",
+      hiddenWidgetsNoResults:
+        "Für diese Suche wurden keine ausgeblendeten Widgets gefunden.",
+      hiddenWidgetsNoResultsHint:
+        "Versuchen Sie weniger Begriffe oder ein allgemeineres Thema.",
+      hiddenWidgetShow: "Einblenden",
+      hiddenWidgetTypeHorizontalBar: "Verteilungsdiagramm",
+      hiddenWidgetTypeLineSeries: "Zeitverlaufsdiagramm",
+      hiddenWidgetTypeCategoryRank: "Ranking-Diagramm",
+      hiddenWidgetTypeKpi: "KPI-Karte",
+      hiddenWidgetTypeThemeList: "Themenliste",
+      hiddenWidgetTypeSummary: "Textzusammenfassung",
+      hiddenWidgetSectionHorizontalBarTitle: "Verteilungsdiagramme",
+      hiddenWidgetSectionHorizontalBarDescription:
+        "Vergleiche zwischen Kategorien, die sich als horizontale Balken leichter erfassen lassen.",
+      hiddenWidgetSectionLineSeriesTitle: "Zeitverlaufsdiagramme",
+      hiddenWidgetSectionLineSeriesDescription:
+        "Veränderungen über die Zeit, Meilensteine und andere zeitbezogene Muster.",
+      hiddenWidgetSectionCategoryRankTitle: "Ranking-Diagramme",
+      hiddenWidgetSectionCategoryRankDescription:
+        "Stärkste Segmente, wichtigste Kategorien und sortierte Vergleiche.",
+      hiddenWidgetSectionKpiTitle: "KPI-Karten",
+      hiddenWidgetSectionKpiDescription:
+        "Einzelne Kennzahlen für schnelle Orientierung und Berichterstattung.",
+      hiddenWidgetSectionThemeListTitle: "Themenlisten",
+      hiddenWidgetSectionThemeListDescription:
+        "Wiederkehrende qualitative Muster und zugehörige Evidenzthemen.",
+      hiddenWidgetSectionSummaryTitle: "Textzusammenfassungen",
+      hiddenWidgetSectionSummaryDescription:
+        "In Klartext formulierte Interpretationen für dieses Dashboard.",
       summaryEyebrow: "In Klartext",
       comparisonTitle: "Vergleichbare Kennzahlen",
       timelineTitle: "Zeitverlauf",
@@ -1422,6 +1472,9 @@ const de: TranslationDictionary = {
     noProjects: "Noch keine Projekte",
     createFirstProject:
       "Öffnen Sie die Projektseite, um Ihr erstes Projekt anzulegen.",
+    mobileNavigationTitle: "Workspace-Navigation",
+    mobileNavigationDescription:
+      "Zwischen Workspace-Bereichen und Projekten wechseln.",
     overview: "Übersicht",
     analytics: "Analysen",
     insights: "Erkenntnisse",

@@ -1,3 +1,4 @@
+import en from "@/locales/en";
 import type {
   AnalyticsDashboardCompatibilitySource,
   AnalyticsDashboardPreferenceRecord,
@@ -29,6 +30,30 @@ export interface AnalyticsDashboardExportDocument {
   hiddenWidgetIds: string[];
   sections: AnalyticsDashboardExportSection[];
   dataQualityWarnings: string[];
+}
+
+interface AnalyticsDashboardExportCopy {
+  title: string;
+  scopeLabel: string;
+  projectLabel: string;
+  activityLabel: string;
+  schemaLabel: string;
+  compatibilitySourceLabel: string;
+  dataQualityWarningsTitle: string;
+}
+
+function getDefaultExportCopy(): AnalyticsDashboardExportCopy {
+  return {
+    title: en.analytics.dashboard.exportDocumentTitle,
+    scopeLabel: en.analytics.dashboard.exportDocumentScopeLabel,
+    projectLabel: en.analytics.dashboard.exportDocumentProjectLabel,
+    activityLabel: en.analytics.dashboard.exportDocumentActivityLabel,
+    schemaLabel: en.analytics.dashboard.exportDocumentSchemaLabel,
+    compatibilitySourceLabel:
+      en.analytics.dashboard.exportDocumentCompatibilitySourceLabel,
+    dataQualityWarningsTitle:
+      en.analytics.dashboard.exportDocumentWarningsTitle,
+  };
 }
 
 function buildSectionLines(widget: AnalyticsDashboardWidget): string[] {
@@ -86,14 +111,17 @@ export function buildAnalyticsDashboardExportDocument(params: {
 
 export function renderAnalyticsDashboardExportDocumentText(
   document: AnalyticsDashboardExportDocument,
+  copy: AnalyticsDashboardExportCopy = getDefaultExportCopy(),
 ) {
   return [
-    `Impact Atlas dashboard export`,
-    `Scope: ${document.scopeType}`,
-    `Project: ${document.projectId}`,
-    document.activityId ? `Activity: ${document.activityId}` : null,
-    `Schema: ${document.dashboardSchemaVersion}`,
-    `Compatibility source: ${document.dashboardCompatibilitySource}`,
+    copy.title,
+    `${copy.scopeLabel}: ${document.scopeType}`,
+    `${copy.projectLabel}: ${document.projectId}`,
+    document.activityId
+      ? `${copy.activityLabel}: ${document.activityId}`
+      : null,
+    `${copy.schemaLabel}: ${document.dashboardSchemaVersion}`,
+    `${copy.compatibilitySourceLabel}: ${document.dashboardCompatibilitySource}`,
     "",
     ...document.sections.flatMap((section) => [
       `${section.title}`,
@@ -104,7 +132,7 @@ export function renderAnalyticsDashboardExportDocumentText(
     ]),
     ...(document.dataQualityWarnings.length > 0
       ? [
-          "Data quality warnings",
+          copy.dataQualityWarningsTitle,
           ...document.dataQualityWarnings.map((warning) => `- ${warning}`),
         ]
       : []),

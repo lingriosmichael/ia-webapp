@@ -242,6 +242,143 @@ describe("analyticsDashboardLayout", () => {
     ]);
   });
 
+  it("orders the recommended layout as kpis first, charts next, and qualitative content last", () => {
+    const result = makeResult();
+    result.dashboard = {
+      schemaVersion: "dashboard-v3",
+      availableWidgets: [
+        {
+          widgetId: "theme-list-primary",
+          kind: "theme_list",
+          title: "Qualitative signals",
+          subtitle: null,
+          description: "Repeated themes.",
+          sourceActivityIds: ["activity-1"],
+          sourceUploadMetadataIds: ["upload-1"],
+          goalLinkage: {
+            outcomeReferences: [],
+            successIndicators: [],
+            matchedProjectGoalPhrases: [],
+          },
+          qualityFlags: [],
+          items: [],
+        },
+        {
+          widgetId: "summary-primary",
+          kind: "summary",
+          title: "In plain language",
+          subtitle: null,
+          description: "Summary",
+          sourceActivityIds: [],
+          sourceUploadMetadataIds: [],
+          goalLinkage: {
+            outcomeReferences: [],
+            successIndicators: [],
+            matchedProjectGoalPhrases: [],
+          },
+          qualityFlags: [],
+          paragraphs: ["Summary paragraph"],
+          referencedEntryIds: [],
+        },
+        {
+          widgetId: "kpi-primary",
+          kind: "kpi",
+          title: "Participants reached",
+          subtitle: null,
+          description: "Headline metric.",
+          sourceActivityIds: ["activity-1"],
+          sourceUploadMetadataIds: ["upload-1"],
+          goalLinkage: {
+            outcomeReferences: [],
+            successIndicators: [],
+            matchedProjectGoalPhrases: [],
+          },
+          qualityFlags: [],
+          entryId: "metric-1",
+          label: "Participants reached",
+          value: 32,
+          unit: "count",
+          deduplicationConfidence: "not_applicable",
+        },
+        {
+          widgetId: "horizontal-bar-primary",
+          kind: "horizontal_bar",
+          title: "Recommendation distribution",
+          subtitle: null,
+          description: "Distribution chart.",
+          sourceActivityIds: ["activity-1"],
+          sourceUploadMetadataIds: ["upload-1"],
+          goalLinkage: {
+            outcomeReferences: [],
+            successIndicators: [],
+            matchedProjectGoalPhrases: [],
+          },
+          qualityFlags: [],
+          unit: "count",
+          items: [
+            {
+              id: "item-1",
+              label: "Suitable",
+              description: "Suitable",
+              value: 12,
+              unit: "count",
+              entryId: null,
+            },
+          ],
+        },
+        {
+          widgetId: "category-rank-primary",
+          kind: "category_rank",
+          title: "Applications by district",
+          subtitle: null,
+          description: "Ranking chart.",
+          sourceActivityIds: ["activity-1"],
+          sourceUploadMetadataIds: ["upload-1"],
+          goalLinkage: {
+            outcomeReferences: [],
+            successIndicators: [],
+            matchedProjectGoalPhrases: [],
+          },
+          qualityFlags: [],
+          label: "Applications by district",
+          tableName: "Sheet 1",
+          activityId: "activity-1",
+          unit: "count",
+          items: [
+            {
+              id: "segment-1",
+              label: "Mitte",
+              value: 8,
+            },
+          ],
+        },
+      ],
+      defaultLayout: {
+        orderedWidgetIds: [
+          "theme-list-primary",
+          "horizontal-bar-primary",
+          "kpi-primary",
+          "summary-primary",
+          "category-rank-primary",
+        ],
+        hiddenWidgetIds: [],
+      },
+    };
+
+    const resolved = resolveAnalyticsDashboard({
+      result,
+      dashboardCompatibilitySource: "generated",
+    });
+
+    expect(resolved.dashboard.defaultLayout.orderedWidgetIds).toEqual([
+      "kpi-primary",
+      "horizontal-bar-primary",
+      "category-rank-primary",
+      "summary-primary",
+      "theme-list-primary",
+    ]);
+  });
+
   it("keeps deterministic distribution bars when replacement charts exist", () => {
     const result = makeResult();
     result.dashboard = {

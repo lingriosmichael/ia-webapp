@@ -24,6 +24,7 @@ import {
   ListTree,
   Quote,
   RotateCcw,
+  Search,
   Settings2,
   Sparkles,
   TrendingUp,
@@ -46,11 +47,19 @@ import {
 import type { ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdownMenu";
+import { Input } from "@/components/ui/input";
 import { Card } from "@/components/workspaceUI";
 import { resolveCategoryLabels } from "@/lib/analyticsCategoryLabel";
 import { cn } from "@/lib/utils";
@@ -67,6 +76,7 @@ import type {
   AnalyticsDashboardUsageSummary,
   AnalyticsDashboardThemeListWidget,
   AnalyticsDashboardWidget,
+  AnalyticsDashboardWidgetKind,
   AnalyticsResultRecord,
   UpdateAnalyticsDashboardPreferencePayload,
 } from "@/services/apiClient";
@@ -74,6 +84,7 @@ import { AiCuratedBadge } from "./aiCuratedBadge";
 import { formatMetricValue } from "./analyticsFormat";
 import { CatalogDetailsSection } from "./catalogDetailsSection";
 import {
+  type AnalyticsDashboardFallbackCopy,
   resolveAnalyticsDashboard,
   resolveDashboardLayout,
 } from "./analyticsDashboardLayout";
@@ -92,6 +103,14 @@ const HORIZONTAL_BAR_BASE_COLOR = { l: 0.55, c: 0.22, h: 295 };
 const CATEGORY_RANK_BASE_COLOR = { l: 0.7, c: 0.16, h: 180 };
 const MIN_BAR_LIGHTNESS = 0.4;
 const MAX_BAR_LIGHTNESS = 0.82;
+const HIDDEN_WIDGET_KIND_ORDER: AnalyticsDashboardWidgetKind[] = [
+  "horizontal_bar",
+  "line_series",
+  "category_rank",
+  "kpi",
+  "theme_list",
+  "summary",
+];
 
 function getSequentialBarShade(
   base: { l: number; c: number; h: number },
@@ -236,13 +255,23 @@ export function ConfigurableAnalyticsDashboard({
   isResettingLayout: boolean;
 }) {
   const { t, i18n } = useTranslation();
+  const fallbackCopy = useMemo<AnalyticsDashboardFallbackCopy>(
+    () => ({
+      summaryTitle: t("analytics.dashboard.fallbackSummaryTitle"),
+      summaryDescription: t("analytics.dashboard.fallbackSummaryDescription"),
+      themeListTitle: t("analytics.dashboard.themesTitle"),
+      themeListDescription: t("analytics.dashboard.fallbackThemesDescription"),
+    }),
+    [t],
+  );
   const resolvedDashboard = useMemo(
     () =>
       resolveAnalyticsDashboard({
         result,
         dashboardCompatibilitySource,
+        fallbackCopy,
       }),
-    [result, dashboardCompatibilitySource],
+    [result, dashboardCompatibilitySource, fallbackCopy],
   );
   const dashboard = resolvedDashboard.dashboard;
   const resolvedLayoutPreference = useMemo(
@@ -256,6 +285,29 @@ export function ConfigurableAnalyticsDashboard({
   const sensors = useSensors(useSensor(PointerSensor));
   const [isCustomizing, setIsCustomizing] = useState(false);
   const [isExporting, setIsExporting] = useState<"json" | "text" | null>(null);
+  const buildLayoutState = (payload: {
+    orderedWidgetIds: string[];
+    hiddenWidgetIds: string[];
+  }) => ({
+    orderedWidgetIds: payload.orderedWidgetIds,
+    hiddenWidgetIds: payload.hiddenWidgetIds,
+    visibleWidgets: payload.orderedWidgetIds
+      .filter((widgetId) => !payload.hiddenWidgetIds.includes(widgetId))
+      .map((widgetId) =>
+        dashboard.availableWidgets.find(
+          (widget) => widget.widgetId === widgetId,
+        ),
+      )
+      .filter((widget): widget is AnalyticsDashboardWidget => Boolean(widget)),
+    hiddenWidgets: payload.orderedWidgetIds
+      .filter((widgetId) => payload.hiddenWidgetIds.includes(widgetId))
+      .map((widgetId) =>
+        dashboard.availableWidgets.find(
+          (widget) => widget.widgetId === widgetId,
+        ),
+      )
+      .filter((widget): widget is AnalyticsDashboardWidget => Boolean(widget)),
+  });
   const [layoutState, setLayoutState] = useState(
     () => resolvedLayoutPreference,
   );
@@ -322,31 +374,7 @@ export function ConfigurableAnalyticsDashboard({
     orderedWidgetIds: string[];
     hiddenWidgetIds: string[];
   }) => {
-    const nextLayout = {
-      orderedWidgetIds: payload.orderedWidgetIds,
-      hiddenWidgetIds: payload.hiddenWidgetIds,
-      visibleWidgets: payload.orderedWidgetIds
-        .filter((widgetId) => !payload.hiddenWidgetIds.includes(widgetId))
-        .map((widgetId) =>
-          dashboard.availableWidgets.find(
-            (widget) => widget.widgetId === widgetId,
-          ),
-        )
-        .filter((widget): widget is AnalyticsDashboardWidget =>
-          Boolean(widget),
-        ),
-      hiddenWidgets: payload.orderedWidgetIds
-        .filter((widgetId) => payload.hiddenWidgetIds.includes(widgetId))
-        .map((widgetId) =>
-          dashboard.availableWidgets.find(
-            (widget) => widget.widgetId === widgetId,
-          ),
-        )
-        .filter((widget): widget is AnalyticsDashboardWidget =>
-          Boolean(widget),
-        ),
-    };
-    setLayoutState(nextLayout);
+    setLayoutState(buildLayoutState(payload));
     onSaveLayout({
       dashboardSchemaVersion: dashboard.schemaVersion,
       orderedWidgetIds: payload.orderedWidgetIds,
@@ -501,6 +529,7 @@ export function ConfigurableAnalyticsDashboard({
                   ),
                 widgetId: null,
               });
+              setLayoutState(buildLayoutState(dashboard.defaultLayout));
               onResetLayout();
             }}
             disabled={isResettingLayout}
@@ -544,27 +573,10 @@ export function ConfigurableAnalyticsDashboard({
       </DndContext>
 
       {layoutState.hiddenWidgets.length > 0 ? (
-        <Card className="p-5">
-          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-            <EyeOff className="h-4 w-4 text-primary" />
-            {t("analytics.dashboard.hiddenWidgetsTitle", {
-              count: layoutState.hiddenWidgets.length,
-            })}
-          </div>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {layoutState.hiddenWidgets.map((widget) => (
-              <Button
-                key={widget.widgetId}
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => handleToggleWidget(widget.widgetId)}
-              >
-                {widget.title}
-              </Button>
-            ))}
-          </div>
-        </Card>
+        <HiddenWidgetsManagerCard
+          widgets={layoutState.hiddenWidgets}
+          onShowWidget={handleToggleWidget}
+        />
       ) : null}
 
       <DashboardUsageSummaryCard usageSummary={dashboardUsageSummary} />
@@ -662,6 +674,299 @@ function UsageStat({ label, value }: { label: string; value: string }) {
       </div>
     </div>
   );
+}
+
+function HiddenWidgetsManagerCard({
+  widgets,
+  onShowWidget,
+}: {
+  widgets: AnalyticsDashboardWidget[];
+  onShowWidget: (widgetId: string) => void;
+}) {
+  const { t } = useTranslation();
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+
+  const hiddenWidgetStats = HIDDEN_WIDGET_KIND_ORDER.map((kind) => {
+    const count = widgets.filter((widget) => widget.kind === kind).length;
+
+    return {
+      kind,
+      count,
+      label: t(getHiddenWidgetKindLabelKey(kind)),
+    };
+  }).filter((stat) => stat.count > 0);
+
+  const hiddenWidgetPreview = widgets.slice(0, 3);
+  const normalizedSearchValue = searchValue.trim().toLowerCase();
+  const filteredWidgets = widgets.filter((widget) => {
+    if (!normalizedSearchValue) {
+      return true;
+    }
+
+    const searchableText = [
+      widget.title,
+      widget.subtitle ?? "",
+      widget.description,
+    ]
+      .join(" ")
+      .toLowerCase();
+
+    return searchableText.includes(normalizedSearchValue);
+  });
+  const hiddenWidgetSections = HIDDEN_WIDGET_KIND_ORDER.map((kind) => {
+    const sectionWidgets = filteredWidgets.filter(
+      (widget) => widget.kind === kind,
+    );
+
+    return sectionWidgets.length > 0 ? { kind, widgets: sectionWidgets } : null;
+  }).filter(
+    (
+      section,
+    ): section is {
+      kind: AnalyticsDashboardWidgetKind;
+      widgets: AnalyticsDashboardWidget[];
+    } => section !== null,
+  );
+
+  return (
+    <>
+      <Card className="overflow-hidden border-primary/15 bg-[linear-gradient(135deg,rgba(13,148,136,0.08),rgba(255,255,255,0.98)_42%,rgba(250,250,250,1))] p-5">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+              <EyeOff className="h-4 w-4 text-primary" />
+              {t("analytics.dashboard.hiddenWidgetsTitle", {
+                count: widgets.length,
+              })}
+            </div>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+              {t("analytics.dashboard.hiddenWidgetsDescription")}
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {hiddenWidgetStats.map((stat) => (
+                <div
+                  key={stat.kind}
+                  className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/90 px-3 py-1.5 text-xs font-medium text-foreground"
+                >
+                  <span>{stat.label}</span>
+                  <span className="rounded-full bg-secondary px-2 py-0.5 text-[11px] text-muted-foreground">
+                    {stat.count}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 rounded-[16px] border border-border/70 bg-background/80 p-4">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+                {t("analytics.dashboard.hiddenWidgetsPreview")}
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {hiddenWidgetPreview.map((widget) => (
+                  <span
+                    key={widget.widgetId}
+                    className="inline-flex items-center rounded-full bg-secondary px-3 py-1.5 text-xs text-foreground"
+                  >
+                    {widget.title}
+                  </span>
+                ))}
+                {widgets.length > hiddenWidgetPreview.length ? (
+                  <span className="inline-flex items-center rounded-full border border-dashed border-border px-3 py-1.5 text-xs text-muted-foreground">
+                    +{widgets.length - hiddenWidgetPreview.length}
+                  </span>
+                ) : null}
+              </div>
+            </div>
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            className="shrink-0"
+            onClick={() => setIsOpen(true)}
+          >
+            {t("analytics.dashboard.hiddenWidgetsManage")}
+          </Button>
+        </div>
+      </Card>
+
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="max-h-[88vh] max-w-5xl overflow-hidden p-0">
+          <div className="flex max-h-[88vh] flex-col">
+            <DialogHeader className="border-b border-border/60 px-6 py-5">
+              <DialogTitle>
+                {t("analytics.dashboard.hiddenWidgetsManagerTitle", {
+                  count: widgets.length,
+                })}
+              </DialogTitle>
+              <DialogDescription className="max-w-3xl leading-6">
+                {t("analytics.dashboard.hiddenWidgetsManagerDescription")}
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="border-b border-border/60 px-6 py-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  value={searchValue}
+                  onChange={(event) => setSearchValue(event.target.value)}
+                  placeholder={t(
+                    "analytics.dashboard.hiddenWidgetsSearchPlaceholder",
+                  )}
+                  className="pl-9"
+                />
+              </div>
+            </div>
+
+            <div className="overflow-y-auto px-6 py-5">
+              {hiddenWidgetSections.length > 0 ? (
+                <div className="space-y-6">
+                  {hiddenWidgetSections.map((section) => {
+                    const sectionTitleKey = getHiddenWidgetSectionTitleKey(
+                      section.kind,
+                    );
+                    const sectionDescriptionKey =
+                      getHiddenWidgetSectionDescriptionKey(section.kind);
+
+                    return (
+                      <section key={section.kind}>
+                        <div className="flex items-center justify-between gap-3">
+                          <div>
+                            <h3 className="text-sm font-semibold text-foreground">
+                              {t(sectionTitleKey)}
+                            </h3>
+                            <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                              {t(sectionDescriptionKey)}
+                            </p>
+                          </div>
+                          <div className="rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                            {section.widgets.length}
+                          </div>
+                        </div>
+
+                        <div className="mt-4 grid gap-3 md:grid-cols-2">
+                          {section.widgets.map((widget) => (
+                            <button
+                              key={widget.widgetId}
+                              type="button"
+                              onClick={() => onShowWidget(widget.widgetId)}
+                              className="rounded-[16px] border border-border/70 bg-background p-4 text-left transition-colors hover:border-primary/30 hover:bg-primary/5"
+                            >
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="min-w-0">
+                                  <div className="inline-flex items-center gap-2 rounded-full bg-secondary px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+                                    {getHiddenWidgetKindIcon(widget.kind)}
+                                    {t(
+                                      getHiddenWidgetKindLabelKey(widget.kind),
+                                    )}
+                                  </div>
+                                  <div className="mt-3 text-sm font-semibold text-foreground">
+                                    {widget.title}
+                                  </div>
+                                  {widget.subtitle ? (
+                                    <div className="mt-1 text-xs font-medium text-primary">
+                                      {widget.subtitle}
+                                    </div>
+                                  ) : null}
+                                  <div className="mt-2 line-clamp-3 text-xs leading-5 text-muted-foreground">
+                                    {widget.description}
+                                  </div>
+                                </div>
+                                <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary">
+                                  {t("analytics.dashboard.hiddenWidgetShow")}
+                                </span>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </section>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="rounded-[16px] border border-dashed border-border p-8 text-center">
+                  <div className="text-sm font-semibold text-foreground">
+                    {t("analytics.dashboard.hiddenWidgetsNoResults")}
+                  </div>
+                  <div className="mt-2 text-sm leading-6 text-muted-foreground">
+                    {t("analytics.dashboard.hiddenWidgetsNoResultsHint")}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
+
+function getHiddenWidgetKindIcon(kind: AnalyticsDashboardWidgetKind) {
+  switch (kind) {
+    case "horizontal_bar":
+      return <BarChart3 className="h-3.5 w-3.5" />;
+    case "line_series":
+      return <LineChartIcon className="h-3.5 w-3.5" />;
+    case "category_rank":
+      return <TrendingUp className="h-3.5 w-3.5" />;
+    case "kpi":
+      return <Sparkles className="h-3.5 w-3.5" />;
+    case "theme_list":
+      return <ListTree className="h-3.5 w-3.5" />;
+    case "summary":
+      return <FileText className="h-3.5 w-3.5" />;
+  }
+}
+
+function getHiddenWidgetKindLabelKey(kind: AnalyticsDashboardWidgetKind) {
+  switch (kind) {
+    case "horizontal_bar":
+      return "analytics.dashboard.hiddenWidgetTypeHorizontalBar";
+    case "line_series":
+      return "analytics.dashboard.hiddenWidgetTypeLineSeries";
+    case "category_rank":
+      return "analytics.dashboard.hiddenWidgetTypeCategoryRank";
+    case "kpi":
+      return "analytics.dashboard.hiddenWidgetTypeKpi";
+    case "theme_list":
+      return "analytics.dashboard.hiddenWidgetTypeThemeList";
+    case "summary":
+      return "analytics.dashboard.hiddenWidgetTypeSummary";
+  }
+}
+
+function getHiddenWidgetSectionTitleKey(kind: AnalyticsDashboardWidgetKind) {
+  switch (kind) {
+    case "horizontal_bar":
+      return "analytics.dashboard.hiddenWidgetSectionHorizontalBarTitle";
+    case "line_series":
+      return "analytics.dashboard.hiddenWidgetSectionLineSeriesTitle";
+    case "category_rank":
+      return "analytics.dashboard.hiddenWidgetSectionCategoryRankTitle";
+    case "kpi":
+      return "analytics.dashboard.hiddenWidgetSectionKpiTitle";
+    case "theme_list":
+      return "analytics.dashboard.hiddenWidgetSectionThemeListTitle";
+    case "summary":
+      return "analytics.dashboard.hiddenWidgetSectionSummaryTitle";
+  }
+}
+
+function getHiddenWidgetSectionDescriptionKey(
+  kind: AnalyticsDashboardWidgetKind,
+) {
+  switch (kind) {
+    case "horizontal_bar":
+      return "analytics.dashboard.hiddenWidgetSectionHorizontalBarDescription";
+    case "line_series":
+      return "analytics.dashboard.hiddenWidgetSectionLineSeriesDescription";
+    case "category_rank":
+      return "analytics.dashboard.hiddenWidgetSectionCategoryRankDescription";
+    case "kpi":
+      return "analytics.dashboard.hiddenWidgetSectionKpiDescription";
+    case "theme_list":
+      return "analytics.dashboard.hiddenWidgetSectionThemeListDescription";
+    case "summary":
+      return "analytics.dashboard.hiddenWidgetSectionSummaryDescription";
+  }
 }
 
 function SortableDashboardCard({

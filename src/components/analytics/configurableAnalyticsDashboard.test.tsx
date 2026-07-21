@@ -15,10 +15,16 @@ vi.mock("react-i18next", () => {
     "analytics.dashboard.showCustomizer": "Customize widgets",
     "analytics.dashboard.hideCustomizer": "Hide customizer",
     "analytics.dashboard.restoreRecommended": "Restore recommended layout",
+    "analytics.dashboard.fallbackSummaryTitle": "In plain language",
     "analytics.dashboard.summaryEyebrow": "Plain-language view",
     "analytics.dashboard.comparisonTitle": "Comparable metrics",
     "analytics.dashboard.timelineTitle": "Timeline",
     "analytics.dashboard.rankTitle": "Strongest segments",
+    "analytics.dashboard.hiddenWidgetsDescription":
+      "Keep this area compact, then review hidden widgets in a clearer library with labels, context, and restore actions.",
+    "analytics.dashboard.hiddenWidgetsPreview": "Recently hidden",
+    "analytics.dashboard.hiddenWidgetsManage": "Browse hidden widgets",
+    "analytics.dashboard.hiddenWidgetTypeThemeList": "Theme list",
     "analytics.dashboard.themesTitle": "Qualitative signals",
     "analytics.dashboard.usageTitle": "Dashboard usage",
     "analytics.dashboard.usageDescription":
@@ -243,6 +249,12 @@ describe("ConfigurableAnalyticsDashboard", () => {
       "Attendance held steady while onboarding remained compressed.",
     );
     expect(markup).toContain("1 hidden widget");
+    expect(markup).toContain("Qualitative signals");
+    expect(markup).toContain(
+      "Keep this area compact, then review hidden widgets in a clearer library with labels, context, and restore actions.",
+    );
+    expect(markup).toContain("Browse hidden widgets");
+    expect(markup).toContain("Recently hidden");
     expect(markup).toContain("Qualitative signals");
     expect(markup).toContain(
       "No dashboard interactions have been recorded yet.",

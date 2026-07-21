@@ -1,9 +1,20 @@
-export function renderErrorPage(): string {
+import de from "@/locales/de";
+import en from "@/locales/en";
+
+function resolveLanguage(language: string | null | undefined) {
+  return language?.toLowerCase().startsWith("de") ? "de" : "en";
+}
+
+export function renderErrorPage(language?: string | null): string {
+  const resolvedLanguage = resolveLanguage(language);
+  const copy = resolvedLanguage === "de" ? de.errorPage : en.errorPage;
+  const commonCopy = resolvedLanguage === "de" ? de.common : en.common;
+
   return `<!doctype html>
-<html lang="de">
+<html lang="${resolvedLanguage}">
   <head>
     <meta charset="utf-8" />
-    <title>Diese Seite konnte nicht geladen werden</title>
+    <title>${copy.title}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       body { font: 15px/1.5 system-ui, -apple-system, sans-serif; background: #fafafa; color: #111; display: grid; place-items: center; min-height: 100vh; margin: 0; padding: 1.5rem; }
@@ -18,11 +29,11 @@ export function renderErrorPage(): string {
   </head>
   <body>
     <div class="card">
-      <h1>Diese Seite konnte nicht geladen werden</h1>
-      <p>Auf unserer Seite ist ein Fehler aufgetreten. Versuchen Sie es erneut oder gehen Sie zurück zur Startseite.</p>
+      <h1>${copy.title}</h1>
+      <p>${copy.description}</p>
       <div class="actions">
-        <button class="primary" onclick="location.reload()">Erneut versuchen</button>
-        <a class="secondary" href="/">Zur Startseite</a>
+        <button class="primary" onclick="location.reload()">${commonCopy.tryAgain}</button>
+        <a class="secondary" href="/">${commonCopy.goHome}</a>
       </div>
     </div>
   </body>

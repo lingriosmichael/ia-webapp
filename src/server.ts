@@ -26,6 +26,7 @@ async function getServerEntry(): Promise<ServerEntry> {
 // {"unhandled":true,"message":"HTTPError"} — try/catch alone never fires for those.
 async function normalizeCatastrophicSsrResponse(
   response: Response,
+  request: Request,
 ): Promise<Response> {
   if (response.status < 500) return response;
   const contentType = response.headers.get("content-type") ?? "";
@@ -42,7 +43,7 @@ async function normalizeCatastrophicSsrResponse(
   console.error(
     consumeLastCapturedError() ?? new Error(`h3 swallowed SSR error: ${body}`),
   );
-  return new Response(renderErrorPage(), {
+  return new Response(renderErrorPage(request.headers.get("accept-language")), {
     status: 500,
     headers: { "content-type": "text/html; charset=utf-8" },
   });
@@ -53,13 +54,16 @@ export default {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      return await normalizeCatastrophicSsrResponse(response, request);
     } catch (error) {
       console.error(error);
-      return new Response(renderErrorPage(), {
-        status: 500,
-        headers: { "content-type": "text/html; charset=utf-8" },
-      });
+      return new Response(
+        renderErrorPage(request.headers.get("accept-language")),
+        {
+          status: 500,
+          headers: { "content-type": "text/html; charset=utf-8" },
+        },
+      );
     }
   },
 };

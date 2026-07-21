@@ -731,6 +731,13 @@ const en = {
       exportLabel: "Export",
       exportJson: "Export JSON",
       exportText: "Export text",
+      exportDocumentTitle: "Impact Atlas dashboard export",
+      exportDocumentScopeLabel: "Scope",
+      exportDocumentProjectLabel: "Project",
+      exportDocumentActivityLabel: "Activity",
+      exportDocumentSchemaLabel: "Schema",
+      exportDocumentCompatibilitySourceLabel: "Compatibility source",
+      exportDocumentWarningsTitle: "Data quality warnings",
       exportSuccess: "Dashboard export created.",
       exportFailed: "Dashboard export could not be created.",
       compatibilityFallback: "Legacy analytics record",
@@ -746,6 +753,48 @@ const en = {
       visibleBadge: "Visible",
       hiddenWidgetsTitle: "{{count}} hidden widget",
       hiddenWidgetsTitle_other: "{{count}} hidden widgets",
+      fallbackSummaryTitle: "In plain language",
+      fallbackSummaryDescription:
+        "A grounded summary assembled from the deterministic evidence catalog.",
+      fallbackThemesDescription:
+        "Repeated themes surfaced in the current catalog.",
+      hiddenWidgetsDescription:
+        "Keep this area compact, then review hidden widgets in a clearer library with labels, context, and restore actions.",
+      hiddenWidgetsPreview: "Recently hidden",
+      hiddenWidgetsManage: "Browse hidden widgets",
+      hiddenWidgetsManagerTitle: "{{count}} hidden widgets",
+      hiddenWidgetsManagerDescription:
+        "Search and review hidden widgets by widget type before adding them back to the dashboard.",
+      hiddenWidgetsSearchPlaceholder:
+        "Search by widget title, subtitle, or description…",
+      hiddenWidgetsNoResults: "No hidden widgets match this search.",
+      hiddenWidgetsNoResultsHint:
+        "Try fewer words or search for a broader topic.",
+      hiddenWidgetShow: "Show widget",
+      hiddenWidgetTypeHorizontalBar: "Distribution chart",
+      hiddenWidgetTypeLineSeries: "Timeline chart",
+      hiddenWidgetTypeCategoryRank: "Ranking chart",
+      hiddenWidgetTypeKpi: "KPI card",
+      hiddenWidgetTypeThemeList: "Theme list",
+      hiddenWidgetTypeSummary: "Narrative summary",
+      hiddenWidgetSectionHorizontalBarTitle: "Distribution charts",
+      hiddenWidgetSectionHorizontalBarDescription:
+        "Comparisons across categories that are easier to scan as horizontal bars.",
+      hiddenWidgetSectionLineSeriesTitle: "Timeline charts",
+      hiddenWidgetSectionLineSeriesDescription:
+        "Changes over time, milestones, and other time-based patterns.",
+      hiddenWidgetSectionCategoryRankTitle: "Ranking charts",
+      hiddenWidgetSectionCategoryRankDescription:
+        "Top segments, strongest categories, and sorted comparisons.",
+      hiddenWidgetSectionKpiTitle: "KPI cards",
+      hiddenWidgetSectionKpiDescription:
+        "Single headline values for fast reference and reporting.",
+      hiddenWidgetSectionThemeListTitle: "Theme lists",
+      hiddenWidgetSectionThemeListDescription:
+        "Repeated qualitative patterns and supporting evidence themes.",
+      hiddenWidgetSectionSummaryTitle: "Narrative summaries",
+      hiddenWidgetSectionSummaryDescription:
+        "Plain-language interpretations generated for this dashboard.",
       summaryEyebrow: "Plain-language view",
       comparisonTitle: "Comparable metrics",
       timelineTitle: "Timeline",
@@ -1394,6 +1443,9 @@ const en = {
     addActivity: "Add activity",
     noProjects: "No projects yet",
     createFirstProject: "Open the projects page to create your first project.",
+    mobileNavigationTitle: "Workspace navigation",
+    mobileNavigationDescription:
+      "Navigate between workspace areas and projects.",
     overview: "Overview",
     analytics: "Analytics",
     insights: "Insights",

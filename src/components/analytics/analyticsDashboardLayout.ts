@@ -1,3 +1,4 @@
+import en from "@/locales/en";
 import type {
   AnalyticsDashboard,
   AnalyticsDashboardCompatibilitySource,
@@ -9,8 +10,88 @@ import type {
   EvidenceCatalogThemeEntry,
 } from "@/services/apiClient";
 
+export interface AnalyticsDashboardFallbackCopy {
+  summaryTitle: string;
+  summaryDescription: string;
+  themeListTitle: string;
+  themeListDescription: string;
+}
+
+function getDefaultFallbackCopy(): AnalyticsDashboardFallbackCopy {
+  return {
+    summaryTitle: en.analytics.dashboard.summaryEyebrow,
+    summaryDescription: en.analytics.dashboard.fallbackSummaryDescription,
+    themeListTitle: en.analytics.dashboard.themesTitle,
+    themeListDescription: en.analytics.dashboard.fallbackThemesDescription,
+  };
+}
+
+const DEFAULT_WIDGET_KIND_PRIORITY: Record<
+  AnalyticsDashboardWidget["kind"],
+  number
+> = {
+  kpi: 0,
+  horizontal_bar: 1,
+  line_series: 2,
+  category_rank: 3,
+  summary: 4,
+  theme_list: 5,
+};
+
 function uniqueWidgetIds(widgetIds: string[]) {
   return [...new Set(widgetIds)];
+}
+
+function normalizeDefaultWidgetOrder(
+  dashboard: AnalyticsDashboard,
+): AnalyticsDashboard {
+  const availableWidgetMap = new Map(
+    dashboard.availableWidgets.map(
+      (widget) => [widget.widgetId, widget] as const,
+    ),
+  );
+  const availableWidgetIds = dashboard.availableWidgets.map(
+    (widget) => widget.widgetId,
+  );
+  const orderedWidgetIds = uniqueWidgetIds([
+    ...dashboard.defaultLayout.orderedWidgetIds,
+    ...availableWidgetIds,
+  ]).filter((widgetId) => availableWidgetMap.has(widgetId));
+  const originalIndexByWidgetId = new Map(
+    orderedWidgetIds.map((widgetId, index) => [widgetId, index] as const),
+  );
+  const normalizedOrderedWidgetIds = [...orderedWidgetIds].sort(
+    (left, right) => {
+      const leftWidget = availableWidgetMap.get(left);
+      const rightWidget = availableWidgetMap.get(right);
+
+      if (!leftWidget || !rightWidget) {
+        return 0;
+      }
+
+      const leftPriority = DEFAULT_WIDGET_KIND_PRIORITY[leftWidget.kind];
+      const rightPriority = DEFAULT_WIDGET_KIND_PRIORITY[rightWidget.kind];
+
+      if (leftPriority !== rightPriority) {
+        return leftPriority - rightPriority;
+      }
+
+      return (
+        (originalIndexByWidgetId.get(left) ?? 0) -
+        (originalIndexByWidgetId.get(right) ?? 0)
+      );
+    },
+  );
+
+  return {
+    ...dashboard,
+    defaultLayout: {
+      orderedWidgetIds: normalizedOrderedWidgetIds,
+      hiddenWidgetIds: uniqueWidgetIds(
+        dashboard.defaultLayout.hiddenWidgetIds,
+      ).filter((widgetId) => availableWidgetMap.has(widgetId)),
+    },
+  };
 }
 
 function isLegacyComparableHorizontalBar(widget: AnalyticsDashboardWidget) {
@@ -64,6 +145,7 @@ export const FALLBACK_ANALYTICS_DASHBOARD_SCHEMA_VERSION =
 
 export function createFallbackDashboard(
   result: AnalyticsResultRecord,
+  copy: AnalyticsDashboardFallbackCopy = getDefaultFallbackCopy(),
 ): AnalyticsDashboard {
   const metrics = result.catalog.entries.filter(
     (entry): entry is EvidenceCatalogMetricEntry =>
@@ -107,10 +189,9 @@ export function createFallbackDashboard(
     availableWidgets.push({
       widgetId,
       kind: "summary",
-      title: "In plain language",
+      title: copy.summaryTitle,
       subtitle: null,
-      description:
-        "A grounded summary assembled from the deterministic evidence catalog.",
+      description: copy.summaryDescription,
       sourceActivityIds: [],
       sourceUploadMetadataIds: [],
       goalLinkage: {
@@ -132,9 +213,9 @@ export function createFallbackDashboard(
     availableWidgets.push({
       widgetId,
       kind: "theme_list",
-      title: "Qualitative signals",
+      title: copy.themeListTitle,
       subtitle: null,
-      description: "Repeated themes surfaced in the current catalog.",
+      description: copy.themeListDescription,
       sourceActivityIds: themes.flatMap((theme) => theme.sourceActivityIds),
       sourceUploadMetadataIds: themes.flatMap(
         (theme) => theme.sourceUploadMetadataIds,
@@ -155,7 +236,7 @@ export function createFallbackDashboard(
     });
   }
 
-  return {
+  const dashboard: AnalyticsDashboard = {
     schemaVersion: FALLBACK_ANALYTICS_DASHBOARD_SCHEMA_VERSION,
     availableWidgets,
     defaultLayout: {
@@ -163,22 +244,30 @@ export function createFallbackDashboard(
       hiddenWidgetIds: [],
     },
   };
+
+  return normalizeDefaultWidgetOrder(dashboard);
 }
 
 export function resolveAnalyticsDashboard(params: {
   result: AnalyticsResultRecord;
   dashboardCompatibilitySource?: AnalyticsDashboardCompatibilitySource | null;
+  fallbackCopy?: AnalyticsDashboardFallbackCopy;
 }) {
   if (params.result.dashboard) {
     return {
-      dashboard: removeUnsafeComparableWidgets(params.result.dashboard),
+      dashboard: normalizeDefaultWidgetOrder(
+        removeUnsafeComparableWidgets(params.result.dashboard),
+      ),
       compatibilitySource:
         params.dashboardCompatibilitySource ?? ("generated" as const),
     };
   }
 
   return {
-    dashboard: createFallbackDashboard(params.result),
+    dashboard: createFallbackDashboard(
+      params.result,
+      params.fallbackCopy ?? getDefaultFallbackCopy(),
+    ),
     compatibilitySource: "compatibility_fallback" as const,
   };
 }

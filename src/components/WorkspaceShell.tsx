@@ -264,9 +264,9 @@ export function WorkspaceShell({
         <Sheet open={mobileSidebarOpen} onOpenChange={setMobileSidebarOpen}>
           <SheetContent side="left" className="w-[18rem] p-0 sm:max-w-none">
             <SheetHeader className="sr-only">
-              <SheetTitle>Workspace navigation</SheetTitle>
+              <SheetTitle>{locale.sidebar.mobileNavigationTitle}</SheetTitle>
               <SheetDescription>
-                Navigate between workspace areas and projects.
+                {locale.sidebar.mobileNavigationDescription}
               </SheetDescription>
             </SheetHeader>
             <AppSidebar
