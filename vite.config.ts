@@ -12,4 +12,10 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // MVP hosting target is Vercel, not the wrapper's cloudflare-module default —
+  // without this, `npm run build` emits a Cloudflare Workers artifact (wrangler.json)
+  // that Vercel cannot deploy.
+  nitro: {
+    preset: "vercel",
+  },
 });

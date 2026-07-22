@@ -1,6 +1,7 @@
 node_modules/
 dist/
 .output/
+.vercel/
 .tanstack/
 .vite/
 node_modules/.vite/

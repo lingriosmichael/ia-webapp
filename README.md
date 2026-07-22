@@ -14,7 +14,7 @@ This service is the frontend for Impact Atlas. It is a React application built w
 Before you start, install the following:
 
 - Git
-- Node.js v24.18.0
+- Node.js 22.12.0 up to (but not including) 25.0.0 — matches Vercel's currently supported build runtimes and the `engines.node` range in `package.json`
 - npm (this comes with Node.js)
 - A running backend service on port 4000
 - Docker Desktop is only required if you also need the backend MongoDB container
@@ -102,6 +102,44 @@ npm run preview  # preview the built app locally
 npm run lint     # run ESLint
 npm run typecheck # run TypeScript type checking
 ```
+
+## Vercel Deployment
+
+This frontend is intended to run on Vercel in the recommended MVP setup.
+This repository now includes [vercel.json](vercel.json) so Vercel treats the app as `tanstack-start`.
+
+Set this production environment variable in Vercel:
+
+```env
+VITE_API_BASE_URL=https://api.your-domain.com
+```
+
+Notes:
+
+- this app uses TanStack Start SSR, so it is not just a static asset upload
+- Vercel should build it with the TanStack Start/Nitro runtime
+- the backend must allow the exact frontend origin via `CORS_ORIGIN`
+
+## How authentication works
+
+The backend issues an httpOnly session cookie on login — this app never
+sees or stores the actual credential. Every request from `apiClient.ts`
+sends `credentials: "include"` so the browser attaches that cookie
+automatically. Two consequences worth knowing before debugging an auth
+issue:
+
+- Because this is cross-site once deployed (this app on Vercel, the
+  backend on Render), `ia_backend`'s `CORS_ORIGIN` must match this app's
+  origin exactly (credentialed requests never work with a wildcard), and
+  its `AUTH_COOKIE_SAME_SITE` must be `none` — see `ia_backend`'s README.
+  A cookie set with `SameSite=Lax` in a cross-site deployment will not be
+  sent back on API calls, and login will appear to succeed while every
+  subsequent request comes back unauthenticated.
+- `localStorage` in this app (see `src/services/authStorage.ts`) never
+  holds the real credential — only a "session present" boolean marker and
+  the active organization id, both just UI hints. "Login succeeds but the
+  app treats me as logged out" is therefore a cookie problem (see above),
+  not a storage problem.
 
 ## Common troubleshooting
 

@@ -3,7 +3,7 @@ import { initReactI18next } from "react-i18next";
 import de from "@/locales/de";
 import en from "@/locales/en";
 
-export const LANGUAGE_STORAGE_KEY = "grantready-language";
+export const LANGUAGE_STORAGE_KEY = "impact-atlas-language";
 export const SUPPORTED_LANGUAGES = ["de", "en"] as const;
 export type AppLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 export const DEFAULT_LANGUAGE: AppLanguage = "de";

@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ProjectOverviewSectionCard } from "@/components/project/projectOverviewSectionCard";
-import { ProjectSettingsPanel } from "@/components/projectSettingsPanel";
+import { ProjectSettingsPanel } from "@/components/ProjectSettingsPanel";
 import { Button } from "@/components/ui/button";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
 import { useWorkspaceShell } from "@/components/workspaceShell";

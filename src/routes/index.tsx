@@ -12,7 +12,7 @@ import { LandingTrustBar } from "@/components/landing/landingTrustBar";
 import { useSessionQuery } from "@/hooks/useAuth";
 import { resolveActiveOrganizationId } from "@/lib/organizationSelection";
 import { resolveWorkspaceDestination } from "@/lib/workspaceRouting";
-import { getAccessToken } from "@/services/authStorage";
+import { getSessionMarker } from "@/services/authStorage";
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
@@ -21,17 +21,17 @@ export const Route = createFileRoute("/")({
 function LandingPage() {
   const navigate = useNavigate();
   const sessionQuery = useSessionQuery();
-  const token = getAccessToken();
+  const hasSession = Boolean(getSessionMarker() || sessionQuery.data);
   const activeOrganizationId = resolveActiveOrganizationId(
     sessionQuery.data?.organizations ?? [],
   );
 
   useEffect(() => {
-    if (!token) {
+    if (sessionQuery.isLoading) {
       return;
     }
 
-    if (sessionQuery.isLoading) {
+    if (!hasSession) {
       return;
     }
 
@@ -62,10 +62,10 @@ function LandingPage() {
     };
   }, [
     activeOrganizationId,
+    hasSession,
     navigate,
     sessionQuery.data?.organizations.length,
     sessionQuery.isLoading,
-    token,
   ]);
 
   return (

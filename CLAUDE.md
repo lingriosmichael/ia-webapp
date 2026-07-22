@@ -57,10 +57,24 @@ approaches across a solo codebase costs you more than it saves.
 
 ## Auth
 
-Prefer an httpOnly cookie over localStorage for the JWT if your backend
-setup allows it — reduces XSS blast radius. If you do need
-localStorage/in-memory storage for now, treat it as a known tradeoff,
-not a long-term default.
+This is implemented, not just a recommendation: `ia_backend` sets the
+session as an httpOnly cookie, and `apiClient.ts` calls every request with
+`credentials: "include"` so the browser attaches it automatically — the
+JWT itself never touches client-side JavaScript or localStorage.
+`authStorage.ts` only stores two non-sensitive, client-side hints: a
+"session present" boolean marker (`useAuth.ts` reads it to skip an
+unnecessary session check) and the active organization id. Neither is a
+credential; losing or corrupting either just degrades to "ask the backend
+again" or "pick an organization again," never an auth bypass.
+
+`useAuth.ts`'s `useSessionQuery`/`useRequireAuth` gate every authenticated
+query off `typeof window !== "undefined"` — see the comment on
+`useSessionQuery` for why this is a real safety property (it's what keeps
+this app safe from an SSR cookie-forwarding bug) and not just a hydration
+nicety. Do not remove that gate, and do not add a route `loader` or
+`createServerFn` that fetches an authenticated endpoint without reading
+that comment first.
+
 All auth logic (attaching the token, handling 401s) belongs in the
 centralized API client, not scattered across components.
 
@@ -80,9 +94,11 @@ React Testing Library is the natural fit for this stack.
 
 ## Environment
 
-API base URL comes from an env var (VITE_API_URL or similar) — never
-hardcode localhost:4000 in source, since it'll silently break in
-staging/prod.
+API base URL comes from the `VITE_API_BASE_URL` env var — never hardcode
+localhost:4000 in source, since it'll silently break in staging/prod.
+`apiClient.ts` throws at startup if it's unset rather than falling back to
+a default, so a missing value fails loudly instead of quietly pointing at
+the wrong backend.
 
 ## Solo-dev notes
 

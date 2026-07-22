@@ -1,5 +1,3 @@
-import { getAccessToken } from "./authStorage";
-
 export interface ApiErrorPayload {
   code: string;
   message: string;
@@ -461,7 +459,6 @@ export interface ApprovePrivacyReviewResponse {
 }
 
 export interface AuthResponse {
-  accessToken: string;
   expiresInSeconds: number;
   user: UserSummary;
   organizations: OrganizationSummary[];
@@ -1401,13 +1398,10 @@ export function resolveApiUrl(path: string | null | undefined) {
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const token = getAccessToken();
   const response = await fetch(`${apiBaseUrl}${path}`, {
     ...init,
-    headers: {
-      ...(token ? { authorization: `Bearer ${token}` } : {}),
-      ...(init?.headers ?? {}),
-    },
+    credentials: "include",
+    headers: init?.headers ?? {},
   });
 
   const text = await response.text();
@@ -1446,13 +1440,10 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 async function requestBlob(path: string, init?: RequestInit): Promise<Blob> {
-  const token = getAccessToken();
   const response = await fetch(`${apiBaseUrl}${path}`, {
     ...init,
-    headers: {
-      ...(token ? { authorization: `Bearer ${token}` } : {}),
-      ...(init?.headers ?? {}),
-    },
+    credentials: "include",
+    headers: init?.headers ?? {},
   });
 
   if (!response.ok) {
@@ -1483,6 +1474,11 @@ export const apiClient = {
   },
   getSession(): Promise<SessionResponse> {
     return request("/auth/me");
+  },
+  logout(): Promise<{ loggedOut: boolean }> {
+    return request("/auth/logout", {
+      method: "POST",
+    });
   },
   createOrganization(
     payload: CreateOrganizationPayload,
