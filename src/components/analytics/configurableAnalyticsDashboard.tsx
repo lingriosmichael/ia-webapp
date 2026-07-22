@@ -60,7 +60,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdownMenu";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/workspaceUI";
+import { Card } from "@/components/WorkspaceUI";
 import { resolveCategoryLabels } from "@/lib/analyticsCategoryLabel";
 import { cn } from "@/lib/utils";
 import type {

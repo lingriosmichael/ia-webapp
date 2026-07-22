@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { PublicMarketingShell } from "@/components/publicMarketingShell";
-import { OrganizationSettingsPanel } from "@/components/organizationSettingsPanel";
+import { PublicMarketingShell } from "@/components/PublicMarketingShell";
+import { OrganizationSettingsPanel } from "@/components/OrganizationSettingsPanel";
 import { Button } from "@/components/ui/button";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useOrganizationWorkspaceQuery } from "@/hooks/useWorkspaceQueries";

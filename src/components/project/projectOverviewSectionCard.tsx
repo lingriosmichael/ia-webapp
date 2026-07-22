@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Card } from "@/components/workspaceUI";
+import { Card } from "@/components/WorkspaceUI";
 import { cn } from "@/lib/utils";
 
 export function ProjectOverviewSectionCard({

@@ -9,7 +9,7 @@ import {
   EntityDialog,
   DialogSection,
   FieldLabel,
-} from "@/components/entityDialog";
+} from "@/components/EntityDialog";
 import { Input } from "@/components/ui/input";
 import {
   Popover,

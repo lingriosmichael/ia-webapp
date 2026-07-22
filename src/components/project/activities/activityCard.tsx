@@ -15,9 +15,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdownMenu";
-import { useWorkspaceShell } from "@/components/workspaceShell";
+import { useWorkspaceShell } from "@/components/WorkspaceShell";
 import { useDeleteActivityMutation } from "@/hooks/useWorkspaceQueries";
-import { Card } from "@/components/workspaceUI";
+import { Card } from "@/components/WorkspaceUI";
 import { formatDateTime, translateStatus } from "@/lib/translationUtils";
 import { ApiError, type WorkspaceActivity } from "@/services/apiClient";
 

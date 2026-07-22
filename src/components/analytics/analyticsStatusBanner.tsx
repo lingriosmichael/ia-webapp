@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/workspaceUI";
+import { Card } from "@/components/WorkspaceUI";
 import type {
   AnalyticsExecutionRecord,
   AnalyticsResultRecord,

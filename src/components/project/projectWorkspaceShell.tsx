@@ -2,13 +2,13 @@ import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { ProjectTabs } from "@/components/project/projectTabs";
 import { StatusBadge } from "@/components/statusBadge";
-import { PageContainer, PageHeader, TopBar } from "@/components/workspaceUI";
+import { PageContainer, PageHeader, TopBar } from "@/components/WorkspaceUI";
 import {
   useCurrentWorkspaceProject,
   useProjectHierarchy,
   useProjectWorkspacePage,
 } from "@/contexts/projectWorkspaceContext";
-import { WorkspaceMobileNavigationButton } from "@/components/workspaceShell";
+import { WorkspaceMobileNavigationButton } from "@/components/WorkspaceShell";
 import { formatMonthRange, translateStatus } from "@/lib/translationUtils";
 
 export function ProjectWorkspaceShell({

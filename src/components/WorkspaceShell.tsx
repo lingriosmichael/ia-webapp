@@ -10,10 +10,10 @@ import {
 } from "@/hooks/useWorkspaceQueries";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { rememberActiveOrganizationId } from "@/lib/organizationSelection";
-import { ActivityDialog } from "@/components/activityDialog";
+import { ActivityDialog } from "@/components/ActivityDialog";
 import { AppSidebar } from "@/components/AppSidebar";
-import { ProjectDeleteDialog } from "@/components/projectDeleteDialog";
-import { ProjectDialog } from "@/components/projectDialog";
+import { ProjectDeleteDialog } from "@/components/ProjectDeleteDialog";
+import { ProjectDialog } from "@/components/ProjectDialog";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,

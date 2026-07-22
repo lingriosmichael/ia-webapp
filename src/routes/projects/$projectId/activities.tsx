@@ -2,12 +2,12 @@ import { Outlet, createFileRoute, useMatches } from "@tanstack/react-router";
 import { ActivityCard } from "@/components/project/activities/activityCard";
 import { Button } from "@/components/ui/button";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
-import { Card } from "@/components/workspaceUI";
+import { Card } from "@/components/WorkspaceUI";
 import {
   useCurrentWorkspaceProject,
   useProjectWorkspacePage,
 } from "@/contexts/projectWorkspaceContext";
-import { useWorkspaceShell } from "@/components/workspaceShell";
+import { useWorkspaceShell } from "@/components/WorkspaceShell";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { useProjectActivitiesQuery } from "@/hooks/useWorkspaceQueries";
 import { useRequireAuth } from "@/hooks/useAuth";

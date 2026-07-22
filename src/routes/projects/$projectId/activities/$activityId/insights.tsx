@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { ActivityAiKnowledgeContent } from "@/components/activityAiKnowledgeContent";
-import { ActivityTabs } from "@/components/activityTabs";
-import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
+import { ActivityTabs } from "@/components/ActivityTabs";
+import { Card, PageHeader, TopBar } from "@/components/WorkspaceUI";
 import { useProjectHierarchy } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
 import {

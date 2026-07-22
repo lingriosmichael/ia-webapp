@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AlertCircle, ArrowRight, Clock3, FolderKanban } from "lucide-react";
 import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
-import { OrganizationCard } from "@/components/organizationCard";
+import { OrganizationCard } from "@/components/OrganizationCard";
 import { StatusBadge } from "@/components/statusBadge";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +10,7 @@ import {
   Card,
   PageHeader,
   TopBar,
-} from "@/components/workspaceUI";
+} from "@/components/WorkspaceUI";
 import { useOrganizationWorkspacePage } from "@/contexts/organizationWorkspaceContext";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { resolveProjectSummaryText } from "@/lib/projectSummary";
@@ -19,7 +19,7 @@ import {
   formatMonthRange,
   translateStatus,
 } from "@/lib/translationUtils";
-import { WorkspaceMobileNavigationButton } from "@/components/workspaceShell";
+import { WorkspaceMobileNavigationButton } from "@/components/WorkspaceShell";
 import type { WorkspaceActivity, WorkspaceProject } from "@/services/apiClient";
 
 export const Route = createFileRoute("/organizations/$organizationId/")({

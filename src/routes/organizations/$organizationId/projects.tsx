@@ -7,11 +7,11 @@ import {
   PageContainer,
   PageHeader,
   TopBar,
-} from "@/components/workspaceUI";
+} from "@/components/WorkspaceUI";
 import {
   useWorkspaceShell,
   WorkspaceMobileNavigationButton,
-} from "@/components/workspaceShell";
+} from "@/components/WorkspaceShell";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 
 export const Route = createFileRoute("/organizations/$organizationId/projects")(

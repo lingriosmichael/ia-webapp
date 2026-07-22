@@ -15,7 +15,7 @@ import { PrivacyReviewDialog } from "@/components/privacyReviewDialog";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
 import { StatusBadge } from "@/components/statusBadge";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/workspaceUI";
+import { Card } from "@/components/WorkspaceUI";
 import {
   useCurrentWorkspaceProject,
   useProjectWorkspacePage,

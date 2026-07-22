@@ -2,10 +2,10 @@ import { AlertTriangle, ShieldAlert } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { DialogSection, EntityDialog } from "@/components/entityDialog";
+import { DialogSection, EntityDialog } from "@/components/EntityDialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Card } from "@/components/workspaceUI";
+import { Card } from "@/components/WorkspaceUI";
 import {
   useActivityUploadsQuery,
   useApprovePrivacyReviewMutation,

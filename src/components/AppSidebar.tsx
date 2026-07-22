@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { OrganizationAvatar } from "@/components/organizationAvatar";
+import { OrganizationAvatar } from "@/components/OrganizationAvatar";
 import {
   DropdownMenu,
   DropdownMenuContent,

@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { PublicMarketingShell } from "@/components/publicMarketingShell";
+import { PublicMarketingShell } from "@/components/PublicMarketingShell";
 import { Button } from "@/components/ui/button";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { resolveActiveOrganizationId } from "@/lib/organizationSelection";

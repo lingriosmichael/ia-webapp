@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { LanguageSwitcher } from "@/components/languageSwitcher";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export function LandingPageHeader() {
   const { t } = useTranslation();

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { OrganizationSettingsPanel } from "@/components/organizationSettingsPanel";
+import { OrganizationSettingsPanel } from "@/components/OrganizationSettingsPanel";
 import { useOrganizationWorkspacePage } from "@/contexts/organizationWorkspaceContext";
-import { PageHeader, TopBar } from "@/components/workspaceUI";
+import { PageHeader, TopBar } from "@/components/WorkspaceUI";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 
 export const Route = createFileRoute("/organizations/$organizationId/settings")(

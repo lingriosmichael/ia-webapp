@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Card } from "@/components/workspaceUI";
+import { Card } from "@/components/WorkspaceUI";
 import type { EvidenceCatalogMetricEntry } from "@/services/apiClient";
 import { formatMetricValue } from "./analyticsFormat";
 import { AiCuratedBadge } from "./aiCuratedBadge";

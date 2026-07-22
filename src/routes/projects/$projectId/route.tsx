@@ -1,8 +1,8 @@
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { Card, PageContainer } from "@/components/workspaceUI";
+import { Card, PageContainer } from "@/components/WorkspaceUI";
 import { ProjectWorkspacePageContext } from "@/contexts/projectWorkspaceContext";
-import { WorkspaceShell } from "@/components/workspaceShell";
+import { WorkspaceShell } from "@/components/WorkspaceShell";
 import { useRequireAuth, useLogout } from "@/hooks/useAuth";
 import {
   useOrganizationWorkspaceQuery,

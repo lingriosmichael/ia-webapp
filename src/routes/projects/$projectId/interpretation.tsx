@@ -42,7 +42,7 @@ import {
   type UploadMetadataRecord,
   type WorkspaceActivity,
 } from "@/services/apiClient";
-import { Card } from "@/components/workspaceUI";
+import { Card } from "@/components/WorkspaceUI";
 
 const INTERPRETATION_POLL_INTERVAL_MS = 3000;
 const TERMINAL_JOB_STATUSES = ["completed", "failed", "cancelled"];

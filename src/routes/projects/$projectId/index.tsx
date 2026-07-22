@@ -5,7 +5,7 @@ import { ProjectOverviewSectionCard } from "@/components/project/projectOverview
 import { ProjectSettingsPanel } from "@/components/ProjectSettingsPanel";
 import { Button } from "@/components/ui/button";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
-import { useWorkspaceShell } from "@/components/workspaceShell";
+import { useWorkspaceShell } from "@/components/WorkspaceShell";
 import { useProjectWorkspacePage } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { resolveProjectSummaryText } from "@/lib/projectSummary";

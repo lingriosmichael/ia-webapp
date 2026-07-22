@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { PublicSiteHeader } from "@/components/publicSiteHeader";
+import { PublicSiteHeader } from "@/components/PublicSiteHeader";
 
 export function PublicMarketingShell({
   currentPage,

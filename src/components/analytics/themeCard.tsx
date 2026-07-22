@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Card } from "@/components/workspaceUI";
+import { Card } from "@/components/WorkspaceUI";
 import type { EvidenceCatalogThemeEntry } from "@/services/apiClient";
 import { AiCuratedBadge } from "./aiCuratedBadge";
 

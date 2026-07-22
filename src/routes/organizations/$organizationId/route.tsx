@@ -1,6 +1,6 @@
 import { Outlet, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { WorkspaceShell } from "@/components/workspaceShell";
+import { WorkspaceShell } from "@/components/WorkspaceShell";
 import { OrganizationWorkspacePageContext } from "@/contexts/organizationWorkspaceContext";
 import { useLogout, useRequireAuth } from "@/hooks/useAuth";
 import { useOrganizationWorkspaceQuery } from "@/hooks/useWorkspaceQueries";

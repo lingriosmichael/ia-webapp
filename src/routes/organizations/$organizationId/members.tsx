@@ -1,7 +1,7 @@
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Card, PageHeader, TopBar } from "@/components/workspaceUI";
+import { Card, PageHeader, TopBar } from "@/components/WorkspaceUI";
 import { useOrganizationWorkspacePage } from "@/contexts/organizationWorkspaceContext";
 import {
   useCreateInvitationMutation,
