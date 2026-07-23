@@ -108,17 +108,23 @@ npm run typecheck # run TypeScript type checking
 This frontend is intended to run on Vercel in the recommended MVP setup.
 This repository now includes [vercel.json](vercel.json) so Vercel treats the app as `tanstack-start`.
 
-Set this production environment variable in Vercel:
+Set these production environment variables in Vercel:
 
 ```env
-VITE_API_BASE_URL=https://api.your-domain.com
+VITE_API_BASE_URL=/api
+BACKEND_PROXY_URL=https://your-backend.onrender.com
 ```
 
 Notes:
 
 - this app uses TanStack Start SSR, so it is not just a static asset upload
 - Vercel should build it with the TanStack Start/Nitro runtime
-- the backend must allow the exact frontend origin via `CORS_ORIGIN`
+- `src/server.ts` proxies `/api/*` to `BACKEND_PROXY_URL`, which keeps auth
+  same-origin at the browser level and avoids third-party-cookie login failures
+  when Vercel and Render are on different domains
+- the backend should still allow the frontend origin via `CORS_ORIGIN` for any
+  direct calls or future integrations, but day-to-day browser auth should go
+  through the proxy path above
 
 ## How authentication works
 
@@ -128,13 +134,13 @@ sends `credentials: "include"` so the browser attaches that cookie
 automatically. Two consequences worth knowing before debugging an auth
 issue:
 
-- Because this is cross-site once deployed (this app on Vercel, the
-  backend on Render), `ia_backend`'s `CORS_ORIGIN` must match this app's
-  origin exactly (credentialed requests never work with a wildcard), and
-  its `AUTH_COOKIE_SAME_SITE` must be `none` — see `ia_backend`'s README.
-  A cookie set with `SameSite=Lax` in a cross-site deployment will not be
-  sent back on API calls, and login will appear to succeed while every
-  subsequent request comes back unauthenticated.
+- In production, prefer `VITE_API_BASE_URL=/api` plus `BACKEND_PROXY_URL`
+  so the browser only talks to the Vercel origin. That keeps the session
+  cookie first-party from the browser's perspective and avoids third-party
+  cookie blocking. If you bypass the proxy and call Render directly from the
+  browser, `ia_backend`'s `CORS_ORIGIN` must match this app's origin exactly
+  and `AUTH_COOKIE_SAME_SITE` must be `none`, or login will appear to succeed
+  while every subsequent request comes back unauthenticated.
 - `localStorage` in this app (see `src/services/authStorage.ts`) never
   holds the real credential — only a "session present" boolean marker and
   the active organization id, both just UI hints. "Login succeeds but the

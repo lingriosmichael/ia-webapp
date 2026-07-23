@@ -19,6 +19,7 @@ type ServerEntry = {
 // deployment stays open until you deliberately lock it down.
 const SITE_AUTH_USERNAME = process.env.SITE_AUTH_USERNAME;
 const SITE_AUTH_PASSWORD = process.env.SITE_AUTH_PASSWORD;
+const BACKEND_PROXY_URL = process.env.BACKEND_PROXY_URL;
 
 function timingSafeStringEqual(a: string, b: string): boolean {
   const bufferA = Buffer.from(a);
@@ -54,6 +55,54 @@ function checkSiteAuth(request: Request): Response | null {
     headers: {
       "WWW-Authenticate": 'Basic realm="Impact Atlas", charset="UTF-8"',
     },
+  });
+}
+
+function isApiProxyRequest(request: Request) {
+  return new URL(request.url).pathname.startsWith("/api/");
+}
+
+function buildBackendProxyTarget(request: Request): URL {
+  if (!BACKEND_PROXY_URL) {
+    throw new Error(
+      "BACKEND_PROXY_URL is not set. Configure it in the Vercel environment.",
+    );
+  }
+
+  const sourceUrl = new URL(request.url);
+  const targetUrl = new URL(BACKEND_PROXY_URL);
+  targetUrl.pathname = sourceUrl.pathname.replace(/^\/api/, "") || "/";
+  targetUrl.search = sourceUrl.search;
+  return targetUrl;
+}
+
+async function proxyApiRequest(request: Request): Promise<Response> {
+  const targetUrl = buildBackendProxyTarget(request);
+  const headers = new Headers(request.headers);
+
+  headers.set("x-forwarded-host", new URL(request.url).host);
+  headers.set(
+    "x-forwarded-proto",
+    new URL(request.url).protocol.replace(":", ""),
+  );
+  headers.delete("host");
+
+  const init: RequestInit & { duplex?: "half" } = {
+    method: request.method,
+    headers,
+    redirect: "manual",
+  };
+
+  if (request.method !== "GET" && request.method !== "HEAD") {
+    init.body = request.body;
+    init.duplex = "half";
+  }
+
+  const response = await fetch(targetUrl, init);
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: response.headers,
   });
 }
 
@@ -101,6 +150,10 @@ export default {
     if (authChallenge) return authChallenge;
 
     try {
+      if (isApiProxyRequest(request)) {
+        return await proxyApiRequest(request);
+      }
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response, request);
