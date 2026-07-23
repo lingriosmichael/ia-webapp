@@ -112,6 +112,13 @@ async function proxyApiRequest(request: Request): Promise<Response> {
     }
   }
 
+  // Node fetch gives us a decoded response body. If we forward the backend's
+  // original compression/length headers unchanged, the browser will try to
+  // decode an already-decoded payload and fail with ERR_CONTENT_DECODING_FAILED.
+  responseHeaders.delete("content-encoding");
+  responseHeaders.delete("content-length");
+  responseHeaders.delete("transfer-encoding");
+
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
