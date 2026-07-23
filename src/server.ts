@@ -99,10 +99,23 @@ async function proxyApiRequest(request: Request): Promise<Response> {
   }
 
   const response = await fetch(targetUrl, init);
+  const responseHeaders = new Headers(response.headers);
+  const responseHeadersWithCookies = response.headers as Headers & {
+    getSetCookie?: () => string[];
+  };
+  const setCookieHeaders = responseHeadersWithCookies.getSetCookie?.() ?? [];
+
+  if (setCookieHeaders.length > 0) {
+    responseHeaders.delete("set-cookie");
+    for (const value of setCookieHeaders) {
+      responseHeaders.append("set-cookie", value);
+    }
+  }
+
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
-    headers: response.headers,
+    headers: responseHeaders,
   });
 }
 
