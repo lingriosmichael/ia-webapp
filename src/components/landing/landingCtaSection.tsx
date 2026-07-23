@@ -45,12 +45,6 @@ export function LandingCtaSection() {
               <ArrowRight className="h-4 w-4" />
             </a>
           </Button>
-          <Button size="lg" variant="outline" asChild>
-            <a href="#pilotprogramm">
-              {t("landing.cta.secondary")}
-              <ArrowRight className="h-4 w-4" />
-            </a>
-          </Button>
         </div>
       </div>
     </section>

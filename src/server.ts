@@ -27,9 +27,7 @@ function timingSafeStringEqual(a: string, b: string): boolean {
   // timingSafeEqual and leak how long the guess was.
   const paddedA = Buffer.concat([bufferA, Buffer.alloc(64)]).subarray(0, 64);
   const paddedB = Buffer.concat([bufferB, Buffer.alloc(64)]).subarray(0, 64);
-  return (
-    bufferA.length === bufferB.length && timingSafeEqual(paddedA, paddedB)
-  );
+  return bufferA.length === bufferB.length && timingSafeEqual(paddedA, paddedB);
 }
 
 function checkSiteAuth(request: Request): Response | null {

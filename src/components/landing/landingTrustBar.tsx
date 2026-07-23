@@ -1,28 +1,15 @@
-import { Globe2, Heart, Key, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { useTranslation } from "react-i18next";
-
-const ICONS = [Heart, ShieldCheck, Globe2, Key];
 
 export function LandingTrustBar() {
   const { t } = useTranslation();
-  const items = t("landing.trustBar.items", {
-    returnObjects: true,
-  }) as string[];
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 rounded-2xl border border-border/70 bg-card/60 px-6 py-4">
-      {items.map((item, index) => {
-        const Icon = ICONS[index % ICONS.length];
-        return (
-          <div
-            key={item}
-            className="flex items-center gap-2 text-sm text-muted-foreground"
-          >
-            <Icon className="h-4 w-4 text-primary" />
-            {item}
-          </div>
-        );
-      })}
+    <div className="rounded-2xl border border-border/70 bg-card/60 px-6 py-5">
+      <div className="mx-auto flex max-w-4xl items-start gap-3 text-sm leading-7 text-muted-foreground">
+        <ShieldCheck className="mt-1 h-4 w-4 shrink-0 text-primary" />
+        <p>{t("landing.trustBar.statement")}</p>
+      </div>
     </div>
   );
 }

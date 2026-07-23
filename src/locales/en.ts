@@ -36,12 +36,11 @@ const en = {
     createWorkspace: "Create workspace",
     header: {
       navHowItWorks: "How it works",
-      navPilotProgram: "Pilot programme",
       navFaq: "FAQ",
       navAboutUs: "About us",
     },
     hero: {
-      pilotBadge: "Pilot phase from August 2024",
+      pilotBadge: "Pilot phase from August 2026",
       freeBadge: "Free participation",
       titleLine1: "Less time on funder reports.",
       titleLine2: "More clarity on ",
@@ -99,19 +98,15 @@ const en = {
       ],
     },
     trustBar: {
-      items: [
-        "Built for NGOs",
-        "GDPR-compliant",
-        "Hosted in the EU",
-        "Your data belongs to you",
-      ],
+      statement:
+        "Impact Atlas is designed according to GDPR principles. We reduce direct personal identifiers before AI processing, use controlled AWS infrastructure, do not use customer data to train general AI models, and delete customer data when the service ends.",
     },
     pilotProgram: {
       title: "Our pilot programme",
       whatYouGet: {
         title: "What you get",
         items: [
-          "Access to Impact Atlas during the 2024 pilot phase",
+          "Access to Impact Atlas during the 2026 pilot phase",
           "Personal onboarding and walkthrough",
           "Support from our team of experts",
           "Regular check-ins & feedback rounds",
@@ -130,7 +125,7 @@ const en = {
         items: [
           "Free participation",
           "About 2–3 hours of time per month",
-          "Runtime: August – September 2024",
+          "Runtime: August – September 2026",
           "Spots are limited",
         ],
       },
@@ -152,7 +147,6 @@ const en = {
       description:
         "Book a no-obligation call now. We'll show you how Impact Atlas takes work off your team's plate and makes your impact visible.",
       primary: "Request a call",
-      secondary: "More about the pilot programme",
     },
     faq: {
       title: "Frequently asked questions",
@@ -161,28 +155,34 @@ const en = {
           question:
             "How much effort does taking part in the pilot programme mean?",
           answer:
-            "Plan for about 2–3 hours per month during the pilot runtime — mainly onboarding, check-ins, and feedback rounds.",
+            "During the pilot programme, plan for an average of two to three hours per month. Most of the effort happens at the beginning: in a personal onboarding session, we set up your project together, clarify your reporting requirements, and discuss which existing data and evidence you want to use.\n\nAfter that, you upload existing project documents and review the information prepared by Impact Atlas. Additional time is mainly needed for short feedback conversations so we can understand what is helpful in your day-to-day work and where the platform should still be improved.\n\nYou do not need to build a new monitoring structure or start additional data collection for this. The pilot programme is intended to fit into your existing workflows as smoothly as possible, not create new bureaucracy. In the first month, the effort may be slightly higher because of onboarding; after that, participation mainly focuses on use, review, and feedback.",
         },
         {
           question: "What data can we use with Impact Atlas?",
           answer:
-            "Your existing project or programme data and evidence — Impact Atlas is built to reuse what you already have, not to require new data collection.",
+            "Impact Atlas is designed to work with the data and evidence that already exist in your project. This can include, for example:\n\n• Excel and CSV files with indicators, participant numbers, or activities\n• Word documents and PDF reports\n• Narrative and interim reports\n• Attendance lists and event overviews\n• Exports from survey or data-collection tools\n• Minutes, conversation notes, and qualitative feedback\n• Project concepts, theories of change, and funding documents\n• Evidence of completed activities and achieved results\n\nThe files do not need to be perfectly prepared. One of the goals of Impact Atlas is precisely to bring together information from different documents and spreadsheets and make it easier to use.\n\nDuring onboarding, we discuss together which materials make sense for your use case. The principle is simple: only upload data that are actually needed for the analysis. Particularly sensitive or unnecessary personal data should, where possible, be removed or pseudonymized beforehand. If your use case requires personal data, we clarify in advance how they can be handled in a data-protection-compliant way.",
+        },
+        {
+          question:
+            "How does Impact Atlas use artificial intelligence and how are personal data protected?",
+          answer:
+            "Impact Atlas uses AI to structure, summarize, and place information from uploaded project documents into a clear and understandable context. For example, the AI can identify relevant content, assign evidence to different activities, describe developments, and point out missing or contradictory information.\n\nThe protection of personal data begins before content is sent to the AI model. An integrated PII scanner detects direct identifiers, currently especially personal names, and replaces them with pseudonymous placeholders. This means the model does not receive a name such as “Maria Mustermann”, but instead a neutral label such as “Person 01”. This pseudonymization reduces risk, but it does not replace all other data-protection measures.\n\nOrganizations should therefore upload only the data required for the specific purpose and, where possible, remove particularly sensitive or unnecessary details before upload. Pseudonymized information is not automatically anonymous in legal terms and may still fall under the GDPR.\n\nAI processing is carried out via Amazon Bedrock. According to AWS, the providers of the foundation models made available there do not have access to customer prompts or generated responses. AWS also states that inputs and outputs are not used to train the foundation models.\n\nImpact Atlas uses AI as a supporting tool. The results should be reviewed by users and do not replace professional or legal judgment.",
         },
         {
           question: "Is our organization legally bound by joining?",
           answer:
-            "No. Participation is free and non-binding, and you can stop at any point during or after the pilot.",
+            "Taking part in the pilot programme does not oblige your organization to continue using Impact Atlas on a paid basis afterwards. There is no automatic conversion into a paid subscription and no later obligation to buy.\n\nFor the pilot phase, we only agree the framework of the collaboration. This can include, for example, the duration of the pilot, how data are handled, responsibilities, and the opportunity to provide feedback on the platform. Your organization remains in control of its own project information and decides which data are used for the pilot.\n\nIf you want to end the pilot programme early, we discuss together how to proceed and how to handle the data uploaded up to that point. Any later use of Impact Atlas is only agreed if both sides explicitly want that.",
         },
         {
           question: "How much setup work is involved?",
           answer:
-            "None on your side technically — we provide personal onboarding and walk you through everything as part of the pilot.",
+            "You do not need your own IT department for setup, and you do not have to install new software in your organization. Impact Atlas is used through the browser.\n\nAt the beginning, we carry out a personal onboarding session. Together, we set up your first project and discuss topics such as:\n\n• What goals and activities does the project include?\n• Which indicators or reporting obligations are relevant?\n• What data and evidence already exist?\n• Who within your organization should work with Impact Atlas?\n• Which analyses or reporting questions are especially important to you?\n\nAfter that, you can assign existing files directly to the relevant project or the appropriate activities. You do not need to migrate your entire existing filing structure or design a new data structure before you begin.\n\nThroughout the pilot phase, we support you personally with questions about setup, selecting suitable materials, and using the results. The goal is to start working as quickly as possible with a real project and your existing data.",
         },
         {
           question:
-            "What happens if we don't want to continue after the pilot?",
+            "What happens to our data if we do not continue using Impact Atlas after the pilot?",
           answer:
-            "Nothing — there's no obligation to continue. If you'd like to keep using Impact Atlas, you can optionally do so on special pilot terms.",
+            "After the pilot programme ends, you decide for yourself whether you want to continue using Impact Atlas. There is no automatic renewal and no obligation to enter into a paid offer.\n\nIf you decide not to continue, your access will be terminated and all data uploaded by your organization will be deleted. This also applies to information and results that Impact Atlas created on the basis of those data.\n\nYour data remain your data at all times. Impact Atlas does not sell them, does not pass them on to other organizations, and does not use them for other purposes without your consent. Before deletion, you can export the results relevant to you, provided that this export option is part of the pilot scope.",
         },
       ],
     },

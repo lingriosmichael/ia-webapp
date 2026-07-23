@@ -1,16 +1,21 @@
 import { Languages } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { SUPPORTED_LANGUAGES } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { AppLanguage } from "@/lib/i18n";
 
-const LANGUAGES: AppLanguage[] = ["de", "en"];
+const LANGUAGE_LABEL_KEYS: Record<AppLanguage, "german" | "english"> = {
+  de: "german",
+  en: "english",
+};
 
 export function LanguageSwitcher({ className = "" }: { className?: string }) {
   const { i18n, t } = useTranslation();
-  const activeLanguage = (i18n.resolvedLanguage ?? i18n.language).startsWith(
-    "en",
-  )
-    ? "en"
+  const resolvedLanguage = (i18n.resolvedLanguage ?? i18n.language)
+    .toLowerCase()
+    .slice(0, 2) as AppLanguage;
+  const activeLanguage = SUPPORTED_LANGUAGES.includes(resolvedLanguage)
+    ? resolvedLanguage
     : "de";
 
   return (
@@ -28,7 +33,7 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
       >
         <Languages className="h-3.5 w-3.5" />
       </span>
-      {LANGUAGES.map((language) => {
+      {SUPPORTED_LANGUAGES.map((language) => {
         const isActive = language === activeLanguage;
         return (
           <button
@@ -43,7 +48,7 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
             )}
             aria-pressed={isActive}
           >
-            {t(`language.${language === "de" ? "german" : "english"}`)}
+            {t(`language.${LANGUAGE_LABEL_KEYS[language]}`)}
           </button>
         );
       })}

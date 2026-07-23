@@ -38,12 +38,11 @@ const de: TranslationDictionary = {
     createWorkspace: "Workspace erstellen",
     header: {
       navHowItWorks: "So funktioniert's",
-      navPilotProgram: "Pilotprogramm",
       navFaq: "FAQ",
       navAboutUs: "Über uns",
     },
     hero: {
-      pilotBadge: "Pilotphase ab August 2024",
+      pilotBadge: "Pilotphase ab August 2026",
       freeBadge: "Kostenfreie Teilnahme",
       titleLine1: "Weniger Zeit für Förderberichte.",
       titleLine2: "Mehr Klarheit über ",
@@ -101,19 +100,15 @@ const de: TranslationDictionary = {
       ],
     },
     trustBar: {
-      items: [
-        "Entwickelt für NGOs",
-        "DSGVO-konform",
-        "Hosting in der EU",
-        "Ihre Daten gehören Ihnen",
-      ],
+      statement:
+        "Impact Atlas ist nach DSGVO-Grundsätzen konzipiert. Wir reduzieren direkte personenbezogene Identifikatoren vor der KI-Verarbeitung, nutzen kontrollierte AWS-Infrastruktur, verwenden Kundendaten nicht zum Training allgemeiner KI-Modelle und löschen Kundendaten, wenn der Service endet.",
     },
     pilotProgram: {
       title: "Unser Pilotprogramm",
       whatYouGet: {
         title: "Das erhalten Sie",
         items: [
-          "Zugang zu Impact Atlas während der Pilotphase 2024",
+          "Zugang zu Impact Atlas während der Pilotphase 2026",
           "Persönliches Onboarding und Erklärung",
           "Unterstützung durch unser Expert:innen-Team",
           "Regelmäßiger Austausch & Feedbackrunden",
@@ -132,7 +127,7 @@ const de: TranslationDictionary = {
         items: [
           "Kostenfreie Teilnahme",
           "Ca. 2-3 Stunden Zeitaufwand pro Monat",
-          "Laufzeit: August – September 2024",
+          "Laufzeit: August – September 2026",
           "Plätze sind begrenzt",
         ],
       },
@@ -154,7 +149,6 @@ const de: TranslationDictionary = {
       description:
         "Vereinbaren Sie jetzt ein unverbindliches Gespräch. Wir zeigen Ihnen, wie Impact Atlas Ihr Team entlastet und Ihre Wirkung sichtbar macht.",
       primary: "Gespräch anfragen",
-      secondary: "Mehr über das Pilotprogramm",
     },
     faq: {
       title: "Häufige Fragen",
@@ -162,28 +156,34 @@ const de: TranslationDictionary = {
         {
           question: "Wie viel Aufwand bedeutet die Teilnahme am Pilotprogramm?",
           answer:
-            "Rechnen Sie mit ca. 2–3 Stunden pro Monat während der Laufzeit des Pilotprogramms – vor allem für Onboarding, Austausch und Feedbackrunden.",
+            "Rechnen Sie während des Pilotprogramms mit durchschnittlich zwei bis drei Stunden pro Monat. Der größte Teil des Aufwands entsteht zu Beginn: In einem persönlichen Onboarding richten wir gemeinsam Ihr Projekt ein, klären Ihre Berichtsanforderungen und besprechen, welche vorhandenen Daten und Nachweise Sie nutzen möchten.\n\nAnschließend laden Sie bestehende Projektunterlagen hoch und prüfen die von Impact Atlas aufbereiteten Informationen. Zusätzliche Zeit benötigen wir vor allem für kurze Feedbackgespräche, damit wir verstehen, was für Ihren Arbeitsalltag hilfreich ist und wo die Plattform noch verbessert werden sollte.\n\nSie müssen dafür keine neue Monitoring-Struktur aufbauen und keine zusätzliche Datenerhebung starten. Das Pilotprogramm soll sich möglichst gut in Ihre bestehenden Abläufe integrieren, nicht neue Bürokratie schaffen. Im ersten Monat kann der Aufwand durch das Onboarding etwas höher sein; danach konzentriert sich die Teilnahme vor allem auf Nutzung, Prüfung und Feedback.",
         },
         {
           question: "Welche Daten können wir mit Impact Atlas nutzen?",
           answer:
-            "Ihre bestehenden Projekt- bzw. Programmdaten und Nachweise – Impact Atlas ist darauf ausgelegt, das weiterzuverwenden, was Sie bereits haben, statt neue Datensammlung zu erfordern.",
+            "Impact Atlas ist dafür gedacht, mit den Daten und Nachweisen zu arbeiten, die in Ihrem Projekt bereits vorhanden sind. Dazu können beispielsweise gehören:\n\n• Excel- und CSV-Dateien mit Indikatoren, Teilnehmendenzahlen oder Aktivitäten\n• Word-Dokumente und PDF-Berichte\n• Sach- und Zwischenberichte\n• Anwesenheitslisten und Veranstaltungsübersichten\n• Exporte aus Umfrage- oder Datenerhebungstools\n• Protokolle, Gesprächsnotizen und qualitative Rückmeldungen\n• Projektkonzepte, Wirkungslogiken und Förderunterlagen\n• Nachweise zu durchgeführten Aktivitäten und erzielten Ergebnissen\n\nDie Dateien müssen nicht perfekt aufbereitet sein. Ein Ziel von Impact Atlas ist es gerade, Informationen aus unterschiedlichen Dokumenten und Tabellen zusammenzuführen und übersichtlicher nutzbar zu machen.\n\nIm Onboarding besprechen wir gemeinsam, welche Unterlagen für Ihren Anwendungsfall sinnvoll sind. Dabei gilt: Es sollten nur Daten hochgeladen werden, die für die Auswertung tatsächlich benötigt werden. Besonders schützenswerte oder unnötige personenbezogene Daten sollten nach Möglichkeit vorher entfernt oder pseudonymisiert werden. Falls Ihr Anwendungsfall personenbezogene Daten erfordert, klären wir vorab, wie damit datenschutzkonform umgegangen werden kann.",
+        },
+        {
+          question:
+            "Wie nutzt Impact Atlas künstliche Intelligenz und wie werden personenbezogene Daten geschützt?",
+          answer:
+            "Impact Atlas nutzt KI, um Informationen aus hochgeladenen Projektunterlagen zu strukturieren, zusammenzufassen und in einen verständlichen Zusammenhang zu bringen. Die KI kann beispielsweise relevante Inhalte erkennen, Nachweise verschiedenen Aktivitäten zuordnen, Entwicklungen beschreiben und auf fehlende oder widersprüchliche Informationen hinweisen.\n\nDer Schutz personenbezogener Daten beginnt, bevor Inhalte an das KI-Modell übermittelt werden. Ein integrierter PII-Scanner erkennt direkte Identifikatoren – derzeit insbesondere Personennamen – und ersetzt sie durch pseudonyme Platzhalter. Dadurch erhält das Modell beispielsweise nicht den Namen „Maria Mustermann“, sondern eine neutrale Kennzeichnung wie „Person 01“. Diese Pseudonymisierung reduziert das Risiko, ersetzt aber nicht alle weiteren Datenschutzmaßnahmen.\n\nOrganisationen sollten deshalb nur die für den jeweiligen Zweck erforderlichen Daten hochladen und besonders sensible oder nicht benötigte Angaben möglichst bereits vor dem Upload entfernen. Pseudonymisierte Informationen gelten rechtlich nicht automatisch als anonym und können weiterhin unter die DSGVO fallen.\n\nDie KI-Verarbeitung erfolgt über Amazon Bedrock. Nach Angaben von AWS haben die Anbieter der dort bereitgestellten Basismodelle keinen Zugriff auf Kundenprompts oder die generierten Antworten. AWS erklärt außerdem, dass Ein- und Ausgaben nicht zum Training der Basismodelle verwendet werden.\n\nImpact Atlas verwendet KI als unterstützendes Werkzeug. Die Ergebnisse sollten durch die Nutzer:innen geprüft werden und ersetzen keine fachliche oder rechtliche Bewertung.",
         },
         {
           question: "Ist meine Organisation rechtlich gebunden?",
           answer:
-            "Nein. Die Teilnahme ist kostenfrei und unverbindlich, Sie können jederzeit während oder nach dem Pilotprogramm aussteigen.",
+            "Die Teilnahme am Pilotprogramm verpflichtet Ihre Organisation nicht dazu, Impact Atlas anschließend kostenpflichtig weiterzunutzen. Es gibt keine automatische Verlängerung in ein kostenpflichtiges Abonnement und keine spätere Kaufverpflichtung.\n\nFür die Pilotphase vereinbaren wir lediglich die Rahmenbedingungen der Zusammenarbeit. Dazu gehören beispielsweise die Laufzeit des Piloten, der Umgang mit Daten, Zuständigkeiten und die Möglichkeit, Feedback zur Plattform zu geben. Ihre Organisation behält die Kontrolle über ihre eigenen Projektinformationen und entscheidet selbst, welche Daten für den Pilot genutzt werden.\n\nSollten Sie das Pilotprogramm vorzeitig beenden wollen, besprechen wir gemeinsam das weitere Vorgehen und den Umgang mit den bis dahin hochgeladenen Daten. Eine spätere Nutzung von Impact Atlas wird nur dann vereinbart, wenn beide Seiten dies ausdrücklich wünschen.",
         },
         {
           question: "Wie aufwendig ist die Einrichtung?",
           answer:
-            "Auf Ihrer Seite technisch gesehen gar nicht – wir übernehmen ein persönliches Onboarding und begleiten Sie durch das gesamte Pilotprogramm.",
+            "Für die Einrichtung benötigen Sie keine eigene IT-Abteilung und müssen keine neue Software in Ihrer Organisation installieren. Impact Atlas wird über den Browser genutzt.\n\nZu Beginn führen wir ein persönliches Onboarding durch. Dabei richten wir gemeinsam Ihr erstes Projekt ein und besprechen unter anderem:\n\n• Welche Ziele und Aktivitäten umfasst das Projekt?\n• Welche Indikatoren oder Berichtspflichten sind relevant?\n• Welche Daten und Nachweise liegen bereits vor?\n• Wer soll innerhalb Ihrer Organisation mit Impact Atlas arbeiten?\n• Welche Auswertungen oder Berichtsfragen sind für Sie besonders wichtig?\n\nDanach können Sie bestehende Dateien direkt dem jeweiligen Projekt oder den passenden Aktivitäten zuordnen. Sie müssen Ihre bisherigen Ablagen nicht vollständig migrieren und auch keine neue Datenstruktur entwickeln, bevor Sie beginnen können.\n\nWährend der Pilotphase unterstützen wir Sie persönlich bei Fragen zur Einrichtung, zur Auswahl geeigneter Unterlagen und zur Nutzung der Ergebnisse. Das Ziel ist, möglichst schnell mit einem realen Projekt und Ihren bestehenden Daten arbeiten zu können.",
         },
         {
           question:
-            "Was passiert, wenn wir nach dem Pilot nicht weiter nutzen möchten?",
+            "Was passiert mit unseren Daten, wenn wir Impact Atlas nach dem Pilot nicht weiter nutzen?",
           answer:
-            "Nichts – es besteht keine Verpflichtung zur Weiternutzung. Wenn Sie Impact Atlas weiter nutzen möchten, können Sie dies optional zu Sonderkonditionen aus dem Pilotprogramm tun.",
+            "Sie entscheiden nach Abschluss des Pilotprogramms selbst, ob Sie Impact Atlas weiterhin nutzen möchten. Es gibt keine automatische Verlängerung und keine Verpflichtung, ein kostenpflichtiges Angebot abzuschließen.\n\nEntscheiden Sie sich gegen eine weitere Nutzung, wird Ihr Zugang beendet und alle von Ihrer Organisation hochgeladenen Daten werden gelöscht. Das gilt auch für Informationen und Ergebnisse, die Impact Atlas auf Grundlage dieser Daten erstellt hat.\n\nIhre Daten bleiben zu jeder Zeit Ihre Daten. Impact Atlas verkauft sie nicht, gibt sie nicht an andere Organisationen weiter und verwendet sie nicht ohne Ihre Zustimmung für andere Zwecke. Vor der Löschung können Sie die für Sie relevanten Ergebnisse exportieren, sofern diese Exportmöglichkeit Teil des Pilotumfangs ist.",
         },
       ],
     },

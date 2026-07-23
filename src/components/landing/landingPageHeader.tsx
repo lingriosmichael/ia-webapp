@@ -20,9 +20,6 @@ export function LandingPageHeader() {
         <a href="#so-funktionierts" className="hover:text-foreground">
           {t("landing.header.navHowItWorks")}
         </a>
-        <a href="#pilotprogramm" className="hover:text-foreground">
-          {t("landing.header.navPilotProgram")}
-        </a>
         <a href="#faq" className="hover:text-foreground">
           {t("landing.header.navFaq")}
         </a>

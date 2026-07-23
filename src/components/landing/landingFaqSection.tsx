@@ -31,7 +31,9 @@ export function LandingFaqSection() {
                 </span>
               </AccordionTrigger>
               <AccordionContent>
-                <div className="pl-7">{item.answer}</div>
+                <div className="pl-7 whitespace-pre-line leading-7">
+                  {item.answer}
+                </div>
               </AccordionContent>
             </AccordionItem>
           ))}
