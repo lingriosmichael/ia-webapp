@@ -63,6 +63,11 @@ interface ProjectDialogState {
   successIndicators: string;
 }
 
+interface ProjectDialogFormErrors {
+  startMonth?: string;
+  endMonth?: string;
+}
+
 const initialState: ProjectDialogState = {
   name: "",
   startMonth: "",
@@ -97,11 +102,13 @@ export function ProjectDialog({
   const locale = useWorkspaceLocale();
   const [form, setForm] = useState<ProjectDialogState>(initialState);
   const [targetGroupsError, setTargetGroupsError] = useState<boolean>(false);
+  const [formErrors, setFormErrors] = useState<ProjectDialogFormErrors>({});
 
   useEffect(() => {
     if (!open) {
       setForm(initialState);
       setTargetGroupsError(false);
+      setFormErrors({});
     }
   }, [open]);
 
@@ -110,6 +117,17 @@ export function ProjectDialog({
     value: ProjectDialogState[Key],
   ) {
     setForm((current) => ({ ...current, [key]: value }));
+
+    if (key === "startMonth" || key === "endMonth") {
+      const monthKey: keyof ProjectDialogFormErrors = key;
+
+      if (formErrors[monthKey]) {
+        setFormErrors((current) => ({
+          ...current,
+          [monthKey]: undefined,
+        }));
+      }
+    }
   }
 
   function addCustomTargetGroup() {
@@ -153,19 +171,41 @@ export function ProjectDialog({
       ...form.targetGroups,
       customTargetGroup,
     ]);
+    const nextErrors: ProjectDialogFormErrors = {};
+
+    if (!form.startMonth.trim()) {
+      nextErrors.startMonth = locale.projectSettings.requiredMonth;
+    } else if (!normalizedStartMonth) {
+      nextErrors.startMonth = locale.projectSettings.invalidMonth;
+    }
+
+    if (!form.endMonth.trim()) {
+      nextErrors.endMonth = locale.projectSettings.requiredMonth;
+    } else if (!normalizedEndMonth) {
+      nextErrors.endMonth = locale.projectSettings.invalidMonth;
+    }
+
+    setFormErrors(nextErrors);
+    setTargetGroupsError(normalizedTargetGroups.length === 0);
+
     if (
       normalizedTargetGroups.length === 0 ||
-      !normalizedStartMonth ||
-      !normalizedEndMonth
+      Object.values(nextErrors).some(Boolean)
     ) {
-      setTargetGroupsError(true);
+      return;
+    }
+
+    const startMonth = normalizedStartMonth;
+    const endMonth = normalizedEndMonth;
+
+    if (!startMonth || !endMonth) {
       return;
     }
 
     await onSubmit({
       name: form.name.trim(),
-      startMonth: normalizedStartMonth,
-      endMonth: normalizedEndMonth,
+      startMonth,
+      endMonth,
       fundingProgram: form.fundingProgram.trim(),
       fundingOrganization: form.fundingOrganization.trim(),
       targetGroups: normalizedTargetGroups,
@@ -221,6 +261,11 @@ export function ProjectDialog({
               }
               required
             />
+            {formErrors.startMonth ? (
+              <p className="text-xs text-destructive">
+                {formErrors.startMonth}
+              </p>
+            ) : null}
           </div>
           <div className="space-y-2">
             <FieldLabel>{locale.dialogs.project.endMonth}</FieldLabel>
@@ -230,6 +275,9 @@ export function ProjectDialog({
               onChange={(event) => updateField("endMonth", event.target.value)}
               required
             />
+            {formErrors.endMonth ? (
+              <p className="text-xs text-destructive">{formErrors.endMonth}</p>
+            ) : null}
           </div>
           <div className="space-y-2">
             <FieldLabel>{locale.dialogs.project.fundingProgram}</FieldLabel>
