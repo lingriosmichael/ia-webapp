@@ -23,6 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { normalizeMonthValue } from "@/lib/monthValue";
 import { cn } from "@/lib/utils";
 
 function toggleValue(values: string[], value: string) {
@@ -146,19 +147,25 @@ export function ProjectDialog({
     const customTargetGroup = form.customTargetGroupEnabled
       ? form.customTargetGroup.trim()
       : "";
+    const normalizedStartMonth = normalizeMonthValue(form.startMonth);
+    const normalizedEndMonth = normalizeMonthValue(form.endMonth);
     const normalizedTargetGroups = deduplicateValues([
       ...form.targetGroups,
       customTargetGroup,
     ]);
-    if (normalizedTargetGroups.length === 0) {
+    if (
+      normalizedTargetGroups.length === 0 ||
+      !normalizedStartMonth ||
+      !normalizedEndMonth
+    ) {
       setTargetGroupsError(true);
       return;
     }
 
     await onSubmit({
       name: form.name.trim(),
-      startMonth: form.startMonth,
-      endMonth: form.endMonth,
+      startMonth: normalizedStartMonth,
+      endMonth: normalizedEndMonth,
       fundingProgram: form.fundingProgram.trim(),
       fundingOrganization: form.fundingOrganization.trim(),
       targetGroups: normalizedTargetGroups,

@@ -1652,6 +1652,7 @@ const de: TranslationDictionary = {
     optionalLabel: "optional",
     requiredField: "Bitte füllen Sie dieses Pflichtfeld aus.",
     requiredMonth: "Bitte wählen Sie einen Monat aus.",
+    invalidMonth: "Bitte geben Sie einen gültigen Monat ein.",
     dangerTitle: "Projekt löschen",
     dangerDescription:
       "Beim Löschen eines Projekts werden alle verknüpften Aktivitäten, Uploads, Jobs, Prüfergebnisse, Analysen und AI knowledge dauerhaft entfernt.",

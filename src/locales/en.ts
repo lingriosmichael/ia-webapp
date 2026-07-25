@@ -1624,6 +1624,7 @@ const en = {
     optionalLabel: "optional",
     requiredField: "Please complete this required field.",
     requiredMonth: "Please select a month.",
+    invalidMonth: "Please enter a valid month.",
     dangerTitle: "Delete project",
     dangerDescription:
       "Deleting a project permanently removes all activities, uploads, jobs, review outputs, analyses, and AI knowledge linked to it.",

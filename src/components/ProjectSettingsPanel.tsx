@@ -25,6 +25,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/WorkspaceUI";
 import { useUpdateProjectMutation } from "@/hooks/useWorkspaceQueries";
+import { normalizeMonthValue } from "@/lib/monthValue";
 import { resolveProjectSummaryText } from "@/lib/projectSummary";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { cn } from "@/lib/utils";
@@ -196,6 +197,8 @@ export function ProjectSettingsPanel({
     }
 
     const nextErrors = validateFormState(formState, locale.projectSettings);
+    const normalizedStartMonth = normalizeMonthValue(formState.startMonth);
+    const normalizedEndMonth = normalizeMonthValue(formState.endMonth);
     const normalizedTargetGroups = deduplicateValues([
       ...formState.targetGroups,
       formState.customTargetGroup,
@@ -214,8 +217,8 @@ export function ProjectSettingsPanel({
     try {
       await updateProjectMutation.mutateAsync({
         name: formState.name.trim(),
-        startMonth: formState.startMonth,
-        endMonth: formState.endMonth,
+        startMonth: normalizedStartMonth!,
+        endMonth: normalizedEndMonth!,
         fundingProgram: formState.fundingProgram.trim(),
         fundingOrganization: formState.fundingOrganization.trim(),
         targetGroups: normalizedTargetGroups,
@@ -867,6 +870,7 @@ function validateFormState(
   locale: {
     requiredField: string;
     requiredMonth: string;
+    invalidMonth: string;
   },
 ): ProjectSettingsFormErrors {
   const errors: ProjectSettingsFormErrors = {};
@@ -877,10 +881,14 @@ function validateFormState(
 
   if (!formState.startMonth) {
     errors.startMonth = locale.requiredMonth;
+  } else if (!normalizeMonthValue(formState.startMonth)) {
+    errors.startMonth = locale.invalidMonth;
   }
 
   if (!formState.endMonth) {
     errors.endMonth = locale.requiredMonth;
+  } else if (!normalizeMonthValue(formState.endMonth)) {
+    errors.endMonth = locale.invalidMonth;
   }
 
   if (!formState.fundingProgram.trim()) {
