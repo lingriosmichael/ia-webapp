@@ -17,5 +17,9 @@ export default defineConfig({
   // that Vercel cannot deploy.
   nitro: {
     preset: "vercel",
+    // Nitro's current nf3-based externals tracer breaks on Vercel because nf3
+    // imports a CommonJS-only @vercel/nft entry as a named ESM export. Bundle
+    // runtime dependencies into the server output instead of tracing them.
+    noExternals: true,
   },
 });

@@ -160,6 +160,7 @@ function EvidenceActivityGroup({
     organizationId,
   );
   const inputRef = useRef<HTMLInputElement>(null);
+  const completedQueueTimeoutRef = useRef<number | null>(null);
   const [uploadQueue, setUploadQueue] = useState<UploadQueueItem[]>([]);
   const [isExpanded, setIsExpanded] = useState(
     !shouldCollapseActivity(activity),
@@ -180,6 +181,40 @@ function EvidenceActivityGroup({
   useEffect(() => {
     setIsExpanded(!isReviewedActivity);
   }, [isReviewedActivity]);
+
+  useEffect(() => {
+    if (completedQueueTimeoutRef.current !== null) {
+      window.clearTimeout(completedQueueTimeoutRef.current);
+      completedQueueTimeoutRef.current = null;
+    }
+
+    if (uploadQueue.length === 0) {
+      return;
+    }
+
+    const hasActiveUpload = uploadQueue.some(
+      (item) => item.status === "queued" || item.status === "uploading",
+    );
+    const hasFailedUpload = uploadQueue.some(
+      (item) => item.status === "failed",
+    );
+
+    if (hasActiveUpload || hasFailedUpload) {
+      return;
+    }
+
+    completedQueueTimeoutRef.current = window.setTimeout(() => {
+      setUploadQueue([]);
+      completedQueueTimeoutRef.current = null;
+    }, 1200);
+
+    return () => {
+      if (completedQueueTimeoutRef.current !== null) {
+        window.clearTimeout(completedQueueTimeoutRef.current);
+        completedQueueTimeoutRef.current = null;
+      }
+    };
+  }, [uploadQueue]);
 
   function updateUploadQueueItem(
     queueItemId: string,
