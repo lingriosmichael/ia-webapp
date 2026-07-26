@@ -81,7 +81,7 @@ function ProjectLayout() {
 
 function CenteredState({ label }: { label: string }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background text-sm text-muted-foreground">
+    <div className="flex min-h-screen items-center justify-center bg-workspace-background text-sm text-muted-foreground">
       {label}
     </div>
   );

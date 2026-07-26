@@ -68,27 +68,42 @@ export function DialogSection({
   description,
   children,
 }: {
-  title: string;
+  title?: string;
   description?: string;
   children: ReactNode;
 }) {
   return (
     <section className="space-y-4">
-      <div>
-        <h3 className="text-sm font-semibold uppercase tracking-[0.08em] text-primary">
-          {title}
-        </h3>
-        {description ? (
-          <p className="mt-1 text-sm text-muted-foreground">{description}</p>
-        ) : null}
-      </div>
+      {title || description ? (
+        <div>
+          {title ? (
+            <h3 className="text-sm font-semibold tracking-tight text-primary">
+              {title}
+            </h3>
+          ) : null}
+          {description ? (
+            <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+          ) : null}
+        </div>
+      ) : null}
       {children}
     </section>
   );
 }
 
-export function FieldLabel({ children }: { children: ReactNode }) {
+export function FieldLabel({
+  children,
+  optionalLabel,
+}: {
+  children: ReactNode;
+  optionalLabel?: string;
+}) {
   return (
-    <label className="text-sm font-medium text-foreground">{children}</label>
+    <div className="flex items-center gap-2">
+      <label className="text-sm font-medium text-foreground">{children}</label>
+      {optionalLabel ? (
+        <span className="text-xs text-muted-foreground">({optionalLabel})</span>
+      ) : null}
+    </div>
   );
 }

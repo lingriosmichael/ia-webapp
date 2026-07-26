@@ -1,6 +1,6 @@
-# Impact Atlas Web App
+# brindl Web App
 
-This service is the frontend for Impact Atlas. It is a React application built with Vite and TanStack Start. It talks to the backend API over HTTP and provides the user interface for managing organizations, projects, and activities.
+This service is the frontend for brindl. It is a React application built with Vite and TanStack Start. It talks to the backend API over HTTP and provides the user interface for managing organizations, projects, and activities.
 
 ## What this service does
 

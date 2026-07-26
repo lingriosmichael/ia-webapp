@@ -352,7 +352,7 @@ export function ConfigurableAnalyticsDashboard({
         hiddenWidgetIds: layoutState.hiddenWidgetIds,
       });
       const fileBaseName = [
-        "impact-atlas-dashboard",
+        "brindl-dashboard",
         result.projectId,
         result.activityId ?? result.scopeType.toLowerCase(),
       ].join("-");

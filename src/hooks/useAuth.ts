@@ -60,7 +60,10 @@ export function useRequireAuth() {
   const navigate = useNavigate();
   const sessionQuery = useSessionQuery();
   const sessionMarker = getSessionMarker();
-  const token = sessionMarker || (sessionQuery.data ? "session" : null);
+  const token =
+    sessionQuery.data || (sessionQuery.isLoading && sessionMarker)
+      ? "session"
+      : null;
 
   useEffect(() => {
     if (sessionQuery.data && !sessionMarker) {

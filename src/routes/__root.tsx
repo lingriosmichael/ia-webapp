@@ -65,7 +65,7 @@ function NotFoundPage() {
         </p>
         <Link
           to="/"
-          className="inline-flex h-10 items-center rounded-md bg-primary px-5 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
+          className="inline-flex h-10 items-center rounded-md bg-signal px-5 text-sm font-medium text-signal-foreground shadow hover:bg-signal/94"
         >
           {t("common.backToHome")}
         </Link>

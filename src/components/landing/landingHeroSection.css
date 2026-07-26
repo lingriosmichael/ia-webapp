@@ -10,12 +10,12 @@
   z-index: -1;
   background: radial-gradient(
     ellipse at center,
-    rgba(124, 58, 237, 0.15) 0%,
-    rgba(167, 139, 250, 0.09) 45%,
+    rgba(124, 58, 237, 0.1) 0%,
+    rgba(167, 139, 250, 0.06) 45%,
     transparent 75%
   );
-  filter: blur(36px);
-  transform: scale(1.08);
+  filter: blur(24px);
+  transform: scale(1.04);
   pointer-events: none;
 }
 
@@ -27,17 +27,17 @@
   -webkit-mask-image: radial-gradient(
     ellipse farthest-side at center,
     black 0%,
-    black 68%,
-    rgba(0, 0, 0, 0.9) 78%,
-    rgba(0, 0, 0, 0.35) 91%,
+    black 82%,
+    rgba(0, 0, 0, 0.96) 90%,
+    rgba(0, 0, 0, 0.7) 96%,
     transparent 100%
   );
   mask-image: radial-gradient(
     ellipse farthest-side at center,
     black 0%,
-    black 68%,
-    rgba(0, 0, 0, 0.9) 78%,
-    rgba(0, 0, 0, 0.35) 91%,
+    black 82%,
+    rgba(0, 0, 0, 0.96) 90%,
+    rgba(0, 0, 0, 0.7) 96%,
     transparent 100%
   );
 
@@ -54,29 +54,29 @@
     inset: 12% 6%;
     background: radial-gradient(
       ellipse at center,
-      rgba(124, 58, 237, 0.1) 0%,
-      rgba(167, 139, 250, 0.06) 45%,
+      rgba(124, 58, 237, 0.07) 0%,
+      rgba(167, 139, 250, 0.04) 45%,
       transparent 70%
     );
-    filter: blur(24px);
-    transform: scale(1.04);
+    filter: blur(18px);
+    transform: scale(1.02);
   }
 
   .hero-visual img {
     -webkit-mask-image: radial-gradient(
       ellipse farthest-side at center,
       black 0%,
-      black 74%,
-      rgba(0, 0, 0, 0.9) 84%,
-      rgba(0, 0, 0, 0.45) 94%,
+      black 86%,
+      rgba(0, 0, 0, 0.96) 93%,
+      rgba(0, 0, 0, 0.72) 97%,
       transparent 100%
     );
     mask-image: radial-gradient(
       ellipse farthest-side at center,
       black 0%,
-      black 74%,
-      rgba(0, 0, 0, 0.9) 84%,
-      rgba(0, 0, 0, 0.45) 94%,
+      black 86%,
+      rgba(0, 0, 0, 0.96) 93%,
+      rgba(0, 0, 0, 0.72) 97%,
       transparent 100%
     );
   }

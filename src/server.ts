@@ -53,7 +53,7 @@ function checkSiteAuth(request: Request): Response | null {
   return new Response("Authentication required.", {
     status: 401,
     headers: {
-      "WWW-Authenticate": 'Basic realm="Impact Atlas", charset="UTF-8"',
+      "WWW-Authenticate": 'Basic realm="brindl", charset="UTF-8"',
     },
   });
 }

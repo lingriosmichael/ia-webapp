@@ -2,6 +2,9 @@ import { Outlet, createFileRoute, useMatches } from "@tanstack/react-router";
 import {
   ChevronDown,
   ChevronRight,
+  CircleAlert,
+  CircleCheck,
+  LoaderCircle,
   Sparkles,
   Trash2,
   UploadCloud,
@@ -31,6 +34,7 @@ import {
 import {
   isSupportedEvidenceFileType,
   SUPPORTED_EVIDENCE_FILE_ACCEPT,
+  validateEvidenceFileName,
 } from "@/lib/evidenceFileTypes";
 import { translateStatus } from "@/lib/translationUtils";
 import {
@@ -124,6 +128,15 @@ function shouldCollapseActivity(activity: WorkspaceActivity) {
   return isEvidenceReviewed(activity, activity.uploadMetadataCount);
 }
 
+type UploadQueueItemStatus = "queued" | "uploading" | "uploaded" | "failed";
+
+interface UploadQueueItem {
+  id: string;
+  fileName: string;
+  status: UploadQueueItemStatus;
+  message?: string;
+}
+
 function EvidenceActivityGroup({
   activity,
   projectId,
@@ -147,7 +160,7 @@ function EvidenceActivityGroup({
     organizationId,
   );
   const inputRef = useRef<HTMLInputElement>(null);
-  const [uploadingName, setUploadingName] = useState<string | null>(null);
+  const [uploadQueue, setUploadQueue] = useState<UploadQueueItem[]>([]);
   const [isExpanded, setIsExpanded] = useState(
     !shouldCollapseActivity(activity),
   );
@@ -168,11 +181,51 @@ function EvidenceActivityGroup({
     setIsExpanded(!isReviewedActivity);
   }, [isReviewedActivity]);
 
+  function updateUploadQueueItem(
+    queueItemId: string,
+    nextStatus: UploadQueueItemStatus,
+    message?: string,
+  ) {
+    setUploadQueue((current) =>
+      current.map((item) =>
+        item.id === queueItemId
+          ? {
+              ...item,
+              status: nextStatus,
+              message,
+            }
+          : item,
+      ),
+    );
+  }
+
+  function getFileValidationMessage(file: File) {
+    const fileNameValidationError = validateEvidenceFileName(file.name);
+
+    if (fileNameValidationError === "empty") {
+      return t("upload.invalidFileNameToast");
+    }
+
+    if (fileNameValidationError === "too_long") {
+      return t("upload.fileNameTooLongToast");
+    }
+
+    if (fileNameValidationError === "invalid_characters") {
+      return t("upload.invalidFileNameToast");
+    }
+
+    if (!isSupportedEvidenceFileType(file.name)) {
+      return t("upload.unsupportedFileTypeToast");
+    }
+
+    return null;
+  }
+
   async function onPickFile(event: ChangeEvent<HTMLInputElement>) {
-    const nextFile = event.target.files?.[0];
+    const selectedFiles = Array.from(event.target.files ?? []);
     event.target.value = "";
 
-    if (!nextFile) {
+    if (selectedFiles.length === 0) {
       return;
     }
 
@@ -181,21 +234,69 @@ function EvidenceActivityGroup({
       return;
     }
 
-    if (!isSupportedEvidenceFileType(nextFile.name)) {
-      toast.error(t("upload.unsupportedFileTypeToast"));
+    const nextQueue = selectedFiles.map((file, index) => ({
+      id: `${Date.now()}-${index}-${file.name}`,
+      fileName: file.name,
+      status: "queued" as const,
+    }));
+
+    setUploadQueue(nextQueue);
+    setIsExpanded(true);
+
+    let uploadedCount = 0;
+    let failedCount = 0;
+
+    for (const [index, file] of selectedFiles.entries()) {
+      const queueItem = nextQueue[index];
+      if (!queueItem) {
+        continue;
+      }
+
+      const validationMessage = getFileValidationMessage(file);
+      if (validationMessage) {
+        updateUploadQueueItem(queueItem.id, "failed", validationMessage);
+        failedCount += 1;
+        continue;
+      }
+
+      try {
+        updateUploadQueueItem(queueItem.id, "uploading");
+        await uploadMutation.mutateAsync(file);
+        updateUploadQueueItem(queueItem.id, "uploaded");
+        uploadedCount += 1;
+      } catch (error) {
+        const message =
+          error instanceof ApiError ? error.message : t("upload.failedToast");
+        updateUploadQueueItem(queueItem.id, "failed", message);
+        failedCount += 1;
+      }
+    }
+
+    if (uploadedCount > 0 && failedCount === 0) {
+      toast.success(
+        uploadedCount === 1
+          ? t("upload.successToast")
+          : t("upload.multiSuccessToast", { count: uploadedCount }),
+      );
       return;
     }
 
-    try {
-      setUploadingName(nextFile.name);
-      await uploadMutation.mutateAsync(nextFile);
-      toast.success(t("upload.successToast"));
-    } catch (error) {
+    if (uploadedCount > 0 && failedCount > 0) {
       toast.error(
-        error instanceof ApiError ? error.message : t("upload.failedToast"),
+        t("upload.multiResultToast", {
+          uploaded: uploadedCount,
+          failed: failedCount,
+        }),
       );
-    } finally {
-      setUploadingName(null);
+      return;
+    }
+
+    if (failedCount > 0) {
+      toast.error(
+        failedCount === 1
+          ? t("upload.failedToast")
+          : t("upload.multiFailedToast", { count: failedCount }),
+      );
     }
   }
 
@@ -247,8 +348,11 @@ function EvidenceActivityGroup({
     }).format(new Date(createdAt));
   }
 
+  const hasActiveUploadQueue = uploadQueue.some(
+    (item) => item.status === "queued" || item.status === "uploading",
+  );
   const showExpandedDetails =
-    !isReviewedActivity || isExpanded || uploadMutation.isPending;
+    !isReviewedActivity || isExpanded || hasActiveUploadQueue;
   const canToggleDetails = isReviewedActivity && evidenceCount > 0;
 
   return (
@@ -259,10 +363,6 @@ function EvidenceActivityGroup({
             {activity.name}
           </h2>
           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-            <span>
-              {activity.activityType ??
-                t("projectWorkspace.activities.defaultType")}
-            </span>
             {evidenceCount > 0 ? (
               <span>
                 {t("projectWorkspace.activities.evidenceCount", {
@@ -303,6 +403,7 @@ function EvidenceActivityGroup({
               <input
                 ref={inputRef}
                 type="file"
+                multiple
                 accept={SUPPORTED_EVIDENCE_FILE_ACCEPT}
                 className="hidden"
                 onChange={onPickFile}
@@ -310,10 +411,10 @@ function EvidenceActivityGroup({
               <Button
                 type="button"
                 onClick={() => inputRef.current?.click()}
-                disabled={uploadMutation.isPending}
+                disabled={hasActiveUploadQueue}
               >
                 <UploadCloud className="h-4 w-4" />
-                {uploadMutation.isPending
+                {hasActiveUploadQueue
                   ? t("projectWorkspace.evidence.uploading")
                   : t("projectWorkspace.evidence.uploadAction")}
               </Button>
@@ -339,10 +440,27 @@ function EvidenceActivityGroup({
         </div>
       </div>
 
-      {uploadMutation.isPending && uploadingName && showExpandedDetails ? (
-        <p className="border-t border-border/70 px-5 py-3 text-sm text-muted-foreground">
-          {t("projectWorkspace.evidence.uploading")} {uploadingName}
-        </p>
+      {uploadQueue.length > 0 && showExpandedDetails ? (
+        <div className="border-t border-border/70 px-5 py-3">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+              {t("upload.queueTitle")}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {t("upload.queueProgress", {
+                uploaded: uploadQueue.filter(
+                  (item) => item.status === "uploaded",
+                ).length,
+                total: uploadQueue.length,
+              })}
+            </p>
+          </div>
+          <div className="mt-3 space-y-2">
+            {uploadQueue.map((item) => (
+              <UploadQueueRow key={item.id} item={item} />
+            ))}
+          </div>
+        </div>
       ) : null}
 
       {!showExpandedDetails ? null : uploadsQuery.isLoading ? (
@@ -373,6 +491,45 @@ function EvidenceActivityGroup({
         </div>
       )}
     </Card>
+  );
+}
+
+function UploadQueueRow({ item }: { item: UploadQueueItem }) {
+  const { t } = useTranslation();
+
+  const icon =
+    item.status === "uploaded" ? (
+      <CircleCheck className="h-4 w-4 text-emerald-600" />
+    ) : item.status === "failed" ? (
+      <CircleAlert className="h-4 w-4 text-destructive" />
+    ) : item.status === "uploading" ? (
+      <LoaderCircle className="h-4 w-4 animate-spin text-primary" />
+    ) : (
+      <UploadCloud className="h-4 w-4 text-muted-foreground" />
+    );
+
+  const label =
+    item.status === "queued"
+      ? t("upload.queueQueued")
+      : item.status === "uploading"
+        ? t("upload.queueUploading")
+        : item.status === "uploaded"
+          ? t("upload.queueUploaded")
+          : t("upload.queueFailed");
+
+  return (
+    <div className="flex items-start gap-3 rounded-xl border border-border/70 bg-background px-3 py-2">
+      <div className="mt-0.5 shrink-0">{icon}</div>
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-sm font-medium text-foreground">
+          {item.fileName}
+        </div>
+        <div className="mt-0.5 text-xs text-muted-foreground">{label}</div>
+        {item.message ? (
+          <div className="mt-1 text-xs text-destructive">{item.message}</div>
+        ) : null}
+      </div>
+    </div>
   );
 }
 

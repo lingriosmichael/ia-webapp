@@ -3,8 +3,7 @@ import type {
   AnalyticsScopeType,
 } from "@/services/apiClient";
 
-export const ANALYTICS_DASHBOARD_EVENT_NAME =
-  "impact-atlas:analytics-dashboard";
+export const ANALYTICS_DASHBOARD_EVENT_NAME = "brindl:analytics-dashboard";
 
 export type AnalyticsDashboardInteractionType =
   | "dashboard_viewed"

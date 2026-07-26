@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Check, ChevronDown, Info, Plus, X } from "lucide-react";
+import { Check, ChevronDown, Plus, X } from "lucide-react";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import type { CreateProjectPayload } from "@/services/apiClient";
 import { Badge } from "@/components/ui/badge";
@@ -17,12 +17,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { normalizeMonthValue } from "@/lib/monthValue";
 import { cn } from "@/lib/utils";
 
@@ -47,6 +41,8 @@ interface ProjectDialogState {
   name: string;
   startMonth: string;
   endMonth: string;
+  overarchingTargetGroup: string;
+  intendedChanges: string;
   fundingProgram: string;
   fundingOrganization: string;
   targetGroups: string[];
@@ -55,12 +51,6 @@ interface ProjectDialogState {
   areaOfOperation: string;
   partnerships: string;
   sdgs: string;
-  impactModelInputs: string;
-  impactModelActivities: string;
-  impactModelOutputs: string;
-  impactModelImpact: string;
-  impactModelOutcomes: string;
-  successIndicators: string;
 }
 
 interface ProjectDialogFormErrors {
@@ -72,6 +62,8 @@ const initialState: ProjectDialogState = {
   name: "",
   startMonth: "",
   endMonth: "",
+  overarchingTargetGroup: "",
+  intendedChanges: "",
   fundingProgram: "",
   fundingOrganization: "",
   targetGroups: [],
@@ -80,12 +72,6 @@ const initialState: ProjectDialogState = {
   areaOfOperation: "",
   partnerships: "",
   sdgs: "",
-  impactModelInputs: "",
-  impactModelActivities: "",
-  impactModelOutputs: "",
-  impactModelImpact: "",
-  impactModelOutcomes: "",
-  successIndicators: "",
 };
 
 export function ProjectDialog({
@@ -102,12 +88,15 @@ export function ProjectDialog({
   const locale = useWorkspaceLocale();
   const [form, setForm] = useState<ProjectDialogState>(initialState);
   const [targetGroupsError, setTargetGroupsError] = useState<boolean>(false);
+  const [intendedChangesError, setIntendedChangesError] =
+    useState<boolean>(false);
   const [formErrors, setFormErrors] = useState<ProjectDialogFormErrors>({});
 
   useEffect(() => {
     if (!open) {
       setForm(initialState);
       setTargetGroupsError(false);
+      setIntendedChangesError(false);
       setFormErrors({});
     }
   }, [open]);
@@ -171,6 +160,7 @@ export function ProjectDialog({
       ...form.targetGroups,
       customTargetGroup,
     ]);
+    const normalizedIntendedChanges = parseListInput(form.intendedChanges);
     const nextErrors: ProjectDialogFormErrors = {};
 
     if (!form.startMonth.trim()) {
@@ -187,9 +177,15 @@ export function ProjectDialog({
 
     setFormErrors(nextErrors);
     setTargetGroupsError(normalizedTargetGroups.length === 0);
+    setIntendedChangesError(
+      normalizedIntendedChanges.length === 0 ||
+        normalizedIntendedChanges.length > 3,
+    );
 
     if (
       normalizedTargetGroups.length === 0 ||
+      normalizedIntendedChanges.length === 0 ||
+      normalizedIntendedChanges.length > 3 ||
       Object.values(nextErrors).some(Boolean)
     ) {
       return;
@@ -206,20 +202,14 @@ export function ProjectDialog({
       name: form.name.trim(),
       startMonth,
       endMonth,
-      fundingProgram: form.fundingProgram.trim(),
-      fundingOrganization: form.fundingOrganization.trim(),
+      overarchingTargetGroup: form.overarchingTargetGroup.trim(),
+      intendedChanges: normalizedIntendedChanges,
+      fundingProgram: form.fundingProgram.trim() || undefined,
+      fundingOrganization: form.fundingOrganization.trim() || undefined,
       targetGroups: normalizedTargetGroups,
-      areaOfOperation: form.areaOfOperation.trim(),
+      areaOfOperation: form.areaOfOperation.trim() || undefined,
       partnerships: form.partnerships.trim() || undefined,
       sdgs: parseListInput(form.sdgs),
-      impactModel: {
-        inputs: form.impactModelInputs.trim(),
-        activities: form.impactModelActivities.trim(),
-        outputs: form.impactModelOutputs.trim(),
-        impact: form.impactModelImpact.trim(),
-        outcomes: form.impactModelOutcomes.trim(),
-      },
-      successIndicators: form.successIndicators.trim(),
     });
 
     onOpenChange(false);
@@ -279,19 +269,56 @@ export function ProjectDialog({
               <p className="text-xs text-destructive">{formErrors.endMonth}</p>
             ) : null}
           </div>
+          <div className="space-y-2 md:col-span-2">
+            <FieldLabel>
+              {locale.dialogs.project.overarchingTargetGroup}
+            </FieldLabel>
+            <Input
+              value={form.overarchingTargetGroup}
+              onChange={(event) =>
+                updateField("overarchingTargetGroup", event.target.value)
+              }
+              placeholder={
+                locale.dialogs.project.overarchingTargetGroupPlaceholder
+              }
+              required
+            />
+          </div>
+          <div className="space-y-2 md:col-span-2">
+            <FieldLabel>{locale.dialogs.project.intendedChanges}</FieldLabel>
+            <Textarea
+              value={form.intendedChanges}
+              onChange={(event) => {
+                setIntendedChangesError(false);
+                updateField("intendedChanges", event.target.value);
+              }}
+              placeholder={locale.dialogs.project.intendedChangesPlaceholder}
+              rows={3}
+              required
+            />
+            <p className="text-xs text-muted-foreground">
+              {locale.dialogs.project.intendedChangesHint}
+            </p>
+            {intendedChangesError ? (
+              <p className="text-xs text-destructive">
+                {locale.dialogs.project.intendedChangesValidation}
+              </p>
+            ) : null}
+          </div>
           <div className="space-y-2">
-            <FieldLabel>{locale.dialogs.project.fundingProgram}</FieldLabel>
+            <FieldLabel optionalLabel={locale.projectSettings.optionalLabel}>
+              {locale.dialogs.project.fundingProgram}
+            </FieldLabel>
             <Input
               value={form.fundingProgram}
               onChange={(event) =>
                 updateField("fundingProgram", event.target.value)
               }
               placeholder={locale.dialogs.project.fundingProgramPlaceholder}
-              required
             />
           </div>
           <div className="space-y-2">
-            <FieldLabel>
+            <FieldLabel optionalLabel={locale.projectSettings.optionalLabel}>
               {locale.dialogs.project.fundingOrganization}
             </FieldLabel>
             <Input
@@ -302,7 +329,6 @@ export function ProjectDialog({
               placeholder={
                 locale.dialogs.project.fundingOrganizationPlaceholder
               }
-              required
             />
           </div>
           <div className="space-y-2">
@@ -352,14 +378,15 @@ export function ProjectDialog({
             />
           </div>
           <div className="space-y-2">
-            <FieldLabel>{locale.dialogs.project.areaOfOperation}</FieldLabel>
+            <FieldLabel optionalLabel={locale.projectSettings.optionalLabel}>
+              {locale.dialogs.project.areaOfOperation}
+            </FieldLabel>
             <Input
               value={form.areaOfOperation}
               onChange={(event) =>
                 updateField("areaOfOperation", event.target.value)
               }
               placeholder={locale.dialogs.project.areaOfOperationPlaceholder}
-              required
             />
           </div>
           <div className="space-y-2 md:col-span-2">
@@ -374,7 +401,9 @@ export function ProjectDialog({
             />
           </div>
           <div className="space-y-2 md:col-span-2">
-            <FieldLabel>{locale.dialogs.project.sdgs}</FieldLabel>
+            <FieldLabel optionalLabel={locale.projectSettings.optionalLabel}>
+              {locale.dialogs.project.sdgs}
+            </FieldLabel>
             <Textarea
               value={form.sdgs}
               onChange={(event) => updateField("sdgs", event.target.value)}
@@ -387,111 +416,7 @@ export function ProjectDialog({
           </div>
         </div>
       </DialogSection>
-
-      <DialogSection title={locale.dialogs.project.impactModel}>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <span>{locale.dialogs.project.impactModelDescription}</span>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-secondary"
-                  aria-label={locale.dialogs.project.impactModelTooltipLabel}
-                >
-                  <Info className="h-3.5 w-3.5" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent className="max-w-sm space-y-1 px-3 py-2 text-left text-xs leading-5">
-                <p>{locale.dialogs.project.impactModelTooltip.inputs}</p>
-                <p>{locale.dialogs.project.impactModelTooltip.activities}</p>
-                <p>{locale.dialogs.project.impactModelTooltip.outputs}</p>
-                <p>{locale.dialogs.project.impactModelTooltip.impact}</p>
-                <p>{locale.dialogs.project.impactModelTooltip.outcomes}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-
-        <div className="grid gap-5 md:grid-cols-2">
-          <TextAreaField
-            label={locale.dialogs.project.inputs}
-            value={form.impactModelInputs}
-            onChange={(value) => updateField("impactModelInputs", value)}
-            placeholder={locale.dialogs.project.inputsPlaceholder}
-            required
-          />
-          <TextAreaField
-            label={locale.dialogs.project.activities}
-            value={form.impactModelActivities}
-            onChange={(value) => updateField("impactModelActivities", value)}
-            placeholder={locale.dialogs.project.activitiesPlaceholder}
-            required
-          />
-          <TextAreaField
-            label={locale.dialogs.project.outputs}
-            value={form.impactModelOutputs}
-            onChange={(value) => updateField("impactModelOutputs", value)}
-            placeholder={locale.dialogs.project.outputsPlaceholder}
-            required
-          />
-          <TextAreaField
-            label={locale.dialogs.project.outcomes}
-            value={form.impactModelOutcomes}
-            onChange={(value) => updateField("impactModelOutcomes", value)}
-            placeholder={locale.dialogs.project.outcomesPlaceholder}
-            required
-          />
-          <TextAreaField
-            label={locale.dialogs.project.impact}
-            value={form.impactModelImpact}
-            onChange={(value) => updateField("impactModelImpact", value)}
-            placeholder={locale.dialogs.project.impactPlaceholder}
-            required
-          />
-        </div>
-      </DialogSection>
-
-      <DialogSection title={locale.dialogs.project.successIndicatorsSection}>
-        <TextAreaField
-          label={locale.dialogs.project.successIndicators}
-          value={form.successIndicators}
-          onChange={(value) => updateField("successIndicators", value)}
-          placeholder={locale.dialogs.project.successIndicatorsPlaceholder}
-          required
-          rows={4}
-        />
-      </DialogSection>
     </EntityDialog>
-  );
-}
-
-function TextAreaField({
-  label,
-  value,
-  onChange,
-  placeholder,
-  required = false,
-  rows = 4,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder: string;
-  required?: boolean;
-  rows?: number;
-}) {
-  return (
-    <div className="space-y-2">
-      <FieldLabel>{label}</FieldLabel>
-      <Textarea
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-        rows={rows}
-        required={required}
-      />
-    </div>
   );
 }
 

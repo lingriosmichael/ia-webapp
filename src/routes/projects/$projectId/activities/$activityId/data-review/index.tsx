@@ -1,7 +1,7 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { UploadCloud } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { ActivityTabs } from "@/components/ActivityTabs";
+import { ActivityTabs } from "@/components/activityTabs";
 import { Card, PageHeader, TopBar } from "@/components/WorkspaceUI";
 import { useProjectHierarchy } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
@@ -78,7 +78,7 @@ function SchemaReview() {
               <Link
                 to="/projects/$projectId/activities"
                 params={{ projectId }}
-                className="mt-5 inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
+                className="mt-5 inline-flex h-10 items-center gap-2 rounded-md bg-signal px-4 text-sm font-medium text-signal-foreground shadow hover:bg-signal/94"
               >
                 <UploadCloud className="h-4 w-4" />
                 {t("schemaReview.empty.cta")}
@@ -97,7 +97,7 @@ function SchemaReview() {
               <Link
                 to="/projects/$projectId/activities"
                 params={{ projectId }}
-                className="mt-5 inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
+                className="mt-5 inline-flex h-10 items-center rounded-md bg-signal px-4 text-sm font-medium text-signal-foreground shadow hover:bg-signal/94"
               >
                 {t("schemaReview.notReady.cta")}
               </Link>

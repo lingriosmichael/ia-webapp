@@ -1,10 +1,4 @@
-import {
-  CalendarDays,
-  Database,
-  FolderKanban,
-  MoreHorizontal,
-  Trash2,
-} from "lucide-react";
+import { CalendarDays, Database, MoreHorizontal, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { StatusBadge } from "@/components/statusBadge";
@@ -68,12 +62,7 @@ export function ActivityCard({
     <Card className="flex h-full flex-col p-5">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-secondary/35 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
-            <FolderKanban className="h-3.5 w-3.5" />
-            {activity.activityType ??
-              t("projectWorkspace.activities.defaultType")}
-          </div>
-          <h3 className="mt-3 text-[17px] font-semibold tracking-tight text-foreground">
+          <h3 className="text-[17px] font-semibold tracking-tight text-foreground">
             {activity.name}
           </h3>
         </div>

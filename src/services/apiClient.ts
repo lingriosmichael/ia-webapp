@@ -99,6 +99,8 @@ export interface ProjectSummary {
   fundingProgram: string | null;
   fundingOrganization: string | null;
   targetGroups: string[];
+  overarchingTargetGroup: string | null;
+  intendedChanges: string[];
   areaOfOperation: string | null;
   partnerships: string | null;
   sdgs: string[];
@@ -115,14 +117,12 @@ export interface ActivitySummary {
   projectId: string;
   name: string;
   description: string | null;
-  activityType: string | null;
-  owner: string | null;
   startDate: string | null;
   endDate: string | null;
-  objectives: string | null;
-  successIndicators: string | null;
   targetAudience: string | null;
-  additionalContext: string | null;
+  objectives: string | null;
+  output: string | null;
+  outcome: string | null;
   status: ActivityStatus;
   permissions: ActivityPermissions;
   interpretationAcknowledgedAt: string | null;
@@ -169,20 +169,14 @@ export interface CreateProjectPayload {
   name: string;
   startMonth: string;
   endMonth: string;
-  fundingProgram: string;
-  fundingOrganization: string;
+  fundingProgram?: string;
+  fundingOrganization?: string;
   targetGroups: string[];
-  areaOfOperation: string;
+  overarchingTargetGroup: string;
+  intendedChanges: string[];
+  areaOfOperation?: string;
   partnerships?: string;
   sdgs?: string[];
-  impactModel: {
-    inputs: string;
-    activities: string;
-    outputs: string;
-    impact: string;
-    outcomes: string;
-  };
-  successIndicators: string;
 }
 
 export interface UpdateProjectPayload {
@@ -192,6 +186,8 @@ export interface UpdateProjectPayload {
   fundingProgram?: string | null;
   fundingOrganization?: string | null;
   targetGroups?: string[];
+  overarchingTargetGroup?: string;
+  intendedChanges?: string[];
   areaOfOperation?: string | null;
   partnerships?: string | null;
   sdgs?: string[];
@@ -218,27 +214,24 @@ export interface DeleteProjectResponse {
 export interface CreateActivityPayload {
   name: string;
   description?: string;
-  activityType?: string;
-  owner?: string;
   startDate?: string;
   endDate?: string;
-  objectives?: string;
-  successIndicators?: string;
   targetAudience?: string;
+  objectives?: string;
+  output?: string;
+  outcome?: string;
   status?: ActivityStatus;
 }
 
 export interface UpdateActivityPayload {
   name?: string;
   description?: string | null;
-  activityType?: string | null;
-  owner?: string | null;
   startDate?: string | null;
   endDate?: string | null;
-  objectives?: string | null;
-  successIndicators?: string | null;
   targetAudience?: string | null;
-  additionalContext?: string | null;
+  objectives?: string | null;
+  output?: string | null;
+  outcome?: string | null;
   status?: ActivityStatus;
 }
 
@@ -517,7 +510,8 @@ export type InterpretationQualitativeOutcomeAnchorType =
   | "project_outcome"
   | "project_impact"
   | "activity_objective"
-  | "activity_success_indicator"
+  | "activity_output"
+  | "activity_outcome"
   | "unanchored";
 
 export interface InterpretationIndicator {
@@ -1075,7 +1069,8 @@ export interface EvidenceCatalogThemeEntry {
     | "project_outcome"
     | "project_impact"
     | "activity_objective"
-    | "activity_success_indicator"
+    | "activity_output"
+    | "activity_outcome"
     | "unanchored"
   >;
   sourceActivityIds: string[];

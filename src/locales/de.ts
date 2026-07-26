@@ -7,7 +7,7 @@ const de: TranslationDictionary = {
     english: "EN",
   },
   common: {
-    brand: "Impact Atlas",
+    brand: "brindl",
     evidenceWorkspace: "Evidenz-Arbeitsbereich",
     logIn: "Anmelden",
     register: "Registrieren",
@@ -48,16 +48,11 @@ const de: TranslationDictionary = {
       titleLine2: "Mehr Klarheit über ",
       titleHighlight: "Ihre Wirkung.",
       description:
-        "Impact Atlas bringt Projektdaten, Nachweise und Wirkungsinformationen an einem Ort zusammen. So erstellt Ihr Team Berichte schneller und erkennt leichter, was Ihre Arbeit bewirkt.",
+        "brindl bringt Projektdaten, Nachweise und Wirkungsinformationen an einem Ort zusammen. So erstellt Ihr Team Berichte schneller und erkennt leichter, was Ihre Arbeit bewirkt.",
       ctaPrimary: "Pilotprogramm ansehen",
       ctaSecondary: "15-minütigen Gespräch vereinbaren",
-      trustItems: [
-        "Bestehende Daten weiterverwenden",
-        "Persönliches Onboarding",
-        "Keine technische Einrichtung",
-      ],
       mockupAlt:
-        "Impact Atlas Dashboard-Vorschau mit der Übersicht eines Mentoring-Programms, seinen jüngsten Aktivitäten und einem Wirkungs-Insights-Panel mit einem Beziehungskapital-Wert von 79%.",
+        "brindl Dashboard-Vorschau mit der Übersicht eines Mentoring-Programms, seinen jüngsten Aktivitäten und einem Wirkungs-Insights-Panel mit einem Beziehungskapital-Wert von 79%.",
     },
     problem: {
       title: "Kommt Ihnen das bekannt vor?",
@@ -65,7 +60,7 @@ const de: TranslationDictionary = {
         {
           title: "Informationen verstreut",
           description:
-            "Projektdaten, Nachweise und Dokumente liegen in verschiedenen Dateisystemen/Ordnern, Mails & auf dem nächsten Stick.",
+            "Projektdaten, Nachweise und Dokumente liegen in verschiedenen Dateisystemen/Ordnern, wie Excel, Word, PDF, Emails etc.",
         },
         {
           title: "Berichte dauern zu lange",
@@ -80,17 +75,17 @@ const de: TranslationDictionary = {
       ],
     },
     howItWorks: {
-      title: "So hilft Impact Atlas",
+      title: "So hilft brindl",
       steps: [
         {
-          title: "Sammeln",
+          title: "An einem Ort sammeln",
           description:
-            "Projektdaten und Nachweise automatisch sammeln – anstatt zeitaufwendig selbst organisieren.",
+            "Projektdaten und Nachweise werden an einem Ort gesammelt und strukturiert.",
         },
         {
           title: "Verstehen",
           description:
-            "Daten verstehen und auswerten. Wirkungen sichtbar machen – mit klaren Kennzahlen und Insights.",
+            "Daten verstehen und auswerten. Wirkungen werden sichtbar gemacht und mit klaren Kennzahlen und Insights versehen.",
         },
         {
           title: "Berichten",
@@ -101,16 +96,15 @@ const de: TranslationDictionary = {
     },
     trustBar: {
       statement:
-        "Impact Atlas ist nach DSGVO-Grundsätzen konzipiert. Wir reduzieren direkte personenbezogene Identifikatoren vor der KI-Verarbeitung, nutzen kontrollierte AWS-Infrastruktur, verwenden Kundendaten nicht zum Training allgemeiner KI-Modelle und löschen Kundendaten, wenn der Service endet.",
+        "brindl ist nach DSGVO-Grundsätzen konzipiert. Wir reduzieren direkte personenbezogene Identifikatoren vor der KI-Verarbeitung, nutzen kontrollierte AWS-Infrastruktur, verwenden Kundendaten nicht zum Training allgemeiner KI-Modelle und löschen Kundendaten, wenn der Service endet.",
     },
     pilotProgram: {
       title: "Unser Pilotprogramm",
       whatYouGet: {
         title: "Das erhalten Sie",
         items: [
-          "Zugang zu Impact Atlas während der Pilotphase 2026",
-          "Persönliches Onboarding und Erklärung",
-          "Unterstützung durch unser Expert:innen-Team",
+          "Zugang zu brindl während der Pilotphase 2026",
+          "Persönliches Onboarding und Erklärung (Bei Bedarf)",
           "Regelmäßiger Austausch & Feedbackrunden",
         ],
       },
@@ -126,7 +120,6 @@ const de: TranslationDictionary = {
         title: "Wichtig zu wissen",
         items: [
           "Kostenfreie Teilnahme",
-          "Ca. 2-3 Stunden Zeitaufwand pro Monat",
           "Laufzeit: August – September 2026",
           "Plätze sind begrenzt",
         ],
@@ -136,7 +129,8 @@ const de: TranslationDictionary = {
         items: [
           "Sie erhalten eine Auswertung mit Insights",
           "Gemeinsames Feedback zur Optimierung",
-          "Zugang zu Impact Atlas zu Sonderkonditionen (optional)",
+          "Zugang zu brindl zu Sonderkonditionen",
+          "Sie teilen uns in einem kurzen Gespräch mit, wie nutzerfreundlich brindl ist und was noch fehlt.",
         ],
       },
     },
@@ -147,7 +141,7 @@ const de: TranslationDictionary = {
       titleHighlight2: "mehr Wirkung",
       titleAfter: "?",
       description:
-        "Vereinbaren Sie jetzt ein unverbindliches Gespräch. Wir zeigen Ihnen, wie Impact Atlas Ihr Team entlastet und Ihre Wirkung sichtbar macht.",
+        "Vereinbaren Sie jetzt ein unverbindliches Gespräch. Wir zeigen Ihnen, wie brindl Ihr Team entlastet und Ihre Wirkung sichtbar macht.",
       primary: "Gespräch anfragen",
     },
     faq: {
@@ -156,34 +150,34 @@ const de: TranslationDictionary = {
         {
           question: "Wie viel Aufwand bedeutet die Teilnahme am Pilotprogramm?",
           answer:
-            "Rechnen Sie während des Pilotprogramms mit durchschnittlich zwei bis drei Stunden pro Monat. Der größte Teil des Aufwands entsteht zu Beginn: In einem persönlichen Onboarding richten wir gemeinsam Ihr Projekt ein, klären Ihre Berichtsanforderungen und besprechen, welche vorhandenen Daten und Nachweise Sie nutzen möchten.\n\nAnschließend laden Sie bestehende Projektunterlagen hoch und prüfen die von Impact Atlas aufbereiteten Informationen. Zusätzliche Zeit benötigen wir vor allem für kurze Feedbackgespräche, damit wir verstehen, was für Ihren Arbeitsalltag hilfreich ist und wo die Plattform noch verbessert werden sollte.\n\nSie müssen dafür keine neue Monitoring-Struktur aufbauen und keine zusätzliche Datenerhebung starten. Das Pilotprogramm soll sich möglichst gut in Ihre bestehenden Abläufe integrieren, nicht neue Bürokratie schaffen. Im ersten Monat kann der Aufwand durch das Onboarding etwas höher sein; danach konzentriert sich die Teilnahme vor allem auf Nutzung, Prüfung und Feedback.",
+            "Rechnen Sie während des Pilotprogramms mit durchschnittlich zwei bis drei Stunden pro Monat. Der größte Teil des Aufwands entsteht zu Beginn: In einem persönlichen Onboarding richten wir gemeinsam Ihr Projekt ein, klären Ihre Berichtsanforderungen und besprechen, welche vorhandenen Daten und Nachweise Sie nutzen möchten.\n\nAnschließend laden Sie bestehende Projektunterlagen hoch und prüfen die von brindl aufbereiteten Informationen. Zusätzliche Zeit benötigen wir vor allem für kurze Feedbackgespräche, damit wir verstehen, was für Ihren Arbeitsalltag hilfreich ist und wo die Plattform noch verbessert werden sollte.\n\nSie müssen dafür keine neue Monitoring-Struktur aufbauen und keine zusätzliche Datenerhebung starten. Das Pilotprogramm soll sich möglichst gut in Ihre bestehenden Abläufe integrieren, nicht neue Bürokratie schaffen. Im ersten Monat kann der Aufwand durch das Onboarding etwas höher sein; danach konzentriert sich die Teilnahme vor allem auf Nutzung, Prüfung und Feedback.",
         },
         {
-          question: "Welche Daten können wir mit Impact Atlas nutzen?",
+          question: "Welche Daten können wir mit brindl nutzen?",
           answer:
-            "Impact Atlas ist dafür gedacht, mit den Daten und Nachweisen zu arbeiten, die in Ihrem Projekt bereits vorhanden sind. Dazu können beispielsweise gehören:\n\n• Excel- und CSV-Dateien mit Indikatoren, Teilnehmendenzahlen oder Aktivitäten\n• Word-Dokumente und PDF-Berichte\n• Sach- und Zwischenberichte\n• Anwesenheitslisten und Veranstaltungsübersichten\n• Exporte aus Umfrage- oder Datenerhebungstools\n• Protokolle, Gesprächsnotizen und qualitative Rückmeldungen\n• Projektkonzepte, Wirkungslogiken und Förderunterlagen\n• Nachweise zu durchgeführten Aktivitäten und erzielten Ergebnissen\n\nDie Dateien müssen nicht perfekt aufbereitet sein. Ein Ziel von Impact Atlas ist es gerade, Informationen aus unterschiedlichen Dokumenten und Tabellen zusammenzuführen und übersichtlicher nutzbar zu machen.\n\nIm Onboarding besprechen wir gemeinsam, welche Unterlagen für Ihren Anwendungsfall sinnvoll sind. Dabei gilt: Es sollten nur Daten hochgeladen werden, die für die Auswertung tatsächlich benötigt werden. Besonders schützenswerte oder unnötige personenbezogene Daten sollten nach Möglichkeit vorher entfernt oder pseudonymisiert werden. Falls Ihr Anwendungsfall personenbezogene Daten erfordert, klären wir vorab, wie damit datenschutzkonform umgegangen werden kann.",
+            "brindl ist dafür gedacht, mit den Daten und Nachweisen zu arbeiten, die in Ihrem Projekt bereits vorhanden sind. Dazu können beispielsweise gehören:\n\n• Excel- und CSV-Dateien mit Indikatoren, Teilnehmendenzahlen oder Aktivitäten\n• Word-Dokumente und PDF-Berichte\n• Sach- und Zwischenberichte\n• Anwesenheitslisten und Veranstaltungsübersichten\n• Exporte aus Umfrage- oder Datenerhebungstools\n• Protokolle, Gesprächsnotizen und qualitative Rückmeldungen\n• Projektkonzepte, Wirkungslogiken und Förderunterlagen\n• Nachweise zu durchgeführten Aktivitäten und erzielten Ergebnissen\n\nDie Dateien müssen nicht perfekt aufbereitet sein. Ein Ziel von brindl ist es gerade, Informationen aus unterschiedlichen Dokumenten und Tabellen zusammenzuführen und übersichtlicher nutzbar zu machen.\n\nIm Onboarding besprechen wir gemeinsam, welche Unterlagen für Ihren Anwendungsfall sinnvoll sind. Dabei gilt: Es sollten nur Daten hochgeladen werden, die für die Auswertung tatsächlich benötigt werden. Besonders schützenswerte oder unnötige personenbezogene Daten sollten nach Möglichkeit vorher entfernt oder pseudonymisiert werden. Falls Ihr Anwendungsfall personenbezogene Daten erfordert, klären wir vorab, wie damit datenschutzkonform umgegangen werden kann.",
         },
         {
           question:
-            "Wie nutzt Impact Atlas künstliche Intelligenz und wie werden personenbezogene Daten geschützt?",
+            "Wie nutzt brindl künstliche Intelligenz und wie werden personenbezogene Daten geschützt?",
           answer:
-            "Impact Atlas nutzt KI, um Informationen aus hochgeladenen Projektunterlagen zu strukturieren, zusammenzufassen und in einen verständlichen Zusammenhang zu bringen. Die KI kann beispielsweise relevante Inhalte erkennen, Nachweise verschiedenen Aktivitäten zuordnen, Entwicklungen beschreiben und auf fehlende oder widersprüchliche Informationen hinweisen.\n\nDer Schutz personenbezogener Daten beginnt, bevor Inhalte an das KI-Modell übermittelt werden. Ein integrierter PII-Scanner erkennt direkte Identifikatoren – derzeit insbesondere Personennamen – und ersetzt sie durch pseudonyme Platzhalter. Dadurch erhält das Modell beispielsweise nicht den Namen „Maria Mustermann“, sondern eine neutrale Kennzeichnung wie „Person 01“. Diese Pseudonymisierung reduziert das Risiko, ersetzt aber nicht alle weiteren Datenschutzmaßnahmen.\n\nOrganisationen sollten deshalb nur die für den jeweiligen Zweck erforderlichen Daten hochladen und besonders sensible oder nicht benötigte Angaben möglichst bereits vor dem Upload entfernen. Pseudonymisierte Informationen gelten rechtlich nicht automatisch als anonym und können weiterhin unter die DSGVO fallen.\n\nDie KI-Verarbeitung erfolgt über Amazon Bedrock. Nach Angaben von AWS haben die Anbieter der dort bereitgestellten Basismodelle keinen Zugriff auf Kundenprompts oder die generierten Antworten. AWS erklärt außerdem, dass Ein- und Ausgaben nicht zum Training der Basismodelle verwendet werden.\n\nImpact Atlas verwendet KI als unterstützendes Werkzeug. Die Ergebnisse sollten durch die Nutzer:innen geprüft werden und ersetzen keine fachliche oder rechtliche Bewertung.",
+            "brindl nutzt KI, um Informationen aus hochgeladenen Projektunterlagen zu strukturieren, zusammenzufassen und in einen verständlichen Zusammenhang zu bringen. Die KI kann beispielsweise relevante Inhalte erkennen, Nachweise verschiedenen Aktivitäten zuordnen, Entwicklungen beschreiben und auf fehlende oder widersprüchliche Informationen hinweisen.\n\nDer Schutz personenbezogener Daten beginnt, bevor Inhalte an das KI-Modell übermittelt werden. Ein integrierter PII-Scanner erkennt direkte Identifikatoren – derzeit insbesondere Personennamen – und ersetzt sie durch pseudonyme Platzhalter. Dadurch erhält das Modell beispielsweise nicht den Namen „Maria Mustermann“, sondern eine neutrale Kennzeichnung wie „Person 01“. Diese Pseudonymisierung reduziert das Risiko, ersetzt aber nicht alle weiteren Datenschutzmaßnahmen.\n\nOrganisationen sollten deshalb nur die für den jeweiligen Zweck erforderlichen Daten hochladen und besonders sensible oder nicht benötigte Angaben möglichst bereits vor dem Upload entfernen. Pseudonymisierte Informationen gelten rechtlich nicht automatisch als anonym und können weiterhin unter die DSGVO fallen.\n\nDie KI-Verarbeitung erfolgt über Amazon Bedrock. Nach Angaben von AWS haben die Anbieter der dort bereitgestellten Basismodelle keinen Zugriff auf Kundenprompts oder die generierten Antworten. AWS erklärt außerdem, dass Ein- und Ausgaben nicht zum Training der Basismodelle verwendet werden.\n\nbrindl verwendet KI als unterstützendes Werkzeug. Die Ergebnisse sollten durch die Nutzer:innen geprüft werden und ersetzen keine fachliche oder rechtliche Bewertung.",
         },
         {
           question: "Ist meine Organisation rechtlich gebunden?",
           answer:
-            "Die Teilnahme am Pilotprogramm verpflichtet Ihre Organisation nicht dazu, Impact Atlas anschließend kostenpflichtig weiterzunutzen. Es gibt keine automatische Verlängerung in ein kostenpflichtiges Abonnement und keine spätere Kaufverpflichtung.\n\nFür die Pilotphase vereinbaren wir lediglich die Rahmenbedingungen der Zusammenarbeit. Dazu gehören beispielsweise die Laufzeit des Piloten, der Umgang mit Daten, Zuständigkeiten und die Möglichkeit, Feedback zur Plattform zu geben. Ihre Organisation behält die Kontrolle über ihre eigenen Projektinformationen und entscheidet selbst, welche Daten für den Pilot genutzt werden.\n\nSollten Sie das Pilotprogramm vorzeitig beenden wollen, besprechen wir gemeinsam das weitere Vorgehen und den Umgang mit den bis dahin hochgeladenen Daten. Eine spätere Nutzung von Impact Atlas wird nur dann vereinbart, wenn beide Seiten dies ausdrücklich wünschen.",
+            "Die Teilnahme am Pilotprogramm verpflichtet Ihre Organisation nicht dazu, brindl anschließend kostenpflichtig weiterzunutzen. Es gibt keine automatische Verlängerung in ein kostenpflichtiges Abonnement und keine spätere Kaufverpflichtung.\n\nFür die Pilotphase vereinbaren wir lediglich die Rahmenbedingungen der Zusammenarbeit. Dazu gehören beispielsweise die Laufzeit des Piloten, der Umgang mit Daten, Zuständigkeiten und die Möglichkeit, Feedback zur Plattform zu geben. Ihre Organisation behält die Kontrolle über ihre eigenen Projektinformationen und entscheidet selbst, welche Daten für den Pilot genutzt werden.\n\nSollten Sie das Pilotprogramm vorzeitig beenden wollen, besprechen wir gemeinsam das weitere Vorgehen und den Umgang mit den bis dahin hochgeladenen Daten. Eine spätere Nutzung von brindl wird nur dann vereinbart, wenn beide Seiten dies ausdrücklich wünschen.",
         },
         {
           question: "Wie aufwendig ist die Einrichtung?",
           answer:
-            "Für die Einrichtung benötigen Sie keine eigene IT-Abteilung und müssen keine neue Software in Ihrer Organisation installieren. Impact Atlas wird über den Browser genutzt.\n\nZu Beginn führen wir ein persönliches Onboarding durch. Dabei richten wir gemeinsam Ihr erstes Projekt ein und besprechen unter anderem:\n\n• Welche Ziele und Aktivitäten umfasst das Projekt?\n• Welche Indikatoren oder Berichtspflichten sind relevant?\n• Welche Daten und Nachweise liegen bereits vor?\n• Wer soll innerhalb Ihrer Organisation mit Impact Atlas arbeiten?\n• Welche Auswertungen oder Berichtsfragen sind für Sie besonders wichtig?\n\nDanach können Sie bestehende Dateien direkt dem jeweiligen Projekt oder den passenden Aktivitäten zuordnen. Sie müssen Ihre bisherigen Ablagen nicht vollständig migrieren und auch keine neue Datenstruktur entwickeln, bevor Sie beginnen können.\n\nWährend der Pilotphase unterstützen wir Sie persönlich bei Fragen zur Einrichtung, zur Auswahl geeigneter Unterlagen und zur Nutzung der Ergebnisse. Das Ziel ist, möglichst schnell mit einem realen Projekt und Ihren bestehenden Daten arbeiten zu können.",
+            "Für die Einrichtung benötigen Sie keine eigene IT-Abteilung und müssen keine neue Software in Ihrer Organisation installieren. brindl wird über den Browser genutzt.\n\nZu Beginn führen wir ein persönliches Onboarding durch. Dabei richten wir gemeinsam Ihr erstes Projekt ein und besprechen unter anderem:\n\n• Welche Ziele und Aktivitäten umfasst das Projekt?\n• Welche Indikatoren oder Berichtspflichten sind relevant?\n• Welche Daten und Nachweise liegen bereits vor?\n• Wer soll innerhalb Ihrer Organisation mit brindl arbeiten?\n• Welche Auswertungen oder Berichtsfragen sind für Sie besonders wichtig?\n\nDanach können Sie bestehende Dateien direkt dem jeweiligen Projekt oder den passenden Aktivitäten zuordnen. Sie müssen Ihre bisherigen Ablagen nicht vollständig migrieren und auch keine neue Datenstruktur entwickeln, bevor Sie beginnen können.\n\nWährend der Pilotphase unterstützen wir Sie persönlich bei Fragen zur Einrichtung, zur Auswahl geeigneter Unterlagen und zur Nutzung der Ergebnisse. Das Ziel ist, möglichst schnell mit einem realen Projekt und Ihren bestehenden Daten arbeiten zu können.",
         },
         {
           question:
-            "Was passiert mit unseren Daten, wenn wir Impact Atlas nach dem Pilot nicht weiter nutzen?",
+            "Was passiert mit unseren Daten, wenn wir brindl nach dem Pilot nicht weiter nutzen?",
           answer:
-            "Sie entscheiden nach Abschluss des Pilotprogramms selbst, ob Sie Impact Atlas weiterhin nutzen möchten. Es gibt keine automatische Verlängerung und keine Verpflichtung, ein kostenpflichtiges Angebot abzuschließen.\n\nEntscheiden Sie sich gegen eine weitere Nutzung, wird Ihr Zugang beendet und alle von Ihrer Organisation hochgeladenen Daten werden gelöscht. Das gilt auch für Informationen und Ergebnisse, die Impact Atlas auf Grundlage dieser Daten erstellt hat.\n\nIhre Daten bleiben zu jeder Zeit Ihre Daten. Impact Atlas verkauft sie nicht, gibt sie nicht an andere Organisationen weiter und verwendet sie nicht ohne Ihre Zustimmung für andere Zwecke. Vor der Löschung können Sie die für Sie relevanten Ergebnisse exportieren, sofern diese Exportmöglichkeit Teil des Pilotumfangs ist.",
+            "Sie entscheiden nach Abschluss des Pilotprogramms selbst, ob Sie brindl weiterhin nutzen möchten. Es gibt keine automatische Verlängerung und keine Verpflichtung, ein kostenpflichtiges Angebot abzuschließen.\n\nEntscheiden Sie sich gegen eine weitere Nutzung, wird Ihr Zugang beendet und alle von Ihrer Organisation hochgeladenen Daten werden gelöscht. Das gilt auch für Informationen und Ergebnisse, die brindl auf Grundlage dieser Daten erstellt hat.\n\nIhre Daten bleiben zu jeder Zeit Ihre Daten. brindl verkauft sie nicht, gibt sie nicht an andere Organisationen weiter und verwendet sie nicht ohne Ihre Zustimmung für andere Zwecke. Vor der Löschung können Sie die für Sie relevanten Ergebnisse exportieren, sofern diese Exportmöglichkeit Teil des Pilotumfangs ist.",
         },
       ],
     },
@@ -192,7 +186,7 @@ const de: TranslationDictionary = {
       impressum: "Impressum",
       datenschutz: "Datenschutz",
       agb: "AGB",
-      rights: "Impact Atlas. Alle Rechte vorbehalten.",
+      rights: "brindl. Alle Rechte vorbehalten.",
     },
   },
   legal: {
@@ -215,9 +209,9 @@ const de: TranslationDictionary = {
   },
   auth: {
     loginMarketingTitle:
-      "Bauen Sie einen Fördernachweis-Workspace vor der KI-Ebene auf.",
+      "Aus vorhandenen Projektdaten belastbare Wirkungsnachweise erstellen.",
     loginMarketingDescription:
-      "Starten Sie mit Organisationen, Projekten, Aktivitäten, Authentifizierung und einem belastbaren Backend. Die semantische Verarbeitung kommt später.",
+      "brindl strukturiert Ihre Unterlagen, macht vorhandene Nachweise sichtbar und zeigt, welche Informationen für eine fundierte Wirkungsdarstellung noch fehlen.",
     registerMarketingTitle: "Ihre Projekte erzählen bereits eine Geschichte",
     registerMarketingDescription:
       "In wenigen Minuten richten Sie Ihren Workspace ein und können anschließend Projektdaten hochladen, analysieren und Wirkung sichtbar machen.",
@@ -254,10 +248,10 @@ const de: TranslationDictionary = {
       "Legen Sie zuerst die Organisation an, bevor Sie Projektleitungen einladen und in den Workspace führen.",
     workspaceProvisioningCardTitle: "Workspace erstellen",
     workspaceProvisioningCardDescription:
-      "Verwenden Sie den Organisationsnamen genau so, wie Ihr Team ihn in Impact Atlas sehen soll.",
+      "Verwenden Sie den Organisationsnamen genau so, wie Ihr Team ihn in brindl sehen soll.",
     workspaceCreatedToast: "Workspace wurde erstellt.",
     workspaceCreateFailed: "Workspace konnte nicht erstellt werden.",
-    welcomeTitle: "Willkommen bei Impact Atlas.",
+    welcomeTitle: "Willkommen bei brindl.",
     welcomeDescription:
       "Ihr Workspace ist bereit. Konfigurieren Sie zuerst die Organisation, bevor Sie Ihr Team einladen.",
     welcomeCardTitle: "Ihr Workspace ist bereit.",
@@ -455,7 +449,6 @@ const de: TranslationDictionary = {
       emptyDescription:
         "Aktivitäten sind Workshops, Mentoring-Sessions, Trainings oder andere Maßnahmen, zu denen Evidenz gesammelt wird.",
       emptyAction: "Erste Aktivität erstellen",
-      defaultType: "Aktivität",
       noDescription: "Noch keine Aktivitätsbeschreibung vorhanden.",
       noDate: "Noch kein Datum festgelegt",
       evidenceCount: "{{count}} Evidenzdateien",
@@ -475,7 +468,7 @@ const de: TranslationDictionary = {
         "Verwalten Sie hochgeladene Dateien nach Aktivität. Evidenz bleibt immer der Maßnahme zugeordnet, zu der sie gehört.",
       emptyTitle: "Noch keine Aktivitäten für Evidenz vorhanden",
       emptyDescription:
-        "Legen Sie zuerst eine Aktivität an. Jeder Evidenz-Upload in Impact Atlas gehört zu einer konkreten Aktivität.",
+        "Legen Sie zuerst eine Aktivität an. Jeder Evidenz-Upload in brindl gehört zu einer konkreten Aktivität.",
       openActivity: "Aktivität öffnen",
       uploadAction: "Evidenz hochladen",
       uploading: "{{name}} wird hochgeladen…",
@@ -497,17 +490,17 @@ const de: TranslationDictionary = {
         "Datenschutzprüfung konnte nicht freigegeben werden.",
       privacyReviewTitle: "Datenschutzprüfung",
       privacyReviewDescription:
-        "Bestätigen Sie, wie erkannte Namen und Adressen behandelt werden sollen, bevor Impact Atlas mit der datenschutzsicheren Repräsentation fortfährt.",
+        "Bestätigen Sie, wie erkannte Namen und Adressen behandelt werden sollen, bevor brindl mit der datenschutzsicheren Repräsentation fortfährt.",
       loadingPrivacyReview: "Datenschutzprüfung wird geladen…",
       noPrivacyFindings: "Es liegen noch keine Datenschutzbefunde vor.",
       privacyFindingSummary:
         "{{entityType}} wurde {{count}}-mal erkannt. Empfohlene Aktion: {{action}}.",
       analysisDialogAnalyzingTitle: "Ihre Datei wird analysiert…",
       analysisDialogAnalyzingDescription:
-        "Impact Atlas liest die Datei ein und prüft auf Namen und Adressen. Sie können dieses Fenster schließen und weiterarbeiten — die Analyse läuft im Hintergrund weiter.",
+        "brindl liest die Datei ein und prüft auf Namen und Adressen. Sie können dieses Fenster schließen und weiterarbeiten — die Analyse läuft im Hintergrund weiter.",
       analysisDialogReadyTitle: "Bereit zur Datenschutzprüfung",
       analysisDialogReadyDescription:
-        "Impact Atlas hat die Analyse dieser Datei abgeschlossen. Prüfen Sie die erkannten Befunde, bevor es weitergeht.",
+        "brindl hat die Analyse dieser Datei abgeschlossen. Prüfen Sie die erkannten Befunde, bevor es weitergeht.",
       analysisDialogFailedTitle: "Analyse fehlgeschlagen",
       analysisDialogFailedFallback:
         "Die Datei konnte aufgrund eines unerwarteten Fehlers nicht analysiert werden.",
@@ -526,11 +519,11 @@ const de: TranslationDictionary = {
         "{{count}} Befunde erkannt. Für {{decisions}} Eintrag(e) ist noch eine explizite Transformationsauswahl erforderlich.",
       decisionRequired: "Entscheidung erforderlich",
       gdprNoticeIntro:
-        "Wir haben in diesem Datensatz Namen oder Adressen gefunden. Wählen Sie für jeden Punkt unten, wie Impact Atlas diese Daten transformieren soll, bevor der Datensatz datenschutzsicher weiterverarbeitet wird.",
+        "Wir haben in diesem Datensatz Namen oder Adressen gefunden. Wählen Sie für jeden Punkt unten, wie brindl diese Daten transformieren soll, bevor der Datensatz datenschutzsicher weiterverarbeitet wird.",
       recommendationSentence:
-        "Wir empfehlen, dass Impact Atlas diese {{entityType}}-Daten {{verb}}, bevor der Datensatz weiterverwendet wird.",
+        "Wir empfehlen, dass brindl diese {{entityType}}-Daten {{verb}}, bevor der Datensatz weiterverwendet wird.",
       recommendationSentenceWithExample:
-        "Wir empfehlen, dass Impact Atlas diese {{entityType}}-Daten {{verb}}, bevor der Datensatz weiterverwendet wird. Beispielwert: „{{example}}“.",
+        "Wir empfehlen, dass brindl diese {{entityType}}-Daten {{verb}}, bevor der Datensatz weiterverwendet wird. Beispielwert: „{{example}}“.",
       recommendationVerbKeep: "beibehält",
       recommendationVerbTokenize:
         "durch ein stabiles pseudonymes Kürzel ersetzt",
@@ -541,9 +534,9 @@ const de: TranslationDictionary = {
         "an den sensiblen Stellen bereinigt oder schwärzt",
       recommendedActionBadge: "Empfohlen",
       keepOverrideWarning:
-        "Impact Atlas würde diese Daten unverändert beibehalten. Wenn Sie die Tokenisierung ablehnen, müssen Sie bestätigen, dass Sie sich dieser Entscheidung bewusst sind und den Nutzungsbedingungen zustimmen.",
+        "brindl würde diese Daten unverändert beibehalten. Wenn Sie die Tokenisierung ablehnen, müssen Sie bestätigen, dass Sie sich dieser Entscheidung bewusst sind und den Nutzungsbedingungen zustimmen.",
       keepUnchangedAcknowledgementLabel:
-        "Ich lehne die empfohlene Tokenisierung bewusst ab und bestätige, dass ich für diese Entscheidung verantwortlich bin und die Nutzungsbedingungen von Impact Atlas akzeptiere.",
+        "Ich lehne die empfohlene Tokenisierung bewusst ab und bestätige, dass ich für diese Entscheidung verantwortlich bin und die Nutzungsbedingungen von brindl akzeptiere.",
       keepUnchangedAcknowledgementRequired:
         "Bestätigen Sie diese Warnung, wenn Sie die Daten unverändert beibehalten möchten.",
       overrideFindingWarning:
@@ -573,7 +566,7 @@ const de: TranslationDictionary = {
       reviewTransformingTitle:
         "Datenschutzsichere Repräsentation in Erstellung",
       reviewTransformingDescription:
-        "Die Datenschutzprüfung wurde freigegeben. Impact Atlas erstellt gerade die datenschutzsichere Repräsentation.",
+        "Die Datenschutzprüfung wurde freigegeben. brindl erstellt gerade die datenschutzsichere Repräsentation.",
       parsedRepresentationTitle: "Geparste Repräsentation",
       parsedRepresentationDescription:
         "Prüfen Sie die deterministische Struktur, die aus der hochgeladenen Datei extrahiert wurde. Diese Vorschau zeigt keine rohen personenbezogenen Werte oder Absatztexte.",
@@ -668,7 +661,7 @@ const de: TranslationDictionary = {
         actionOpeningKnowledge: "AI knowledge wird geöffnet…",
         knowledgeDialogTitle: "AI knowledge",
         knowledgeDialogDescription:
-          "Impact Atlas hat die interpretierte Evidenz dieser Aktivität zu einem gemeinsamen Wissensstand auf Aktivitätsebene zusammengeführt.",
+          "brindl hat die interpretierte Evidenz dieser Aktivität zu einem gemeinsamen Wissensstand auf Aktivitätsebene zusammengeführt.",
         knowledgeDialogLoading: "AI knowledge wird geladen…",
         knowledgeDialogError: "AI knowledge konnte nicht geladen werden.",
         knowledgeDialogMeta:
@@ -743,7 +736,7 @@ const de: TranslationDictionary = {
       exportLabel: "Export",
       exportJson: "JSON exportieren",
       exportText: "Text exportieren",
-      exportDocumentTitle: "Impact Atlas Dashboard-Export",
+      exportDocumentTitle: "brindl Dashboard-Export",
       exportDocumentScopeLabel: "Bereich",
       exportDocumentProjectLabel: "Projekt",
       exportDocumentActivityLabel: "Aktivität",
@@ -893,7 +886,7 @@ const de: TranslationDictionary = {
       titles: {
         empty: "Laden Sie Ihren ersten Datensatz hoch",
         uploading: "Ihr Datensatz wird hochgeladen",
-        processing: "Impact Atlas bereitet Ihre Evidenz vor",
+        processing: "brindl bereitet Ihre Evidenz vor",
         ready: "Ihre Evidenz ist bereit für den nächsten Schritt",
         attention: "Dieser Datensatz braucht einen zweiten Blick",
       },
@@ -951,7 +944,7 @@ const de: TranslationDictionary = {
       eyebrow: "Evidenz hinzufügen",
       title: "Monitoring-Daten in diese Aktivität bringen",
       description:
-        "Laden Sie eine CSV-, Excel-, PDF- oder DOCX-Datei hoch. Impact Atlas führt Sie von hier aus durch Prüfung, Analyse und AI knowledge.",
+        "Laden Sie eine CSV-, Excel-, PDF- oder DOCX-Datei hoch. brindl führt Sie von hier aus durch Prüfung, Analyse und AI knowledge.",
       cta: "Evidenz hochladen",
       remove: "Entfernen",
     },
@@ -1048,9 +1041,23 @@ const de: TranslationDictionary = {
     uploading: "Wird hochgeladen…",
     createProcessingJob: "Evidenz analysieren",
     successToast: "Evidenz hochgeladen.",
+    multiSuccessToast: "{{count}} Dateien hochgeladen.",
     failedToast: "Upload fehlgeschlagen.",
+    multiFailedToast: "{{count}} Dateien konnten nicht hochgeladen werden.",
+    multiResultToast:
+      "{{uploaded}} Dateien hochgeladen, {{failed}} fehlgeschlagen.",
+    invalidFileNameToast:
+      "Dieser Dateiname wird nicht unterstützt. Bitte entferne Steuerzeichen oder Pfadtrenner und versuche es erneut.",
+    fileNameTooLongToast:
+      "Dieser Dateiname ist zu lang. Bitte kürze ihn und versuche es erneut.",
     unsupportedFileTypeToast:
       "Nicht unterstützter Dateityp. Bitte lade eine CSV-, Excel- (.xlsx/.xls), PDF- oder Word-Datei (.docx) hoch.",
+    queueTitle: "Upload-Warteschlange",
+    queueProgress: "{{uploaded}} / {{total}} abgeschlossen",
+    queueQueued: "In Warteschlange",
+    queueUploading: "Wird hochgeladen",
+    queueUploaded: "Hochgeladen",
+    queueFailed: "Fehlgeschlagen",
   },
   processing: {
     loading: "Job-Status wird geladen…",
@@ -1078,7 +1085,7 @@ const de: TranslationDictionary = {
     eyebrow: "KI-Datensatzprüfung",
     title: "Hat die KI Ihren Datensatz richtig verstanden?",
     description:
-      "Impact Atlas ordnet jede hochgeladene Spalte ein, markiert personenbezogene Daten und empfiehlt sichere Transformationen, bevor die Interpretation weitergeht.",
+      "brindl ordnet jede hochgeladene Spalte ein, markiert personenbezogene Daten und empfiehlt sichere Transformationen, bevor die Interpretation weitergeht.",
     cta: {
       uploadDataset: "Datensatz hochladen",
       reviewRequired: "Prüfung erforderlich ({{count}})",
@@ -1090,7 +1097,7 @@ const de: TranslationDictionary = {
       eyebrow: "KI-Dateninterpretation",
       title: "Es wurde noch kein Datensatz analysiert.",
       description:
-        "Sobald Sie eine CSV- oder Excel-Datei hochladen, liest Impact Atlas die Struktur, versteht die Felder, erkennt personenbezogene Daten und bereitet alles für die Interpretation vor.",
+        "Sobald Sie eine CSV- oder Excel-Datei hochladen, liest brindl die Struktur, versteht die Felder, erkennt personenbezogene Daten und bereitet alles für die Interpretation vor.",
       benefits: [
         "Jede Spalte automatisch erkennen",
         "Die wahrscheinlichste Bedeutung jedes Felds verstehen",
@@ -1309,7 +1316,7 @@ const de: TranslationDictionary = {
     eyebrow: "Activity AI knowledge",
     title: "Die Aktivität als gemeinsamen Wissensstand lesen",
     description:
-      "Impact Atlas führt die interpretierte Evidenz dieser Aktivität zu einem narrativen KI-Wissensstand auf Aktivitätsebene zusammen.",
+      "brindl führt die interpretierte Evidenz dieser Aktivität zu einem narrativen KI-Wissensstand auf Aktivitätsebene zusammen.",
     notReadyTitle: "AI knowledge ist noch nicht bereit",
     notReadyDescription:
       "Gehen Sie zur Interpretationsseite zurück, um Datenschutzprüfungen abzuschließen, Klärungsfragen zu beantworten oder die KI-Analyse für diese Aktivität zu starten.",
@@ -1328,20 +1335,18 @@ const de: TranslationDictionary = {
     workflowGuardrails: [
       "Nutzen Sie möglichst einen klaren Datensatz pro Aktivität.",
       "Halten Sie Aktivitätsnamen und Beschreibungen spezifisch, damit der KI-Kontext verlässlich bleibt.",
-      "Aktualisieren Sie Verantwortlichkeit und Status, wenn sich die Umsetzung verändert.",
+      "Aktualisieren Sie den Status, wenn sich die Umsetzung verändert.",
     ],
     contextTitle: "Warum dieser Kontext wichtig ist",
     supportTitle: "Unterstützung für spätere Iterationen",
     supportDescription:
       "Diese Seite wird zum Ort für Aktivitätsmetadaten, Evidenzregeln und spätere Workflow-Einstellungen ausgebaut.",
-    noOwner: "Es wurde noch keine verantwortliche Person zugewiesen.",
     noDescription: "Es wurde noch keine Aktivitätsbeschreibung ergänzt.",
     noProjectGoal: "Es wurden noch keine Projektwirkung oder Outcomes erfasst.",
     fields: {
       name: "Name",
       status: "Status",
       project: "Projekt",
-      owner: "Verantwortliche Person",
       created: "Erstellt",
       updated: "Aktualisiert",
       description: "Beschreibung",
@@ -1666,20 +1671,14 @@ const de: TranslationDictionary = {
     },
     fields: {
       timeline: "Zeitraum",
+      overarchingTargetGroup: "Übergeordnete Zielgruppe(n)",
+      intendedChanges: "Angestrebte Veränderungen",
       fundingProgram: "Förderprogramm",
       fundingOrganization: "Fördernde Organisation",
       targetGroups: "Zielgruppen",
       areaOfOperation: "Einsatzgebiet",
       partnerships: "Kooperationen / Partnerschaften",
       sdgs: "SDGs",
-      successIndicators: "Erfolgsindikatoren",
-      inputs: "Inputs",
-      activities: "Aktivitäten",
-      outputs: "Outputs",
-      impact: "Impact",
-      outcomes: "Outcomes",
-      created: "Erstellt",
-      updated: "Aktualisiert",
     },
   },
   projectDelete: {
@@ -1706,7 +1705,7 @@ const de: TranslationDictionary = {
     create: "Erstellen",
     createProjectTitle: "Projekt erstellen",
     createProjectDescription:
-      "Erfassen Sie Projektprofil, Zielgruppen und Wirkungsmodell für dieses Projekt.",
+      "Erfassen Sie Projektprofil und Zielgruppen für dieses Projekt.",
     createActivityTitle: "Aktivität hinzufügen",
     createActivityDescription:
       "Erfassen Sie die Umsetzungsdetails für eine Projektaktivität.",
@@ -1723,6 +1722,15 @@ const de: TranslationDictionary = {
       namePlaceholder: "Mentoring-Programm 2026",
       startMonth: "Startmonat / Jahr",
       endMonth: "Endmonat / Jahr",
+      overarchingTargetGroup: "Übergeordnete Zielgruppe(n)",
+      overarchingTargetGroupPlaceholder:
+        "z. B. Jugendliche mit Migrationshintergrund",
+      intendedChanges: "Ein bis drei angestrebte Veränderungen",
+      intendedChangesPlaceholder: "Welche Veränderungen streben Sie an?",
+      intendedChangesHint:
+        "Nennen Sie ein bis drei Veränderungen, getrennt durch Kommas oder Zeilenumbrüche.",
+      intendedChangesValidation:
+        "Bitte nennen Sie ein bis drei angestrebte Veränderungen.",
       fundingProgram: "Förderprogramm",
       fundingProgramPlaceholder: "Erasmus+",
       fundingOrganization: "Fördernde Organisation",
@@ -1745,38 +1753,6 @@ const de: TranslationDictionary = {
       partnerships: "Kooperationen / Partnerschaften",
       partnershipsPlaceholder:
         "Optional. Wichtige Kooperations- oder Umsetzungspartner ergänzen.",
-      impactModel: "Wirkungsmodell (I-O-O-I Modell)",
-      impactModelDescription:
-        "Erfassen Sie die zentralen Bausteine Ihrer Projektlogik.",
-      impactModelTooltipLabel: "Wirkungsmodell erklären",
-      impactModelTooltip: {
-        inputs: "Inputs: Welche Ressourcen setzen Sie für das Projekt ein?",
-        activities: "Aktivitäten: Welche Maßnahmen führen Sie durch?",
-        outputs: "Outputs: Welche direkten Ergebnisse entstehen?",
-        impact:
-          "Impact: Welche langfristige oder übergeordnete Wirkung soll das Projekt unterstützen?",
-        outcomes:
-          "Outcomes: Welche Veränderungen möchten Sie bei Ihrer Zielgruppe erreichen?",
-      },
-      inputs: "Inputs",
-      inputsPlaceholder:
-        "Welche Ressourcen, welches Personal, Budget oder welche Infrastruktur setzen Sie ein?",
-      activities: "Aktivitäten",
-      activitiesPlaceholder:
-        "Welche konkreten Maßnahmen, Formate oder Interventionen führen Sie durch?",
-      outputs: "Outputs",
-      outputsPlaceholder:
-        "Welche direkten und messbaren Ergebnisse erzeugt das Projekt?",
-      impact: "Impact",
-      impactPlaceholder:
-        "Welche übergeordnete oder langfristige Wirkung soll das Projekt unterstützen?",
-      outcomes: "Outcomes",
-      outcomesPlaceholder:
-        "Welche Veränderungen sollen bei den Zielgruppen erreicht werden?",
-      successIndicatorsSection: "Erfolgsindikatoren",
-      successIndicators: "Erfolgsindikatoren",
-      successIndicatorsPlaceholder:
-        "Woran erkennen Sie, dass Ihr Projekt erfolgreich war?",
     },
     activity: {
       submit: "Aktivität erstellen",
@@ -1793,27 +1769,26 @@ const de: TranslationDictionary = {
       description: "Beschreibung",
       descriptionPlaceholder:
         "Zweitägige Schulung für freiwillige Mentorinnen und Mentoren.",
-      activityType: "Aktivitätstyp",
-      activityTypeCustomPlaceholder: "Aktivitätstyp beschreiben",
-      owner: "Verantwortliche Person",
-      ownerPlaceholder: "Programmleitung",
       startDate: "Startdatum",
       endDate: "Enddatum",
-      objectives: "Ziele",
-      objectivesTooltipLabel: "Hinweis zur Formulierung von Zielen",
-      objectivesTooltip:
-        "Beschreiben Sie das Ziel aus der Perspektive der Zielgruppe im Präsens, als wäre es bereits erreicht. Formulieren Sie den gewünschten Zustand bzw. die angestrebte Veränderung konkret, positiv und ergebnisorientiert.",
-      objectivesPlaceholder:
-        "Senior:innen sind aktiv als Mentor:innen eingebunden und erleben durch den regelmäßigen Kontakt mit Jugendlichen mehr soziale Teilhabe.",
-      successIndicators: "Outcome-Indikator(en)",
-      successIndicatorsTooltipLabel: "Hinweis zu Outcome-Indikatoren",
-      successIndicatorsTooltip:
-        "Woran man erkennt, dass die Veränderung eingetreten ist.",
-      successIndicatorsPlaceholder:
-        "Outcome-Indikator zu Ziel + Zielgruppe 1:\n85 % der teilnehmenden Senior:innen geben an, sich durch das Mentoring weniger einsam zu fühlen.",
       targetAudience: "Zielgruppe",
-      targetAudiencePlaceholder:
-        "Zurückkehrende freiwillige Mentorinnen und Mentoren",
+      targetAudienceTooltipLabel: "Hinweis zur Zielgruppe",
+      targetAudienceTooltip: "Mit wem wird die Aktivität durchgeführt?",
+      targetAudiencePlaceholder: "Bewerbungstraining",
+      objectives: "Zweck der Aktivität",
+      objectivesTooltipLabel: "Hinweis zum Zweck der Aktivität",
+      objectivesTooltip: "Warum wird sie durchgeführt?",
+      objectivesPlaceholder:
+        "Die Teilnehmenden praktisch auf Bewerbungsverfahren vorbereiten",
+      output: "Output",
+      outputTooltipLabel: "Hinweis zum Output",
+      outputTooltip: "Was wird unmittelbar durchgeführt oder erstellt?",
+      outputPlaceholder: "Vier Trainings mit 35 Teilnehmenden",
+      outcome: "Outcome",
+      outcomeTooltipLabel: "Hinweis zum Outcome",
+      outcomeTooltip: "Was soll sich bei der Zielgruppe verändern?",
+      outcomePlaceholder:
+        "Teilnehmende fühlen sich sicherer im Bewerbungsprozess.",
       status: "Status",
     },
     options: {
@@ -1833,17 +1808,6 @@ const de: TranslationDictionary = {
         "Sonstige",
       ],
       customTargetGroupOption: "Sonstige",
-      activityTypes: [
-        "Workshop",
-        "Informationsveranstaltung",
-        "Beratung",
-        "Mentoring",
-        "Schulung",
-        "Veranstaltung",
-        "Netzwerktreffen",
-        "Kampagne",
-      ],
-      customActivityTypeOption: "Sonstige",
     },
   },
   errorPage: {

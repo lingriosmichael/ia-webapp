@@ -5,7 +5,7 @@ const en = {
     english: "EN",
   },
   common: {
-    brand: "Impact Atlas",
+    brand: "brindl",
     evidenceWorkspace: "Evidence Workspace",
     logIn: "Log in",
     register: "Register",
@@ -46,16 +46,11 @@ const en = {
       titleLine2: "More clarity on ",
       titleHighlight: "your impact.",
       description:
-        "Impact Atlas brings project data, evidence, and impact information together in one place, so your team writes reports faster and sees more clearly what your work achieves.",
+        "brindl brings project data, evidence, and impact information together in one place, so your team writes reports faster and sees more clearly what your work achieves.",
       ctaPrimary: "View pilot programme",
       ctaSecondary: "Book a 15-minute call",
-      trustItems: [
-        "Reuse your existing data",
-        "Personal onboarding",
-        "No technical setup",
-      ],
       mockupAlt:
-        "Impact Atlas dashboard preview showing a mentoring programme's overview, its recent activities, and an impact insights panel with a 79% relationship-capital score.",
+        "brindl dashboard preview showing a mentoring programme's overview, its recent activities, and an impact insights panel with a 79% relationship-capital score.",
     },
     problem: {
       title: "Does this sound familiar?",
@@ -63,7 +58,7 @@ const en = {
         {
           title: "Information scattered everywhere",
           description:
-            "Project data, evidence, and documents sit across different file systems, folders, emails, and the nearest USB stick.",
+            "Project data, evidence, and documents sit across different file systems and folders, such as Excel files, Word documents, PDFs, emails, and similar materials.",
         },
         {
           title: "Reports take too long",
@@ -78,17 +73,17 @@ const en = {
       ],
     },
     howItWorks: {
-      title: "How Impact Atlas helps",
+      title: "How brindl helps",
       steps: [
         {
-          title: "Collect",
+          title: "Bring together in one place",
           description:
-            "Gather project data and evidence automatically, instead of organizing it yourself by hand.",
+            "Project data and evidence are brought together in one place and structured.",
         },
         {
           title: "Understand",
           description:
-            "Understand and analyze the data. Make impact visible — with clear metrics and insights.",
+            "Understand and analyze the data. Impact becomes visible and is enriched with clear metrics and insights.",
         },
         {
           title: "Report",
@@ -99,16 +94,15 @@ const en = {
     },
     trustBar: {
       statement:
-        "Impact Atlas is designed according to GDPR principles. We reduce direct personal identifiers before AI processing, use controlled AWS infrastructure, do not use customer data to train general AI models, and delete customer data when the service ends.",
+        "brindl is designed according to GDPR principles. We reduce direct personal identifiers before AI processing, use controlled AWS infrastructure, do not use customer data to train general AI models, and delete customer data when the service ends.",
     },
     pilotProgram: {
       title: "Our pilot programme",
       whatYouGet: {
         title: "What you get",
         items: [
-          "Access to Impact Atlas during the 2026 pilot phase",
-          "Personal onboarding and walkthrough",
-          "Support from our team of experts",
+          "Access to brindl during the 2026 pilot phase",
+          "Personal onboarding and walkthrough (if needed)",
           "Regular check-ins & feedback rounds",
         ],
       },
@@ -124,7 +118,6 @@ const en = {
         title: "Good to know",
         items: [
           "Free participation",
-          "About 2–3 hours of time per month",
           "Runtime: August – September 2026",
           "Spots are limited",
         ],
@@ -134,7 +127,8 @@ const en = {
         items: [
           "You get an evaluation with insights",
           "Joint feedback for optimization",
-          "Access to Impact Atlas on special terms (optional)",
+          "Access to brindl on special terms",
+          "In a short conversation, you tell us how user-friendly brindl is and what is still missing.",
         ],
       },
     },
@@ -145,7 +139,7 @@ const en = {
       titleHighlight2: "more impact",
       titleAfter: "?",
       description:
-        "Book a no-obligation call now. We'll show you how Impact Atlas takes work off your team's plate and makes your impact visible.",
+        "Book a no-obligation call now. We'll show you how brindl takes work off your team's plate and makes your impact visible.",
       primary: "Request a call",
     },
     faq: {
@@ -155,34 +149,34 @@ const en = {
           question:
             "How much effort does taking part in the pilot programme mean?",
           answer:
-            "During the pilot programme, plan for an average of two to three hours per month. Most of the effort happens at the beginning: in a personal onboarding session, we set up your project together, clarify your reporting requirements, and discuss which existing data and evidence you want to use.\n\nAfter that, you upload existing project documents and review the information prepared by Impact Atlas. Additional time is mainly needed for short feedback conversations so we can understand what is helpful in your day-to-day work and where the platform should still be improved.\n\nYou do not need to build a new monitoring structure or start additional data collection for this. The pilot programme is intended to fit into your existing workflows as smoothly as possible, not create new bureaucracy. In the first month, the effort may be slightly higher because of onboarding; after that, participation mainly focuses on use, review, and feedback.",
+            "During the pilot programme, plan for an average of two to three hours per month. Most of the effort happens at the beginning: in a personal onboarding session, we set up your project together, clarify your reporting requirements, and discuss which existing data and evidence you want to use.\n\nAfter that, you upload existing project documents and review the information prepared by brindl. Additional time is mainly needed for short feedback conversations so we can understand what is helpful in your day-to-day work and where the platform should still be improved.\n\nYou do not need to build a new monitoring structure or start additional data collection for this. The pilot programme is intended to fit into your existing workflows as smoothly as possible, not create new bureaucracy. In the first month, the effort may be slightly higher because of onboarding; after that, participation mainly focuses on use, review, and feedback.",
         },
         {
-          question: "What data can we use with Impact Atlas?",
+          question: "What data can we use with brindl?",
           answer:
-            "Impact Atlas is designed to work with the data and evidence that already exist in your project. This can include, for example:\n\n• Excel and CSV files with indicators, participant numbers, or activities\n• Word documents and PDF reports\n• Narrative and interim reports\n• Attendance lists and event overviews\n• Exports from survey or data-collection tools\n• Minutes, conversation notes, and qualitative feedback\n• Project concepts, theories of change, and funding documents\n• Evidence of completed activities and achieved results\n\nThe files do not need to be perfectly prepared. One of the goals of Impact Atlas is precisely to bring together information from different documents and spreadsheets and make it easier to use.\n\nDuring onboarding, we discuss together which materials make sense for your use case. The principle is simple: only upload data that are actually needed for the analysis. Particularly sensitive or unnecessary personal data should, where possible, be removed or pseudonymized beforehand. If your use case requires personal data, we clarify in advance how they can be handled in a data-protection-compliant way.",
+            "brindl is designed to work with the data and evidence that already exist in your project. This can include, for example:\n\n• Excel and CSV files with indicators, participant numbers, or activities\n• Word documents and PDF reports\n• Narrative and interim reports\n• Attendance lists and event overviews\n• Exports from survey or data-collection tools\n• Minutes, conversation notes, and qualitative feedback\n• Project concepts, theories of change, and funding documents\n• Evidence of completed activities and achieved results\n\nThe files do not need to be perfectly prepared. One of the goals of brindl is precisely to bring together information from different documents and spreadsheets and make it easier to use.\n\nDuring onboarding, we discuss together which materials make sense for your use case. The principle is simple: only upload data that are actually needed for the analysis. Particularly sensitive or unnecessary personal data should, where possible, be removed or pseudonymized beforehand. If your use case requires personal data, we clarify in advance how they can be handled in a data-protection-compliant way.",
         },
         {
           question:
-            "How does Impact Atlas use artificial intelligence and how are personal data protected?",
+            "How does brindl use artificial intelligence and how are personal data protected?",
           answer:
-            "Impact Atlas uses AI to structure, summarize, and place information from uploaded project documents into a clear and understandable context. For example, the AI can identify relevant content, assign evidence to different activities, describe developments, and point out missing or contradictory information.\n\nThe protection of personal data begins before content is sent to the AI model. An integrated PII scanner detects direct identifiers, currently especially personal names, and replaces them with pseudonymous placeholders. This means the model does not receive a name such as “Maria Mustermann”, but instead a neutral label such as “Person 01”. This pseudonymization reduces risk, but it does not replace all other data-protection measures.\n\nOrganizations should therefore upload only the data required for the specific purpose and, where possible, remove particularly sensitive or unnecessary details before upload. Pseudonymized information is not automatically anonymous in legal terms and may still fall under the GDPR.\n\nAI processing is carried out via Amazon Bedrock. According to AWS, the providers of the foundation models made available there do not have access to customer prompts or generated responses. AWS also states that inputs and outputs are not used to train the foundation models.\n\nImpact Atlas uses AI as a supporting tool. The results should be reviewed by users and do not replace professional or legal judgment.",
+            "brindl uses AI to structure, summarize, and place information from uploaded project documents into a clear and understandable context. For example, the AI can identify relevant content, assign evidence to different activities, describe developments, and point out missing or contradictory information.\n\nThe protection of personal data begins before content is sent to the AI model. An integrated PII scanner detects direct identifiers, currently especially personal names, and replaces them with pseudonymous placeholders. This means the model does not receive a name such as “Maria Mustermann”, but instead a neutral label such as “Person 01”. This pseudonymization reduces risk, but it does not replace all other data-protection measures.\n\nOrganizations should therefore upload only the data required for the specific purpose and, where possible, remove particularly sensitive or unnecessary details before upload. Pseudonymized information is not automatically anonymous in legal terms and may still fall under the GDPR.\n\nAI processing is carried out via Amazon Bedrock. According to AWS, the providers of the foundation models made available there do not have access to customer prompts or generated responses. AWS also states that inputs and outputs are not used to train the foundation models.\n\nbrindl uses AI as a supporting tool. The results should be reviewed by users and do not replace professional or legal judgment.",
         },
         {
           question: "Is our organization legally bound by joining?",
           answer:
-            "Taking part in the pilot programme does not oblige your organization to continue using Impact Atlas on a paid basis afterwards. There is no automatic conversion into a paid subscription and no later obligation to buy.\n\nFor the pilot phase, we only agree the framework of the collaboration. This can include, for example, the duration of the pilot, how data are handled, responsibilities, and the opportunity to provide feedback on the platform. Your organization remains in control of its own project information and decides which data are used for the pilot.\n\nIf you want to end the pilot programme early, we discuss together how to proceed and how to handle the data uploaded up to that point. Any later use of Impact Atlas is only agreed if both sides explicitly want that.",
+            "Taking part in the pilot programme does not oblige your organization to continue using brindl on a paid basis afterwards. There is no automatic conversion into a paid subscription and no later obligation to buy.\n\nFor the pilot phase, we only agree the framework of the collaboration. This can include, for example, the duration of the pilot, how data are handled, responsibilities, and the opportunity to provide feedback on the platform. Your organization remains in control of its own project information and decides which data are used for the pilot.\n\nIf you want to end the pilot programme early, we discuss together how to proceed and how to handle the data uploaded up to that point. Any later use of brindl is only agreed if both sides explicitly want that.",
         },
         {
           question: "How much setup work is involved?",
           answer:
-            "You do not need your own IT department for setup, and you do not have to install new software in your organization. Impact Atlas is used through the browser.\n\nAt the beginning, we carry out a personal onboarding session. Together, we set up your first project and discuss topics such as:\n\n• What goals and activities does the project include?\n• Which indicators or reporting obligations are relevant?\n• What data and evidence already exist?\n• Who within your organization should work with Impact Atlas?\n• Which analyses or reporting questions are especially important to you?\n\nAfter that, you can assign existing files directly to the relevant project or the appropriate activities. You do not need to migrate your entire existing filing structure or design a new data structure before you begin.\n\nThroughout the pilot phase, we support you personally with questions about setup, selecting suitable materials, and using the results. The goal is to start working as quickly as possible with a real project and your existing data.",
+            "You do not need your own IT department for setup, and you do not have to install new software in your organization. brindl is used through the browser.\n\nAt the beginning, we carry out a personal onboarding session. Together, we set up your first project and discuss topics such as:\n\n• What goals and activities does the project include?\n• Which indicators or reporting obligations are relevant?\n• What data and evidence already exist?\n• Who within your organization should work with brindl?\n• Which analyses or reporting questions are especially important to you?\n\nAfter that, you can assign existing files directly to the relevant project or the appropriate activities. You do not need to migrate your entire existing filing structure or design a new data structure before you begin.\n\nThroughout the pilot phase, we support you personally with questions about setup, selecting suitable materials, and using the results. The goal is to start working as quickly as possible with a real project and your existing data.",
         },
         {
           question:
-            "What happens to our data if we do not continue using Impact Atlas after the pilot?",
+            "What happens to our data if we do not continue using brindl after the pilot?",
           answer:
-            "After the pilot programme ends, you decide for yourself whether you want to continue using Impact Atlas. There is no automatic renewal and no obligation to enter into a paid offer.\n\nIf you decide not to continue, your access will be terminated and all data uploaded by your organization will be deleted. This also applies to information and results that Impact Atlas created on the basis of those data.\n\nYour data remain your data at all times. Impact Atlas does not sell them, does not pass them on to other organizations, and does not use them for other purposes without your consent. Before deletion, you can export the results relevant to you, provided that this export option is part of the pilot scope.",
+            "After the pilot programme ends, you decide for yourself whether you want to continue using brindl. There is no automatic renewal and no obligation to enter into a paid offer.\n\nIf you decide not to continue, your access will be terminated and all data uploaded by your organization will be deleted. This also applies to information and results that brindl created on the basis of those data.\n\nYour data remain your data at all times. brindl does not sell them, does not pass them on to other organizations, and does not use them for other purposes without your consent. Before deletion, you can export the results relevant to you, provided that this export option is part of the pilot scope.",
         },
       ],
     },
@@ -191,7 +185,7 @@ const en = {
       impressum: "Imprint",
       datenschutz: "Privacy policy",
       agb: "Terms",
-      rights: "Impact Atlas. All rights reserved.",
+      rights: "brindl. All rights reserved.",
     },
   },
   legal: {
@@ -214,9 +208,9 @@ const en = {
   },
   auth: {
     loginMarketingTitle:
-      "Build a grant evidence workspace before the AI layer.",
+      "Turn existing project data into robust impact evidence.",
     loginMarketingDescription:
-      "Start with organizations, projects, activities, authentication, and a durable backend. Semantic processing comes later.",
+      "brindl structures your documents, makes existing evidence visible, and shows which information is still missing for a well-founded impact narrative.",
     registerMarketingTitle: "Your projects already tell a story.",
     registerMarketingDescription:
       "Create your account first, then provision the workspace, refine the organization profile, and invite your project managers.",
@@ -251,10 +245,10 @@ const en = {
       "Create the organization record before inviting project managers and routing them into the workspace.",
     workspaceProvisioningCardTitle: "Create workspace",
     workspaceProvisioningCardDescription:
-      "Use the organization name exactly as your team expects to see it inside Impact Atlas.",
+      "Use the organization name exactly as your team expects to see it inside brindl.",
     workspaceCreatedToast: "Workspace created.",
     workspaceCreateFailed: "Workspace could not be created.",
-    welcomeTitle: "Welcome to Impact Atlas.",
+    welcomeTitle: "Welcome to brindl.",
     welcomeDescription:
       "Your workspace is ready. Configure the organization before inviting the rest of the team.",
     welcomeCardTitle: "Your workspace is ready.",
@@ -450,7 +444,6 @@ const en = {
       emptyDescription:
         "Activities are workshops, mentoring sessions, trainings, or other interventions where evidence is collected.",
       emptyAction: "Create first activity",
-      defaultType: "Activity",
       noDescription: "No activity description yet.",
       noDate: "No date set yet",
       evidenceCount: "{{count}} evidence files",
@@ -470,7 +463,7 @@ const en = {
         "Manage uploaded files by activity. Evidence stays grouped by the work it belongs to.",
       emptyTitle: "No activities available for evidence yet",
       emptyDescription:
-        "Create an activity first. Every evidence upload in Impact Atlas belongs to a specific activity.",
+        "Create an activity first. Every evidence upload in brindl belongs to a specific activity.",
       openActivity: "Open activity",
       uploadAction: "Upload evidence",
       uploading: "{{name}} is being uploaded…",
@@ -491,17 +484,17 @@ const en = {
       privacyApprovalFailed: "Privacy review could not be approved.",
       privacyReviewTitle: "Privacy review",
       privacyReviewDescription:
-        "Confirm how detected names and addresses should be handled before Impact Atlas continues with the privacy-safe representation.",
+        "Confirm how detected names and addresses should be handled before brindl continues with the privacy-safe representation.",
       loadingPrivacyReview: "Loading privacy review…",
       noPrivacyFindings: "No privacy findings available yet.",
       privacyFindingSummary:
         "{{entityType}} detected {{count}} time(s). Recommended action: {{action}}.",
       analysisDialogAnalyzingTitle: "Analyzing your file…",
       analysisDialogAnalyzingDescription:
-        "Impact Atlas is parsing the file and checking for names and addresses. You can close this and keep working — it'll keep running in the background.",
+        "brindl is parsing the file and checking for names and addresses. You can close this and keep working — it'll keep running in the background.",
       analysisDialogReadyTitle: "Ready for privacy review",
       analysisDialogReadyDescription:
-        "Impact Atlas finished analyzing this file. Review the detected findings before it continues.",
+        "brindl finished analyzing this file. Review the detected findings before it continues.",
       analysisDialogFailedTitle: "Analysis failed",
       analysisDialogFailedFallback:
         "The file could not be analyzed due to an unexpected error.",
@@ -520,11 +513,11 @@ const en = {
         "{{count}} findings detected. {{decisions}} item(s) still require an explicit transformation choice.",
       decisionRequired: "Decision required",
       gdprNoticeIntro:
-        "We found names or addresses in this dataset. For each item below, choose how Impact Atlas should transform it before the dataset continues into privacy-safe processing.",
+        "We found names or addresses in this dataset. For each item below, choose how brindl should transform it before the dataset continues into privacy-safe processing.",
       recommendationSentence:
-        "We recommend that Impact Atlas {{verb}} this {{entityType}} data before the dataset is used further.",
+        "We recommend that brindl {{verb}} this {{entityType}} data before the dataset is used further.",
       recommendationSentenceWithExample:
-        'We recommend that Impact Atlas {{verb}} this {{entityType}} data before the dataset is used further. Example value: "{{example}}".',
+        'We recommend that brindl {{verb}} this {{entityType}} data before the dataset is used further. Example value: "{{example}}".',
       recommendationVerbKeep: "keep",
       recommendationVerbTokenize: "replace it with a stable pseudonymous token",
       recommendationVerbGeneralize: "reduce it to a broader non-specific value",
@@ -532,9 +525,9 @@ const en = {
       recommendationVerbRestrict: "redact the risky parts of",
       recommendedActionBadge: "Recommended",
       keepOverrideWarning:
-        "Impact Atlas will keep this data unchanged. If you refuse tokenization, you must confirm that you understand this decision and agree to the applicable terms and conditions.",
+        "brindl will keep this data unchanged. If you refuse tokenization, you must confirm that you understand this decision and agree to the applicable terms and conditions.",
       keepUnchangedAcknowledgementLabel:
-        "I am intentionally refusing the recommended tokenization and confirm that I accept responsibility for this decision and agree to Impact Atlas terms and conditions.",
+        "I am intentionally refusing the recommended tokenization and confirm that I accept responsibility for this decision and agree to brindl terms and conditions.",
       keepUnchangedAcknowledgementRequired:
         "Confirm this warning if you want to keep the data unchanged.",
       overrideFindingWarning:
@@ -563,7 +556,7 @@ const en = {
         "This file has already been approved and converted into a privacy-safe representation.",
       reviewTransformingTitle: "Privacy-safe representation in progress",
       reviewTransformingDescription:
-        "The privacy review is approved. Impact Atlas is currently creating the privacy-safe representation.",
+        "The privacy review is approved. brindl is currently creating the privacy-safe representation.",
       parsedRepresentationTitle: "Parsed representation",
       parsedRepresentationDescription:
         "Inspect the deterministic structure extracted from the uploaded file. This preview never shows raw personal values or paragraph text.",
@@ -656,7 +649,7 @@ const en = {
         actionOpeningKnowledge: "Opening AI knowledge…",
         knowledgeDialogTitle: "AI knowledge",
         knowledgeDialogDescription:
-          "Impact Atlas combined the interpreted evidence of this activity into one activity-level knowledge view.",
+          "brindl combined the interpreted evidence of this activity into one activity-level knowledge view.",
         knowledgeDialogLoading: "Loading AI knowledge…",
         knowledgeDialogError: "AI knowledge could not be loaded.",
         knowledgeDialogMeta:
@@ -730,7 +723,7 @@ const en = {
       exportLabel: "Export",
       exportJson: "Export JSON",
       exportText: "Export text",
-      exportDocumentTitle: "Impact Atlas dashboard export",
+      exportDocumentTitle: "brindl dashboard export",
       exportDocumentScopeLabel: "Scope",
       exportDocumentProjectLabel: "Project",
       exportDocumentActivityLabel: "Activity",
@@ -877,7 +870,7 @@ const en = {
       titles: {
         empty: "Upload your first dataset",
         uploading: "Uploading your dataset",
-        processing: "Impact Atlas is preparing your evidence",
+        processing: "brindl is preparing your evidence",
         ready: "Your evidence is ready for the next step",
         attention: "This dataset needs another look",
       },
@@ -933,7 +926,7 @@ const en = {
       eyebrow: "Add evidence",
       title: "Bring monitoring data into this activity",
       description:
-        "Upload one CSV, Excel, PDF, or DOCX file and Impact Atlas will guide you through review, analysis, and AI knowledge from here.",
+        "Upload one CSV, Excel, PDF, or DOCX file and brindl will guide you through review, analysis, and AI knowledge from here.",
       cta: "Upload evidence",
       remove: "Remove",
     },
@@ -1029,9 +1022,22 @@ const en = {
     uploading: "Uploading…",
     createProcessingJob: "Analyse evidence",
     successToast: "Evidence uploaded.",
+    multiSuccessToast: "{{count}} files uploaded.",
     failedToast: "Upload failed.",
+    multiFailedToast: "{{count}} files failed to upload.",
+    multiResultToast: "{{uploaded}} files uploaded, {{failed}} failed.",
+    invalidFileNameToast:
+      "This file name is not supported. Please remove control characters or path separators and try again.",
+    fileNameTooLongToast:
+      "This file name is too long. Please shorten it and try again.",
     unsupportedFileTypeToast:
       "Unsupported file type. Please upload a CSV, Excel (.xlsx/.xls), PDF, or Word (.docx) file.",
+    queueTitle: "Upload queue",
+    queueProgress: "{{uploaded}} / {{total}} complete",
+    queueQueued: "Queued",
+    queueUploading: "Uploading",
+    queueUploaded: "Uploaded",
+    queueFailed: "Failed",
   },
   processing: {
     loading: "Loading job status…",
@@ -1059,7 +1065,7 @@ const en = {
     eyebrow: "AI Dataset Review",
     title: "Did the AI understand your dataset correctly?",
     description:
-      "Impact Atlas maps each uploaded column, flags personal data, and recommends safe transformations before interpretation continues.",
+      "brindl maps each uploaded column, flags personal data, and recommends safe transformations before interpretation continues.",
     cta: {
       uploadDataset: "Upload dataset",
       reviewRequired: "Review required ({{count}})",
@@ -1071,7 +1077,7 @@ const en = {
       eyebrow: "AI Data Interpretation",
       title: "We haven't analysed a dataset yet.",
       description:
-        "Once you upload a CSV or Excel file, Impact Atlas will read the structure, understand each field, identify personal data, and prepare it for interpretation.",
+        "Once you upload a CSV or Excel file, brindl will read the structure, understand each field, identify personal data, and prepare it for interpretation.",
       benefits: [
         "Detect every column automatically",
         "Understand what each field most likely means",
@@ -1286,7 +1292,7 @@ const en = {
     eyebrow: "Activity AI knowledge",
     title: "Read the activity as one knowledge view",
     description:
-      "Impact Atlas combines the interpreted evidence of this activity into one narrative AI knowledge view.",
+      "brindl combines the interpreted evidence of this activity into one narrative AI knowledge view.",
     notReadyTitle: "AI knowledge is not ready yet",
     notReadyDescription:
       "Return to the interpretation page to finish privacy review, answer clarification questions, or run AI analysis for this activity.",
@@ -1305,20 +1311,18 @@ const en = {
     workflowGuardrails: [
       "Use one clear dataset per activity when possible.",
       "Keep activity names and descriptions specific so AI context stays reliable.",
-      "Update ownership and status when delivery changes.",
+      "Update status when delivery changes.",
     ],
     contextTitle: "Why this context matters",
     supportTitle: "Support for future iterations",
     supportDescription:
       "This page will grow into the place for activity metadata, evidence rules, and future workflow preferences.",
-    noOwner: "No owner has been assigned yet.",
     noDescription: "No activity description has been added yet.",
     noProjectGoal: "No project impact or outcomes have been recorded yet.",
     fields: {
       name: "Name",
       status: "Status",
       project: "Project",
-      owner: "Owner",
       created: "Created",
       updated: "Updated",
       description: "Description",
@@ -1638,20 +1642,14 @@ const en = {
     },
     fields: {
       timeline: "Timeline",
+      overarchingTargetGroup: "Overarching target group(s)",
+      intendedChanges: "Intended changes",
       fundingProgram: "Funding programme",
       fundingOrganization: "Funding organization",
       targetGroups: "Target groups",
       areaOfOperation: "Area of operation",
       partnerships: "Partnerships",
       sdgs: "SDGs",
-      successIndicators: "Success indicators",
-      inputs: "Inputs",
-      activities: "Activities",
-      outputs: "Outputs",
-      impact: "Impact",
-      outcomes: "Outcomes",
-      created: "Created",
-      updated: "Updated",
     },
   },
   projectDelete: {
@@ -1677,7 +1675,7 @@ const en = {
     create: "Create",
     createProjectTitle: "Create project",
     createProjectDescription:
-      "Capture the project profile, target groups, and logic model for this project.",
+      "Capture the project profile and target groups for this project.",
     createActivityTitle: "Add activity",
     createActivityDescription:
       "Capture the delivery details for a project activity.",
@@ -1694,6 +1692,15 @@ const en = {
       namePlaceholder: "Mentoring Programme 2026",
       startMonth: "Start month / year",
       endMonth: "End month / year",
+      overarchingTargetGroup: "Overarching target group(s)",
+      overarchingTargetGroupPlaceholder:
+        "e.g. young people with a migration background",
+      intendedChanges: "One to three intended changes",
+      intendedChangesPlaceholder: "What changes are you aiming for?",
+      intendedChangesHint:
+        "List one to three changes, separated by commas or new lines.",
+      intendedChangesValidation:
+        "Please provide one to three intended changes.",
       fundingProgram: "Funding programme",
       fundingProgramPlaceholder: "Erasmus+",
       fundingOrganization: "Funding organization",
@@ -1714,38 +1721,6 @@ const en = {
       partnerships: "Cooperations / Partnerships",
       partnershipsPlaceholder:
         "Optional. Add important cooperation partners or delivery partnerships.",
-      impactModel: "Impact model (I-O-O-I model)",
-      impactModelDescription:
-        "Capture the core building blocks of your project logic.",
-      impactModelTooltipLabel: "Explain logic model fields",
-      impactModelTooltip: {
-        inputs: "Inputs: Which resources do you use for the project?",
-        activities: "Activities: Which measures do you carry out?",
-        outputs: "Outputs: Which direct results are created?",
-        impact:
-          "Impact: Which longer-term or higher-level change should the project contribute to?",
-        outcomes:
-          "Outcomes: Which changes do you want to achieve for your target group?",
-      },
-      inputs: "Inputs",
-      inputsPlaceholder:
-        "Which resources, staff, budget, or infrastructure do you use?",
-      activities: "Activities",
-      activitiesPlaceholder:
-        "Which concrete measures, formats, or interventions will you run?",
-      outputs: "Outputs",
-      outputsPlaceholder:
-        "Which direct and countable results will the project produce?",
-      impact: "Impact",
-      impactPlaceholder:
-        "Which broader or longer-term impact should the project support?",
-      outcomes: "Outcomes",
-      outcomesPlaceholder:
-        "Which changes should happen for the target groups through the project?",
-      successIndicatorsSection: "Success indicators",
-      successIndicators: "Success indicators",
-      successIndicatorsPlaceholder:
-        "How will you know that the project was successful?",
     },
     activity: {
       submit: "Create activity",
@@ -1761,26 +1736,26 @@ const en = {
       namePlaceholder: "Senior Mentor Training",
       description: "Description",
       descriptionPlaceholder: "Two-day training for volunteer mentors.",
-      activityType: "Activity type",
-      activityTypeCustomPlaceholder: "Describe the activity type",
-      owner: "Owner",
-      ownerPlaceholder: "Programme Manager",
       startDate: "Start date",
       endDate: "End date",
-      objectives: "Objectives",
-      objectivesTooltipLabel: "Guidance on writing objectives",
-      objectivesTooltip:
-        "Describe the objective from the target group's perspective in the present tense, as if it has already been achieved. Phrase the desired state or intended change concretely, positively, and with a clear outcome focus.",
-      objectivesPlaceholder:
-        "Seniors are actively engaged as mentors and experience greater social participation through regular contact with young people.",
-      successIndicators: "Outcome indicator(s)",
-      successIndicatorsTooltipLabel: "Guidance on outcome indicators",
-      successIndicatorsTooltip:
-        "How you will know that the change has occurred.",
-      successIndicatorsPlaceholder:
-        "Outcome indicator for objective + target group 1:\n85% of participating seniors report feeling less lonely as a result of the mentoring.",
       targetAudience: "Target group",
-      targetAudiencePlaceholder: "Returning volunteer mentors",
+      targetAudienceTooltipLabel: "Guidance on target group",
+      targetAudienceTooltip: "Who is the activity carried out with?",
+      targetAudiencePlaceholder: "Job application training",
+      objectives: "Purpose of the activity",
+      objectivesTooltipLabel: "Guidance on the activity's purpose",
+      objectivesTooltip: "Why is it carried out?",
+      objectivesPlaceholder:
+        "Preparing participants practically for job application procedures",
+      output: "Output",
+      outputTooltipLabel: "Guidance on output",
+      outputTooltip: "What is directly carried out or created?",
+      outputPlaceholder: "Four trainings with 35 participants",
+      outcome: "Outcome",
+      outcomeTooltipLabel: "Guidance on outcome",
+      outcomeTooltip: "What should change for the target group?",
+      outcomePlaceholder:
+        "Participants feel more confident in the job application process.",
       status: "Status",
     },
     options: {
@@ -1800,17 +1775,6 @@ const en = {
         "Other",
       ],
       customTargetGroupOption: "Other",
-      activityTypes: [
-        "Workshop",
-        "Information session",
-        "Consultation",
-        "Mentoring",
-        "Training",
-        "Event",
-        "Networking meeting",
-        "Campaign",
-      ],
-      customActivityTypeOption: "Other",
     },
   },
   errorPage: {

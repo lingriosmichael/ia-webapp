@@ -5,14 +5,13 @@ import { LandingFaqSection } from "@/components/landing/landingFaqSection";
 import { LandingFooter } from "@/components/landing/landingFooter";
 import { LandingHeroSection } from "@/components/landing/landingHeroSection";
 import { LandingHowItWorksSection } from "@/components/landing/landingHowItWorksSection";
-import { LandingPageHeader } from "@/components/landing/landingPageHeader";
 import { LandingPilotProgramSection } from "@/components/landing/landingPilotProgramSection";
 import { LandingProblemSection } from "@/components/landing/landingProblemSection";
 import { LandingTrustBar } from "@/components/landing/landingTrustBar";
+import { PublicSiteHeader } from "@/components/PublicSiteHeader";
 import { useSessionQuery } from "@/hooks/useAuth";
 import { resolveActiveOrganizationId } from "@/lib/organizationSelection";
 import { resolveWorkspaceDestination } from "@/lib/workspaceRouting";
-import { getSessionMarker } from "@/services/authStorage";
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
@@ -21,7 +20,6 @@ export const Route = createFileRoute("/")({
 function LandingPage() {
   const navigate = useNavigate();
   const sessionQuery = useSessionQuery();
-  const hasSession = Boolean(getSessionMarker() || sessionQuery.data);
   const activeOrganizationId = resolveActiveOrganizationId(
     sessionQuery.data?.organizations ?? [],
   );
@@ -31,7 +29,7 @@ function LandingPage() {
       return;
     }
 
-    if (!hasSession) {
+    if (!sessionQuery.data) {
       return;
     }
 
@@ -62,17 +60,19 @@ function LandingPage() {
     };
   }, [
     activeOrganizationId,
-    hasSession,
     navigate,
+    sessionQuery.data,
     sessionQuery.data?.organizations.length,
     sessionQuery.isLoading,
   ]);
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(9,126,105,0.18),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(197,132,24,0.16),_transparent_22%),linear-gradient(180deg,_#fbf7ee_0%,_#f4efe6_44%,_#ffffff_100%)] text-foreground">
-      <div className="mx-auto max-w-7xl px-6 py-8">
-        <LandingPageHeader />
+    <div className="min-h-screen bg-[linear-gradient(90deg,_#e4ece1_0%,_#ece8e0_100%)] text-foreground">
+      <div className="mx-auto max-w-7xl px-6 pb-6 pt-4 md:pb-8 md:pt-5">
+        <PublicSiteHeader currentPage="landing" />
         <LandingHeroSection />
+      </div>
+      <div className="mx-auto max-w-7xl px-6 pb-6 md:pb-8">
         <LandingProblemSection />
         <LandingHowItWorksSection />
         <LandingTrustBar />

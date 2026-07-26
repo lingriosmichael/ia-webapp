@@ -50,7 +50,7 @@ export default tseslint.config(
       "src/components/ui/navigationMenu.tsx",
       "src/components/ui/sidebar.tsx",
       "src/components/ui/toggle.tsx",
-      "src/components/workspaceShell.tsx",
+      "src/components/WorkspaceShell.tsx",
       "src/routes/organizations/$organizationId/route.tsx",
     ],
     rules: {

@@ -12,7 +12,7 @@ import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { rememberActiveOrganizationId } from "@/lib/organizationSelection";
 import { ActivityDialog } from "@/components/ActivityDialog";
 import { AppSidebar } from "@/components/AppSidebar";
-import { ProjectDeleteDialog } from "@/components/ProjectDeleteDialog";
+import { ProjectDeleteDialog } from "@/components/projectDeleteDialog";
 import { ProjectDialog } from "@/components/ProjectDialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -166,13 +166,12 @@ export function WorkspaceShell({
       const updatePayload: UpdateActivityPayload = {
         name: payload.name,
         description: payload.description ?? null,
-        activityType: payload.activityType ?? null,
-        owner: payload.owner ?? null,
         startDate: payload.startDate ?? null,
         endDate: payload.endDate ?? null,
-        objectives: payload.objectives ?? null,
-        successIndicators: payload.successIndicators ?? null,
         targetAudience: payload.targetAudience ?? null,
+        objectives: payload.objectives ?? null,
+        output: payload.output ?? null,
+        outcome: payload.outcome ?? null,
         status: payload.status,
       };
 
@@ -244,7 +243,7 @@ export function WorkspaceShell({
 
   return (
     <WorkspaceShellContext.Provider value={workspaceShellActions}>
-      <div className="flex min-h-screen w-full bg-background">
+      <div className="flex min-h-screen w-full bg-workspace-background">
         <AppSidebar
           organizationName={organizationName}
           organizationRole={organizationRole}

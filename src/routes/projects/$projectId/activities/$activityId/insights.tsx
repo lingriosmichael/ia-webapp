@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { ActivityAiKnowledgeContent } from "@/components/activityAiKnowledgeContent";
-import { ActivityTabs } from "@/components/ActivityTabs";
+import { ActivityTabs } from "@/components/activityTabs";
 import { Card, PageHeader, TopBar } from "@/components/WorkspaceUI";
 import { useProjectHierarchy } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
@@ -122,7 +122,7 @@ function EmptyStateCard({
         <Link
           to="/projects/$projectId/interpretation"
           params={{ projectId }}
-          className="mt-5 inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
+          className="mt-5 inline-flex h-10 items-center rounded-md bg-signal px-4 text-sm font-medium text-signal-foreground shadow hover:bg-signal/94"
         >
           {ctaLabel}
         </Link>

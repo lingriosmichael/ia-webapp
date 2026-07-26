@@ -42,7 +42,7 @@ function OrganizationLayout() {
 
   if (!auth.token || auth.isLoading || workspaceQuery.isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background text-sm text-muted-foreground">
+      <div className="flex min-h-screen items-center justify-center bg-workspace-background text-sm text-muted-foreground">
         Loading workspace…
       </div>
     );
@@ -50,7 +50,7 @@ function OrganizationLayout() {
 
   if (!workspaceQuery.data) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background text-sm text-muted-foreground">
+      <div className="flex min-h-screen items-center justify-center bg-workspace-background text-sm text-muted-foreground">
         Workspace could not be loaded.
       </div>
     );

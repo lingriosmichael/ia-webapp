@@ -1,7 +1,7 @@
 import { FolderKanban, Users2 } from "lucide-react";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { OrganizationAvatar } from "@/components/OrganizationAvatar";
+import { OrganizationAvatar } from "@/components/organizationAvatar";
 import { StatusBadge } from "@/components/statusBadge";
 import { Card } from "@/components/WorkspaceUI";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";

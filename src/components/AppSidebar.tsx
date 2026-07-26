@@ -13,7 +13,8 @@ import {
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { OrganizationAvatar } from "@/components/OrganizationAvatar";
+import { BrandWordmark } from "@/components/BrandWordmark";
+import { OrganizationAvatar } from "@/components/organizationAvatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -212,6 +213,14 @@ export function AppSidebar({
 
   const content = (
     <>
+      <div className="flex items-center overflow-visible px-4 pb-4 pt-8">
+        <BrandWordmark
+          className="-ml-[2.64rem] h-9 shrink-0"
+          imageClassName="h-9 w-auto origin-left scale-[3.84]"
+          textClassName="text-xs tracking-[0.1em]"
+        />
+      </div>
+
       <SidebarHeader
         organizationName={organizationName}
         organizationRole={organizationRole}

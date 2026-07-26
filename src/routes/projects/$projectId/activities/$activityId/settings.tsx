@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { FileText, Settings2, ShieldCheck, UserRound } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { ActivityTabs } from "@/components/ActivityTabs";
+import { ActivityTabs } from "@/components/activityTabs";
 import { Card, PageHeader, TopBar } from "@/components/WorkspaceUI";
 import { useProjectHierarchy } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
@@ -81,10 +81,6 @@ function ActivitySettingsPage() {
               <DetailRow
                 label={t("activitySettings.fields.project")}
                 value={project.name}
-              />
-              <DetailRow
-                label={t("activitySettings.fields.owner")}
-                value={activity.owner ?? t("activitySettings.noOwner")}
               />
               <DetailRow
                 label={t("activitySettings.fields.created")}

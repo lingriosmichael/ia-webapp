@@ -11,6 +11,10 @@ import {
   resolveActiveOrganizationId,
 } from "@/lib/organizationSelection";
 import { resolveWorkspaceDestination } from "@/lib/workspaceRouting";
+import {
+  clearActiveOrganizationId,
+  clearSessionMarker,
+} from "@/services/authStorage";
 import { ApiError } from "@/services/apiClient";
 import { useTranslation } from "react-i18next";
 
@@ -47,6 +51,14 @@ function OnboardingWorkspacePage() {
       toast.success(t("auth.workspaceCreatedToast"));
       void navigate({ to: "/onboarding/welcome" });
     } catch (error) {
+      if (error instanceof ApiError && error.statusCode === 401) {
+        clearSessionMarker();
+        clearActiveOrganizationId();
+        toast.error(t("auth.loginFailed"));
+        void navigate({ to: "/login" });
+        return;
+      }
+
       toast.error(
         error instanceof ApiError
           ? error.message

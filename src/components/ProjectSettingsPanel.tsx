@@ -1,12 +1,4 @@
-import {
-  CalendarRange,
-  Check,
-  ChevronDown,
-  Plus,
-  ShieldAlert,
-  Trash2,
-  X,
-} from "lucide-react";
+import { Check, ChevronDown, Plus, ShieldAlert, Trash2, X } from "lucide-react";
 import type { FormEvent, ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -29,11 +21,7 @@ import { normalizeMonthValue } from "@/lib/monthValue";
 import { resolveProjectSummaryText } from "@/lib/projectSummary";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { cn } from "@/lib/utils";
-import {
-  formatDateTime,
-  formatMonthRange,
-  translateStatus,
-} from "@/lib/translationUtils";
+import { formatMonthRange, translateStatus } from "@/lib/translationUtils";
 import { ApiError, type ProjectSummary } from "@/services/apiClient";
 
 function deduplicateValues(values: string[]) {
@@ -57,6 +45,8 @@ interface ProjectSettingsFormState {
   name: string;
   startMonth: string;
   endMonth: string;
+  overarchingTargetGroup: string;
+  intendedChanges: string;
   fundingProgram: string;
   fundingOrganization: string;
   targetGroups: string[];
@@ -64,27 +54,14 @@ interface ProjectSettingsFormState {
   areaOfOperation: string;
   partnerships: string;
   sdgs: string;
-  impactModelInputs: string;
-  impactModelActivities: string;
-  impactModelOutputs: string;
-  impactModelImpact: string;
-  impactModelOutcomes: string;
-  successIndicators: string;
 }
 
 interface ProjectSettingsFormErrors {
   name?: string;
   startMonth?: string;
   endMonth?: string;
-  fundingProgram?: string;
-  fundingOrganization?: string;
-  areaOfOperation?: string;
-  impactModelInputs?: string;
-  impactModelActivities?: string;
-  impactModelOutputs?: string;
-  impactModelImpact?: string;
-  impactModelOutcomes?: string;
-  successIndicators?: string;
+  overarchingTargetGroup?: string;
+  intendedChanges?: string;
 }
 
 export function ProjectSettingsPanel({
@@ -148,6 +125,10 @@ export function ProjectSettingsPanel({
     project.sdgs.length > 0
       ? project.sdgs.join(" · ")
       : locale.projectSettings.notSet;
+  const intendedChangesDisplay =
+    project.intendedChanges.length > 0
+      ? project.intendedChanges.join(" · ")
+      : locale.projectSettings.notSet;
 
   function updateField<Key extends keyof ProjectSettingsFormState>(
     key: Key,
@@ -196,7 +177,11 @@ export function ProjectSettingsPanel({
       return;
     }
 
-    const nextErrors = validateFormState(formState, locale.projectSettings);
+    const nextErrors = validateFormState(formState, {
+      ...locale.projectSettings,
+      intendedChangesValidation:
+        locale.dialogs.project.intendedChangesValidation,
+    });
     const normalizedStartMonth = normalizeMonthValue(formState.startMonth);
     const normalizedEndMonth = normalizeMonthValue(formState.endMonth);
     const normalizedTargetGroups = deduplicateValues([
@@ -219,20 +204,14 @@ export function ProjectSettingsPanel({
         name: formState.name.trim(),
         startMonth: normalizedStartMonth!,
         endMonth: normalizedEndMonth!,
-        fundingProgram: formState.fundingProgram.trim(),
-        fundingOrganization: formState.fundingOrganization.trim(),
+        overarchingTargetGroup: formState.overarchingTargetGroup.trim(),
+        intendedChanges: parseListInput(formState.intendedChanges),
+        fundingProgram: formState.fundingProgram.trim() || null,
+        fundingOrganization: formState.fundingOrganization.trim() || null,
         targetGroups: normalizedTargetGroups,
-        areaOfOperation: formState.areaOfOperation.trim(),
+        areaOfOperation: formState.areaOfOperation.trim() || null,
         partnerships: formState.partnerships.trim() || null,
         sdgs: parseListInput(formState.sdgs),
-        impactModel: {
-          inputs: formState.impactModelInputs.trim(),
-          activities: formState.impactModelActivities.trim(),
-          outputs: formState.impactModelOutputs.trim(),
-          impact: formState.impactModelImpact.trim(),
-          outcomes: formState.impactModelOutcomes.trim(),
-        },
-        successIndicators: formState.successIndicators.trim(),
       });
       toast.success(locale.projectSettings.success);
       setIsCustomTargetGroupInputOpen(false);
@@ -271,6 +250,16 @@ export function ProjectSettingsPanel({
             value={timeline || locale.projectSettings.notSet}
           />
           <OverviewFieldRow
+            label={locale.projectSettings.fields.overarchingTargetGroup}
+            value={
+              project.overarchingTargetGroup || locale.projectSettings.notSet
+            }
+          />
+          <OverviewFieldRow
+            label={locale.projectSettings.fields.intendedChanges}
+            value={intendedChangesDisplay}
+          />
+          <OverviewFieldRow
             label={locale.projectSettings.fields.targetGroups}
             value={targetGroupsDisplay}
           />
@@ -287,54 +276,6 @@ export function ProjectSettingsPanel({
             value={
               <div className="max-w-[62rem] whitespace-pre-wrap text-[15px] leading-7 text-foreground">
                 {project.partnerships || locale.projectSettings.notSet}
-              </div>
-            }
-          />
-          <OverviewFieldRow
-            label={locale.dialogs.project.impactModel}
-            value={
-              <div className="grid gap-4 lg:grid-cols-2">
-                <OverviewFieldValueBlock
-                  label={locale.projectSettings.fields.inputs}
-                  value={
-                    project.impactModel.inputs || locale.projectSettings.notSet
-                  }
-                />
-                <OverviewFieldValueBlock
-                  label={locale.projectSettings.fields.activities}
-                  value={
-                    project.impactModel.activities ||
-                    locale.projectSettings.notSet
-                  }
-                />
-                <OverviewFieldValueBlock
-                  label={locale.projectSettings.fields.outputs}
-                  value={
-                    project.impactModel.outputs || locale.projectSettings.notSet
-                  }
-                />
-                <OverviewFieldValueBlock
-                  label={locale.projectSettings.fields.impact}
-                  value={
-                    project.impactModel.impact || locale.projectSettings.notSet
-                  }
-                />
-                <OverviewFieldValueBlock
-                  label={locale.projectSettings.fields.outcomes}
-                  value={
-                    project.impactModel.outcomes ||
-                    locale.projectSettings.notSet
-                  }
-                  className="lg:col-span-2"
-                />
-              </div>
-            }
-          />
-          <OverviewFieldRow
-            label={locale.projectSettings.fields.successIndicators}
-            value={
-              <div className="max-w-[62rem] whitespace-pre-wrap text-[15px] leading-7 text-foreground">
-                {project.successIndicators || locale.projectSettings.notSet}
               </div>
             }
           />
@@ -394,419 +335,221 @@ export function ProjectSettingsPanel({
             </div>
           ) : null}
 
-          {isEditing ? (
-            <div className="mt-8 space-y-8">
-              <div className="grid gap-6 md:grid-cols-2">
-                <FieldGroup
-                  className="md:col-span-2"
-                  label={locale.dialogs.project.name}
-                  error={formErrors.name}
-                >
-                  <Input
-                    value={formState.name}
-                    onChange={(event) =>
-                      updateField("name", event.target.value)
-                    }
-                    placeholder={locale.dialogs.project.namePlaceholder}
-                    maxLength={120}
-                    required
-                  />
-                </FieldGroup>
-
-                <FieldGroup
-                  label={locale.dialogs.project.startMonth}
-                  error={formErrors.startMonth}
-                >
-                  <Input
-                    type="month"
-                    value={formState.startMonth}
-                    onChange={(event) =>
-                      updateField("startMonth", event.target.value)
-                    }
-                    required
-                  />
-                </FieldGroup>
-
-                <FieldGroup
-                  label={locale.dialogs.project.endMonth}
-                  error={formErrors.endMonth}
-                >
-                  <Input
-                    type="month"
-                    value={formState.endMonth}
-                    onChange={(event) =>
-                      updateField("endMonth", event.target.value)
-                    }
-                    required
-                  />
-                </FieldGroup>
-
-                <FieldGroup
-                  label={locale.dialogs.project.fundingProgram}
-                  error={formErrors.fundingProgram}
-                >
-                  <Input
-                    value={formState.fundingProgram}
-                    onChange={(event) =>
-                      updateField("fundingProgram", event.target.value)
-                    }
-                    placeholder={
-                      locale.dialogs.project.fundingProgramPlaceholder
-                    }
-                    maxLength={200}
-                    required
-                  />
-                </FieldGroup>
-
-                <FieldGroup
-                  label={locale.dialogs.project.fundingOrganization}
-                  error={formErrors.fundingOrganization}
-                >
-                  <Input
-                    value={formState.fundingOrganization}
-                    onChange={(event) =>
-                      updateField("fundingOrganization", event.target.value)
-                    }
-                    placeholder={
-                      locale.dialogs.project.fundingOrganizationPlaceholder
-                    }
-                    maxLength={200}
-                    required
-                  />
-                </FieldGroup>
-
-                <FieldGroup
-                  label={locale.dialogs.project.targetGroups}
-                  error={
-                    targetGroupsError
-                      ? locale.dialogs.project.targetGroupsValidation
-                      : undefined
-                  }
-                >
-                  <TargetGroupMultiSelect
-                    options={[...locale.dialogs.options.targetGroups]}
-                    selectedValues={formState.targetGroups}
-                    customOption={
-                      locale.dialogs.options.customTargetGroupOption
-                    }
-                    customValue={formState.customTargetGroup}
-                    customValueOpen={isCustomTargetGroupInputOpen}
-                    onToggleValue={(value) => {
-                      setTargetGroupsError(false);
-                      updateField(
-                        "targetGroups",
-                        toggleValue(formState.targetGroups, value),
-                      );
-                    }}
-                    onToggleCustomValueOpen={() =>
-                      setIsCustomTargetGroupInputOpen((current) => !current)
-                    }
-                    onCustomValueChange={(value) =>
-                      updateField("customTargetGroup", value)
-                    }
-                    onAddCustomValue={addCustomTargetGroup}
-                    onRemoveValue={removeTargetGroup}
-                    placeholder={locale.dialogs.project.targetGroupsPlaceholder}
-                    customPlaceholder={
-                      locale.dialogs.project.customTargetGroupPlaceholder
-                    }
-                    selectedSummarySingle={
-                      locale.dialogs.project.targetGroupsSelectedSingle
-                    }
-                    selectedSummaryMultiple={
-                      locale.dialogs.project.targetGroupsSelectedMultiple
-                    }
-                    error={targetGroupsError}
-                  />
-                </FieldGroup>
-
-                <FieldGroup
-                  label={locale.dialogs.project.areaOfOperation}
-                  error={formErrors.areaOfOperation}
-                >
-                  <Input
-                    value={formState.areaOfOperation}
-                    onChange={(event) =>
-                      updateField("areaOfOperation", event.target.value)
-                    }
-                    placeholder={
-                      locale.dialogs.project.areaOfOperationPlaceholder
-                    }
-                    maxLength={2000}
-                    required
-                  />
-                </FieldGroup>
-
-                <FieldGroup
-                  className="md:col-span-2"
-                  label={locale.dialogs.project.partnerships}
-                  optionalLabel={locale.projectSettings.optionalLabel}
-                >
-                  <Textarea
-                    value={formState.partnerships}
-                    onChange={(event) =>
-                      updateField("partnerships", event.target.value)
-                    }
-                    placeholder={locale.dialogs.project.partnershipsPlaceholder}
-                    rows={4}
-                    maxLength={2000}
-                  />
-                </FieldGroup>
-
-                <FieldGroup
-                  className="md:col-span-2"
-                  label={locale.dialogs.project.sdgs}
-                  optionalLabel={locale.projectSettings.optionalLabel}
-                  hint={locale.dialogs.project.sdgsHint}
-                >
-                  <Textarea
-                    value={formState.sdgs}
-                    onChange={(event) =>
-                      updateField("sdgs", event.target.value)
-                    }
-                    placeholder={locale.dialogs.project.sdgsPlaceholder}
-                    rows={3}
-                  />
-                </FieldGroup>
-              </div>
-
-              <div className="rounded-[12px] border border-border/70 p-5">
-                <div className="text-sm font-semibold tracking-tight text-foreground">
-                  {locale.dialogs.project.impactModel}
-                </div>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  {locale.dialogs.project.impactModelDescription}
-                </p>
-
-                <div className="mt-6 grid gap-6 md:grid-cols-2">
-                  <FieldGroup
-                    label={locale.dialogs.project.inputs}
-                    error={formErrors.impactModelInputs}
-                  >
-                    <Textarea
-                      value={formState.impactModelInputs}
-                      onChange={(event) =>
-                        updateField("impactModelInputs", event.target.value)
-                      }
-                      placeholder={locale.dialogs.project.inputsPlaceholder}
-                      rows={4}
-                      maxLength={2000}
-                      required
-                    />
-                  </FieldGroup>
-
-                  <FieldGroup
-                    label={locale.dialogs.project.activities}
-                    error={formErrors.impactModelActivities}
-                  >
-                    <Textarea
-                      value={formState.impactModelActivities}
-                      onChange={(event) =>
-                        updateField("impactModelActivities", event.target.value)
-                      }
-                      placeholder={locale.dialogs.project.activitiesPlaceholder}
-                      rows={4}
-                      maxLength={2000}
-                      required
-                    />
-                  </FieldGroup>
-
-                  <FieldGroup
-                    label={locale.dialogs.project.outputs}
-                    error={formErrors.impactModelOutputs}
-                  >
-                    <Textarea
-                      value={formState.impactModelOutputs}
-                      onChange={(event) =>
-                        updateField("impactModelOutputs", event.target.value)
-                      }
-                      placeholder={locale.dialogs.project.outputsPlaceholder}
-                      rows={4}
-                      maxLength={2000}
-                      required
-                    />
-                  </FieldGroup>
-
-                  <FieldGroup
-                    label={locale.dialogs.project.impact}
-                    error={formErrors.impactModelImpact}
-                  >
-                    <Textarea
-                      value={formState.impactModelImpact}
-                      onChange={(event) =>
-                        updateField("impactModelImpact", event.target.value)
-                      }
-                      placeholder={locale.dialogs.project.impactPlaceholder}
-                      rows={4}
-                      maxLength={2000}
-                      required
-                    />
-                  </FieldGroup>
-
-                  <FieldGroup
-                    label={locale.dialogs.project.outcomes}
-                    error={formErrors.impactModelOutcomes}
-                    className="md:col-span-2"
-                  >
-                    <Textarea
-                      value={formState.impactModelOutcomes}
-                      onChange={(event) =>
-                        updateField("impactModelOutcomes", event.target.value)
-                      }
-                      placeholder={locale.dialogs.project.outcomesPlaceholder}
-                      rows={4}
-                      maxLength={2000}
-                      required
-                    />
-                  </FieldGroup>
-                </div>
-              </div>
-
-              <div className="rounded-[12px] border border-border/70 p-5">
-                <FieldGroup
-                  label={locale.dialogs.project.successIndicators}
-                  error={formErrors.successIndicators}
-                >
-                  <Textarea
-                    value={formState.successIndicators}
-                    onChange={(event) =>
-                      updateField("successIndicators", event.target.value)
-                    }
-                    placeholder={
-                      locale.dialogs.project.successIndicatorsPlaceholder
-                    }
-                    rows={4}
-                    maxLength={2000}
-                    required
-                  />
-                </FieldGroup>
-              </div>
-            </div>
-          ) : (
-            <div className="mt-8 grid gap-4 md:grid-cols-2">
-              <DetailCard
+          <div className="mt-8 space-y-8">
+            <div className="grid gap-6 md:grid-cols-2">
+              <FieldGroup
+                className="md:col-span-2"
                 label={locale.dialogs.project.name}
-                value={project.name}
-              />
-              <DetailCard
-                label={locale.projectSettings.fields.timeline}
-                value={timeline || locale.projectSettings.notSet}
-                icon={<CalendarRange className="h-4 w-4 text-primary" />}
-              />
-              <DetailCard
-                label={locale.projectSettings.fields.fundingProgram}
-                value={project.fundingProgram || locale.projectSettings.notSet}
-              />
-              <DetailCard
-                label={locale.projectSettings.fields.fundingOrganization}
-                value={
-                  project.fundingOrganization || locale.projectSettings.notSet
+                error={formErrors.name}
+              >
+                <Input
+                  value={formState.name}
+                  onChange={(event) => updateField("name", event.target.value)}
+                  placeholder={locale.dialogs.project.namePlaceholder}
+                  maxLength={120}
+                  required
+                />
+              </FieldGroup>
+
+              <FieldGroup
+                label={locale.dialogs.project.startMonth}
+                error={formErrors.startMonth}
+              >
+                <Input
+                  type="month"
+                  value={formState.startMonth}
+                  onChange={(event) =>
+                    updateField("startMonth", event.target.value)
+                  }
+                  required
+                />
+              </FieldGroup>
+
+              <FieldGroup
+                label={locale.dialogs.project.endMonth}
+                error={formErrors.endMonth}
+              >
+                <Input
+                  type="month"
+                  value={formState.endMonth}
+                  onChange={(event) =>
+                    updateField("endMonth", event.target.value)
+                  }
+                  required
+                />
+              </FieldGroup>
+
+              <FieldGroup
+                className="md:col-span-2"
+                label={locale.dialogs.project.overarchingTargetGroup}
+                error={formErrors.overarchingTargetGroup}
+              >
+                <Input
+                  value={formState.overarchingTargetGroup}
+                  onChange={(event) =>
+                    updateField("overarchingTargetGroup", event.target.value)
+                  }
+                  placeholder={
+                    locale.dialogs.project.overarchingTargetGroupPlaceholder
+                  }
+                  maxLength={200}
+                  required
+                />
+              </FieldGroup>
+
+              <FieldGroup
+                className="md:col-span-2"
+                label={locale.dialogs.project.intendedChanges}
+                error={formErrors.intendedChanges}
+                hint={locale.dialogs.project.intendedChangesHint}
+              >
+                <Textarea
+                  value={formState.intendedChanges}
+                  onChange={(event) =>
+                    updateField("intendedChanges", event.target.value)
+                  }
+                  placeholder={
+                    locale.dialogs.project.intendedChangesPlaceholder
+                  }
+                  rows={3}
+                  required
+                />
+              </FieldGroup>
+
+              <FieldGroup
+                label={locale.dialogs.project.fundingProgram}
+                optionalLabel={locale.projectSettings.optionalLabel}
+              >
+                <Input
+                  value={formState.fundingProgram}
+                  onChange={(event) =>
+                    updateField("fundingProgram", event.target.value)
+                  }
+                  placeholder={locale.dialogs.project.fundingProgramPlaceholder}
+                  maxLength={200}
+                />
+              </FieldGroup>
+
+              <FieldGroup
+                label={locale.dialogs.project.fundingOrganization}
+                optionalLabel={locale.projectSettings.optionalLabel}
+              >
+                <Input
+                  value={formState.fundingOrganization}
+                  onChange={(event) =>
+                    updateField("fundingOrganization", event.target.value)
+                  }
+                  placeholder={
+                    locale.dialogs.project.fundingOrganizationPlaceholder
+                  }
+                  maxLength={200}
+                />
+              </FieldGroup>
+
+              <FieldGroup
+                label={locale.dialogs.project.targetGroups}
+                error={
+                  targetGroupsError
+                    ? locale.dialogs.project.targetGroupsValidation
+                    : undefined
                 }
-              />
-              <DetailCard
-                label={locale.projectSettings.fields.targetGroups}
-                value={
-                  project.targetGroups.length > 0
-                    ? project.targetGroups.join(", ")
-                    : locale.projectSettings.notSet
-                }
-              />
-              <DetailCard
-                label={locale.projectSettings.fields.areaOfOperation}
-                value={project.areaOfOperation || locale.projectSettings.notSet}
-              />
-              <DetailCard
-                label={locale.projectSettings.fields.partnerships}
-                value={project.partnerships || locale.projectSettings.notSet}
-              />
-              <DetailCard
-                label={locale.projectSettings.fields.sdgs}
-                value={
-                  project.sdgs.length > 0
-                    ? project.sdgs.join(", ")
-                    : locale.projectSettings.notSet
-                }
-              />
-              <DetailCard
-                label={locale.projectSettings.fields.created}
-                value={formatDateTime(project.createdAt, i18n.language)}
-              />
-              <DetailCard
-                label={locale.projectSettings.fields.updated}
-                value={formatDateTime(project.updatedAt, i18n.language)}
-              />
+              >
+                <TargetGroupMultiSelect
+                  options={[...locale.dialogs.options.targetGroups]}
+                  selectedValues={formState.targetGroups}
+                  customOption={locale.dialogs.options.customTargetGroupOption}
+                  customValue={formState.customTargetGroup}
+                  customValueOpen={isCustomTargetGroupInputOpen}
+                  onToggleValue={(value) => {
+                    setTargetGroupsError(false);
+                    updateField(
+                      "targetGroups",
+                      toggleValue(formState.targetGroups, value),
+                    );
+                  }}
+                  onToggleCustomValueOpen={() =>
+                    setIsCustomTargetGroupInputOpen((current) => !current)
+                  }
+                  onCustomValueChange={(value) =>
+                    updateField("customTargetGroup", value)
+                  }
+                  onAddCustomValue={addCustomTargetGroup}
+                  onRemoveValue={removeTargetGroup}
+                  placeholder={locale.dialogs.project.targetGroupsPlaceholder}
+                  customPlaceholder={
+                    locale.dialogs.project.customTargetGroupPlaceholder
+                  }
+                  selectedSummarySingle={
+                    locale.dialogs.project.targetGroupsSelectedSingle
+                  }
+                  selectedSummaryMultiple={
+                    locale.dialogs.project.targetGroupsSelectedMultiple
+                  }
+                  error={targetGroupsError}
+                />
+              </FieldGroup>
+
+              <FieldGroup
+                label={locale.dialogs.project.areaOfOperation}
+                optionalLabel={locale.projectSettings.optionalLabel}
+              >
+                <Input
+                  value={formState.areaOfOperation}
+                  onChange={(event) =>
+                    updateField("areaOfOperation", event.target.value)
+                  }
+                  placeholder={
+                    locale.dialogs.project.areaOfOperationPlaceholder
+                  }
+                  maxLength={2000}
+                />
+              </FieldGroup>
+
+              <FieldGroup
+                className="md:col-span-2"
+                label={locale.dialogs.project.partnerships}
+                optionalLabel={locale.projectSettings.optionalLabel}
+              >
+                <Textarea
+                  value={formState.partnerships}
+                  onChange={(event) =>
+                    updateField("partnerships", event.target.value)
+                  }
+                  placeholder={locale.dialogs.project.partnershipsPlaceholder}
+                  rows={4}
+                  maxLength={2000}
+                />
+              </FieldGroup>
+
+              <FieldGroup
+                className="md:col-span-2"
+                label={locale.dialogs.project.sdgs}
+                optionalLabel={locale.projectSettings.optionalLabel}
+                hint={locale.dialogs.project.sdgsHint}
+              >
+                <Textarea
+                  value={formState.sdgs}
+                  onChange={(event) => updateField("sdgs", event.target.value)}
+                  placeholder={locale.dialogs.project.sdgsPlaceholder}
+                  rows={3}
+                />
+              </FieldGroup>
             </div>
-          )}
+          </div>
         </Card>
 
-        {!isEditing ? (
-          <>
-            <Card className="p-6 sm:p-8">
-              <div className="text-sm font-semibold tracking-tight text-foreground">
-                {locale.dialogs.project.impactModel}
-              </div>
-              <div className="mt-6 grid gap-4 md:grid-cols-2">
-                <DetailCard
-                  label={locale.projectSettings.fields.inputs}
-                  value={
-                    project.impactModel.inputs || locale.projectSettings.notSet
-                  }
-                />
-                <DetailCard
-                  label={locale.projectSettings.fields.activities}
-                  value={
-                    project.impactModel.activities ||
-                    locale.projectSettings.notSet
-                  }
-                />
-                <DetailCard
-                  label={locale.projectSettings.fields.outputs}
-                  value={
-                    project.impactModel.outputs || locale.projectSettings.notSet
-                  }
-                />
-                <DetailCard
-                  label={locale.projectSettings.fields.impact}
-                  value={
-                    project.impactModel.impact || locale.projectSettings.notSet
-                  }
-                />
-                <DetailCard
-                  label={locale.projectSettings.fields.outcomes}
-                  value={
-                    project.impactModel.outcomes ||
-                    locale.projectSettings.notSet
-                  }
-                  className="md:col-span-2"
-                />
-              </div>
-            </Card>
-
-            <Card className="p-6 sm:p-8">
-              <DetailCard
-                label={locale.projectSettings.fields.successIndicators}
-                value={
-                  project.successIndicators || locale.projectSettings.notSet
-                }
-              />
-            </Card>
-          </>
-        ) : null}
-
-        {isEditing ? (
-          <Card className="p-6 sm:p-8">
-            <div className="flex flex-wrap items-center justify-end gap-3">
-              <Button
-                type="submit"
-                disabled={updateProjectMutation.isPending || !hasChanges}
-              >
-                {updateProjectMutation.isPending
-                  ? locale.projectSettings.savingAction
-                  : locale.projectSettings.saveAction}
-              </Button>
-            </div>
-          </Card>
-        ) : null}
+        <Card className="p-6 sm:p-8">
+          <div className="flex flex-wrap items-center justify-end gap-3">
+            <Button
+              type="submit"
+              disabled={updateProjectMutation.isPending || !hasChanges}
+            >
+              {updateProjectMutation.isPending
+                ? locale.projectSettings.savingAction
+                : locale.projectSettings.saveAction}
+            </Button>
+          </div>
+        </Card>
 
         {project.permissions.canDelete ? (
           <Card className="border-destructive/20 p-5 shadow-none sm:p-6">
@@ -842,6 +585,8 @@ function createFormState(project: ProjectSummary): ProjectSettingsFormState {
     name: project.name,
     startMonth: project.startMonth ?? "",
     endMonth: project.endMonth ?? "",
+    overarchingTargetGroup: project.overarchingTargetGroup ?? "",
+    intendedChanges: project.intendedChanges.join("\n"),
     fundingProgram: project.fundingProgram ?? "",
     fundingOrganization: project.fundingOrganization ?? "",
     targetGroups: project.targetGroups,
@@ -849,12 +594,6 @@ function createFormState(project: ProjectSummary): ProjectSettingsFormState {
     areaOfOperation: project.areaOfOperation ?? "",
     partnerships: project.partnerships ?? "",
     sdgs: project.sdgs.join("\n"),
-    impactModelInputs: project.impactModel.inputs ?? "",
-    impactModelActivities: project.impactModel.activities ?? "",
-    impactModelOutputs: project.impactModel.outputs ?? "",
-    impactModelImpact: project.impactModel.impact ?? "",
-    impactModelOutcomes: project.impactModel.outcomes ?? "",
-    successIndicators: project.successIndicators ?? "",
   };
 }
 
@@ -871,6 +610,7 @@ function validateFormState(
     requiredField: string;
     requiredMonth: string;
     invalidMonth: string;
+    intendedChangesValidation: string;
   },
 ): ProjectSettingsFormErrors {
   const errors: ProjectSettingsFormErrors = {};
@@ -891,40 +631,13 @@ function validateFormState(
     errors.endMonth = locale.invalidMonth;
   }
 
-  if (!formState.fundingProgram.trim()) {
-    errors.fundingProgram = locale.requiredField;
+  if (!formState.overarchingTargetGroup.trim()) {
+    errors.overarchingTargetGroup = locale.requiredField;
   }
 
-  if (!formState.fundingOrganization.trim()) {
-    errors.fundingOrganization = locale.requiredField;
-  }
-
-  if (!formState.areaOfOperation.trim()) {
-    errors.areaOfOperation = locale.requiredField;
-  }
-
-  if (!formState.impactModelInputs.trim()) {
-    errors.impactModelInputs = locale.requiredField;
-  }
-
-  if (!formState.impactModelActivities.trim()) {
-    errors.impactModelActivities = locale.requiredField;
-  }
-
-  if (!formState.impactModelOutputs.trim()) {
-    errors.impactModelOutputs = locale.requiredField;
-  }
-
-  if (!formState.impactModelImpact.trim()) {
-    errors.impactModelImpact = locale.requiredField;
-  }
-
-  if (!formState.impactModelOutcomes.trim()) {
-    errors.impactModelOutcomes = locale.requiredField;
-  }
-
-  if (!formState.successIndicators.trim()) {
-    errors.successIndicators = locale.requiredField;
+  const parsedIntendedChanges = parseListInput(formState.intendedChanges);
+  if (parsedIntendedChanges.length === 0 || parsedIntendedChanges.length > 3) {
+    errors.intendedChanges = locale.intendedChangesValidation;
   }
 
   return errors;
@@ -962,35 +675,6 @@ function FieldGroup({
   );
 }
 
-function DetailCard({
-  label,
-  value,
-  icon,
-  className,
-}: {
-  label: string;
-  value: string;
-  icon?: ReactNode;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "rounded-[12px] border border-border/80 bg-secondary/35 p-5",
-        className,
-      )}
-    >
-      <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
-        {icon}
-        {label}
-      </div>
-      <div className="mt-3 whitespace-pre-wrap text-sm leading-6 text-foreground">
-        {value}
-      </div>
-    </div>
-  );
-}
-
 function OverviewSectionCard({
   title,
   children,
@@ -1023,27 +707,6 @@ function OverviewFieldRow({
         {label}
       </div>
       <div className="text-[15px] leading-7 text-foreground">{value}</div>
-    </div>
-  );
-}
-
-function OverviewFieldValueBlock({
-  label,
-  value,
-  className,
-}: {
-  label: string;
-  value: string;
-  className?: string;
-}) {
-  return (
-    <div className={cn("space-y-2", className)}>
-      <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-        {label}
-      </div>
-      <div className="whitespace-pre-wrap text-[15px] leading-7 text-foreground">
-        {value}
-      </div>
     </div>
   );
 }

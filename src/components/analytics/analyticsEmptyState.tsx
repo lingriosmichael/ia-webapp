@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Card } from "@/components/WorkspaceUI";
 
 export const analyticsCtaLinkClassName =
-  "mt-5 inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90";
+  "mt-5 inline-flex h-10 items-center rounded-md bg-signal px-4 text-sm font-medium text-signal-foreground shadow hover:bg-signal/94";
 
 export function AnalyticsEmptyState({
   title,

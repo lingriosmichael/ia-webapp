@@ -3,7 +3,7 @@ import type { ChangeEvent, DragEvent, FormEvent, ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { OrganizationAvatar } from "@/components/OrganizationAvatar";
+import { OrganizationAvatar } from "@/components/organizationAvatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

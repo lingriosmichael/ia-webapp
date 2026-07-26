@@ -43,7 +43,7 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
             className={cn(
               "rounded px-2.5 py-1 text-[11px] font-semibold transition-colors",
               isActive
-                ? "bg-primary text-primary-foreground shadow-[var(--shadow-soft)]"
+                ? "bg-signal text-signal-foreground shadow-[var(--shadow-soft)]"
                 : "text-muted-foreground hover:bg-secondary hover:text-foreground",
             )}
             aria-pressed={isActive}

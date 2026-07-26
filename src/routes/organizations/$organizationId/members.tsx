@@ -153,7 +153,7 @@ function OrganizationMembersPage() {
               <button
                 type="submit"
                 disabled={createInvitationMutation.isPending}
-                className="inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-60"
+                className="inline-flex h-10 items-center rounded-md bg-signal px-4 text-sm font-medium text-signal-foreground shadow hover:bg-signal/94 disabled:opacity-60"
               >
                 {createInvitationMutation.isPending
                   ? locale.members.inviting

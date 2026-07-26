@@ -1,7 +1,7 @@
 import { Link, useParams } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { ActivityTabs } from "@/components/ActivityTabs";
+import { ActivityTabs } from "@/components/activityTabs";
 import { PageHeader, PageContainer, TopBar } from "@/components/WorkspaceUI";
 import { useProjectHierarchy } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
