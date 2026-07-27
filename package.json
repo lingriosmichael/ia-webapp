@@ -15,8 +15,10 @@
     "test:watch": "vitest",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "check:imports": "node ./scripts/checkCaseSensitiveImports.mjs",
     "typecheck": "tsc --noEmit",
     "check": "npm run typecheck",
+    "check:vercel": "npm run check:imports && npm run typecheck && npm run lint && npm run test && npm run build",
     "format": "prettier --write ."
   },
   "dependencies": {

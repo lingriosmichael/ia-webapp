@@ -6,6 +6,14 @@
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
+const vercelNitroConfig = {
+  preset: "vercel",
+  // Nitro's current nf3-based externals tracer breaks on Vercel because nf3
+  // imports a CommonJS-only @vercel/nft entry as a named ESM export. Bundle
+  // runtime dependencies into the server output instead of tracing them.
+  noExternals: true,
+} as const;
+
 export default defineConfig({
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
@@ -15,11 +23,7 @@ export default defineConfig({
   // MVP hosting target is Vercel, not the wrapper's cloudflare-module default —
   // without this, `npm run build` emits a Cloudflare Workers artifact (wrangler.json)
   // that Vercel cannot deploy.
-  nitro: {
-    preset: "vercel",
-    // Nitro's current nf3-based externals tracer breaks on Vercel because nf3
-    // imports a CommonJS-only @vercel/nft entry as a named ESM export. Bundle
-    // runtime dependencies into the server output instead of tracing them.
-    noExternals: true,
-  },
+  // The wrapper package's TypeScript type lags Nitro's actual runtime config
+  // shape; keep the valid Nitro option while preserving local typecheck.
+  nitro: vercelNitroConfig as never,
 });
