@@ -1,9 +1,15 @@
-import { useParams } from "@tanstack/react-router";
+import { Link, useParams } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useProjectAnalyticsDashboardInteractionTracking } from "@/hooks/useAnalyticsDashboardInteractionTracking";
+import { deriveAnalyticsReadinessSummary } from "@/lib/interpretationWorkflow";
+import { useAnalyticsEmptyStateContent } from "@/hooks/useAnalyticsEmptyStateContent";
+import {
+  AnalyticsEmptyState,
+  analyticsCtaLinkClassName,
+} from "@/components/analytics/analyticsEmptyState";
 import {
   useGenerateProjectAnalyticsMutation,
   useProjectAnalyticsQuery,
@@ -35,6 +41,13 @@ export function ProjectAnalyticsPage() {
     projectId,
     Boolean(auth.token),
   );
+  const interpretationResults = interpretationsQuery.data?.results ?? [];
+  const readiness = deriveAnalyticsReadinessSummary(interpretationResults);
+  const {
+    title: emptyStateTitle,
+    description: emptyStateDescription,
+    showCta: showInterpretationCta,
+  } = useAnalyticsEmptyStateContent(readiness, "projectAnalytics");
 
   async function handleRegenerate() {
     try {
@@ -102,7 +115,25 @@ export function ProjectAnalyticsPage() {
           isRegenerating={generateMutation.isPending}
         />
 
-        {isExecutionComplete && result && result.catalog.entries.length > 0 ? (
+        {!isExecutionComplete ||
+        !result ||
+        result.catalog.entries.length === 0 ? (
+          <AnalyticsEmptyState
+            title={emptyStateTitle}
+            description={emptyStateDescription}
+            cta={
+              showInterpretationCta ? (
+                <Link
+                  to="/projects/$projectId/interpretation"
+                  params={{ projectId }}
+                  className={analyticsCtaLinkClassName}
+                >
+                  {t("projectAnalytics.noVerifiedEvidenceCta")}
+                </Link>
+              ) : undefined
+            }
+          />
+        ) : (
           <ConfigurableAnalyticsDashboard
             result={result}
             layoutPreference={layoutPreference}
@@ -116,7 +147,7 @@ export function ProjectAnalyticsPage() {
             isSavingLayout={updateLayoutMutation.isPending}
             isResettingLayout={resetLayoutMutation.isPending}
           />
-        ) : null}
+        )}
       </div>
     </ProjectWorkspaceShell>
   );

@@ -247,7 +247,7 @@ function ProjectInterpretationPage() {
   });
 
   const readyActivityCount = activityStatuses.filter(
-    (entry) => entry.status === "ready" || entry.status === "reviewed",
+    (entry) => entry.status === "reviewed",
   ).length;
   const inProgressActivityCount = activityStatuses.filter(
     (entry) => entry.status === "processing",
@@ -483,7 +483,10 @@ function ActivityKnowledgeCard({
     hasPendingBlockingQuestions(result.questions),
   );
   const status = getActivityResultStatus(activity, uploads, jobs, results);
-  const hasPersistedKnowledge = Boolean(activity.aiKnowledgeGeneratedAt);
+  const hasPersistedKnowledge = Boolean(
+    activity.aiKnowledgeGeneratedAt ||
+    generateKnowledgeMutation.data?.generatedAt,
+  );
 
   const readyToInterpretUploadCount = uploads.filter((upload) => {
     if (resultByUploadId.has(upload.id)) {
@@ -515,11 +518,6 @@ function ActivityKnowledgeCard({
     !startMutation.isPending;
   const canGenerateKnowledge =
     !hasPersistedKnowledge &&
-    (status === "ready" || status === "reviewed") &&
-    !hasUnresolvedActionableQuestion &&
-    !generateKnowledgeMutation.isPending;
-  const canRefreshKnowledge =
-    hasPersistedKnowledge &&
     (status === "ready" || status === "reviewed") &&
     !hasUnresolvedActionableQuestion &&
     !generateKnowledgeMutation.isPending;
@@ -636,22 +634,19 @@ function ActivityKnowledgeCard({
             <Button
               size="sm"
               variant="outline"
-              onClick={() => generateKnowledgeMutation.mutate()}
+              onClick={() =>
+                generateKnowledgeMutation.mutate(undefined, {
+                  onSuccess: () => {
+                    onOpenKnowledge(activity.id, activity.name);
+                  },
+                  onError: (error) => {
+                    toast.error(error.message);
+                  },
+                })
+              }
             >
               {t(
-                "projectWorkspace.interpretation.simplified.actionRunKnowledge",
-              )}
-            </Button>
-          ) : null}
-
-          {canRefreshKnowledge ? (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => generateKnowledgeMutation.mutate()}
-            >
-              {t(
-                "projectWorkspace.interpretation.simplified.actionRefreshKnowledge",
+                "projectWorkspace.interpretation.simplified.actionGenerateKnowledge",
               )}
             </Button>
           ) : null}

@@ -657,6 +657,7 @@ const de: TranslationDictionary = {
         questionsTitle: "Klärungsfragen",
         actionRunning: "Wird analysiert…",
         actionRunKnowledge: "KI analysieren",
+        actionGenerateKnowledge: "AI knowledge erzeugen",
         activityNotReadyToast:
           "Diese Aktivität ist noch nicht bereit für die KI-Analyse. Schließen Sie zuerst die Datenschutzprüfung ab oder warten Sie, bis die Verarbeitung fertig ist.",
         actionRefreshKnowledge: "AI knowledge aktualisieren",

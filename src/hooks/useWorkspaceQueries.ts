@@ -189,10 +189,49 @@ export function useGenerateActivityAiKnowledgeMutation(
   return useMutation<ActivityAiKnowledgeRecord, ApiError>({
     mutationFn: () => apiClient.generateActivityAiKnowledge(activityId),
     onSuccess: (knowledge) => {
+      const generatedAt = knowledge.generatedAt ?? new Date().toISOString();
+
       queryClient.setQueryData(
         activityAiKnowledgeQueryKey(activityId),
         knowledge,
       );
+      queryClient.setQueryData<ActivitySummary | undefined>(
+        activityQueryKey(activityId),
+        (currentActivity) =>
+          currentActivity
+            ? {
+                ...currentActivity,
+                aiKnowledgeGeneratedAt: generatedAt,
+                interpretationAcknowledgedAt:
+                  currentActivity.interpretationAcknowledgedAt ?? generatedAt,
+              }
+            : currentActivity,
+      );
+      if (organizationId) {
+        queryClient.setQueryData<OrganizationWorkspace | undefined>(
+          workspaceQueryKey(organizationId),
+          (currentWorkspace) =>
+            currentWorkspace
+              ? {
+                  ...currentWorkspace,
+                  projects: currentWorkspace.projects.map((project) => ({
+                    ...project,
+                    activities: project.activities.map((activity) =>
+                      activity.id === activityId
+                        ? {
+                            ...activity,
+                            aiKnowledgeGeneratedAt: generatedAt,
+                            interpretationAcknowledgedAt:
+                              activity.interpretationAcknowledgedAt ??
+                              generatedAt,
+                          }
+                        : activity,
+                    ),
+                  })),
+                }
+              : currentWorkspace,
+        );
+      }
       void queryClient.invalidateQueries({
         queryKey: activityQueryKey(activityId),
       });
@@ -201,12 +240,18 @@ export function useGenerateActivityAiKnowledgeMutation(
           queryKey: projectInterpretationsQueryKey(projectId),
         });
         void queryClient.invalidateQueries({
+          queryKey: projectAnalyticsQueryKey(projectId),
+        });
+        void queryClient.invalidateQueries({
           queryKey: projectOverviewQueryKey(projectId),
         });
         void queryClient.invalidateQueries({
           queryKey: projectActivitiesQueryKey(projectId),
         });
       }
+      void queryClient.invalidateQueries({
+        queryKey: activityAnalyticsQueryKey(activityId),
+      });
       if (organizationId) {
         void queryClient.invalidateQueries({
           queryKey: workspaceQueryKey(organizationId),

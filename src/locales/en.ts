@@ -645,6 +645,7 @@ const en = {
         questionsTitle: "Clarification questions",
         actionRunning: "Analyzing…",
         actionRunKnowledge: "Analyze with AI",
+        actionGenerateKnowledge: "Generate AI knowledge",
         activityNotReadyToast:
           "This activity is not ready for AI analysis yet. Finish privacy review first or wait for processing to complete.",
         actionRefreshKnowledge: "Refresh AI knowledge",
