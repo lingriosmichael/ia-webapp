@@ -55,6 +55,10 @@ function OrganizationMembersPage() {
 
   const members = membersQuery.data ?? [];
 
+  function buildInvitationLink(token: string) {
+    return `${window.location.origin}/invitations/${token}/accept`;
+  }
+
   async function inviteMember(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -89,9 +93,7 @@ function OrganizationMembersPage() {
 
   async function copyInvitationLink(token: string) {
     try {
-      await navigator.clipboard.writeText(
-        `${window.location.origin}/invitations/${token}/accept`,
-      );
+      await navigator.clipboard.writeText(buildInvitationLink(token));
       toast.success(locale.members.copyInviteLinkSuccess);
     } catch {
       toast.error(locale.members.copyInviteLinkFailure);
@@ -178,6 +180,14 @@ function OrganizationMembersPage() {
                       </div>
                       <div className="mt-1 text-muted-foreground">
                         {locale.members.pendingStatus}
+                      </div>
+                      <div className="mt-3">
+                        <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                          {locale.members.invitationLinkLabel}
+                        </div>
+                        <div className="mt-2 break-all rounded-xl border border-border bg-background px-3 py-2 font-mono text-xs text-foreground">
+                          {buildInvitationLink(invitation.token)}
+                        </div>
                       </div>
                       <div className="mt-3 flex flex-wrap gap-3">
                         <button

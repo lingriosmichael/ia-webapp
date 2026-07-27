@@ -1602,10 +1602,12 @@ const de: TranslationDictionary = {
     organizationAdminRole: "Organisationsadministration",
     sendInvitation: "Einladung senden",
     inviting: "Einladung wird gesendet…",
-    inviteSuccess: "Einladung wurde erstellt.",
+    inviteSuccess:
+      "Einladung wurde erstellt. Den Einladungslink finden Sie unter den ausstehenden Einladungen.",
     inviteFailure: "Einladung konnte nicht erstellt werden.",
     pendingInvitations: "Ausstehende Einladungen",
     pendingStatus: "Wartet auf Annahme",
+    invitationLinkLabel: "Einladungslink",
     copyInviteLink: "Einladungslink kopieren",
     copyInviteLinkSuccess: "Einladungslink wurde kopiert.",
     copyInviteLinkFailure: "Einladungslink konnte nicht kopiert werden.",

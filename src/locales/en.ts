@@ -1574,10 +1574,12 @@ const en = {
     organizationAdminRole: "Organization Admin",
     sendInvitation: "Send invitation",
     inviting: "Sending invitation…",
-    inviteSuccess: "Invitation created.",
+    inviteSuccess:
+      "Invitation created. You can copy the invitation link from the pending invitations list.",
     inviteFailure: "Invitation could not be created.",
     pendingInvitations: "Pending invitations",
     pendingStatus: "Pending acceptance",
+    invitationLinkLabel: "Invitation link",
     copyInviteLink: "Copy invitation link",
     copyInviteLinkSuccess: "Invitation link copied.",
     copyInviteLinkFailure: "Invitation link could not be copied.",
