@@ -475,9 +475,10 @@ const de: TranslationDictionary = {
       loading: "Evidenz wird geladen…",
       noFiles: "Für diese Aktivität wurde noch keine Evidenz hochgeladen.",
       openFile: "Datei öffnen",
-      analyzeFile: "Analysieren",
+      analyzeFile: "Datenschutz prüfen",
       retryAnalysis: "Analyse erneut starten",
       reviewPrivacy: "Datenschutz prüfen",
+      viewPrivacyReview: "Prüfung ansehen",
       approvePrivacy: "Freigeben und fortfahren",
       approvingPrivacy: "Freigabe läuft…",
       analysisInProgress: "Verarbeitung läuft…",
@@ -656,6 +657,8 @@ const de: TranslationDictionary = {
         questionsTitle: "Klärungsfragen",
         actionRunning: "Wird analysiert…",
         actionRunKnowledge: "KI analysieren",
+        activityNotReadyToast:
+          "Diese Aktivität ist noch nicht bereit für die KI-Analyse. Schließen Sie zuerst die Datenschutzprüfung ab oder warten Sie, bis die Verarbeitung fertig ist.",
         actionRefreshKnowledge: "AI knowledge aktualisieren",
         actionOpenKnowledge: "AI knowledge öffnen",
         actionOpeningKnowledge: "AI knowledge wird geöffnet…",
@@ -1618,7 +1621,7 @@ const de: TranslationDictionary = {
     eyebrow: "Abrechnung",
     title: "Abo und Abrechnung",
     description:
-      "Abrechnung bleibt auf Organisationsebene, damit Projektverantwortung klar getrennt bleibt.",
+      "Die Abrechnung erfolgt auf Organisationsebene, damit die Verantwortlichkeiten der einzelnen Projekte klar voneinander getrennt bleiben.",
     placeholder:
       "Das Abonnementmanagement kann später hier ergänzt werden, ohne das Projekt- und Aktivitätsmodell zu verändern.",
   },

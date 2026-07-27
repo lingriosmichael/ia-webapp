@@ -470,9 +470,10 @@ const en = {
       loading: "Loading evidence…",
       noFiles: "No evidence uploaded yet for this activity.",
       openFile: "Open file",
-      analyzeFile: "Analyze",
+      analyzeFile: "Review privacy",
       retryAnalysis: "Retry analysis",
       reviewPrivacy: "Review privacy",
+      viewPrivacyReview: "View review",
       approvePrivacy: "Approve and continue",
       approvingPrivacy: "Approving…",
       analysisInProgress: "Processing…",
@@ -644,6 +645,8 @@ const en = {
         questionsTitle: "Clarification questions",
         actionRunning: "Analyzing…",
         actionRunKnowledge: "Analyze with AI",
+        activityNotReadyToast:
+          "This activity is not ready for AI analysis yet. Finish privacy review first or wait for processing to complete.",
         actionRefreshKnowledge: "Refresh AI knowledge",
         actionOpenKnowledge: "Open AI knowledge",
         actionOpeningKnowledge: "Opening AI knowledge…",
@@ -1590,7 +1593,7 @@ const en = {
     eyebrow: "Billing",
     title: "Subscription and billing",
     description:
-      "Billing remains organization-level so project ownership rules stay simple.",
+      "Billing is handled at the organization level so the responsibilities of individual projects remain clearly separated.",
     placeholder:
       "Subscription management can be added here later without changing the project and activity model.",
   },

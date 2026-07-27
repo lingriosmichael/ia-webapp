@@ -6,16 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useCreateOrganizationMutation } from "@/hooks/useWorkspaceQueries";
-import {
-  rememberActiveOrganizationId,
-  resolveActiveOrganizationId,
-} from "@/lib/organizationSelection";
+import { resolveActiveOrganizationId } from "@/lib/organizationSelection";
 import { resolveWorkspaceDestination } from "@/lib/workspaceRouting";
 import {
   clearActiveOrganizationId,
   clearSessionMarker,
 } from "@/services/authStorage";
-import { ApiError } from "@/services/apiClient";
+import { apiClient, ApiError } from "@/services/apiClient";
 import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/onboarding/workspace")({
@@ -28,8 +25,13 @@ function OnboardingWorkspacePage() {
   const { t } = useTranslation();
   const createOrganizationMutation = useCreateOrganizationMutation();
   const [organizationName, setOrganizationName] = useState("");
+  const [isCompletingSetup, setIsCompletingSetup] = useState(false);
 
   useEffect(() => {
+    if (isCompletingSetup) {
+      return;
+    }
+
     const organizationId = resolveActiveOrganizationId(
       auth.data?.organizations ?? [],
     );
@@ -38,19 +40,31 @@ function OnboardingWorkspacePage() {
         navigate(destination),
       );
     }
-  }, [auth.data?.organizations, navigate]);
+  }, [auth.data?.organizations, isCompletingSetup, navigate]);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
-      const organization = await createOrganizationMutation.mutateAsync({
+      setIsCompletingSetup(true);
+
+      await createOrganizationMutation.mutateAsync({
         name: organizationName,
       });
-      rememberActiveOrganizationId(organization.id);
+
+      try {
+        await apiClient.logout();
+      } catch {
+        // Fall through to local cleanup so the user still lands back on login.
+      }
+
+      clearSessionMarker();
+      clearActiveOrganizationId();
       toast.success(t("auth.workspaceCreatedToast"));
-      void navigate({ to: "/onboarding/welcome" });
+      void navigate({ to: "/login" });
     } catch (error) {
+      setIsCompletingSetup(false);
+
       if (error instanceof ApiError && error.statusCode === 401) {
         clearSessionMarker();
         clearActiveOrganizationId();

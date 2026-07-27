@@ -41,7 +41,6 @@ interface ProjectDialogState {
   name: string;
   startMonth: string;
   endMonth: string;
-  overarchingTargetGroup: string;
   intendedChanges: string;
   fundingProgram: string;
   fundingOrganization: string;
@@ -62,7 +61,6 @@ const initialState: ProjectDialogState = {
   name: "",
   startMonth: "",
   endMonth: "",
-  overarchingTargetGroup: "",
   intendedChanges: "",
   fundingProgram: "",
   fundingOrganization: "",
@@ -202,7 +200,6 @@ export function ProjectDialog({
       name: form.name.trim(),
       startMonth,
       endMonth,
-      overarchingTargetGroup: form.overarchingTargetGroup.trim(),
       intendedChanges: normalizedIntendedChanges,
       fundingProgram: form.fundingProgram.trim() || undefined,
       fundingOrganization: form.fundingOrganization.trim() || undefined,
@@ -268,21 +265,6 @@ export function ProjectDialog({
             {formErrors.endMonth ? (
               <p className="text-xs text-destructive">{formErrors.endMonth}</p>
             ) : null}
-          </div>
-          <div className="space-y-2 md:col-span-2">
-            <FieldLabel>
-              {locale.dialogs.project.overarchingTargetGroup}
-            </FieldLabel>
-            <Input
-              value={form.overarchingTargetGroup}
-              onChange={(event) =>
-                updateField("overarchingTargetGroup", event.target.value)
-              }
-              placeholder={
-                locale.dialogs.project.overarchingTargetGroupPlaceholder
-              }
-              required
-            />
           </div>
           <div className="space-y-2 md:col-span-2">
             <FieldLabel>{locale.dialogs.project.intendedChanges}</FieldLabel>

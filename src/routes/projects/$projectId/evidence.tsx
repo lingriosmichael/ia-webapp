@@ -48,15 +48,27 @@ export const Route = createFileRoute("/projects/$projectId/evidence")({
   component: ProjectEvidencePage,
 });
 
+function getLatestEvidenceJobCreatedTimestamp(job: ProcessingJobRecord) {
+  const createdAt = Date.parse(job.createdAt);
+  return Number.isNaN(createdAt) ? 0 : createdAt;
+}
+
 function getLatestEvidenceJob(
   jobs: ProcessingJobRecord[],
   uploadMetadataId: string,
 ) {
-  return jobs.find(
-    (job) =>
-      job.uploadMetadataId === uploadMetadataId &&
-      job.jobType === "evidence_processing",
-  );
+  return jobs
+    .filter(
+      (job) =>
+        job.uploadMetadataId === uploadMetadataId &&
+        job.jobType === "evidence_processing",
+    )
+    .sort((left, right) => {
+      return (
+        getLatestEvidenceJobCreatedTimestamp(right) -
+        getLatestEvidenceJobCreatedTimestamp(left)
+      );
+    })[0];
 }
 
 function isEvidenceReviewed(
@@ -636,6 +648,10 @@ function EvidenceFileRow({
     : job.status === "failed"
       ? t("projectWorkspace.evidence.retryAnalysis")
       : t(`projectWorkspace.evidence.analysisStates.${job.status}`);
+  const privacyReviewButtonLabel =
+    job?.status === "awaiting_privacy_review"
+      ? t("projectWorkspace.evidence.reviewPrivacy")
+      : t("projectWorkspace.evidence.viewPrivacyReview");
 
   async function handleAnalyzeAction() {
     if (!canAnalyse) {
@@ -739,7 +755,7 @@ function EvidenceFileRow({
               variant="outline"
               size="sm"
             >
-              {t("projectWorkspace.evidence.reviewPrivacy")}
+              {privacyReviewButtonLabel}
             </Button>
           ) : null}
           {activity.permissions.canUploadEvidence ? (

@@ -172,7 +172,6 @@ export interface CreateProjectPayload {
   fundingProgram?: string;
   fundingOrganization?: string;
   targetGroups: string[];
-  overarchingTargetGroup: string;
   intendedChanges: string[];
   areaOfOperation?: string;
   partnerships?: string;
@@ -186,7 +185,6 @@ export interface UpdateProjectPayload {
   fundingProgram?: string | null;
   fundingOrganization?: string | null;
   targetGroups?: string[];
-  overarchingTargetGroup?: string;
   intendedChanges?: string[];
   areaOfOperation?: string | null;
   partnerships?: string | null;

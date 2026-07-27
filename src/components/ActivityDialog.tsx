@@ -266,18 +266,6 @@ export function ActivityDialog({
         <div className="grid gap-5 md:grid-cols-2">
           <div className="space-y-2 md:col-span-2">
             <ActivityTextareaField
-              label={locale.dialogs.activity.objectives}
-              tooltipLabel={locale.dialogs.activity.objectivesTooltipLabel}
-              tooltip={locale.dialogs.activity.objectivesTooltip}
-              value={form.objectives}
-              onChange={(value) =>
-                setForm((current) => ({ ...current, objectives: value }))
-              }
-              placeholder={locale.dialogs.activity.objectivesPlaceholder}
-            />
-          </div>
-          <div className="space-y-2 md:col-span-2">
-            <ActivityTextareaField
               label={locale.dialogs.activity.output}
               tooltipLabel={locale.dialogs.activity.outputTooltipLabel}
               tooltip={locale.dialogs.activity.outputTooltip}

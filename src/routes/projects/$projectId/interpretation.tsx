@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AlertTriangle, CircleHelp, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import { PrivacyReviewDialog } from "@/components/privacyReviewDialog";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
 import { ActivityAiKnowledgeContent } from "@/components/activityAiKnowledgeContent";
@@ -32,6 +33,7 @@ import {
 import { useRequireAuth } from "@/hooks/useAuth";
 import { getQuestionsByDomain } from "@/lib/interpretationWorkflow";
 import {
+  ApiError,
   apiClient,
   type EvidenceModality,
   type InterpretationQuestion,
@@ -89,6 +91,29 @@ function isPrivacyPreviewAvailable(job: ProcessingJobRecord | undefined) {
   );
 }
 
+function getLatestEvidenceJobCreatedTimestamp(job: ProcessingJobRecord) {
+  const createdAt = Date.parse(job.createdAt);
+  return Number.isNaN(createdAt) ? 0 : createdAt;
+}
+
+function getLatestEvidenceProcessingJob(
+  jobs: ProcessingJobRecord[],
+  uploadMetadataId: string,
+) {
+  return jobs
+    .filter(
+      (job) =>
+        job.uploadMetadataId === uploadMetadataId &&
+        job.jobType === "evidence_processing",
+    )
+    .sort((left, right) => {
+      return (
+        getLatestEvidenceJobCreatedTimestamp(right) -
+        getLatestEvidenceJobCreatedTimestamp(left)
+      );
+    })[0];
+}
+
 function getPendingQuestionCount(
   result: InterpretationResultRecord,
   questionDomain?: InterpretationQuestionDomain,
@@ -111,14 +136,16 @@ function getActivityResultStatus(
     return "no_evidence";
   }
 
+  const latestEvidenceJobs = uploads
+    .map((upload) => getLatestEvidenceProcessingJob(jobs, upload.id))
+    .filter((job): job is ProcessingJobRecord => Boolean(job));
+
   if (activity.interpretationAcknowledgedAt) {
     return "reviewed";
   }
 
-  const hasPendingPrivacyReview = jobs.some(
-    (job) =>
-      job.jobType === "evidence_processing" &&
-      job.status === "awaiting_privacy_review",
+  const hasPendingPrivacyReview = latestEvidenceJobs.some(
+    (job) => job.status === "awaiting_privacy_review",
   );
   if (hasPendingPrivacyReview) {
     return "privacy_review";
@@ -367,13 +394,12 @@ function ActivityKnowledgeCard({
   const latestEvidenceJobByUploadId = new Map(
     uploads.map((upload) => [
       upload.id,
-      jobs.find(
-        (job) =>
-          job.jobType === "evidence_processing" &&
-          job.uploadMetadataId === upload.id,
-      ),
+      getLatestEvidenceProcessingJob(jobs, upload.id),
     ]),
   );
+  const latestEvidenceJobs = uploads
+    .map((upload) => latestEvidenceJobByUploadId.get(upload.id))
+    .filter((job): job is ProcessingJobRecord => Boolean(job));
   const previewQueries = useQueries({
     queries: uploads.map((upload) => {
       const latestEvidenceJob = latestEvidenceJobByUploadId.get(upload.id);
@@ -437,15 +463,11 @@ function ActivityKnowledgeCard({
     });
   }, [activeJobSyncQueries, activity.id, projectId, queryClient]);
 
-  const pendingPrivacyReview = jobs.find(
-    (job) =>
-      job.jobType === "evidence_processing" &&
-      job.status === "awaiting_privacy_review",
+  const currentPendingPrivacyReview = latestEvidenceJobs.find(
+    (job) => job.status === "awaiting_privacy_review",
   );
-  const pendingPrivacyReviewCount = jobs.filter(
-    (job) =>
-      job.jobType === "evidence_processing" &&
-      job.status === "awaiting_privacy_review",
+  const pendingPrivacyReviewCount = latestEvidenceJobs.filter(
+    (job) => job.status === "awaiting_privacy_review",
   ).length;
   const pendingQuestions = results.flatMap((result) =>
     [
@@ -489,7 +511,7 @@ function ActivityKnowledgeCard({
     uploads.length > 0 &&
     readyToInterpretUploadCount > 0 &&
     activeInterpretationJobs.length === 0 &&
-    !pendingPrivacyReview &&
+    !currentPendingPrivacyReview &&
     !startMutation.isPending;
   const canGenerateKnowledge =
     !hasPersistedKnowledge &&
@@ -564,11 +586,14 @@ function ActivityKnowledgeCard({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          {status === "privacy_review" && pendingPrivacyReview ? (
+          {status === "privacy_review" && currentPendingPrivacyReview ? (
             <Button
               size="sm"
               onClick={() =>
-                onOpenPrivacyReview(pendingPrivacyReview.id, activity.name)
+                onOpenPrivacyReview(
+                  currentPendingPrivacyReview.id,
+                  activity.name,
+                )
               }
             >
               {t("projectWorkspace.interpretation.reviewPrivacyAction")}
@@ -585,7 +610,21 @@ function ActivityKnowledgeCard({
             <Button
               size="sm"
               variant="outline"
-              onClick={() => startMutation.mutate()}
+              onClick={() =>
+                startMutation.mutate(undefined, {
+                  onError: (error) => {
+                    const message =
+                      error instanceof ApiError &&
+                      error.code === "activity_interpretation_not_ready"
+                        ? t(
+                            "projectWorkspace.interpretation.simplified.activityNotReadyToast",
+                          )
+                        : error.message;
+
+                    toast.error(message);
+                  },
+                })
+              }
             >
               {t(
                 "projectWorkspace.interpretation.simplified.actionRunKnowledge",

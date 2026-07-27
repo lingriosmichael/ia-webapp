@@ -45,7 +45,6 @@ interface ProjectSettingsFormState {
   name: string;
   startMonth: string;
   endMonth: string;
-  overarchingTargetGroup: string;
   intendedChanges: string;
   fundingProgram: string;
   fundingOrganization: string;
@@ -60,7 +59,6 @@ interface ProjectSettingsFormErrors {
   name?: string;
   startMonth?: string;
   endMonth?: string;
-  overarchingTargetGroup?: string;
   intendedChanges?: string;
 }
 
@@ -204,7 +202,6 @@ export function ProjectSettingsPanel({
         name: formState.name.trim(),
         startMonth: normalizedStartMonth!,
         endMonth: normalizedEndMonth!,
-        overarchingTargetGroup: formState.overarchingTargetGroup.trim(),
         intendedChanges: parseListInput(formState.intendedChanges),
         fundingProgram: formState.fundingProgram.trim() || null,
         fundingOrganization: formState.fundingOrganization.trim() || null,
@@ -248,12 +245,6 @@ export function ProjectSettingsPanel({
           <OverviewFieldRow
             label={locale.projectSettings.fields.timeline}
             value={timeline || locale.projectSettings.notSet}
-          />
-          <OverviewFieldRow
-            label={locale.projectSettings.fields.overarchingTargetGroup}
-            value={
-              project.overarchingTargetGroup || locale.projectSettings.notSet
-            }
           />
           <OverviewFieldRow
             label={locale.projectSettings.fields.intendedChanges}
@@ -375,24 +366,6 @@ export function ProjectSettingsPanel({
                   onChange={(event) =>
                     updateField("endMonth", event.target.value)
                   }
-                  required
-                />
-              </FieldGroup>
-
-              <FieldGroup
-                className="md:col-span-2"
-                label={locale.dialogs.project.overarchingTargetGroup}
-                error={formErrors.overarchingTargetGroup}
-              >
-                <Input
-                  value={formState.overarchingTargetGroup}
-                  onChange={(event) =>
-                    updateField("overarchingTargetGroup", event.target.value)
-                  }
-                  placeholder={
-                    locale.dialogs.project.overarchingTargetGroupPlaceholder
-                  }
-                  maxLength={200}
                   required
                 />
               </FieldGroup>
@@ -585,7 +558,6 @@ function createFormState(project: ProjectSummary): ProjectSettingsFormState {
     name: project.name,
     startMonth: project.startMonth ?? "",
     endMonth: project.endMonth ?? "",
-    overarchingTargetGroup: project.overarchingTargetGroup ?? "",
     intendedChanges: project.intendedChanges.join("\n"),
     fundingProgram: project.fundingProgram ?? "",
     fundingOrganization: project.fundingOrganization ?? "",
@@ -629,10 +601,6 @@ function validateFormState(
     errors.endMonth = locale.requiredMonth;
   } else if (!normalizeMonthValue(formState.endMonth)) {
     errors.endMonth = locale.invalidMonth;
-  }
-
-  if (!formState.overarchingTargetGroup.trim()) {
-    errors.overarchingTargetGroup = locale.requiredField;
   }
 
   const parsedIntendedChanges = parseListInput(formState.intendedChanges);
