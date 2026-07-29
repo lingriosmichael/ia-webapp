@@ -1,6 +1,6 @@
 import { useQueries, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { AlertTriangle, CircleHelp, Sparkles } from "lucide-react";
+import { AlertTriangle, CircleHelp, Loader2, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -58,6 +58,7 @@ type ActivityWorkflowStatus =
   | "privacy_review"
   | "processing"
   | "questions"
+  | "partial"
   | "ready"
   | "reviewed"
   | "not_started";
@@ -171,6 +172,10 @@ function getActivityResultStatus(
     return "ready";
   }
 
+  if (results.length > 0) {
+    return "partial";
+  }
+
   return "not_started";
 }
 
@@ -254,7 +259,9 @@ function ProjectInterpretationPage() {
   ).length;
   const needsAttentionActivityCount = activityStatuses.filter(
     (entry) =>
-      entry.status === "privacy_review" || entry.status === "questions",
+      entry.status === "privacy_review" ||
+      entry.status === "questions" ||
+      entry.status === "partial",
   ).length;
 
   return (
@@ -510,12 +517,19 @@ function ActivityKnowledgeCard({
     );
   }).length;
 
+  const hasQueuedInterpretationStart =
+    startMutation.isSuccess &&
+    startMutation.data.startedCount > 0 &&
+    activeInterpretationJobs.length === 0;
+  const isInterpretationProcessing =
+    status === "processing" || hasQueuedInterpretationStart;
   const canStartInterpretation =
     uploads.length > 0 &&
     readyToInterpretUploadCount > 0 &&
     activeInterpretationJobs.length === 0 &&
     !currentPendingPrivacyReview &&
-    !startMutation.isPending;
+    !startMutation.isPending &&
+    !hasQueuedInterpretationStart;
   const canGenerateKnowledge =
     !hasPersistedKnowledge &&
     (status === "ready" || status === "reviewed") &&
@@ -526,16 +540,16 @@ function ActivityKnowledgeCard({
   const summary =
     status === "no_evidence"
       ? t("projectWorkspace.interpretation.noEvidenceYet")
-      : status === "privacy_review"
+      : isInterpretationProcessing
         ? t(
-            "projectWorkspace.interpretation.simplified.activitySummary.privacyReview",
-            {
-              count: pendingPrivacyReviewCount,
-            },
+            "projectWorkspace.interpretation.simplified.activitySummary.processing",
           )
-        : status === "processing"
+        : status === "privacy_review"
           ? t(
-              "projectWorkspace.interpretation.simplified.activitySummary.processing",
+              "projectWorkspace.interpretation.simplified.activitySummary.privacyReview",
+              {
+                count: pendingPrivacyReviewCount,
+              },
             )
           : status === "questions"
             ? t(
@@ -544,17 +558,25 @@ function ActivityKnowledgeCard({
                   count: totalPendingQuestionCount,
                 },
               )
-            : status === "ready"
+            : status === "partial"
               ? t(
-                  "projectWorkspace.interpretation.simplified.activitySummary.ready",
+                  "projectWorkspace.interpretation.simplified.activitySummary.partial",
+                  {
+                    interpreted: results.length,
+                    remaining: Math.max(uploads.length - results.length, 0),
+                  },
                 )
-              : status === "reviewed"
+              : status === "ready"
                 ? t(
-                    "projectWorkspace.interpretation.simplified.activitySummary.reviewed",
+                    "projectWorkspace.interpretation.simplified.activitySummary.ready",
                   )
-                : t(
-                    "projectWorkspace.interpretation.simplified.activitySummary.notStarted",
-                  );
+                : status === "reviewed"
+                  ? t(
+                      "projectWorkspace.interpretation.simplified.activitySummary.reviewed",
+                    )
+                  : t(
+                      "projectWorkspace.interpretation.simplified.activitySummary.notStarted",
+                    );
 
   function handleOpenKnowledge() {
     onOpenKnowledge(activity.id, activity.name);
@@ -568,11 +590,22 @@ function ActivityKnowledgeCard({
             <h3 className="text-[16px] font-semibold tracking-tight text-foreground">
               {activity.name}
             </h3>
-            <ActivityStatusBadge status={status} />
+            <ActivityStatusBadge
+              status={status}
+              isInterpretationProcessing={isInterpretationProcessing}
+            />
           </div>
           <p className="mt-3 text-sm leading-6 text-muted-foreground">
             {summary}
           </p>
+          {isInterpretationProcessing ? (
+            <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-signal-soft px-3 py-1 text-xs font-medium text-signal">
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              <span>
+                {t("projectWorkspace.interpretation.simplified.actionRunning")}
+              </span>
+            </div>
+          ) : null}
           <p className="mt-2 text-xs text-muted-foreground">
             {uploads.length > 0
               ? t("projectWorkspace.interpretation.simplified.activityMeta", {
@@ -598,13 +631,16 @@ function ActivityKnowledgeCard({
             </Button>
           ) : null}
 
-          {status === "processing" ? (
+          {isInterpretationProcessing ? (
             <Button size="sm" variant="outline" disabled>
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
               {t("projectWorkspace.interpretation.simplified.actionRunning")}
             </Button>
           ) : null}
 
-          {!canOpenKnowledge && canStartInterpretation ? (
+          {!isInterpretationProcessing &&
+          !canOpenKnowledge &&
+          canStartInterpretation ? (
             <Button
               size="sm"
               variant="outline"
@@ -683,14 +719,33 @@ function ActivityKnowledgeCard({
   );
 }
 
-function ActivityStatusBadge({ status }: { status: ActivityWorkflowStatus }) {
+function ActivityStatusBadge({
+  status,
+  isInterpretationProcessing = false,
+}: {
+  status: ActivityWorkflowStatus;
+  isInterpretationProcessing?: boolean;
+}) {
   const { t } = useTranslation();
+
+  if (isInterpretationProcessing) {
+    return (
+      <Badge variant="secondary" className="gap-1">
+        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+        {t("projectWorkspace.interpretation.simplified.status.processing")}
+      </Badge>
+    );
+  }
 
   if (status === "ready" || status === "reviewed") {
     return null;
   }
 
-  if (status === "privacy_review" || status === "questions") {
+  if (
+    status === "privacy_review" ||
+    status === "questions" ||
+    status === "partial"
+  ) {
     return (
       <Badge
         variant="outline"

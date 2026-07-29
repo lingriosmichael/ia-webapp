@@ -15,7 +15,10 @@ import {
   useResetActivityAnalyticsLayoutMutation,
   useUpdateActivityAnalyticsLayoutMutation,
 } from "@/hooks/useWorkspaceQueries";
-import { deriveAnalyticsReadinessSummary } from "@/lib/interpretationWorkflow";
+import {
+  deriveAnalyticsReadinessSummary,
+  type AnalyticsReadinessSummary,
+} from "@/lib/interpretationWorkflow";
 import { useAnalyticsEmptyStateContent } from "@/hooks/useAnalyticsEmptyStateContent";
 import {
   AnalyticsEmptyState,
@@ -62,11 +65,24 @@ export function ActivityAnalyticsPage() {
     (interpretationResult) => interpretationResult.activityId === activityId,
   );
   const readiness = deriveAnalyticsReadinessSummary(interpretationResults);
+  const activityIsReviewed = Boolean(
+    activityQuery.data?.interpretationAcknowledgedAt ||
+    activityQuery.data?.aiKnowledgeGeneratedAt,
+  );
+  const effectiveReadiness: AnalyticsReadinessSummary =
+    activityIsReviewed && readiness.state !== "ready"
+      ? {
+          ...readiness,
+          state: "ready_to_generate",
+          preparationBlockedCount: 0,
+          awaitingAnalysisCount: 0,
+        }
+      : readiness;
   const {
     title: emptyStateTitle,
     description: emptyStateDescription,
     showCta: showOverviewCta,
-  } = useAnalyticsEmptyStateContent(readiness, "activityAnalytics");
+  } = useAnalyticsEmptyStateContent(effectiveReadiness, "activityAnalytics");
   useActivityAnalyticsDashboardInteractionTracking(
     projectId,
     activityId,

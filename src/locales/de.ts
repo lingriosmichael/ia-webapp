@@ -628,9 +628,9 @@ const de: TranslationDictionary = {
       noEvidenceYet: "Noch keine Evidenz hochgeladen.",
       simplified: {
         pageTitle: "AI knowledge",
-        heroTitle: "Ein KI-Wissensfluss pro Aktivität.",
+        heroTitle: "Erkenntnisse aus Ihren Daten",
         heroDescription:
-          "Fügen Sie Evidenz zu einer Aktivität hinzu, starten Sie eine einzige KI-Analyse und öffnen Sie danach eine gemeinsame AI knowledge Ansicht für die gesamte Aktivität.",
+          "Die KI unterstützt Sie dabei, Zusammenhänge, Entwicklungen und mögliche Lücken zu erkennen. Die fachliche Einordnung und Bewertung bleibt bei Ihnen.",
         statActivities: "Aktivitäten",
         statReady: "AI knowledge bereit",
         statAttention: "Braucht Aufmerksamkeit",
@@ -646,6 +646,10 @@ const de: TranslationDictionary = {
             "{{count}} Klärungsfrage ist noch offen, bevor AI knowledge fertig werden kann.",
           questions_other:
             "{{count}} Klärungsfragen sind noch offen, bevor AI knowledge fertig werden kann.",
+          partial:
+            "{{interpreted}} Datei ist bereits interpretiert. {{remaining}} weitere Datei fehlt noch oder benötigt Aufmerksamkeit, bevor AI knowledge fertig werden kann.",
+          partial_other:
+            "{{interpreted}} Dateien sind bereits interpretiert. {{remaining}} weitere Dateien fehlen noch oder benötigen Aufmerksamkeit, bevor AI knowledge fertig werden kann.",
           ready: "AI knowledge kann jetzt für diese Aktivität erzeugt werden.",
           reviewed: "AI knowledge ist für diese Aktivität verfügbar.",
           notStarted:
@@ -677,6 +681,7 @@ const de: TranslationDictionary = {
           privacy_review: "Datenschutzprüfung",
           processing: "In Bearbeitung",
           questions: "Fragen offen",
+          partial: "Teilweise fertig",
           ready: "Bereit",
           reviewed: "Verfügbar",
           not_started: "Noch nicht gestartet",
@@ -1346,10 +1351,12 @@ const de: TranslationDictionary = {
     supportDescription:
       "Diese Seite wird zum Ort für Aktivitätsmetadaten, Evidenzregeln und spätere Workflow-Einstellungen ausgebaut.",
     noDescription: "Es wurde noch keine Aktivitätsbeschreibung ergänzt.",
+    noActivityType: "Es wurde noch kein Aktivitätstyp ergänzt.",
     noProjectGoal: "Es wurden noch keine Projektwirkung oder Outcomes erfasst.",
     fields: {
       name: "Name",
       status: "Status",
+      activityType: "Aktivitätstyp",
       project: "Projekt",
       created: "Erstellt",
       updated: "Aktualisiert",
@@ -1669,9 +1676,7 @@ const de: TranslationDictionary = {
       "Beim Löschen eines Projekts werden alle verknüpften Aktivitäten, Uploads, Jobs, Prüfergebnisse, Analysen und AI knowledge dauerhaft entfernt.",
     deleteAction: "Projekt löschen",
     notSet: "Nicht gesetzt",
-    noProjectDescription: "Noch kein Projektprofil hinterlegt.",
     sections: {
-      description: "Beschreibung",
       fundingContext: "Förderkontext",
       projectContext: "Projektkontext",
     },
@@ -1775,6 +1780,8 @@ const de: TranslationDictionary = {
       description: "Beschreibung",
       descriptionPlaceholder:
         "Zweitägige Schulung für freiwillige Mentorinnen und Mentoren.",
+      activityType: "Aktivitätstyp",
+      activityTypeCustomPlaceholder: "Aktivitätstyp beschreiben",
       startDate: "Startdatum",
       endDate: "Enddatum",
       targetAudience: "Zielgruppe",
@@ -1813,7 +1820,18 @@ const de: TranslationDictionary = {
         "Politische Akteure",
         "Sonstige",
       ],
+      activityTypes: [
+        "Workshop",
+        "Informationsveranstaltung",
+        "Beratung",
+        "Mentoring",
+        "Schulung",
+        "Veranstaltung",
+        "Netzwerktreffen",
+        "Kampagne",
+      ],
       customTargetGroupOption: "Sonstige",
+      customActivityTypeOption: "Sonstige",
     },
   },
   errorPage: {

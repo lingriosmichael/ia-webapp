@@ -2,9 +2,13 @@ import { Link, useParams } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
+import { useCurrentWorkspaceProject } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useProjectAnalyticsDashboardInteractionTracking } from "@/hooks/useAnalyticsDashboardInteractionTracking";
-import { deriveAnalyticsReadinessSummary } from "@/lib/interpretationWorkflow";
+import {
+  deriveAnalyticsReadinessSummary,
+  type AnalyticsReadinessSummary,
+} from "@/lib/interpretationWorkflow";
 import { useAnalyticsEmptyStateContent } from "@/hooks/useAnalyticsEmptyStateContent";
 import {
   AnalyticsEmptyState,
@@ -25,6 +29,7 @@ export function ProjectAnalyticsPage() {
   const { projectId } = useParams({ from: "/projects/$projectId/analytics" });
   const auth = useRequireAuth();
   const { t } = useTranslation();
+  const workspaceProject = useCurrentWorkspaceProject();
   const analyticsQuery = useProjectAnalyticsQuery(
     projectId,
     Boolean(auth.token),
@@ -43,11 +48,31 @@ export function ProjectAnalyticsPage() {
   );
   const interpretationResults = interpretationsQuery.data?.results ?? [];
   const readiness = deriveAnalyticsReadinessSummary(interpretationResults);
+  const evidenceActivities = (workspaceProject?.activities ?? []).filter(
+    (activity) => activity.uploadMetadataCount > 0,
+  );
+  const allEvidenceActivitiesReviewed =
+    evidenceActivities.length > 0 &&
+    evidenceActivities.every((activity) =>
+      Boolean(
+        activity.interpretationAcknowledgedAt ||
+        activity.aiKnowledgeGeneratedAt,
+      ),
+    );
+  const effectiveReadiness: AnalyticsReadinessSummary =
+    allEvidenceActivitiesReviewed && readiness.state !== "ready"
+      ? {
+          ...readiness,
+          state: "ready_to_generate",
+          preparationBlockedCount: 0,
+          awaitingAnalysisCount: 0,
+        }
+      : readiness;
   const {
     title: emptyStateTitle,
     description: emptyStateDescription,
     showCta: showInterpretationCta,
-  } = useAnalyticsEmptyStateContent(readiness, "projectAnalytics");
+  } = useAnalyticsEmptyStateContent(effectiveReadiness, "projectAnalytics");
 
   async function handleRegenerate() {
     try {

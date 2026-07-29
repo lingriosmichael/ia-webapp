@@ -79,6 +79,12 @@ function ActivitySettingsPage() {
                 value={translateStatus(t, activity.status)}
               />
               <DetailRow
+                label={t("activitySettings.fields.activityType")}
+                value={
+                  activity.activityType ?? t("activitySettings.noActivityType")
+                }
+              />
+              <DetailRow
                 label={t("activitySettings.fields.project")}
                 value={project.name}
               />
@@ -120,6 +126,10 @@ function ActivitySettingsPage() {
                 {t("activitySettings.contextTitle")}
               </div>
               <ul className="mt-4 space-y-3 text-sm leading-6 text-muted-foreground">
+                <li>
+                  {activity.activityType ??
+                    t("activitySettings.noActivityType")}
+                </li>
                 <li>
                   {resolveProjectSummaryText(project) ??
                     t("activitySettings.noProjectGoal")}

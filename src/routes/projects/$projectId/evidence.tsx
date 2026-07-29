@@ -78,6 +78,12 @@ function isEvidenceReviewed(
   return activity.interpretationAcknowledgedAt !== null && uploadCount > 0;
 }
 
+function isPrivacyReviewCompleted(latestJob: ProcessingJobRecord | undefined) {
+  return Boolean(
+    latestJob && ["transforming", "completed"].includes(latestJob.status),
+  );
+}
+
 function ProjectEvidencePage() {
   const { projectId } = Route.useParams();
   const { workspace } = useProjectWorkspacePage();
@@ -136,10 +142,6 @@ function ProjectEvidencePage() {
   );
 }
 
-function shouldCollapseActivity(activity: WorkspaceActivity) {
-  return isEvidenceReviewed(activity, activity.uploadMetadataCount);
-}
-
 type UploadQueueItemStatus = "queued" | "uploading" | "uploaded" | "failed";
 
 interface UploadQueueItem {
@@ -174,25 +176,30 @@ function EvidenceActivityGroup({
   const inputRef = useRef<HTMLInputElement>(null);
   const completedQueueTimeoutRef = useRef<number | null>(null);
   const [uploadQueue, setUploadQueue] = useState<UploadQueueItem[]>([]);
-  const [isExpanded, setIsExpanded] = useState(
-    !shouldCollapseActivity(activity),
-  );
   const uploads = uploadsQuery.data ?? [];
   const evidenceCount = uploadsQuery.data
     ? uploads.length
     : activity.uploadMetadataCount;
   const jobs = jobsQuery.data ?? [];
+  const latestEvidenceJobs = uploads
+    .map((upload) => getLatestEvidenceJob(jobs, upload.id))
+    .filter((job): job is ProcessingJobRecord => Boolean(job));
   const latestUpload = uploads[0];
-  const pendingPrivacyReviewCount = jobs.filter(
-    (job) =>
-      job.jobType === "evidence_processing" &&
-      job.status === "awaiting_privacy_review",
+  const pendingPrivacyReviewCount = latestEvidenceJobs.filter(
+    (job) => job.status === "awaiting_privacy_review",
   ).length;
   const isReviewedActivity = isEvidenceReviewed(activity, evidenceCount);
+  const isPrivacyReviewSettled =
+    evidenceCount > 0 &&
+    uploads.length === evidenceCount &&
+    uploads.every((upload) =>
+      isPrivacyReviewCompleted(getLatestEvidenceJob(jobs, upload.id)),
+    );
+  const [isExpanded, setIsExpanded] = useState(!isPrivacyReviewSettled);
 
   useEffect(() => {
-    setIsExpanded(!isReviewedActivity);
-  }, [isReviewedActivity]);
+    setIsExpanded(!isPrivacyReviewSettled);
+  }, [isPrivacyReviewSettled]);
 
   useEffect(() => {
     if (completedQueueTimeoutRef.current !== null) {
@@ -399,8 +406,8 @@ function EvidenceActivityGroup({
     (item) => item.status === "queued" || item.status === "uploading",
   );
   const showExpandedDetails =
-    !isReviewedActivity || isExpanded || hasActiveUploadQueue;
-  const canToggleDetails = isReviewedActivity && evidenceCount > 0;
+    !isPrivacyReviewSettled || isExpanded || hasActiveUploadQueue;
+  const canToggleDetails = isPrivacyReviewSettled && evidenceCount > 0;
 
   return (
     <Card className="overflow-hidden">

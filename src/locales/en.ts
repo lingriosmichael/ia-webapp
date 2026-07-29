@@ -636,6 +636,10 @@ const en = {
             "{{count}} clarification question is still open before AI knowledge can be completed.",
           questions_other:
             "{{count}} clarification questions are still open before AI knowledge can be completed.",
+          partial:
+            "{{interpreted}} file is already interpreted. {{remaining}} more file is still missing or needs attention before AI knowledge can be completed.",
+          partial_other:
+            "{{interpreted}} files are already interpreted. {{remaining}} more files are still missing or need attention before AI knowledge can be completed.",
           ready: "AI knowledge can now be generated for this activity.",
           reviewed: "AI knowledge is available for this activity.",
           notStarted: "AI analysis has not been started for this activity yet.",
@@ -665,6 +669,7 @@ const en = {
           privacy_review: "Privacy review",
           processing: "In progress",
           questions: "Questions open",
+          partial: "Partially complete",
           ready: "Ready",
           reviewed: "Available",
           not_started: "Not started",
@@ -1322,10 +1327,12 @@ const en = {
     supportDescription:
       "This page will grow into the place for activity metadata, evidence rules, and future workflow preferences.",
     noDescription: "No activity description has been added yet.",
+    noActivityType: "No activity type has been added yet.",
     noProjectGoal: "No project impact or outcomes have been recorded yet.",
     fields: {
       name: "Name",
       status: "Status",
+      activityType: "Activity type",
       project: "Project",
       created: "Created",
       updated: "Updated",
@@ -1640,9 +1647,7 @@ const en = {
       "Deleting a project permanently removes all activities, uploads, jobs, review outputs, analyses, and AI knowledge linked to it.",
     deleteAction: "Delete project",
     notSet: "Not set",
-    noProjectDescription: "No project profile captured yet.",
     sections: {
-      description: "Description",
       fundingContext: "Funding context",
       projectContext: "Project context",
     },
@@ -1742,6 +1747,8 @@ const en = {
       namePlaceholder: "Senior Mentor Training",
       description: "Description",
       descriptionPlaceholder: "Two-day training for volunteer mentors.",
+      activityType: "Activity type",
+      activityTypeCustomPlaceholder: "Describe the activity type",
       startDate: "Start date",
       endDate: "End date",
       targetAudience: "Target group",
@@ -1780,7 +1787,18 @@ const en = {
         "Political actors",
         "Other",
       ],
+      activityTypes: [
+        "Workshop",
+        "Information session",
+        "Consultation",
+        "Mentoring",
+        "Training",
+        "Event",
+        "Networking meeting",
+        "Campaign",
+      ],
       customTargetGroupOption: "Other",
+      customActivityTypeOption: "Other",
     },
   },
   errorPage: {

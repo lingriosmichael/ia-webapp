@@ -33,6 +33,8 @@ const STATUS_OPTIONS: ActivityStatus[] = ["active", "completed"];
 interface ActivityDialogState {
   name: string;
   description: string;
+  activityType: string;
+  customActivityType: string;
   startDate: string;
   endDate: string;
   targetAudience: string;
@@ -45,6 +47,8 @@ interface ActivityDialogState {
 const initialState: ActivityDialogState = {
   name: "",
   description: "",
+  activityType: "",
+  customActivityType: "",
   startDate: "",
   endDate: "",
   targetAudience: "",
@@ -119,6 +123,8 @@ export function ActivityDialog({
 }) {
   const locale = useWorkspaceLocale();
   const [form, setForm] = useState<ActivityDialogState>(initialState);
+  const customActivityTypeOption =
+    locale.dialogs.options.customActivityTypeOption;
 
   useEffect(() => {
     if (!open) {
@@ -127,9 +133,22 @@ export function ActivityDialog({
     }
 
     if (initialActivity) {
+      const rawActivityType = initialActivity.activityType ?? "";
+      const isFixedActivityType = (
+        locale.dialogs.options.activityTypes as readonly string[]
+      ).includes(rawActivityType);
+
       setForm({
         name: initialActivity.name,
         description: initialActivity.description ?? "",
+        activityType:
+          rawActivityType === ""
+            ? ""
+            : isFixedActivityType
+              ? rawActivityType
+              : customActivityTypeOption,
+        customActivityType:
+          rawActivityType !== "" && !isFixedActivityType ? rawActivityType : "",
         startDate: toDateInputValue(initialActivity.startDate),
         endDate: toDateInputValue(initialActivity.endDate),
         targetAudience: initialActivity.targetAudience ?? "",
@@ -142,14 +161,25 @@ export function ActivityDialog({
     }
 
     setForm(initialState);
-  }, [initialActivity, open]);
+  }, [
+    customActivityTypeOption,
+    initialActivity,
+    locale.dialogs.options.activityTypes,
+    open,
+  ]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    const activityType =
+      form.activityType === customActivityTypeOption
+        ? form.customActivityType.trim() || undefined
+        : form.activityType || undefined;
+
     await onSubmit({
       name: form.name,
       description: form.description || undefined,
+      activityType,
       startDate: form.startDate
         ? new Date(form.startDate).toISOString()
         : undefined,
@@ -217,6 +247,45 @@ export function ActivityDialog({
               placeholder={locale.dialogs.activity.descriptionPlaceholder}
               rows={4}
             />
+          </div>
+          <div className="space-y-2">
+            <FieldLabel>{locale.dialogs.activity.activityType}</FieldLabel>
+            <Select
+              value={form.activityType}
+              onValueChange={(value) =>
+                setForm((current) => ({ ...current, activityType: value }))
+              }
+            >
+              <SelectTrigger>
+                <SelectValue
+                  placeholder={locale.dialogs.activity.activityType}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {locale.dialogs.options.activityTypes.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+                <SelectItem value={customActivityTypeOption}>
+                  {customActivityTypeOption}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            {form.activityType === customActivityTypeOption ? (
+              <Input
+                value={form.customActivityType}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    customActivityType: event.target.value,
+                  }))
+                }
+                placeholder={
+                  locale.dialogs.activity.activityTypeCustomPlaceholder
+                }
+              />
+            ) : null}
           </div>
           <div className="space-y-2">
             <FieldLabel>{locale.dialogs.activity.startDate}</FieldLabel>

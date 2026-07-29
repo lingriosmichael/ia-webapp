@@ -1,14 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
-import { ProjectOverviewSectionCard } from "@/components/project/projectOverviewSectionCard";
 import { ProjectSettingsPanel } from "@/components/ProjectSettingsPanel";
 import { Button } from "@/components/ui/button";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
 import { useWorkspaceShell } from "@/components/WorkspaceShell";
 import { useProjectWorkspacePage } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
-import { resolveProjectSummaryText } from "@/lib/projectSummary";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 
 export const Route = createFileRoute("/projects/$projectId/")({
@@ -21,11 +19,6 @@ function ProjectOverviewPage() {
   const { openProjectDeleteDialog } = useWorkspaceShell();
   const { project } = useProjectWorkspacePage();
   const [isEditing, setIsEditing] = useState(false);
-  const projectDescription =
-    resolveProjectSummaryText({
-      impactModel: project.impactModel,
-      successIndicators: project.successIndicators,
-    }) ?? locale.projectSettings.noProjectDescription;
 
   useEffect(() => {
     setIsEditing(false);
@@ -61,16 +54,6 @@ function ProjectOverviewPage() {
       }
     >
       <section className="space-y-6">
-        {!isEditing ? (
-          <ProjectOverviewSectionCard
-            title={locale.projectSettings.sections.description}
-          >
-            <p className="max-w-[62rem] whitespace-pre-wrap text-[15px] leading-7 text-foreground">
-              {projectDescription}
-            </p>
-          </ProjectOverviewSectionCard>
-        ) : null}
-
         <ProjectSettingsPanel
           project={project}
           isEditing={isEditing}

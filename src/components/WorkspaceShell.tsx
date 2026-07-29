@@ -166,6 +166,7 @@ export function WorkspaceShell({
       const updatePayload: UpdateActivityPayload = {
         name: payload.name,
         description: payload.description ?? null,
+        activityType: payload.activityType ?? null,
         startDate: payload.startDate ?? null,
         endDate: payload.endDate ?? null,
         targetAudience: payload.targetAudience ?? null,

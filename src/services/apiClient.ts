@@ -117,6 +117,7 @@ export interface ActivitySummary {
   projectId: string;
   name: string;
   description: string | null;
+  activityType: string | null;
   startDate: string | null;
   endDate: string | null;
   targetAudience: string | null;
@@ -212,6 +213,7 @@ export interface DeleteProjectResponse {
 export interface CreateActivityPayload {
   name: string;
   description?: string;
+  activityType?: string;
   startDate?: string;
   endDate?: string;
   targetAudience?: string;
@@ -224,6 +226,7 @@ export interface CreateActivityPayload {
 export interface UpdateActivityPayload {
   name?: string;
   description?: string | null;
+  activityType?: string | null;
   startDate?: string | null;
   endDate?: string | null;
   targetAudience?: string | null;
