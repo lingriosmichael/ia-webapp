@@ -287,6 +287,9 @@ export interface UploadMetadataRecord {
   organizationId: string;
   projectId: string;
   activityId: string | null;
+  sourceWorkbookUploadMetadataId: string | null;
+  derivedSheetName: string | null;
+  derivedSheetIndex: number | null;
   logicalEvidenceId: string;
   versionNumber: number;
   replacesUploadMetadataId: string | null;
@@ -310,6 +313,7 @@ export interface ProcessingJobRecord {
   activityId: string | null;
   uploadMetadataId: string | null;
   jobType:
+    | "workbook_split"
     | "evidence_processing"
     | "dataset_interpretation"
     | "dataset_review"
@@ -582,6 +586,8 @@ export interface InterpretationQuestion {
   kind: InterpretationQuestionKind;
   questionDomain: InterpretationQuestionDomain;
   options: string[] | null;
+  recommendedOption: string | null;
+  recommendedConfidence: number | null;
   isBlocking: boolean;
   questionCode: InterpretationQuestionCode | null;
   targetTableName: string | null;
@@ -1692,9 +1698,6 @@ export const apiClient = {
       method: "POST",
     });
   },
-  downloadUploadMetadataFile(uploadMetadataId: string): Promise<Blob> {
-    return requestBlob(`/evidence/${uploadMetadataId}/file`);
-  },
   listActivityJobs(activityId: string): Promise<ProcessingJobRecord[]> {
     return request(`/activities/${activityId}/jobs`);
   },
@@ -1710,11 +1713,13 @@ export const apiClient = {
       body: formData,
     });
   },
-  getJob(jobId: string): Promise<ProcessingJobRecord> {
-    return request(`/jobs/${jobId}`);
-  },
   syncJob(jobId: string): Promise<ProcessingJobRecord> {
     return request(`/jobs/${jobId}/sync`, {
+      method: "POST",
+    });
+  },
+  cancelJob(jobId: string): Promise<ProcessingJobRecord> {
+    return request(`/jobs/${jobId}/cancel`, {
       method: "POST",
     });
   },

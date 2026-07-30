@@ -1,4 +1,5 @@
 import { Outlet, createFileRoute, useMatches } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   ChevronDown,
   ChevronRight,
@@ -24,6 +25,9 @@ import {
   useProjectWorkspacePage,
 } from "@/contexts/projectWorkspaceContext";
 import {
+  activityJobsQueryKey,
+  activityUploadsQueryKey,
+  projectOverviewQueryKey,
   useActivityJobsQuery,
   useActivityUploadsQuery,
   useDeleteEvidenceMutation,
@@ -39,6 +43,7 @@ import {
 import { translateStatus } from "@/lib/translationUtils";
 import {
   ApiError,
+  apiClient,
   type ProcessingJobRecord,
   type UploadMetadataRecord,
   type WorkspaceActivity,
@@ -61,7 +66,8 @@ function getLatestEvidenceJob(
     .filter(
       (job) =>
         job.uploadMetadataId === uploadMetadataId &&
-        job.jobType === "evidence_processing",
+        (job.jobType === "evidence_processing" ||
+          job.jobType === "workbook_split"),
     )
     .sort((left, right) => {
       return (
@@ -82,6 +88,39 @@ function isPrivacyReviewCompleted(latestJob: ProcessingJobRecord | undefined) {
   return Boolean(
     latestJob && ["transforming", "completed"].includes(latestJob.status),
   );
+}
+
+function isRestartableEvidenceJob(job: ProcessingJobRecord | undefined) {
+  if (!job) {
+    return false;
+  }
+
+  if (job.jobType === "workbook_split") {
+    return ["queued", "processing"].includes(job.status);
+  }
+
+  if (job.jobType === "evidence_processing") {
+    return ["queued", "processing", "transforming"].includes(job.status);
+  }
+
+  return false;
+}
+
+function canStartEvidenceAnalysisFromLatestJob(
+  job: ProcessingJobRecord | undefined,
+) {
+  if (!job) {
+    return true;
+  }
+
+  if (
+    job.jobType !== "workbook_split" &&
+    job.jobType !== "evidence_processing"
+  ) {
+    return false;
+  }
+
+  return job.status === "failed" || job.status === "cancelled";
 }
 
 function ProjectEvidencePage() {
@@ -616,6 +655,8 @@ function EvidenceFileRow({
   const { t } = useTranslation();
   const [progressDialogOpen, setProgressDialogOpen] = useState(false);
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
+  const [restartAnalysisPending, setRestartAnalysisPending] = useState(false);
+  const queryClient = useQueryClient();
   const startAnalysisMutation = useStartEvidenceAnalysisMutation(
     activity.id,
     projectId,
@@ -633,6 +674,7 @@ function EvidenceFileRow({
     ].includes(job.status);
   const canReviewPrivacy = Boolean(
     job &&
+    job.jobType === "evidence_processing" &&
     ["awaiting_privacy_review", "transforming", "completed"].includes(
       job.status,
     ),
@@ -644,11 +686,14 @@ function EvidenceFileRow({
       job.status,
     ),
   );
+  const canRestartActiveAnalysis = Boolean(
+    activity.permissions.canUploadEvidence && isRestartableEvidenceJob(job),
+  );
   const canAnalyse =
     activity.permissions.canUploadEvidence &&
     upload.status === "uploaded" &&
     !upload.originalFileDeletedAt &&
-    (!job || job.status === "failed" || job.status === "cancelled");
+    canStartEvidenceAnalysisFromLatestJob(job);
 
   const analyzeButtonLabel = !job
     ? t("projectWorkspace.evidence.analyzeFile")
@@ -682,6 +727,40 @@ function EvidenceFileRow({
     }
   }
 
+  async function handleRestartAnalysisAction() {
+    if (!job || !canRestartActiveAnalysis) {
+      return;
+    }
+
+    setRestartAnalysisPending(true);
+    setProgressDialogOpen(true);
+
+    try {
+      await apiClient.cancelJob(job.id);
+      await queryClient.invalidateQueries({
+        queryKey: activityJobsQueryKey(activity.id),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: activityUploadsQueryKey(activity.id),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: projectOverviewQueryKey(projectId),
+      });
+
+      await startAnalysisMutation.mutateAsync(upload.id);
+      toast.success(t("projectWorkspace.evidence.analysisRestarted"));
+    } catch (error) {
+      setProgressDialogOpen(false);
+      toast.error(
+        error instanceof ApiError
+          ? error.message
+          : t("projectWorkspace.evidence.analysisRestartFailed"),
+      );
+    } finally {
+      setRestartAnalysisPending(false);
+    }
+  }
+
   useEffect(() => {
     if (!shouldAutoOpenPrivacyReview) {
       return;
@@ -690,6 +769,26 @@ function EvidenceFileRow({
     setProgressDialogOpen(false);
     setReviewDialogOpen(true);
   }, [shouldAutoOpenPrivacyReview]);
+
+  useEffect(() => {
+    if (!job || job.jobType !== "workbook_split") {
+      return;
+    }
+
+    if (!["completed", "failed", "cancelled"].includes(job.status)) {
+      return;
+    }
+
+    void queryClient.invalidateQueries({
+      queryKey: activityUploadsQueryKey(activity.id),
+    });
+    void queryClient.invalidateQueries({
+      queryKey: activityJobsQueryKey(activity.id),
+    });
+    void queryClient.invalidateQueries({
+      queryKey: projectOverviewQueryKey(projectId),
+    });
+  }, [activity.id, job, projectId, queryClient]);
 
   function openPrivacyReview() {
     if (!job) {
@@ -741,6 +840,7 @@ function EvidenceFileRow({
             type="button"
             onClick={handleAnalyzeAction}
             disabled={
+              restartAnalysisPending ||
               startAnalysisMutation.isPending ||
               Boolean(
                 job &&
@@ -755,6 +855,19 @@ function EvidenceFileRow({
             <Sparkles className="h-4 w-4" />
             {analyzeButtonLabel}
           </Button>
+          {canRestartActiveAnalysis ? (
+            <Button
+              type="button"
+              onClick={handleRestartAnalysisAction}
+              disabled={
+                restartAnalysisPending || startAnalysisMutation.isPending
+              }
+              variant="outline"
+              size="sm"
+            >
+              {t("projectWorkspace.evidence.restartStuckAnalysis")}
+            </Button>
+          ) : null}
           {canReviewPrivacy ? (
             <Button
               type="button"

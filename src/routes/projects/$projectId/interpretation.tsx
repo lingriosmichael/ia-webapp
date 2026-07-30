@@ -45,9 +45,11 @@ import {
   type WorkspaceActivity,
 } from "@/services/apiClient";
 import { Card } from "@/components/WorkspaceUI";
+import { cn } from "@/lib/utils";
 
 const INTERPRETATION_POLL_INTERVAL_MS = 3000;
 const TERMINAL_JOB_STATUSES = ["completed", "failed", "cancelled"];
+const RECOMMENDED_OPTION_CONFIDENCE_THRESHOLD = 0.8;
 
 export const Route = createFileRoute("/projects/$projectId/interpretation")({
   component: ProjectInterpretationPage,
@@ -105,7 +107,8 @@ function getLatestEvidenceProcessingJob(
     .filter(
       (job) =>
         job.uploadMetadataId === uploadMetadataId &&
-        job.jobType === "evidence_processing",
+        (job.jobType === "evidence_processing" ||
+          job.jobType === "workbook_split"),
     )
     .sort((left, right) => {
       return (
@@ -388,6 +391,8 @@ function ActivityKnowledgeCard({
 }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const [restartInterpretationPending, setRestartInterpretationPending] =
+    useState(false);
   const startMutation = useStartActivityInterpretationMutation(
     activity.id,
     projectId,
@@ -494,6 +499,7 @@ function ActivityKnowledgeCard({
     activity.aiKnowledgeGeneratedAt ||
     generateKnowledgeMutation.data?.generatedAt,
   );
+  const hasExistingInterpretations = results.length > 0;
 
   const readyToInterpretUploadCount = uploads.filter((upload) => {
     if (resultByUploadId.has(upload.id)) {
@@ -523,6 +529,10 @@ function ActivityKnowledgeCard({
     activeInterpretationJobs.length === 0;
   const isInterpretationProcessing =
     status === "processing" || hasQueuedInterpretationStart;
+  const canRestartInterpretation =
+    activeInterpretationJobs.length > 0 &&
+    !restartInterpretationPending &&
+    !startMutation.isPending;
   const canStartInterpretation =
     uploads.length > 0 &&
     readyToInterpretUploadCount > 0 &&
@@ -536,6 +546,11 @@ function ActivityKnowledgeCard({
     !hasUnresolvedActionableQuestion &&
     !generateKnowledgeMutation.isPending;
   const canOpenKnowledge = hasPersistedKnowledge;
+  const interpretationActionLabel = hasExistingInterpretations
+    ? t(
+        "projectWorkspace.interpretation.simplified.actionInterpretMissingEvidence",
+      )
+    : t("projectWorkspace.interpretation.simplified.actionRunKnowledge");
 
   const summary =
     status === "no_evidence"
@@ -578,6 +593,61 @@ function ActivityKnowledgeCard({
                       "projectWorkspace.interpretation.simplified.activitySummary.notStarted",
                     );
 
+  async function handleRestartInterpretation() {
+    if (activeInterpretationJobs.length === 0) {
+      return;
+    }
+
+    setRestartInterpretationPending(true);
+
+    try {
+      await Promise.all(
+        activeInterpretationJobs.map((job) => apiClient.cancelJob(job.id)),
+      );
+      await queryClient.invalidateQueries({
+        queryKey: activityJobsQueryKey(activity.id),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: projectInterpretationsQueryKey(projectId),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: activityAiKnowledgeQueryKey(activity.id),
+      });
+
+      const response = await startMutation.mutateAsync(undefined);
+      const message =
+        response.startedCount === 0 && response.skippedCount === 0
+          ? t(
+              "projectWorkspace.interpretation.simplified.interpretationRestartNoop",
+            )
+          : response.skippedCount > 0
+            ? t(
+                "projectWorkspace.interpretation.simplified.interpretationResumed",
+              )
+            : t(
+                "projectWorkspace.interpretation.simplified.interpretationRestarted",
+              );
+
+      toast.success(message);
+    } catch (error) {
+      const message =
+        error instanceof ApiError &&
+        error.code === "activity_interpretation_not_ready"
+          ? t(
+              "projectWorkspace.interpretation.simplified.activityNotReadyToast",
+            )
+          : error instanceof ApiError
+            ? error.message
+            : t(
+                "projectWorkspace.interpretation.simplified.interpretationRestartFailed",
+              );
+
+      toast.error(message);
+    } finally {
+      setRestartInterpretationPending(false);
+    }
+  }
+
   function handleOpenKnowledge() {
     onOpenKnowledge(activity.id, activity.name);
   }
@@ -598,14 +668,6 @@ function ActivityKnowledgeCard({
           <p className="mt-3 text-sm leading-6 text-muted-foreground">
             {summary}
           </p>
-          {isInterpretationProcessing ? (
-            <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-signal-soft px-3 py-1 text-xs font-medium text-signal">
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              <span>
-                {t("projectWorkspace.interpretation.simplified.actionRunning")}
-              </span>
-            </div>
-          ) : null}
           <p className="mt-2 text-xs text-muted-foreground">
             {uploads.length > 0
               ? t("projectWorkspace.interpretation.simplified.activityMeta", {
@@ -631,10 +693,14 @@ function ActivityKnowledgeCard({
             </Button>
           ) : null}
 
-          {isInterpretationProcessing ? (
-            <Button size="sm" variant="outline" disabled>
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              {t("projectWorkspace.interpretation.simplified.actionRunning")}
+          {isInterpretationProcessing && canRestartInterpretation ? (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => void handleRestartInterpretation()}
+              disabled={restartInterpretationPending || startMutation.isPending}
+            >
+              {t("projectWorkspace.interpretation.simplified.actionRestart")}
             </Button>
           ) : null}
 
@@ -646,6 +712,18 @@ function ActivityKnowledgeCard({
               variant="outline"
               onClick={() =>
                 startMutation.mutate(undefined, {
+                  onSuccess: ({ skippedCount }) => {
+                    const message =
+                      skippedCount > 0
+                        ? t(
+                            "projectWorkspace.interpretation.simplified.interpretationResumed",
+                          )
+                        : t(
+                            "projectWorkspace.interpretation.simplified.interpretationStarted",
+                          );
+
+                    toast.success(message);
+                  },
                   onError: (error) => {
                     const message =
                       error instanceof ApiError &&
@@ -660,9 +738,7 @@ function ActivityKnowledgeCard({
                 })
               }
             >
-              {t(
-                "projectWorkspace.interpretation.simplified.actionRunKnowledge",
-              )}
+              {interpretationActionLabel}
             </Button>
           ) : null}
 
@@ -938,6 +1014,10 @@ function QuestionCard({
         <div className="mt-3 flex flex-wrap gap-2">
           {question.options.map((option) => {
             const isSelected = question.answeredValue === option;
+            const isRecommended =
+              question.recommendedOption === option &&
+              (question.recommendedConfidence ?? 0) >=
+                RECOMMENDED_OPTION_CONFIDENCE_THRESHOLD;
             return (
               <Button
                 key={option}
@@ -945,6 +1025,11 @@ function QuestionCard({
                 size="sm"
                 onClick={() => submitAnswer(option)}
                 disabled={answerMutation.isPending}
+                className={cn(
+                  isRecommended &&
+                    !isSelected &&
+                    "border-primary/25 bg-primary/8 text-foreground hover:bg-primary/12",
+                )}
               >
                 {option}
               </Button>

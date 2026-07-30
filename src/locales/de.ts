@@ -290,45 +290,6 @@ const de: TranslationDictionary = {
       "Einladung angenommen. Weiterleitung in den Workspace.",
     invitationAcceptFailed: "Einladung konnte nicht angenommen werden.",
   },
-  organization: {
-    loading: "Workspace wird geladen…",
-    loadFailed: "Workspace konnte nicht geladen werden.",
-    eyebrow: "Organisations-Workspace",
-    description:
-      "Erstellen Sie Projekte, fügen Sie Aktivitäten hinzu und führen Sie Nutzer in den Evidenz-Workspace.",
-    stats: {
-      projects: "Projekte",
-      activities: "Aktivitäten",
-      role: "Rolle",
-      status: "Status",
-      ready: "Bereit",
-      backendConnected: "Backend verbunden",
-    },
-    createProject: "Projekt erstellen",
-    projectName: "Projektname",
-    projectNamePlaceholder: "Jugend-Mentoring-Programm",
-    descriptionLabel: "Beschreibung",
-    projectDescriptionPlaceholder: "Optionale Zusammenfassung für das Team",
-    creatingProject: "Wird erstellt…",
-    createProjectToast: "Projekt wurde erstellt.",
-    createProjectFailed: "Projekt konnte nicht erstellt werden.",
-    noProjectsTitle: "Noch keine Projekte",
-    noProjectsDescription:
-      "Erstellen Sie das erste Projekt für diese Organisation, um die Workspace-Routen freizuschalten.",
-    projectEyebrow: "Projekt",
-    noProjectDescription: "Es wurde noch kein Projektziel hinterlegt.",
-    openProject: "Projekt öffnen",
-    noActivityDescription: "Noch keine Aktivitätsbeschreibung vorhanden.",
-    uploads: "Uploads",
-    jobs: "Jobs",
-    results: "Ergebnisse",
-    addActivityNamePlaceholder: "Aktivitätsname hinzufügen",
-    addActivityDescriptionPlaceholder: "Optionale Kurzbeschreibung",
-    addingActivity: "Wird hinzugefügt…",
-    addActivity: "Aktivität hinzufügen",
-    createActivityToast: "Aktivität wurde erstellt.",
-    createActivityFailed: "Aktivität konnte nicht erstellt werden.",
-  },
   project: {
     loading: "Projekt wird geladen…",
     loadFailed: "Projekt konnte nicht geladen werden.",
@@ -477,6 +438,7 @@ const de: TranslationDictionary = {
       openFile: "Datei öffnen",
       analyzeFile: "Datenschutz prüfen",
       retryAnalysis: "Analyse erneut starten",
+      restartStuckAnalysis: "Verarbeitung neu starten",
       reviewPrivacy: "Datenschutz prüfen",
       viewPrivacyReview: "Prüfung ansehen",
       approvePrivacy: "Freigeben und fortfahren",
@@ -485,7 +447,10 @@ const de: TranslationDictionary = {
       analysisCompleted: "Verarbeitung abgeschlossen",
       reviewedStatus: "Geprüft",
       analysisStarted: "Evidenzanalyse wurde gestartet.",
+      analysisRestarted: "Evidenzanalyse wurde neu gestartet.",
       analysisStartFailed: "Evidenzanalyse konnte nicht gestartet werden.",
+      analysisRestartFailed:
+        "Evidenzanalyse konnte nicht neu gestartet werden.",
       privacyApprovalSuccess: "Datenschutzprüfung wurde freigegeben.",
       privacyApprovalFailed:
         "Datenschutzprüfung konnte nicht freigegeben werden.",
@@ -660,8 +625,18 @@ const de: TranslationDictionary = {
           "Für diese Aktivität wurde noch keine Evidenz hochgeladen.",
         questionsTitle: "Klärungsfragen",
         actionRunning: "Wird analysiert…",
+        actionRestart: "Analyse neu starten",
         actionRunKnowledge: "KI analysieren",
+        actionInterpretMissingEvidence: "Fehlende Evidenz interpretieren",
         actionGenerateKnowledge: "AI knowledge erzeugen",
+        interpretationStarted: "KI-Interpretation wurde gestartet.",
+        interpretationRestarted: "KI-Interpretation wurde neu gestartet.",
+        interpretationRestartNoop:
+          "Es wurde keine neue KI-Interpretation gestartet, weil nichts mehr aussteht.",
+        interpretationResumed:
+          "KI-Interpretation wurde nur für die noch fehlende Evidenz gestartet.",
+        interpretationRestartFailed:
+          "KI-Interpretation konnte nicht neu gestartet werden.",
         activityNotReadyToast:
           "Diese Aktivität ist noch nicht bereit für die KI-Analyse. Schließen Sie zuerst die Datenschutzprüfung ab oder warten Sie, bis die Verarbeitung fertig ist.",
         actionRefreshKnowledge: "AI knowledge aktualisieren",
@@ -1068,25 +1043,6 @@ const de: TranslationDictionary = {
     queueUploaded: "Hochgeladen",
     queueFailed: "Fehlgeschlagen",
   },
-  processing: {
-    loading: "Job-Status wird geladen…",
-    loadFailed: "Der Job-Status konnte nicht geladen werden.",
-    crumb: "Interpret",
-    title: "Interpretationsstatus: {{status}}",
-    description:
-      "Die KI liest die hochgeladene Datei, ordnet ihre Struktur ein und bereitet eine Interpretationsebene vor, die Sie vor der tieferen Analyse prüfen können.",
-    pipeline: "Interpretationsfortschritt",
-    stages: [
-      "Datensatz wird hochgeladen",
-      "Upload-Metadaten werden erfasst",
-      "Interpretationsjob wird erstellt",
-      "KI-Verarbeitung wird eingereiht",
-      "Dateistruktur wird gelesen",
-      "Prüfstatus wird vorbereitet",
-    ],
-    backToUpload: "Zurück zum Upload",
-    continueToReview: "Weiter zur Prüfung",
-  },
   schemaReview: {
     loading: "Schema-Prüfung wird geladen…",
     loadFailed: "Die Schema-Prüfung konnte nicht geladen werden.",
@@ -1433,10 +1389,6 @@ const de: TranslationDictionary = {
     active: "Aktiv",
     completed: "Abgeschlossen",
   },
-  role: {
-    ORGANIZATION_ADMIN: "Organisationsadministration",
-    PROJECT_MANAGER: "Projektleitung",
-  },
   organizationCard: {
     eyebrow: "Organisation",
     noMission:
@@ -1634,22 +1586,6 @@ const de: TranslationDictionary = {
       "Die Abrechnung erfolgt auf Organisationsebene, damit die Verantwortlichkeiten der einzelnen Projekte klar voneinander getrennt bleiben.",
     placeholder:
       "Das Abonnementmanagement kann später hier ergänzt werden, ohne das Projekt- und Aktivitätsmodell zu verändern.",
-  },
-  projectPage: {
-    viewInsights: "AI knowledge öffnen",
-    activitiesTitle: "Aktivitäten",
-    activitiesDescription:
-      "Jede Aktivität besitzt ihre eigene Upload- und Job-Historie.",
-    noActivitiesTitle: "Noch keine Aktivitäten",
-    noActivitiesDescription:
-      "Verwenden Sie das Plus neben Aktivitäten in der Seitenleiste, um die erste Aktivität anzulegen.",
-    noActivityDescription: "Noch keine Aktivitätsbeschreibung vorhanden.",
-    quickAction: "Aktivität hinzufügen",
-    uploadsReady: "Bereit",
-    lastUpdated: "Jetzt",
-    privacyTitle: "Ihre Nachweise bleiben privat",
-    privacyDescription:
-      "Personenbezogene Merkmale bleiben außerhalb der KI-Ebene. Das Backend speichert bereits Uploads und simulierte Job-Fortschritte; die semantische Interpretation folgt später.",
   },
   projectSettings: {
     eyebrow: "Projekteinstellungen",
