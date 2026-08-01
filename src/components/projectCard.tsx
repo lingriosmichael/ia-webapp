@@ -1,5 +1,11 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, CalendarRange, FolderKanban } from "lucide-react";
+import {
+  ArrowRight,
+  Building2,
+  CalendarRange,
+  Clock3,
+  FolderKanban,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { StatusBadge } from "@/components/statusBadge";
 import { resolveProjectSummaryText } from "@/lib/projectSummary";
@@ -25,6 +31,7 @@ export function ProjectCard({
     | "impactModel"
     | "successIndicators"
     | "fundingProgram"
+    | "fundingOrganization"
     | "startMonth"
     | "endMonth"
   >;
@@ -40,59 +47,82 @@ export function ProjectCard({
   const summary =
     resolveProjectSummaryText(project) ??
     t("organizationProjects.noDescription");
+  const sponsor = project.fundingOrganization ?? project.fundingProgram;
+  const iconToneClassName =
+    project.status === "completed"
+      ? "border-slate-200 bg-slate-100 text-slate-700"
+      : project.status === "active"
+        ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+        : "border-sky-200 bg-sky-50 text-sky-700";
 
   return (
-    <Link
-      to="/projects/$projectId"
-      params={{ projectId: project.id }}
+    <div
       className={cn(
-        "group flex h-full cursor-pointer flex-col rounded-[14px] border border-border/85 bg-card p-5 transition-colors hover:border-primary/20 hover:bg-primary-soft/20",
+        "group rounded-[24px] border border-border/75 bg-card px-5 py-5 shadow-[var(--shadow-soft)] transition-colors hover:border-primary/20 sm:px-6 sm:py-6",
         className,
       )}
     >
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-[18px] font-semibold tracking-tight text-foreground">
-              {project.name}
-            </h3>
-            <StatusBadge
-              status={project.status}
-              label={translateStatus(t, project.status)}
-            />
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex min-w-0 flex-1 items-start gap-4 sm:gap-5">
+          <div
+            className={cn(
+              "flex h-20 w-20 shrink-0 items-center justify-center rounded-[22px] border",
+              iconToneClassName,
+            )}
+          >
+            <FolderKanban className="h-8 w-8" />
           </div>
-          <p className="mt-2 line-clamp-2 max-w-[44rem] text-sm leading-6 text-muted-foreground">
-            {summary}
-          </p>
-          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
-            {project.fundingProgram ? (
-              <span>{project.fundingProgram}</span>
-            ) : null}
-            {period ? (
-              <span className="inline-flex items-center gap-1.5">
-                <CalendarRange className="h-3.5 w-3.5 text-primary" />
-                {period}
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <h3 className="text-[1rem] leading-[1.25] font-semibold tracking-tight text-foreground">
+                {project.name}
+              </h3>
+              <StatusBadge
+                status={project.status}
+                label={translateStatus(t, project.status)}
+                className="h-6 rounded-full px-2.5 text-[10px]"
+              />
+            </div>
+            <p className="mt-2 max-w-[52rem] text-[11px] leading-5 text-muted-foreground">
+              {summary}
+            </p>
+            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] text-muted-foreground">
+              {sponsor ? (
+                <span className="inline-flex items-center gap-2">
+                  <Building2 className="h-3.5 w-3.5 text-primary" />
+                  {sponsor}
+                </span>
+              ) : null}
+              {period ? (
+                <span className="inline-flex items-center gap-2">
+                  <CalendarRange className="h-3.5 w-3.5 text-primary" />
+                  {period}
+                </span>
+              ) : null}
+              <span className="inline-flex items-center gap-2">
+                <FolderKanban className="h-3.5 w-3.5 text-primary" />
+                {activityCount} {t("projectCard.activities")}
               </span>
-            ) : null}
-            <span className="inline-flex items-center gap-1.5">
-              <FolderKanban className="h-3.5 w-3.5 text-primary" />
-              {activityCount} {t("projectCard.activities")}
-            </span>
-          </div>
-        </div>
-        <div className="flex shrink-0 items-center gap-4">
-          <div className="hidden text-right text-xs text-muted-foreground sm:block">
-            <div>{t("projectCard.updated")}</div>
-            <div className="mt-1 text-sm text-foreground">
-              {formatDateTime(project.updatedAt, i18n.language)}
+              <span className="inline-flex items-center gap-2">
+                <Clock3 className="h-3.5 w-3.5 text-primary" />
+                {t("projectCard.updated")}:{" "}
+                {formatDateTime(project.updatedAt, i18n.language)}
+              </span>
             </div>
           </div>
-          <div className="inline-flex h-10 items-center gap-2 rounded-[10px] border border-border bg-background px-3 text-sm font-medium text-foreground transition-colors group-hover:border-primary/20 group-hover:text-primary">
+        </div>
+
+        <div className="flex shrink-0 items-center gap-3 self-end lg:self-center">
+          <Link
+            to="/projects/$projectId"
+            params={{ projectId: project.id }}
+            className="inline-flex h-10 items-center gap-2 rounded-[16px] border border-border bg-background px-4 text-[12px] font-medium text-foreground transition-colors hover:border-primary/20 hover:text-primary"
+          >
             {t("common.open")}
-            <ArrowRight className="h-4 w-4" />
-          </div>
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

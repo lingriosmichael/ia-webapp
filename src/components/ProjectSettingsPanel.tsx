@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { FieldLabel } from "@/components/EntityDialog";
+import { ProjectImpactListField } from "@/components/ProjectImpactListField";
 import { StatusBadge } from "@/components/statusBadge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,10 @@ function parseListInput(value: string) {
     .filter(Boolean);
 }
 
+function normalizeImpactValues(values: string[]) {
+  return values.map((value) => value.trim()).filter(Boolean);
+}
+
 function toggleValue(values: string[], value: string) {
   return values.includes(value)
     ? values.filter((item) => item !== value)
@@ -43,9 +48,10 @@ function toggleValue(values: string[], value: string) {
 
 interface ProjectSettingsFormState {
   name: string;
+  initialSituation: string;
   startMonth: string;
   endMonth: string;
-  intendedChanges: string;
+  intendedChanges: string[];
   fundingProgram: string;
   fundingOrganization: string;
   targetGroups: string[];
@@ -200,9 +206,10 @@ export function ProjectSettingsPanel({
     try {
       await updateProjectMutation.mutateAsync({
         name: formState.name.trim(),
+        initialSituation: formState.initialSituation.trim() || null,
         startMonth: normalizedStartMonth!,
         endMonth: normalizedEndMonth!,
-        intendedChanges: parseListInput(formState.intendedChanges),
+        intendedChanges: normalizeImpactValues(formState.intendedChanges),
         fundingProgram: formState.fundingProgram.trim() || null,
         fundingOrganization: formState.fundingOrganization.trim() || null,
         targetGroups: normalizedTargetGroups,
@@ -234,6 +241,14 @@ export function ProjectSettingsPanel({
         ) : null}
 
         <OverviewSectionCard title={locale.dialogs.project.projectProfile}>
+          <OverviewFieldRow
+            label={locale.projectSettings.fields.initialSituation}
+            value={
+              <div className="max-w-[62rem] whitespace-pre-wrap text-[15px] leading-7 text-foreground">
+                {project.initialSituation || locale.projectSettings.notSet}
+              </div>
+            }
+          />
           <OverviewFieldRow
             label={locale.projectSettings.fields.fundingProgram}
             value={project.fundingProgram || locale.projectSettings.notSet}
@@ -343,6 +358,24 @@ export function ProjectSettingsPanel({
               </FieldGroup>
 
               <FieldGroup
+                className="md:col-span-2"
+                label={locale.dialogs.project.initialSituation}
+                optionalLabel={locale.projectSettings.optionalLabel}
+              >
+                <Textarea
+                  value={formState.initialSituation}
+                  onChange={(event) =>
+                    updateField("initialSituation", event.target.value)
+                  }
+                  placeholder={
+                    locale.dialogs.project.initialSituationPlaceholder
+                  }
+                  rows={4}
+                  maxLength={2000}
+                />
+              </FieldGroup>
+
+              <FieldGroup
                 label={locale.dialogs.project.startMonth}
                 error={formErrors.startMonth}
               >
@@ -370,24 +403,42 @@ export function ProjectSettingsPanel({
                 />
               </FieldGroup>
 
-              <FieldGroup
-                className="md:col-span-2"
-                label={locale.dialogs.project.intendedChanges}
-                error={formErrors.intendedChanges}
-                hint={locale.dialogs.project.intendedChangesHint}
-              >
-                <Textarea
-                  value={formState.intendedChanges}
-                  onChange={(event) =>
-                    updateField("intendedChanges", event.target.value)
-                  }
+              <div className="md:col-span-2">
+                <ProjectImpactListField
+                  label={locale.dialogs.project.intendedChanges}
+                  values={formState.intendedChanges}
                   placeholder={
                     locale.dialogs.project.intendedChangesPlaceholder
                   }
-                  rows={3}
-                  required
+                  error={formErrors.intendedChanges}
+                  onChangeValue={(index, value) =>
+                    updateField(
+                      "intendedChanges",
+                      formState.intendedChanges.map((item, itemIndex) =>
+                        itemIndex === index ? value : item,
+                      ),
+                    )
+                  }
+                  onAddRow={() =>
+                    updateField("intendedChanges", [
+                      ...formState.intendedChanges,
+                      "",
+                    ])
+                  }
+                  onRemoveRow={(index) =>
+                    updateField(
+                      "intendedChanges",
+                      formState.intendedChanges.filter(
+                        (_item, itemIndex) => itemIndex !== index,
+                      ),
+                    )
+                  }
+                  addRowAriaLabel={locale.dialogs.project.intendedChangesAddRow}
+                  removeRowAriaLabel={
+                    locale.dialogs.project.intendedChangesRemoveRow
+                  }
                 />
-              </FieldGroup>
+              </div>
 
               <FieldGroup
                 label={locale.dialogs.project.fundingProgram}
@@ -556,9 +607,11 @@ export function ProjectSettingsPanel({
 function createFormState(project: ProjectSummary): ProjectSettingsFormState {
   return {
     name: project.name,
+    initialSituation: project.initialSituation ?? "",
     startMonth: project.startMonth ?? "",
     endMonth: project.endMonth ?? "",
-    intendedChanges: project.intendedChanges.join("\n"),
+    intendedChanges:
+      project.intendedChanges.length > 0 ? project.intendedChanges : [""],
     fundingProgram: project.fundingProgram ?? "",
     fundingOrganization: project.fundingOrganization ?? "",
     targetGroups: project.targetGroups,
@@ -603,7 +656,9 @@ function validateFormState(
     errors.endMonth = locale.invalidMonth;
   }
 
-  const parsedIntendedChanges = parseListInput(formState.intendedChanges);
+  const parsedIntendedChanges = normalizeImpactValues(
+    formState.intendedChanges,
+  );
   if (parsedIntendedChanges.length === 0 || parsedIntendedChanges.length > 3) {
     errors.intendedChanges = locale.intendedChangesValidation;
   }

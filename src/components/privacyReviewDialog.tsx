@@ -1,10 +1,18 @@
-import { AlertTriangle, ShieldAlert } from "lucide-react";
+import { AlertTriangle, ShieldAlert, ShieldCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { DialogSection, EntityDialog } from "@/components/EntityDialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Card } from "@/components/WorkspaceUI";
 import {
   useActivityUploadsQuery,
@@ -120,6 +128,9 @@ export function PrivacyReviewDialog({
     job.status === "awaiting_privacy_review" &&
     review.status === "pending",
   );
+  const showCompactApprovalDialog = Boolean(
+    canApproveReview && decisionFindings.length === 0,
+  );
   const allDecisionsResolved = decisionFindings.every((finding) => {
     const key = createDecisionKey(finding.field, finding.entityType);
     const decision = fieldDecisionMap[key];
@@ -191,6 +202,17 @@ export function PrivacyReviewDialog({
           : t("projectWorkspace.evidence.privacyApprovalFailed"),
       );
     }
+  }
+
+  if (showCompactApprovalDialog) {
+    return (
+      <CompactPrivacyApprovalDialog
+        open={open}
+        onOpenChange={onOpenChange}
+        isSubmitting={approvePrivacyReviewMutation.isPending}
+        onConfirm={handleApprovePrivacyReview}
+      />
+    );
   }
 
   return (
@@ -363,6 +385,58 @@ export function PrivacyReviewDialog({
         </>
       )}
     </EntityDialog>
+  );
+}
+
+function CompactPrivacyApprovalDialog({
+  open,
+  onOpenChange,
+  isSubmitting,
+  onConfirm,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  isSubmitting: boolean;
+  onConfirm: () => Promise<void> | void;
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-xl rounded-[28px] border border-border/80 bg-card/98 p-0 shadow-[var(--shadow-elevated)]">
+        <DialogHeader className="border-b border-border/70 px-8 py-6 text-left">
+          <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-soft text-primary">
+            <ShieldCheck className="h-5 w-5" />
+          </div>
+          <DialogTitle className="text-2xl font-semibold tracking-tight">
+            {t("projectWorkspace.evidence.compactPrivacyApprovalTitle")}
+          </DialogTitle>
+          <DialogDescription className="mt-2 text-sm leading-6 text-muted-foreground">
+            {t("projectWorkspace.evidence.compactPrivacyApprovalDescription")}
+          </DialogDescription>
+        </DialogHeader>
+
+        <DialogFooter className="border-t border-border/70 px-8 py-5">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={isSubmitting}
+          >
+            {t("projectWorkspace.evidence.compactPrivacyApprovalClose")}
+          </Button>
+          <Button
+            type="button"
+            onClick={() => void onConfirm()}
+            disabled={isSubmitting}
+          >
+            {isSubmitting
+              ? t("projectWorkspace.evidence.approvingPrivacy")
+              : t("projectWorkspace.evidence.compactPrivacyApprovalContinue")}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 

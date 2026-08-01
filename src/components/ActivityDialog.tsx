@@ -204,9 +204,7 @@ export function ActivityDialog({
           : locale.dialogs.createActivityTitle
       }
       description={
-        mode === "edit"
-          ? locale.dialogs.editActivityDescription
-          : locale.dialogs.createActivityDescription
+        mode === "edit" ? locale.dialogs.editActivityDescription : null
       }
       submitLabel={
         isSubmitting
@@ -221,7 +219,7 @@ export function ActivityDialog({
       isSubmitting={isSubmitting}
       onSubmit={handleSubmit}
     >
-      <DialogSection title={locale.dialogs.activity.sectionTitle}>
+      <DialogSection>
         <div className="grid gap-5 md:grid-cols-2">
           <div className="space-y-2 md:col-span-2">
             <FieldLabel>{locale.dialogs.activity.name}</FieldLabel>
@@ -230,7 +228,6 @@ export function ActivityDialog({
               onChange={(event) =>
                 setForm((current) => ({ ...current, name: event.target.value }))
               }
-              placeholder={locale.dialogs.activity.namePlaceholder}
               required
             />
           </div>
@@ -244,7 +241,6 @@ export function ActivityDialog({
                   description: event.target.value,
                 }))
               }
-              placeholder={locale.dialogs.activity.descriptionPlaceholder}
               rows={4}
             />
           </div>
@@ -257,9 +253,7 @@ export function ActivityDialog({
               }
             >
               <SelectTrigger>
-                <SelectValue
-                  placeholder={locale.dialogs.activity.activityType}
-                />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {locale.dialogs.options.activityTypes.map((option) => (
@@ -286,6 +280,29 @@ export function ActivityDialog({
                 }
               />
             ) : null}
+          </div>
+          <div className="space-y-2">
+            <FieldLabel>{locale.dialogs.activity.status}</FieldLabel>
+            <Select
+              value={form.status}
+              onValueChange={(value) =>
+                setForm((current) => ({
+                  ...current,
+                  status: value as ActivityStatus,
+                }))
+              }
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {STATUS_OPTIONS.map((status) => (
+                  <SelectItem key={status} value={status}>
+                    {locale.status[status]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <FieldLabel>{locale.dialogs.activity.startDate}</FieldLabel>
@@ -326,7 +343,7 @@ export function ActivityDialog({
             onChange={(value) =>
               setForm((current) => ({ ...current, targetAudience: value }))
             }
-            placeholder={locale.dialogs.activity.targetAudiencePlaceholder}
+            placeholder=""
           />
         </div>
       </DialogSection>
@@ -343,6 +360,7 @@ export function ActivityDialog({
                 setForm((current) => ({ ...current, output: value }))
               }
               placeholder={locale.dialogs.activity.outputPlaceholder}
+              rows={5}
             />
           </div>
           <div className="space-y-2 md:col-span-2">
@@ -355,30 +373,8 @@ export function ActivityDialog({
                 setForm((current) => ({ ...current, outcome: value }))
               }
               placeholder={locale.dialogs.activity.outcomePlaceholder}
+              rows={5}
             />
-          </div>
-          <div className="space-y-2 md:col-span-2">
-            <FieldLabel>{locale.dialogs.activity.status}</FieldLabel>
-            <Select
-              value={form.status}
-              onValueChange={(value) =>
-                setForm((current) => ({
-                  ...current,
-                  status: value as ActivityStatus,
-                }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {STATUS_OPTIONS.map((status) => (
-                  <SelectItem key={status} value={status}>
-                    {locale.status[status]}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </div>
         </div>
       </DialogSection>

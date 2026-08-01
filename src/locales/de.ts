@@ -418,8 +418,6 @@ const de: TranslationDictionary = {
       openActivity: "Aktivität öffnen",
       editActivity: "Bearbeiten",
       deleteActivity: "Löschen",
-      deleteConfirmation:
-        "Die Aktivität „{{name}}“ löschen? Verknüpfte Evidenz wird ebenfalls entfernt.",
       deleteSuccess: "Aktivität gelöscht.",
       deleteFailure: "Aktivität konnte nicht gelöscht werden.",
     },
@@ -457,6 +455,12 @@ const de: TranslationDictionary = {
       privacyReviewTitle: "Datenschutzprüfung",
       privacyReviewDescription:
         "Bestätigen Sie, wie erkannte Namen und Adressen behandelt werden sollen, bevor brindl mit der datenschutzsicheren Repräsentation fortfährt.",
+      compactPrivacyApprovalTitle:
+        "Keine manuelle Datenschutzprüfung erforderlich",
+      compactPrivacyApprovalDescription:
+        "Für diese Datei ist keine manuelle Transformationsauswahl notwendig. Sie können die Datei jetzt freigeben und die Verarbeitung fortsetzen.",
+      compactPrivacyApprovalClose: "Schließen",
+      compactPrivacyApprovalContinue: "Fortfahren",
       loadingPrivacyReview: "Datenschutzprüfung wird geladen…",
       noPrivacyFindings: "Es liegen noch keine Datenschutzbefunde vor.",
       privacyFindingSummary:
@@ -1356,7 +1360,7 @@ const de: TranslationDictionary = {
     projects: "Projekte",
     members: "Mitglieder",
     billing: "Abrechnung",
-    sectionTitle: "Projekte",
+    sectionTitle: "Aktive Projekte",
     myProjectsSection: "Meine Projekte",
     allProjectsSection: "Alle Projekte",
     projectSingular: "Projekt",
@@ -1365,6 +1369,9 @@ const de: TranslationDictionary = {
     activities: "Aktivitäten",
     addActivity: "Aktivität hinzufügen",
     noProjects: "Noch keine Projekte",
+    noActiveProjects: "Keine aktiven Projekte",
+    noActiveProjectsHint:
+      "Archivierte Projekte finden Sie auf der Projektseite im Tab „Archiviert“.",
     createFirstProject:
       "Öffnen Sie die Projektseite, um Ihr erstes Projekt anzulegen.",
     mobileNavigationTitle: "Workspace-Navigation",
@@ -1381,7 +1388,13 @@ const de: TranslationDictionary = {
     projectSettings: "Projekteinstellungen",
     organizationSettings: "Organisationseinstellungen",
     projectActions: "Projektaktionen",
+    archiveProject: "Archivieren",
+    reactivateProject: "Reaktivieren",
     deleteProject: "Projekt löschen",
+    archiveProjectSuccess: "Projekt wurde archiviert.",
+    archiveProjectFailure: "Projekt konnte nicht archiviert werden.",
+    reactivateProjectSuccess: "Projekt wurde reaktiviert.",
+    reactivateProjectFailure: "Projekt konnte nicht reaktiviert werden.",
     readOnlyProject: "Projekt im Lesemodus",
   },
   status: {
@@ -1527,15 +1540,25 @@ const de: TranslationDictionary = {
   },
   organizationProjects: {
     eyebrow: "Projekte",
-    title: "Projekte in diesem Workspace",
-    description:
-      "Öffnen Sie ein bestehendes Projekt oder erstellen Sie das nächste Projekt, das Sie betreuen möchten.",
+    title: "Projekte",
+    description: "Verwalten Sie laufende und archivierte Projekte.",
     primaryAction: "Projekt erstellen",
     emptyTitle: "Noch keine Projekte in diesem Workspace",
     emptyDescription:
       "Sobald Projekte angelegt sind, werden sie hier als zentrale Einstiegspunkte für Aktivitäten, Uploads, Analysen und AI knowledge angezeigt.",
     noDescription: "Noch kein Projektziel hinterlegt.",
     activities: "Aktivitäten",
+    activeTabLabel: "Aktive Projekte ({{count}})",
+    archivedTabLabel: "Archiviert ({{count}})",
+    activeTabHint: "Abgeschlossene Projekte finden Sie im Tab „Archiviert“.",
+    archivedTabHint: "Hier sehen Sie Projekte mit abgeschlossenem Status.",
+    searchPlaceholder: "Projekte durchsuchen…",
+    sortUpdated: "Sortieren: Zuletzt aktualisiert",
+    sortName: "Sortieren: Name A–Z",
+    sortStart: "Sortieren: Startdatum",
+    noResultsTitle: "Keine passenden Projekte gefunden",
+    noResultsDescription:
+      "Passen Sie Ihren Suchbegriff oder die Auswahl zwischen aktiven und archivierten Projekten an.",
   },
   projectCard: {
     activities: "Aktivitäten",
@@ -1617,6 +1640,7 @@ const de: TranslationDictionary = {
       projectContext: "Projektkontext",
     },
     fields: {
+      initialSituation: "Ausgangslage",
       timeline: "Zeitraum",
       overarchingTargetGroup: "Übergeordnete Zielgruppe(n)",
       intendedChanges: "Angestrebte Veränderungen",
@@ -1647,15 +1671,20 @@ const de: TranslationDictionary = {
       insights: "alle AI knowledge Inhalte",
     },
   },
+  activityDelete: {
+    title: "Diese Aktivität löschen?",
+    description:
+      "Diese Aktion kann nicht rückgängig gemacht werden. Beim Löschen der Aktivität „{{name}}“ wird verknüpfte Evidenz ebenfalls dauerhaft entfernt.",
+    confirmAction: "Aktivität löschen",
+    deleting: "Wird gelöscht…",
+  },
   dialogs: {
     cancel: "Abbrechen",
     create: "Erstellen",
     createProjectTitle: "Projekt erstellen",
     createProjectDescription:
-      "Erfassen Sie Projektprofil und Zielgruppen für dieses Projekt.",
+      "Übertragen Sie alle Ziele, Leistungen und Kennzahlen, die Sie mit Ihren Fördernden vereinbart haben, möglichst vollständig und in der vereinbarten Form. Eine sorgfältige Eintragung lohnt sich: Die Angaben bilden die Grundlage für die spätere Analyse Ihres Projekts und helfen dabei, Ergebnisse, Entwicklungen und noch fehlende Daten besser einzuordnen.",
     createActivityTitle: "Aktivität hinzufügen",
-    createActivityDescription:
-      "Erfassen Sie die Umsetzungsdetails für eine Projektaktivität.",
     editActivityTitle: "Aktivität bearbeiten",
     editActivityDescription:
       "Aktualisieren Sie die Umsetzungsdetails dieser Projektaktivität.",
@@ -1667,17 +1696,24 @@ const de: TranslationDictionary = {
       projectProfile: "Projektprofil",
       name: "Projektname",
       namePlaceholder: "Mentoring-Programm 2026",
+      initialSituation: "Ausgangslage",
+      initialSituationPlaceholder:
+        "Jugendliche aus einkommensarmen Familien haben in der Region deutlich seltener Zugang zu außerschulischen Bildungsangeboten.",
+      initialSituationTooltipLabel: "Hinweis zur Ausgangslage anzeigen",
+      initialSituationTooltip:
+        "Beschreiben Sie kurz, für wen das Problem besteht und warum Handlungsbedarf besteht.",
       startMonth: "Startmonat / Jahr",
       endMonth: "Endmonat / Jahr",
       overarchingTargetGroup: "Übergeordnete Zielgruppe(n)",
       overarchingTargetGroupPlaceholder:
         "z. B. Jugendliche mit Migrationshintergrund",
-      intendedChanges: "Ein bis drei angestrebte Veränderungen",
-      intendedChangesPlaceholder: "Welche Veränderungen streben Sie an?",
-      intendedChangesHint:
-        "Nennen Sie ein bis drei Veränderungen, getrennt durch Kommas oder Zeilenumbrüche.",
+      intendedChanges: "Angestrebte langfristige Wirkung / Impact",
+      intendedChangesPlaceholder:
+        "Welche langfristigen Veränderungen bei den Zielgruppen soll das Projekt unterstützen?",
       intendedChangesValidation:
-        "Bitte nennen Sie ein bis drei angestrebte Veränderungen.",
+        "Bitte nennen Sie eine bis drei angestrebte langfristige Wirkungen / Impacts.",
+      intendedChangesAddRow: "Weitere Wirkung hinzufügen",
+      intendedChangesRemoveRow: "Wirkung entfernen",
       fundingProgram: "Förderprogramm",
       fundingProgramPlaceholder: "Erasmus+",
       fundingOrganization: "Fördernde Organisation",
@@ -1699,7 +1735,7 @@ const de: TranslationDictionary = {
       areaOfOperationPlaceholder: "Wo wird das Projekt umgesetzt?",
       partnerships: "Kooperationen / Partnerschaften",
       partnershipsPlaceholder:
-        "Optional. Wichtige Kooperations- oder Umsetzungspartner ergänzen.",
+        "Wichtige Kooperations- oder Umsetzungspartner ergänzen.",
     },
     activity: {
       submit: "Aktivität erstellen",
@@ -1710,12 +1746,8 @@ const de: TranslationDictionary = {
       failure: "Aktivität konnte nicht erstellt werden.",
       updateSuccess: "Aktivität wurde aktualisiert.",
       updateFailure: "Aktivität konnte nicht aktualisiert werden.",
-      sectionTitle: "Aktivitäten",
       name: "Aktivitätsname",
-      namePlaceholder: "Mentor:innenschulung für Senioren",
-      description: "Beschreibung",
-      descriptionPlaceholder:
-        "Zweitägige Schulung für freiwillige Mentorinnen und Mentoren.",
+      description: "Beschreibung der Aktivität",
       activityType: "Aktivitätstyp",
       activityTypeCustomPlaceholder: "Aktivitätstyp beschreiben",
       startDate: "Startdatum",
@@ -1723,21 +1755,21 @@ const de: TranslationDictionary = {
       targetAudience: "Zielgruppe",
       targetAudienceTooltipLabel: "Hinweis zur Zielgruppe",
       targetAudienceTooltip: "Mit wem wird die Aktivität durchgeführt?",
-      targetAudiencePlaceholder: "Bewerbungstraining",
       objectives: "Zweck der Aktivität",
       objectivesTooltipLabel: "Hinweis zum Zweck der Aktivität",
       objectivesTooltip: "Warum wird sie durchgeführt?",
       objectivesPlaceholder:
         "Die Teilnehmenden praktisch auf Bewerbungsverfahren vorbereiten",
-      output: "Output",
+      output: "Leistungsziele (Outputs)",
       outputTooltipLabel: "Hinweis zum Output",
       outputTooltip: "Was wird unmittelbar durchgeführt oder erstellt?",
-      outputPlaceholder: "Vier Trainings mit 35 Teilnehmenden",
-      outcome: "Outcome",
+      outputPlaceholder:
+        "• 12 Workshops innerhalb eines Jahres durchführen\n• 150 Teilnehmende erreichen\n• Mindestens 80 % der Teilnehmenden schließen das Angebot ab\n• Mindestens 75 % der Teilnehmenden sind mit dem Angebot zufrieden",
+      outcome: "Veränderungsziele (Outcome)",
       outcomeTooltipLabel: "Hinweis zum Outcome",
       outcomeTooltip: "Was soll sich bei der Zielgruppe verändern?",
       outcomePlaceholder:
-        "Teilnehmende fühlen sich sicherer im Bewerbungsprozess.",
+        "• 80 % der Teilnehmenden kennen nach dem Workshop ihre Unterstützungsangebote\n• 70 % können die erlernten Methoden anschließend selbstständig anwenden\n• 60 % setzen das Gelernte innerhalb von drei Monaten im Alltag um\n• 50 Teilnehmende verbessern innerhalb eines Jahres ihre berufliche Situation",
       status: "Status",
     },
     options: {

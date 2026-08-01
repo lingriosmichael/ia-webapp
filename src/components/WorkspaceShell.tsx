@@ -254,7 +254,6 @@ export function WorkspaceShell({
           userName={userName}
           projects={projects}
           currentProject={currentProject}
-          onCreateProject={workspaceShellActions.openProjectDialog}
           onDeleteProject={workspaceShellActions.openProjectDeleteDialog}
           onLogout={onLogout}
         />
@@ -278,7 +277,6 @@ export function WorkspaceShell({
               userName={userName}
               projects={projects}
               currentProject={currentProject}
-              onCreateProject={workspaceShellActions.openProjectDialog}
               onDeleteProject={workspaceShellActions.openProjectDeleteDialog}
               onLogout={() => {
                 setMobileSidebarOpen(false);

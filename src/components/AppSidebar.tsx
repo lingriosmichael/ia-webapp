@@ -1,20 +1,23 @@
 import { Link } from "@tanstack/react-router";
 import {
+  Archive,
   ChevronRight,
   CreditCard,
   FolderKanban,
   LayoutDashboard,
   LogOut,
   MoreHorizontal,
-  Plus,
+  PlayCircle,
   Settings2,
   Trash2,
   Users2,
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import { BrandWordmark } from "@/components/BrandWordmark";
 import { OrganizationAvatar } from "@/components/organizationAvatar";
+import { useUpdateProjectMutation } from "@/hooks/useWorkspaceQueries";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,10 +28,11 @@ import {
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { getOrganizationBranding } from "@/lib/organizationBranding";
 import { cn } from "@/lib/utils";
-import type {
-  OrganizationPermissions,
-  OrganizationRole,
-  WorkspaceProject,
+import {
+  ApiError,
+  type OrganizationPermissions,
+  type OrganizationRole,
+  type WorkspaceProject,
 } from "@/services/apiClient";
 
 function SidebarHeader({
@@ -107,26 +111,6 @@ function NavRow({
   );
 }
 
-function ActionButton({
-  onClick,
-  label,
-}: {
-  onClick: () => void;
-  label: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-sidebar-hover hover:text-foreground"
-      aria-label={label}
-      title={label}
-    >
-      <Plus className="h-3.5 w-3.5" />
-    </button>
-  );
-}
-
 export function AppSidebar({
   organizationName,
   organizationRole,
@@ -136,7 +120,6 @@ export function AppSidebar({
   userName,
   projects,
   currentProject,
-  onCreateProject,
   onDeleteProject,
   onLogout,
   mode = "desktop",
@@ -149,7 +132,6 @@ export function AppSidebar({
   userName: string;
   projects: WorkspaceProject[];
   currentProject: WorkspaceProject | null;
-  onCreateProject: () => void;
   onDeleteProject: (
     project: Pick<WorkspaceProject, "id" | "name" | "organizationId">,
   ) => void;
@@ -158,6 +140,9 @@ export function AppSidebar({
 }) {
   const { t, i18n } = useTranslation();
   const locale = useWorkspaceLocale();
+  const activeProjects = projects.filter(
+    (project) => project.status === "planning" || project.status === "active",
+  );
   const branding = getOrganizationBranding({
     organizationName,
     organizationRole,
@@ -243,28 +228,22 @@ export function AppSidebar({
         </div>
 
         <div>
-          <div className="mb-2 flex items-center justify-between px-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+          <div className="mb-3 px-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
             <span>{locale.sidebar.sectionTitle}</span>
-            {organizationPermissions.canCreateProject ? (
-              <ActionButton
-                onClick={onCreateProject}
-                label={locale.sidebar.addProject}
-              />
-            ) : null}
           </div>
 
-          {projects.length === 0 ? (
+          {activeProjects.length === 0 ? (
             <div className="rounded-[12px] border border-border/70 bg-card/80 px-4 py-4 text-sm text-muted-foreground">
               <div className="font-medium text-foreground">
-                {locale.sidebar.noProjects}
+                {locale.sidebar.noActiveProjects}
               </div>
               <p className="mt-1 leading-6">
-                {locale.sidebar.createFirstProject}
+                {locale.sidebar.noActiveProjectsHint}
               </p>
             </div>
           ) : (
             <div className="space-y-1">
-              {projects.map((project) => (
+              {activeProjects.map((project) => (
                 <div key={project.id} className="flex items-center gap-1">
                   <Link
                     to="/projects/$projectId"
@@ -283,7 +262,8 @@ export function AppSidebar({
                   <ProjectActionsMenu
                     project={project}
                     onDeleteProject={onDeleteProject}
-                    projectSettingsLabel={locale.sidebar.projectSettings}
+                    archiveProjectLabel={locale.sidebar.archiveProject}
+                    reactivateProjectLabel={locale.sidebar.reactivateProject}
                     deleteProjectLabel={locale.sidebar.deleteProject}
                     actionsLabel={locale.sidebar.projectActions}
                   />
@@ -368,21 +348,53 @@ export function AppSidebar({
 function ProjectActionsMenu({
   project,
   onDeleteProject,
-  projectSettingsLabel,
+  archiveProjectLabel,
+  reactivateProjectLabel,
   deleteProjectLabel,
   actionsLabel,
 }: {
-  project: Pick<
-    WorkspaceProject,
-    "id" | "name" | "organizationId" | "permissions"
-  >;
+  project: WorkspaceProject;
   onDeleteProject: (
     project: Pick<WorkspaceProject, "id" | "name" | "organizationId">,
   ) => void;
-  projectSettingsLabel: string;
+  archiveProjectLabel: string;
+  reactivateProjectLabel: string;
   deleteProjectLabel: string;
   actionsLabel: string;
 }) {
+  const locale = useWorkspaceLocale();
+  const projectStatusMutation = useUpdateProjectMutation(
+    project.id,
+    project.organizationId,
+  );
+  const canManageProjectLifecycle = project.permissions.canManageLifecycle;
+  const isArchivedProject = project.status === "completed";
+
+  async function handleChangeProjectStatus(nextStatus: "active" | "completed") {
+    if (!canManageProjectLifecycle) {
+      return;
+    }
+
+    try {
+      await projectStatusMutation.mutateAsync({
+        status: nextStatus,
+      });
+      toast.success(
+        nextStatus === "completed"
+          ? locale.sidebar.archiveProjectSuccess
+          : locale.sidebar.reactivateProjectSuccess,
+      );
+    } catch (error) {
+      const message =
+        error instanceof ApiError
+          ? error.message
+          : nextStatus === "completed"
+            ? locale.sidebar.archiveProjectFailure
+            : locale.sidebar.reactivateProjectFailure;
+      toast.error(message);
+    }
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -396,26 +408,32 @@ function ProjectActionsMenu({
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-52">
-        <DropdownMenuItem asChild>
-          <Link
-            to="/projects/$projectId/settings"
-            params={{ projectId: project.id }}
-          >
-            <Settings2 className="h-4 w-4" />
-            {projectSettingsLabel}
-          </Link>
+        <DropdownMenuItem
+          disabled={
+            !canManageProjectLifecycle || projectStatusMutation.isPending
+          }
+          onSelect={() =>
+            void handleChangeProjectStatus(
+              isArchivedProject ? "active" : "completed",
+            )
+          }
+        >
+          {isArchivedProject ? (
+            <PlayCircle className="h-4 w-4" />
+          ) : (
+            <Archive className="h-4 w-4" />
+          )}
+          {isArchivedProject ? reactivateProjectLabel : archiveProjectLabel}
         </DropdownMenuItem>
+        {project.permissions.canDelete ? <DropdownMenuSeparator /> : null}
         {project.permissions.canDelete ? (
-          <>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onSelect={() => onDeleteProject(project)}
-              className="text-destructive focus:text-destructive"
-            >
-              <Trash2 className="h-4 w-4" />
-              {deleteProjectLabel}
-            </DropdownMenuItem>
-          </>
+          <DropdownMenuItem
+            onSelect={() => onDeleteProject(project)}
+            className="text-destructive focus:text-destructive"
+          >
+            <Trash2 className="h-4 w-4" />
+            {deleteProjectLabel}
+          </DropdownMenuItem>
         ) : null}
       </DropdownMenuContent>
     </DropdownMenu>

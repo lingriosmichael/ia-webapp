@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Check, ChevronDown, Plus, X } from "lucide-react";
+import { Check, ChevronDown, Info, Plus, X } from "lucide-react";
+import { ProjectImpactListField } from "@/components/ProjectImpactListField";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import type { CreateProjectPayload } from "@/services/apiClient";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +18,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { normalizeMonthValue } from "@/lib/monthValue";
 import { cn } from "@/lib/utils";
 
@@ -37,11 +44,69 @@ function deduplicateValues(values: string[]) {
   return [...new Set(values.map((value) => value.trim()).filter(Boolean))];
 }
 
+function normalizeImpactValues(values: string[]) {
+  return values.map((value) => value.trim()).filter(Boolean);
+}
+
+function ProjectTextareaField({
+  label,
+  tooltipLabel,
+  tooltip,
+  value,
+  onChange,
+  placeholder,
+  rows = 4,
+  maxLength,
+}: {
+  label: string;
+  tooltipLabel?: string;
+  tooltip?: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  rows?: number;
+  maxLength?: number;
+}) {
+  return (
+    <>
+      <div className="flex items-center gap-2">
+        <FieldLabel>{label}</FieldLabel>
+        {tooltipLabel && tooltip ? (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-secondary"
+                  aria-label={tooltipLabel}
+                >
+                  <Info className="h-3 w-3" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-sm px-3 py-2 text-left text-xs leading-5">
+                <p>{tooltip}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ) : null}
+      </div>
+      <Textarea
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder={placeholder}
+        rows={rows}
+        maxLength={maxLength}
+      />
+    </>
+  );
+}
+
 interface ProjectDialogState {
   name: string;
+  initialSituation: string;
   startMonth: string;
   endMonth: string;
-  intendedChanges: string;
+  intendedChanges: string[];
   fundingProgram: string;
   fundingOrganization: string;
   targetGroups: string[];
@@ -59,9 +124,10 @@ interface ProjectDialogFormErrors {
 
 const initialState: ProjectDialogState = {
   name: "",
+  initialSituation: "",
   startMonth: "",
   endMonth: "",
-  intendedChanges: "",
+  intendedChanges: [""],
   fundingProgram: "",
   fundingOrganization: "",
   targetGroups: [],
@@ -158,7 +224,9 @@ export function ProjectDialog({
       ...form.targetGroups,
       customTargetGroup,
     ]);
-    const normalizedIntendedChanges = parseListInput(form.intendedChanges);
+    const normalizedIntendedChanges = normalizeImpactValues(
+      form.intendedChanges,
+    );
     const nextErrors: ProjectDialogFormErrors = {};
 
     if (!form.startMonth.trim()) {
@@ -198,6 +266,7 @@ export function ProjectDialog({
 
     await onSubmit({
       name: form.name.trim(),
+      initialSituation: form.initialSituation.trim() || undefined,
       startMonth,
       endMonth,
       intendedChanges: normalizedIntendedChanges,
@@ -217,7 +286,11 @@ export function ProjectDialog({
       open={open}
       onOpenChange={onOpenChange}
       title={locale.dialogs.createProjectTitle}
-      description={locale.dialogs.createProjectDescription}
+      description={
+        <div className="text-xs leading-5 text-muted-foreground">
+          {locale.dialogs.createProjectDescription}
+        </div>
+      }
       submitLabel={
         isSubmitting
           ? locale.dialogs.project.creating
@@ -227,7 +300,7 @@ export function ProjectDialog({
       isSubmitting={isSubmitting}
       onSubmit={handleSubmit}
     >
-      <DialogSection title={locale.dialogs.project.projectProfile}>
+      <DialogSection>
         <div className="grid gap-5 md:grid-cols-2">
           <div className="space-y-2 md:col-span-2">
             <FieldLabel>{locale.dialogs.project.name}</FieldLabel>
@@ -236,6 +309,18 @@ export function ProjectDialog({
               onChange={(event) => updateField("name", event.target.value)}
               placeholder={locale.dialogs.project.namePlaceholder}
               required
+            />
+          </div>
+          <div className="space-y-2 md:col-span-2">
+            <ProjectTextareaField
+              label={locale.dialogs.project.initialSituation}
+              tooltipLabel={locale.dialogs.project.initialSituationTooltipLabel}
+              tooltip={locale.dialogs.project.initialSituationTooltip}
+              value={form.initialSituation}
+              onChange={(value) => updateField("initialSituation", value)}
+              placeholder={locale.dialogs.project.initialSituationPlaceholder}
+              rows={4}
+              maxLength={2000}
             />
           </div>
           <div className="space-y-2">
@@ -266,26 +351,43 @@ export function ProjectDialog({
               <p className="text-xs text-destructive">{formErrors.endMonth}</p>
             ) : null}
           </div>
-          <div className="space-y-2 md:col-span-2">
-            <FieldLabel>{locale.dialogs.project.intendedChanges}</FieldLabel>
-            <Textarea
-              value={form.intendedChanges}
-              onChange={(event) => {
-                setIntendedChangesError(false);
-                updateField("intendedChanges", event.target.value);
-              }}
+          <div className="md:col-span-2">
+            <ProjectImpactListField
+              label={locale.dialogs.project.intendedChanges}
+              values={form.intendedChanges}
               placeholder={locale.dialogs.project.intendedChangesPlaceholder}
-              rows={3}
-              required
+              error={
+                intendedChangesError
+                  ? locale.dialogs.project.intendedChangesValidation
+                  : undefined
+              }
+              onChangeValue={(index, value) => {
+                setIntendedChangesError(false);
+                updateField(
+                  "intendedChanges",
+                  form.intendedChanges.map((item, itemIndex) =>
+                    itemIndex === index ? value : item,
+                  ),
+                );
+              }}
+              onAddRow={() => {
+                setIntendedChangesError(false);
+                updateField("intendedChanges", [...form.intendedChanges, ""]);
+              }}
+              onRemoveRow={(index) => {
+                setIntendedChangesError(false);
+                updateField(
+                  "intendedChanges",
+                  form.intendedChanges.filter(
+                    (_item, itemIndex) => itemIndex !== index,
+                  ),
+                );
+              }}
+              addRowAriaLabel={locale.dialogs.project.intendedChangesAddRow}
+              removeRowAriaLabel={
+                locale.dialogs.project.intendedChangesRemoveRow
+              }
             />
-            <p className="text-xs text-muted-foreground">
-              {locale.dialogs.project.intendedChangesHint}
-            </p>
-            {intendedChangesError ? (
-              <p className="text-xs text-destructive">
-                {locale.dialogs.project.intendedChangesValidation}
-              </p>
-            ) : null}
           </div>
           <div className="space-y-2">
             <FieldLabel optionalLabel={locale.projectSettings.optionalLabel}>
@@ -372,7 +474,9 @@ export function ProjectDialog({
             />
           </div>
           <div className="space-y-2 md:col-span-2">
-            <FieldLabel>{locale.dialogs.project.partnerships}</FieldLabel>
+            <FieldLabel optionalLabel={locale.projectSettings.optionalLabel}>
+              {locale.dialogs.project.partnerships}
+            </FieldLabel>
             <Textarea
               value={form.partnerships}
               onChange={(event) =>

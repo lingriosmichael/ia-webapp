@@ -413,8 +413,6 @@ const en = {
       openActivity: "Open activity",
       editActivity: "Edit",
       deleteActivity: "Delete",
-      deleteConfirmation:
-        "Delete the activity “{{name}}”? All linked evidence will also be removed.",
       deleteSuccess: "Activity deleted.",
       deleteFailure: "Activity could not be deleted.",
     },
@@ -450,6 +448,11 @@ const en = {
       privacyReviewTitle: "Privacy review",
       privacyReviewDescription:
         "Confirm how detected names and addresses should be handled before brindl continues with the privacy-safe representation.",
+      compactPrivacyApprovalTitle: "No manual privacy review required",
+      compactPrivacyApprovalDescription:
+        "This file does not require any manual transformation choices. You can approve it now and continue processing.",
+      compactPrivacyApprovalClose: "Close",
+      compactPrivacyApprovalContinue: "Continue",
       loadingPrivacyReview: "Loading privacy review…",
       noPrivacyFindings: "No privacy findings available yet.",
       privacyFindingSummary:
@@ -1331,7 +1334,7 @@ const en = {
     projects: "Projects",
     members: "Members",
     billing: "Billing",
-    sectionTitle: "Projects",
+    sectionTitle: "Active Projects",
     myProjectsSection: "My Projects",
     allProjectsSection: "All Projects",
     projectSingular: "Project",
@@ -1340,6 +1343,9 @@ const en = {
     activities: "Activities",
     addActivity: "Add activity",
     noProjects: "No projects yet",
+    noActiveProjects: "No active projects",
+    noActiveProjectsHint:
+      "Archived projects are available on the projects page under the Archived tab.",
     createFirstProject: "Open the projects page to create your first project.",
     mobileNavigationTitle: "Workspace navigation",
     mobileNavigationDescription:
@@ -1355,7 +1361,13 @@ const en = {
     projectSettings: "Project Settings",
     organizationSettings: "Organization Settings",
     projectActions: "Project actions",
+    archiveProject: "Archive",
+    reactivateProject: "Reactivate",
     deleteProject: "Delete project",
+    archiveProjectSuccess: "Project archived.",
+    archiveProjectFailure: "Project could not be archived.",
+    reactivateProjectSuccess: "Project reactivated.",
+    reactivateProjectFailure: "Project could not be reactivated.",
     readOnlyProject: "Read-only project view",
   },
   status: {
@@ -1498,15 +1510,25 @@ const en = {
   },
   organizationProjects: {
     eyebrow: "Projects",
-    title: "Projects in this workspace",
-    description:
-      "Open an existing project or create the next one you want to manage.",
+    title: "Projects",
+    description: "Manage active and archived projects.",
     primaryAction: "Create project",
     emptyTitle: "No projects in this workspace yet",
     emptyDescription:
       "Once projects are created, this page becomes the main place to open them and move into activities, uploads, analytics, and AI knowledge.",
     noDescription: "No project goal captured yet.",
     activities: "activities",
+    activeTabLabel: "Active Projects ({{count}})",
+    archivedTabLabel: "Archived ({{count}})",
+    activeTabHint: "Completed projects are available in the Archived tab.",
+    archivedTabHint: "This tab shows projects with completed status.",
+    searchPlaceholder: "Search projects…",
+    sortUpdated: "Sort: Recently updated",
+    sortName: "Sort: Name A–Z",
+    sortStart: "Sort: Start date",
+    noResultsTitle: "No matching projects found",
+    noResultsDescription:
+      "Adjust your search term or switch between active and archived projects.",
   },
   projectCard: {
     activities: "activities",
@@ -1588,6 +1610,7 @@ const en = {
       projectContext: "Project context",
     },
     fields: {
+      initialSituation: "Initial situation",
       timeline: "Timeline",
       overarchingTargetGroup: "Overarching target group(s)",
       intendedChanges: "Intended changes",
@@ -1617,15 +1640,20 @@ const en = {
       insights: "all AI knowledge",
     },
   },
+  activityDelete: {
+    title: "Delete this activity?",
+    description:
+      "This action cannot be undone. Deleting the activity “{{name}}” will also permanently remove linked evidence.",
+    confirmAction: "Delete activity",
+    deleting: "Deleting…",
+  },
   dialogs: {
     cancel: "Cancel",
     create: "Create",
     createProjectTitle: "Create project",
     createProjectDescription:
-      "Capture the project profile and target groups for this project.",
+      "Transfer all goals, outputs, and indicators that you agreed with your funders as completely as possible and in the agreed format. A careful entry is worthwhile: the information forms the basis for the later analysis of your project and helps classify results, developments, and still-missing data more effectively.",
     createActivityTitle: "Add activity",
-    createActivityDescription:
-      "Capture the delivery details for a project activity.",
     editActivityTitle: "Edit activity",
     editActivityDescription:
       "Update the delivery details for this project activity.",
@@ -1637,17 +1665,24 @@ const en = {
       projectProfile: "Project profile",
       name: "Project name",
       namePlaceholder: "Mentoring Programme 2026",
+      initialSituation: "Initial situation",
+      initialSituationPlaceholder:
+        "Young people from low-income families in the region have significantly less access to extracurricular learning opportunities.",
+      initialSituationTooltipLabel: "Show initial situation guidance",
+      initialSituationTooltip:
+        "Briefly describe who is affected by the problem and why action is needed.",
       startMonth: "Start month / year",
       endMonth: "End month / year",
       overarchingTargetGroup: "Overarching target group(s)",
       overarchingTargetGroupPlaceholder:
         "e.g. young people with a migration background",
-      intendedChanges: "One to three intended changes",
-      intendedChangesPlaceholder: "What changes are you aiming for?",
-      intendedChangesHint:
-        "List one to three changes, separated by commas or new lines.",
+      intendedChanges: "Intended long-term effect / impact",
+      intendedChangesPlaceholder:
+        "Which long-term changes for the target groups should the project support?",
       intendedChangesValidation:
-        "Please provide one to three intended changes.",
+        "Please provide one to three intended long-term effects / impacts.",
+      intendedChangesAddRow: "Add another impact",
+      intendedChangesRemoveRow: "Remove impact",
       fundingProgram: "Funding programme",
       fundingProgramPlaceholder: "Erasmus+",
       fundingOrganization: "Funding organization",
@@ -1667,7 +1702,7 @@ const en = {
       areaOfOperationPlaceholder: "Where is the project being delivered?",
       partnerships: "Cooperations / Partnerships",
       partnershipsPlaceholder:
-        "Optional. Add important cooperation partners or delivery partnerships.",
+        "Add important cooperation partners or delivery partnerships.",
     },
     activity: {
       submit: "Create activity",
@@ -1678,11 +1713,8 @@ const en = {
       failure: "Activity creation failed.",
       updateSuccess: "Activity updated.",
       updateFailure: "Activity update failed.",
-      sectionTitle: "Activities",
       name: "Activity name",
-      namePlaceholder: "Senior Mentor Training",
-      description: "Description",
-      descriptionPlaceholder: "Two-day training for volunteer mentors.",
+      description: "Activity description",
       activityType: "Activity type",
       activityTypeCustomPlaceholder: "Describe the activity type",
       startDate: "Start date",
@@ -1690,21 +1722,21 @@ const en = {
       targetAudience: "Target group",
       targetAudienceTooltipLabel: "Guidance on target group",
       targetAudienceTooltip: "Who is the activity carried out with?",
-      targetAudiencePlaceholder: "Job application training",
       objectives: "Purpose of the activity",
       objectivesTooltipLabel: "Guidance on the activity's purpose",
       objectivesTooltip: "Why is it carried out?",
       objectivesPlaceholder:
         "Preparing participants practically for job application procedures",
-      output: "Output",
+      output: "Output targets (Outputs)",
       outputTooltipLabel: "Guidance on output",
       outputTooltip: "What is directly carried out or created?",
-      outputPlaceholder: "Four trainings with 35 participants",
-      outcome: "Outcome",
+      outputPlaceholder:
+        "• Conduct 12 workshops within one year\n• Reach 150 participants\n• At least 80% of participants complete the programme\n• At least 75% of participants are satisfied with the programme",
+      outcome: "Change targets (Outcome)",
       outcomeTooltipLabel: "Guidance on outcome",
       outcomeTooltip: "What should change for the target group?",
       outcomePlaceholder:
-        "Participants feel more confident in the job application process.",
+        "• 80% of participants know their support options after the workshop\n• 70% can independently apply the methods they learned afterwards\n• 60% apply what they learned in everyday life within three months\n• 50 participants improve their professional situation within one year",
       status: "Status",
     },
     options: {

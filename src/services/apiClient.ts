@@ -42,6 +42,7 @@ export interface OrganizationSettings {
 export interface ProjectPermissions {
   canEdit: boolean;
   canDelete: boolean;
+  canManageLifecycle: boolean;
   canCreateActivity: boolean;
   canUploadEvidence: boolean;
 }
@@ -94,6 +95,7 @@ export interface ProjectSummary {
   ownerId: string;
   ownerName: string | null;
   name: string;
+  initialSituation: string | null;
   startMonth: string | null;
   endMonth: string | null;
   fundingProgram: string | null;
@@ -168,6 +170,7 @@ export interface InvitationAcceptanceSummary {
 
 export interface CreateProjectPayload {
   name: string;
+  initialSituation?: string;
   startMonth: string;
   endMonth: string;
   fundingProgram?: string;
@@ -181,6 +184,7 @@ export interface CreateProjectPayload {
 
 export interface UpdateProjectPayload {
   name?: string;
+  initialSituation?: string | null;
   startMonth?: string | null;
   endMonth?: string | null;
   fundingProgram?: string | null;

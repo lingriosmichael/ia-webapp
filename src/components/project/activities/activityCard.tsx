@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { CalendarDays, Database, MoreHorizontal, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { ActivityDeleteDialog } from "@/components/activityDeleteDialog";
 import { StatusBadge } from "@/components/statusBadge";
 import {
   DropdownMenu,
@@ -26,6 +28,7 @@ export function ActivityCard({
 }) {
   const { t, i18n } = useTranslation();
   const { openActivityDialog } = useWorkspaceShell();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const deleteActivityMutation = useDeleteActivityMutation(
     activity.id,
     projectId,
@@ -36,18 +39,9 @@ export function ActivityCard({
     : t("projectWorkspace.activities.noDate");
 
   async function handleDeleteActivity() {
-    const confirmed = window.confirm(
-      t("projectWorkspace.activities.deleteConfirmation", {
-        name: activity.name,
-      }),
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
     try {
       await deleteActivityMutation.mutateAsync();
+      setDeleteDialogOpen(false);
       toast.success(t("projectWorkspace.activities.deleteSuccess"));
     } catch (error) {
       toast.error(
@@ -85,7 +79,7 @@ export function ActivityCard({
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onSelect={() => void handleDeleteActivity()}
+                onSelect={() => setDeleteDialogOpen(true)}
                 disabled={deleteActivityMutation.isPending}
                 className="text-destructive focus:text-destructive"
               >
@@ -119,6 +113,14 @@ export function ActivityCard({
           />
         </div>
       </div>
+
+      <ActivityDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        activityName={activity.name}
+        isDeleting={deleteActivityMutation.isPending}
+        onConfirm={handleDeleteActivity}
+      />
     </Card>
   );
 }

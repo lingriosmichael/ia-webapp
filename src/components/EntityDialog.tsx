@@ -24,7 +24,7 @@ export function EntityDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
-  description: string;
+  description: ReactNode;
   submitLabel: string;
   cancelLabel: string;
   isSubmitting?: boolean;
@@ -40,8 +40,10 @@ export function EntityDialog({
             <DialogTitle className="text-2xl font-semibold tracking-tight">
               {title}
             </DialogTitle>
-            <DialogDescription className="mt-2 text-sm leading-6 text-muted-foreground">
-              {description}
+            <DialogDescription asChild>
+              <div className="mt-2 whitespace-pre-line text-sm leading-6 text-muted-foreground">
+                {description}
+              </div>
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-8 px-8 py-6">{children}</div>
