@@ -619,6 +619,8 @@ const de: TranslationDictionary = {
             "{{interpreted}} Datei ist bereits interpretiert. {{remaining}} weitere Datei fehlt noch oder benötigt Aufmerksamkeit, bevor AI knowledge fertig werden kann.",
           partial_other:
             "{{interpreted}} Dateien sind bereits interpretiert. {{remaining}} weitere Dateien fehlen noch oder benötigen Aufmerksamkeit, bevor AI knowledge fertig werden kann.",
+          goalReview:
+            "brindl schließt gerade die dateiübergreifende Prüfung der Evidenz dieser Aktivität ab, bevor AI knowledge erzeugt werden kann.",
           ready: "AI knowledge kann jetzt für diese Aktivität erzeugt werden.",
           reviewed: "AI knowledge ist für diese Aktivität verfügbar.",
           notStarted:
@@ -644,6 +646,7 @@ const de: TranslationDictionary = {
         activityNotReadyToast:
           "Diese Aktivität ist noch nicht bereit für die KI-Analyse. Schließen Sie zuerst die Datenschutzprüfung ab oder warten Sie, bis die Verarbeitung fertig ist.",
         actionRefreshKnowledge: "AI knowledge aktualisieren",
+        knowledgeRefreshed: "AI knowledge wurde neu erstellt.",
         actionOpenKnowledge: "AI knowledge öffnen",
         actionOpeningKnowledge: "AI knowledge wird geöffnet…",
         knowledgeDialogTitle: "AI knowledge",
@@ -661,6 +664,7 @@ const de: TranslationDictionary = {
           processing: "In Bearbeitung",
           questions: "Fragen offen",
           partial: "Teilweise fertig",
+          goal_review: "Prüfung läuft",
           ready: "Bereit",
           reviewed: "Verfügbar",
           not_started: "Noch nicht gestartet",

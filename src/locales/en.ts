@@ -607,6 +607,8 @@ const en = {
             "{{interpreted}} file is already interpreted. {{remaining}} more file is still missing or needs attention before AI knowledge can be completed.",
           partial_other:
             "{{interpreted}} files are already interpreted. {{remaining}} more files are still missing or need attention before AI knowledge can be completed.",
+          goalReview:
+            "brindl is finishing cross-file checks across this activity's evidence before AI knowledge can be generated.",
           ready: "AI knowledge can now be generated for this activity.",
           reviewed: "AI knowledge is available for this activity.",
           notStarted: "AI analysis has not been started for this activity yet.",
@@ -630,6 +632,7 @@ const en = {
         activityNotReadyToast:
           "This activity is not ready for AI analysis yet. Finish privacy review first or wait for processing to complete.",
         actionRefreshKnowledge: "Refresh AI knowledge",
+        knowledgeRefreshed: "AI knowledge was regenerated.",
         actionOpenKnowledge: "Open AI knowledge",
         actionOpeningKnowledge: "Opening AI knowledge…",
         knowledgeDialogTitle: "AI knowledge",
@@ -647,6 +650,7 @@ const en = {
           processing: "In progress",
           questions: "Questions open",
           partial: "Partially complete",
+          goal_review: "Finishing checks",
           ready: "Ready",
           reviewed: "Available",
           not_started: "Not started",

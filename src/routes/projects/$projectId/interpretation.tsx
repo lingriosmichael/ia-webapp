@@ -22,11 +22,13 @@ import {
   activityAiKnowledgeQueryKey,
   activityJobsQueryKey,
   activityUploadsQueryKey,
+  activityWorkflowStageQueryKey,
   jobQueryKey,
   projectInterpretationsQueryKey,
   useActivityAiKnowledgeQuery,
   useAnswerInterpretationQuestionMutation,
   useGenerateActivityAiKnowledgeMutation,
+  useRegenerateActivityAiKnowledgeMutation,
   useStartActivityInterpretationMutation,
   useProjectInterpretationsQuery,
 } from "@/hooks/useWorkspaceQueries";
@@ -35,6 +37,7 @@ import { getQuestionsByDomain } from "@/lib/interpretationWorkflow";
 import {
   ApiError,
   apiClient,
+  type ActivityWorkflowStage,
   type EvidenceModality,
   type InterpretationQuestion,
   type InterpretationQuestionDomain,
@@ -47,9 +50,43 @@ import {
 import { Card } from "@/components/WorkspaceUI";
 import { cn } from "@/lib/utils";
 
-const INTERPRETATION_POLL_INTERVAL_MS = 3000;
+// Interpretation always takes at least this long, so polling sooner than
+// the first step never finds anything new. Ramps down as the active job
+// ages, then settles at the steady interval for the rest of the run.
+const INTERPRETATION_POLL_INTERVAL_RAMP_MS = [30_000, 20_000] as const;
+const INTERPRETATION_STEADY_POLL_INTERVAL_MS = 10_000;
 const TERMINAL_JOB_STATUSES = ["completed", "failed", "cancelled"];
 const RECOMMENDED_OPTION_CONFIDENCE_THRESHOLD = 0.8;
+
+// Based on elapsed time since the job actually started (job.createdAt),
+// not a poll counter — a counter would drift out of sync with reality on
+// every remount or tab switch, while elapsed time doesn't.
+function oldestActiveJobAgeMs(
+  jobs: ProcessingJobRecord[] | undefined,
+): number | null {
+  const activeJobs = (jobs ?? []).filter(
+    (job) => !TERMINAL_JOB_STATUSES.includes(job.status),
+  );
+  if (activeJobs.length === 0) {
+    return null;
+  }
+
+  const oldestCreatedAtMs = Math.min(
+    ...activeJobs.map((job) => new Date(job.createdAt).getTime()),
+  );
+  return Date.now() - oldestCreatedAtMs;
+}
+
+function rampedPollIntervalMs(activeJobAgeMs: number): number {
+  let elapsedThreshold = 0;
+  for (const step of INTERPRETATION_POLL_INTERVAL_RAMP_MS) {
+    elapsedThreshold += step;
+    if (activeJobAgeMs < elapsedThreshold) {
+      return step;
+    }
+  }
+  return INTERPRETATION_STEADY_POLL_INTERVAL_MS;
+}
 
 export const Route = createFileRoute("/projects/$projectId/interpretation")({
   component: ProjectInterpretationPage,
@@ -60,6 +97,7 @@ type ActivityWorkflowStatus =
   | "privacy_review"
   | "processing"
   | "questions"
+  | "goal_review"
   | "partial"
   | "ready"
   | "reviewed"
@@ -118,68 +156,45 @@ function getLatestEvidenceProcessingJob(
     })[0];
 }
 
-function getPendingQuestionCount(
-  result: InterpretationResultRecord,
-  questionDomain?: InterpretationQuestionDomain,
-) {
-  return result.questions.filter((question) => {
-    if (question.status !== "pending") {
-      return false;
-    }
-    return questionDomain ? question.questionDomain === questionDomain : true;
-  }).length;
-}
-
-function getActivityResultStatus(
-  activity: WorkspaceActivity,
-  uploads: UploadMetadataRecord[],
-  jobs: ProcessingJobRecord[],
-  results: InterpretationResultRecord[],
+// Maps the backend's authoritative ActivityWorkflowStage
+// (GET /activities/:activityId/workflow-stage — cross-evidence-linkage-design.md
+// §11) onto this page's own display vocabulary. The backend derivation is
+// the single source of truth for the parts that matter for correctness
+// (privacy review, active interpretation, blocking questions, evidence
+// linkage completion); "partial" vs. "not_started" is a purely cosmetic
+// split this page still makes locally from data it already has, since the
+// backend has no reason to care about that distinction.
+//
+// `stage` is `undefined` while the workflow-stage query hasn't resolved
+// yet; "not_started" is a reasonable, self-correcting default for that
+// brief window, consistent with how uploads/jobs already default to `[]`
+// while loading elsewhere on this page.
+function mapWorkflowStageToActivityStatus(
+  stage: ActivityWorkflowStage | undefined,
+  hasInterpretedResults: boolean,
 ): ActivityWorkflowStatus {
-  if (uploads.length === 0) {
-    return "no_evidence";
+  switch (stage) {
+    case "no_evidence":
+      return "no_evidence";
+    case "privacy_review":
+      return "privacy_review";
+    case "analysis_running":
+      return "processing";
+    case "needs_clarification":
+      return "questions";
+    case "goal_review":
+      return "goal_review";
+    case "assessment_ready":
+      return "ready";
+    case "reviewed":
+      return "reviewed";
+    case "analysis_pending":
+      return hasInterpretedResults ? "partial" : "not_started";
+    case undefined:
+      return "not_started";
+    default:
+      return "not_started";
   }
-
-  const latestEvidenceJobs = uploads
-    .map((upload) => getLatestEvidenceProcessingJob(jobs, upload.id))
-    .filter((job): job is ProcessingJobRecord => Boolean(job));
-
-  if (activity.interpretationAcknowledgedAt) {
-    return "reviewed";
-  }
-
-  const hasPendingPrivacyReview = latestEvidenceJobs.some(
-    (job) => job.status === "awaiting_privacy_review",
-  );
-  if (hasPendingPrivacyReview) {
-    return "privacy_review";
-  }
-
-  const hasActiveInterpretationJob = jobs.some(
-    (job) =>
-      job.jobType === "dataset_interpretation" &&
-      !TERMINAL_JOB_STATUSES.includes(job.status),
-  );
-  if (hasActiveInterpretationJob) {
-    return "processing";
-  }
-
-  const hasPendingQuestions = results.some(
-    (result) => getPendingQuestionCount(result) > 0,
-  );
-  if (hasPendingQuestions) {
-    return "questions";
-  }
-
-  if (results.length > 0 && results.length === uploads.length) {
-    return "ready";
-  }
-
-  if (results.length > 0) {
-    return "partial";
-  }
-
-  return "not_started";
 }
 
 function SummaryMetric({ label, value }: { label: string; value: string }) {
@@ -213,12 +228,21 @@ function ProjectInterpretationPage() {
 
   const activities = workspaceProject?.activities ?? [];
   const results = interpretationsQuery.data?.results ?? [];
+  // Polling is scoped to each activity's own fetched data, not the whole
+  // list at once — an activity with no active job / no longer mid-linkage
+  // stops refetching entirely instead of being re-queried forever just
+  // because it happens to be on this page.
   const activityJobsQueries = useQueries({
     queries: activities.map((activity) => ({
       queryKey: activityJobsQueryKey(activity.id),
       queryFn: () => apiClient.listActivityJobs(activity.id),
       enabled: true,
-      refetchInterval: INTERPRETATION_POLL_INTERVAL_MS,
+      refetchInterval: (query: { state: { data?: ProcessingJobRecord[] } }) => {
+        const activeJobAgeMs = oldestActiveJobAgeMs(query.state.data);
+        return activeJobAgeMs === null
+          ? false
+          : rampedPollIntervalMs(activeJobAgeMs);
+      },
     })),
   });
   const activityUploadsQueries = useQueries({
@@ -227,6 +251,35 @@ function ProjectInterpretationPage() {
       queryFn: () => apiClient.listActivityUploads(activity.id),
       enabled: true,
     })),
+  });
+  const activityWorkflowStageQueries = useQueries({
+    queries: activities.map((activity, index) => {
+      const activeJobAgeMs = oldestActiveJobAgeMs(
+        activityJobsQueries[index]?.data,
+      );
+
+      return {
+        queryKey: activityWorkflowStageQueryKey(activity.id),
+        queryFn: () => apiClient.getActivityWorkflowStage(activity.id),
+        enabled: true,
+        refetchInterval: (query: {
+          state: { data?: { stage: ActivityWorkflowStage } };
+        }) => {
+          const stage = query.state.data?.stage;
+          if (stage === "analysis_running") {
+            return activeJobAgeMs === null
+              ? INTERPRETATION_STEADY_POLL_INTERVAL_MS
+              : rampedPollIntervalMs(activeJobAgeMs);
+          }
+          // goal_review has no associated job to measure age from — it's a
+          // short-lived automatic linkage-reconciliation step, not the
+          // "please wait a while" case the ramp above is for.
+          return stage === "goal_review"
+            ? INTERPRETATION_STEADY_POLL_INTERVAL_MS
+            : false;
+        },
+      };
+    }),
   });
 
   const uploadsByActivityId = new Map(
@@ -241,16 +294,23 @@ function ProjectInterpretationPage() {
       activityJobsQueries[index]?.data ?? [],
     ]),
   );
+  const workflowStageByActivityId = new Map(
+    activities.map((activity, index) => [
+      activity.id,
+      activityWorkflowStageQueries[index]?.data?.stage,
+    ]),
+  );
 
   const activityStatuses = activities.map((activity) => {
-    const uploads = uploadsByActivityId.get(activity.id) ?? [];
-    const jobs = jobsByActivityId.get(activity.id) ?? [];
     const activityResults = results.filter(
       (result) => result.activityId === activity.id,
     );
     return {
       activityId: activity.id,
-      status: getActivityResultStatus(activity, uploads, jobs, activityResults),
+      status: mapWorkflowStageToActivityStatus(
+        workflowStageByActivityId.get(activity.id),
+        activityResults.length > 0,
+      ),
     };
   });
 
@@ -258,7 +318,7 @@ function ProjectInterpretationPage() {
     (entry) => entry.status === "reviewed",
   ).length;
   const inProgressActivityCount = activityStatuses.filter(
-    (entry) => entry.status === "processing",
+    (entry) => entry.status === "processing" || entry.status === "goal_review",
   ).length;
   const needsAttentionActivityCount = activityStatuses.filter(
     (entry) =>
@@ -330,6 +390,7 @@ function ProjectInterpretationPage() {
                   results={results.filter(
                     (result) => result.activityId === activity.id,
                   )}
+                  workflowStage={workflowStageByActivityId.get(activity.id)}
                   onOpenPrivacyReview={(jobId, activityName) =>
                     setReviewProcessingJob({ jobId, activityName })
                   }
@@ -377,6 +438,7 @@ function ActivityKnowledgeCard({
   uploads,
   jobs,
   results,
+  workflowStage,
   onOpenPrivacyReview,
   onOpenKnowledge,
 }: {
@@ -386,18 +448,22 @@ function ActivityKnowledgeCard({
   uploads: UploadMetadataRecord[];
   jobs: ProcessingJobRecord[];
   results: InterpretationResultRecord[];
+  workflowStage: ActivityWorkflowStage | undefined;
   onOpenPrivacyReview: (jobId: string, activityName: string) => void;
   onOpenKnowledge: (activityId: string, activityName: string) => void;
 }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const [restartInterpretationPending, setRestartInterpretationPending] =
-    useState(false);
   const startMutation = useStartActivityInterpretationMutation(
     activity.id,
     projectId,
   );
   const generateKnowledgeMutation = useGenerateActivityAiKnowledgeMutation(
+    activity.id,
+    projectId,
+    organizationId,
+  );
+  const regenerateKnowledgeMutation = useRegenerateActivityAiKnowledgeMutation(
     activity.id,
     projectId,
     organizationId,
@@ -473,6 +539,9 @@ function ActivityKnowledgeCard({
     void queryClient.invalidateQueries({
       queryKey: activityAiKnowledgeQueryKey(activity.id),
     });
+    void queryClient.invalidateQueries({
+      queryKey: activityWorkflowStageQueryKey(activity.id),
+    });
   }, [activeJobSyncQueries, activity.id, projectId, queryClient]);
 
   const currentPendingPrivacyReview = latestEvidenceJobs.find(
@@ -494,7 +563,10 @@ function ActivityKnowledgeCard({
   const hasUnresolvedActionableQuestion = results.some((result) =>
     hasPendingBlockingQuestions(result.questions),
   );
-  const status = getActivityResultStatus(activity, uploads, jobs, results);
+  const status = mapWorkflowStageToActivityStatus(
+    workflowStage,
+    results.length > 0,
+  );
   const hasPersistedKnowledge = Boolean(
     activity.aiKnowledgeGeneratedAt ||
     generateKnowledgeMutation.data?.generatedAt,
@@ -529,10 +601,6 @@ function ActivityKnowledgeCard({
     activeInterpretationJobs.length === 0;
   const isInterpretationProcessing =
     status === "processing" || hasQueuedInterpretationStart;
-  const canRestartInterpretation =
-    activeInterpretationJobs.length > 0 &&
-    !restartInterpretationPending &&
-    !startMutation.isPending;
   const canStartInterpretation =
     uploads.length > 0 &&
     readyToInterpretUploadCount > 0 &&
@@ -546,6 +614,11 @@ function ActivityKnowledgeCard({
     !hasUnresolvedActionableQuestion &&
     !generateKnowledgeMutation.isPending;
   const canOpenKnowledge = hasPersistedKnowledge;
+  const canRegenerateKnowledge =
+    hasPersistedKnowledge &&
+    (status === "ready" || status === "reviewed") &&
+    !hasUnresolvedActionableQuestion &&
+    !regenerateKnowledgeMutation.isPending;
   const interpretationActionLabel = hasExistingInterpretations
     ? t(
         "projectWorkspace.interpretation.simplified.actionInterpretMissingEvidence",
@@ -581,75 +654,37 @@ function ActivityKnowledgeCard({
                     remaining: Math.max(uploads.length - results.length, 0),
                   },
                 )
-              : status === "ready"
+              : status === "goal_review"
                 ? t(
-                    "projectWorkspace.interpretation.simplified.activitySummary.ready",
+                    "projectWorkspace.interpretation.simplified.activitySummary.goalReview",
                   )
-                : status === "reviewed"
+                : status === "ready"
                   ? t(
-                      "projectWorkspace.interpretation.simplified.activitySummary.reviewed",
+                      "projectWorkspace.interpretation.simplified.activitySummary.ready",
                     )
-                  : t(
-                      "projectWorkspace.interpretation.simplified.activitySummary.notStarted",
-                    );
-
-  async function handleRestartInterpretation() {
-    if (activeInterpretationJobs.length === 0) {
-      return;
-    }
-
-    setRestartInterpretationPending(true);
-
-    try {
-      await Promise.all(
-        activeInterpretationJobs.map((job) => apiClient.cancelJob(job.id)),
-      );
-      await queryClient.invalidateQueries({
-        queryKey: activityJobsQueryKey(activity.id),
-      });
-      await queryClient.invalidateQueries({
-        queryKey: projectInterpretationsQueryKey(projectId),
-      });
-      await queryClient.invalidateQueries({
-        queryKey: activityAiKnowledgeQueryKey(activity.id),
-      });
-
-      const response = await startMutation.mutateAsync(undefined);
-      const message =
-        response.startedCount === 0 && response.skippedCount === 0
-          ? t(
-              "projectWorkspace.interpretation.simplified.interpretationRestartNoop",
-            )
-          : response.skippedCount > 0
-            ? t(
-                "projectWorkspace.interpretation.simplified.interpretationResumed",
-              )
-            : t(
-                "projectWorkspace.interpretation.simplified.interpretationRestarted",
-              );
-
-      toast.success(message);
-    } catch (error) {
-      const message =
-        error instanceof ApiError &&
-        error.code === "activity_interpretation_not_ready"
-          ? t(
-              "projectWorkspace.interpretation.simplified.activityNotReadyToast",
-            )
-          : error instanceof ApiError
-            ? error.message
-            : t(
-                "projectWorkspace.interpretation.simplified.interpretationRestartFailed",
-              );
-
-      toast.error(message);
-    } finally {
-      setRestartInterpretationPending(false);
-    }
-  }
+                  : status === "reviewed"
+                    ? t(
+                        "projectWorkspace.interpretation.simplified.activitySummary.reviewed",
+                      )
+                    : t(
+                        "projectWorkspace.interpretation.simplified.activitySummary.notStarted",
+                      );
 
   function handleOpenKnowledge() {
     onOpenKnowledge(activity.id, activity.name);
+  }
+
+  function handleRegenerateKnowledge() {
+    regenerateKnowledgeMutation.mutate(undefined, {
+      onSuccess: () => {
+        toast.success(
+          t("projectWorkspace.interpretation.simplified.knowledgeRefreshed"),
+        );
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
   }
 
   return (
@@ -690,17 +725,6 @@ function ActivityKnowledgeCard({
               }
             >
               {t("projectWorkspace.interpretation.reviewPrivacyAction")}
-            </Button>
-          ) : null}
-
-          {isInterpretationProcessing && canRestartInterpretation ? (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => void handleRestartInterpretation()}
-              disabled={restartInterpretationPending || startMutation.isPending}
-            >
-              {t("projectWorkspace.interpretation.simplified.actionRestart")}
             </Button>
           ) : null}
 
@@ -770,6 +794,19 @@ function ActivityKnowledgeCard({
               )}
             </Button>
           ) : null}
+
+          {canRegenerateKnowledge ? (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleRegenerateKnowledge}
+              disabled={regenerateKnowledgeMutation.isPending}
+            >
+              {t(
+                "projectWorkspace.interpretation.simplified.actionRefreshKnowledge",
+              )}
+            </Button>
+          ) : null}
         </div>
       </div>
 
@@ -817,6 +854,17 @@ function ActivityStatusBadge({
     return null;
   }
 
+  if (status === "goal_review") {
+    // Not user-actionable — evidence linkage is an automatic backend step,
+    // not a job the user can restart or a question they need to answer.
+    return (
+      <Badge variant="secondary" className="gap-1">
+        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+        {t("projectWorkspace.interpretation.simplified.status.goal_review")}
+      </Badge>
+    );
+  }
+
   if (
     status === "privacy_review" ||
     status === "questions" ||
@@ -860,7 +908,7 @@ function ActivityAiKnowledgeDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="flex max-h-[85vh] max-w-2xl flex-col">
         <DialogHeader>
           <DialogTitle>
             {activityName ??
@@ -875,21 +923,23 @@ function ActivityAiKnowledgeDialog({
           </DialogDescription>
         </DialogHeader>
 
-        {!activityId || knowledgeQuery.isLoading ? (
-          <div className="py-6 text-sm text-muted-foreground">
-            {t(
-              "projectWorkspace.interpretation.simplified.knowledgeDialogLoading",
-            )}
-          </div>
-        ) : knowledgeQuery.isError || !knowledgeQuery.data ? (
-          <div className="py-6 text-sm text-muted-foreground">
-            {t(
-              "projectWorkspace.interpretation.simplified.knowledgeDialogError",
-            )}
-          </div>
-        ) : (
-          <ActivityAiKnowledgeContent knowledge={knowledgeQuery.data} />
-        )}
+        <div className="overflow-y-auto pr-1">
+          {!activityId || knowledgeQuery.isLoading ? (
+            <div className="py-6 text-sm text-muted-foreground">
+              {t(
+                "projectWorkspace.interpretation.simplified.knowledgeDialogLoading",
+              )}
+            </div>
+          ) : knowledgeQuery.isError || !knowledgeQuery.data ? (
+            <div className="py-6 text-sm text-muted-foreground">
+              {t(
+                "projectWorkspace.interpretation.simplified.knowledgeDialogError",
+              )}
+            </div>
+          ) : (
+            <ActivityAiKnowledgeContent knowledge={knowledgeQuery.data} />
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );

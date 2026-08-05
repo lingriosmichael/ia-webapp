@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  type QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { sessionQueryKey } from "@/hooks/useAuth";
 import {
@@ -12,6 +17,7 @@ import {
   apiClient,
   type ActivitySummary,
   type ActivityAiKnowledgeRecord,
+  type ActivityWorkflowStageRecord,
   type CreateActivityPayload,
   type CreateOrganizationPayload,
   type CreateProjectPayload,
@@ -55,6 +61,8 @@ export const activityJobsQueryKey = (activityId: string) =>
   ["activity-jobs", activityId] as const;
 export const activityAiKnowledgeQueryKey = (activityId: string) =>
   ["activity-ai-knowledge", activityId] as const;
+export const activityWorkflowStageQueryKey = (activityId: string) =>
+  ["activity-workflow-stage", activityId] as const;
 export const jobQueryKey = (jobId: string) => ["job", jobId] as const;
 export const privacyReviewQueryKey = (processingJobId: string) =>
   ["privacy-review", processingJobId] as const;
@@ -179,6 +187,100 @@ export function useActivityAiKnowledgeQuery(
   });
 }
 
+export function useActivityWorkflowStageQuery(
+  activityId: string,
+  enabled = true,
+  refetchIntervalMs?: number,
+) {
+  return useQuery<ActivityWorkflowStageRecord, ApiError>({
+    queryKey: activityWorkflowStageQueryKey(activityId),
+    queryFn: () => apiClient.getActivityWorkflowStage(activityId),
+    enabled,
+    refetchInterval: refetchIntervalMs,
+  });
+}
+
+// Shared by generate and regenerate — both replace the same activity/
+// workspace-level fields and need the same cache invalidations, so this is
+// the one place that has to stay in sync between the two mutations.
+function createAiKnowledgeGeneratedHandler(
+  queryClient: QueryClient,
+  activityId: string,
+  projectId?: string,
+  organizationId?: string,
+) {
+  return (knowledge: ActivityAiKnowledgeRecord) => {
+    const generatedAt = knowledge.generatedAt ?? new Date().toISOString();
+
+    queryClient.setQueryData(
+      activityAiKnowledgeQueryKey(activityId),
+      knowledge,
+    );
+    queryClient.setQueryData<ActivitySummary | undefined>(
+      activityQueryKey(activityId),
+      (currentActivity) =>
+        currentActivity
+          ? {
+              ...currentActivity,
+              aiKnowledgeGeneratedAt: generatedAt,
+              interpretationAcknowledgedAt:
+                currentActivity.interpretationAcknowledgedAt ?? generatedAt,
+            }
+          : currentActivity,
+    );
+    if (organizationId) {
+      queryClient.setQueryData<OrganizationWorkspace | undefined>(
+        workspaceQueryKey(organizationId),
+        (currentWorkspace) =>
+          currentWorkspace
+            ? {
+                ...currentWorkspace,
+                projects: currentWorkspace.projects.map((project) => ({
+                  ...project,
+                  activities: project.activities.map((activity) =>
+                    activity.id === activityId
+                      ? {
+                          ...activity,
+                          aiKnowledgeGeneratedAt: generatedAt,
+                          interpretationAcknowledgedAt:
+                            activity.interpretationAcknowledgedAt ??
+                            generatedAt,
+                        }
+                      : activity,
+                  ),
+                })),
+              }
+            : currentWorkspace,
+      );
+    }
+    void queryClient.invalidateQueries({
+      queryKey: activityQueryKey(activityId),
+    });
+    if (projectId) {
+      void queryClient.invalidateQueries({
+        queryKey: projectInterpretationsQueryKey(projectId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: projectAnalyticsQueryKey(projectId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: projectOverviewQueryKey(projectId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: projectActivitiesQueryKey(projectId),
+      });
+    }
+    void queryClient.invalidateQueries({
+      queryKey: activityAnalyticsQueryKey(activityId),
+    });
+    if (organizationId) {
+      void queryClient.invalidateQueries({
+        queryKey: workspaceQueryKey(organizationId),
+      });
+    }
+  };
+}
+
 export function useGenerateActivityAiKnowledgeMutation(
   activityId: string,
   projectId?: string,
@@ -188,76 +290,30 @@ export function useGenerateActivityAiKnowledgeMutation(
 
   return useMutation<ActivityAiKnowledgeRecord, ApiError>({
     mutationFn: () => apiClient.generateActivityAiKnowledge(activityId),
-    onSuccess: (knowledge) => {
-      const generatedAt = knowledge.generatedAt ?? new Date().toISOString();
+    onSuccess: createAiKnowledgeGeneratedHandler(
+      queryClient,
+      activityId,
+      projectId,
+      organizationId,
+    ),
+  });
+}
 
-      queryClient.setQueryData(
-        activityAiKnowledgeQueryKey(activityId),
-        knowledge,
-      );
-      queryClient.setQueryData<ActivitySummary | undefined>(
-        activityQueryKey(activityId),
-        (currentActivity) =>
-          currentActivity
-            ? {
-                ...currentActivity,
-                aiKnowledgeGeneratedAt: generatedAt,
-                interpretationAcknowledgedAt:
-                  currentActivity.interpretationAcknowledgedAt ?? generatedAt,
-              }
-            : currentActivity,
-      );
-      if (organizationId) {
-        queryClient.setQueryData<OrganizationWorkspace | undefined>(
-          workspaceQueryKey(organizationId),
-          (currentWorkspace) =>
-            currentWorkspace
-              ? {
-                  ...currentWorkspace,
-                  projects: currentWorkspace.projects.map((project) => ({
-                    ...project,
-                    activities: project.activities.map((activity) =>
-                      activity.id === activityId
-                        ? {
-                            ...activity,
-                            aiKnowledgeGeneratedAt: generatedAt,
-                            interpretationAcknowledgedAt:
-                              activity.interpretationAcknowledgedAt ??
-                              generatedAt,
-                          }
-                        : activity,
-                    ),
-                  })),
-                }
-              : currentWorkspace,
-        );
-      }
-      void queryClient.invalidateQueries({
-        queryKey: activityQueryKey(activityId),
-      });
-      if (projectId) {
-        void queryClient.invalidateQueries({
-          queryKey: projectInterpretationsQueryKey(projectId),
-        });
-        void queryClient.invalidateQueries({
-          queryKey: projectAnalyticsQueryKey(projectId),
-        });
-        void queryClient.invalidateQueries({
-          queryKey: projectOverviewQueryKey(projectId),
-        });
-        void queryClient.invalidateQueries({
-          queryKey: projectActivitiesQueryKey(projectId),
-        });
-      }
-      void queryClient.invalidateQueries({
-        queryKey: activityAnalyticsQueryKey(activityId),
-      });
-      if (organizationId) {
-        void queryClient.invalidateQueries({
-          queryKey: workspaceQueryKey(organizationId),
-        });
-      }
-    },
+export function useRegenerateActivityAiKnowledgeMutation(
+  activityId: string,
+  projectId?: string,
+  organizationId?: string,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation<ActivityAiKnowledgeRecord, ApiError>({
+    mutationFn: () => apiClient.regenerateActivityAiKnowledge(activityId),
+    onSuccess: createAiKnowledgeGeneratedHandler(
+      queryClient,
+      activityId,
+      projectId,
+      organizationId,
+    ),
   });
 }
 

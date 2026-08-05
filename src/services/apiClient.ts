@@ -1006,6 +1006,21 @@ export interface ActivityAiKnowledgeRecord {
   insights: ActivityAiKnowledgeInsight[];
 }
 
+export type ActivityWorkflowStage =
+  | "no_evidence"
+  | "privacy_review"
+  | "analysis_pending"
+  | "analysis_running"
+  | "needs_clarification"
+  | "goal_review"
+  | "assessment_ready"
+  | "reviewed";
+
+export interface ActivityWorkflowStageRecord {
+  activityId: string;
+  stage: ActivityWorkflowStage;
+}
+
 export interface StartInterpretationPayload {
   language: "de" | "en";
 }
@@ -1770,11 +1785,23 @@ export const apiClient = {
   ): Promise<ActivityAiKnowledgeRecord> {
     return request(`/activities/${activityId}/ai-knowledge`);
   },
+  getActivityWorkflowStage(
+    activityId: string,
+  ): Promise<ActivityWorkflowStageRecord> {
+    return request(`/activities/${activityId}/workflow-stage`);
+  },
   generateActivityAiKnowledge(
     activityId: string,
   ): Promise<ActivityAiKnowledgeRecord> {
     return request(`/activities/${activityId}/ai-knowledge`, {
       method: "POST",
+    });
+  },
+  regenerateActivityAiKnowledge(
+    activityId: string,
+  ): Promise<ActivityAiKnowledgeRecord> {
+    return request(`/activities/${activityId}/ai-knowledge`, {
+      method: "PUT",
     });
   },
   getInterpretation(
