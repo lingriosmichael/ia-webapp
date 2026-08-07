@@ -468,6 +468,14 @@ function ActivityKnowledgeCard({
     projectId,
     organizationId,
   );
+  // A failed generate/regenerate call used to only show a toast — easy to
+  // miss, and once dismissed there was no remaining indication that the
+  // knowledge dialog was still showing a stale, un-refreshed snapshot.
+  // This stays visible until the next successful attempt (or another
+  // attempt is started), independent of whether the toast was seen.
+  const [knowledgeActionError, setKnowledgeActionError] = useState<
+    string | null
+  >(null);
 
   const latestEvidenceJobByUploadId = new Map(
     uploads.map((upload) => [
@@ -675,13 +683,16 @@ function ActivityKnowledgeCard({
   }
 
   function handleRegenerateKnowledge() {
+    setKnowledgeActionError(null);
     regenerateKnowledgeMutation.mutate(undefined, {
       onSuccess: () => {
+        setKnowledgeActionError(null);
         toast.success(
           t("projectWorkspace.interpretation.simplified.knowledgeRefreshed"),
         );
       },
       onError: (error) => {
+        setKnowledgeActionError(error.message);
         toast.error(error.message);
       },
     });
@@ -770,16 +781,19 @@ function ActivityKnowledgeCard({
             <Button
               size="sm"
               variant="outline"
-              onClick={() =>
+              onClick={() => {
+                setKnowledgeActionError(null);
                 generateKnowledgeMutation.mutate(undefined, {
                   onSuccess: () => {
+                    setKnowledgeActionError(null);
                     onOpenKnowledge(activity.id, activity.name);
                   },
                   onError: (error) => {
+                    setKnowledgeActionError(error.message);
                     toast.error(error.message);
                   },
-                })
-              }
+                });
+              }}
             >
               {t(
                 "projectWorkspace.interpretation.simplified.actionGenerateKnowledge",
@@ -809,6 +823,13 @@ function ActivityKnowledgeCard({
           ) : null}
         </div>
       </div>
+
+      {knowledgeActionError ? (
+        <div className="mt-3 flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-xs text-destructive">
+          <AlertTriangle className="mt-0.5 h-3.5 w-3.5 flex-shrink-0" />
+          <span>{knowledgeActionError}</span>
+        </div>
+      ) : null}
 
       {pendingQuestions.length > 0 ? (
         <div className="mt-4 space-y-3 border-t border-border/70 pt-4">
