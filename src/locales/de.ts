@@ -655,7 +655,7 @@ const de: TranslationDictionary = {
         knowledgeDialogLoading: "AI knowledge wird geladen…",
         knowledgeDialogError: "AI knowledge konnte nicht geladen werden.",
         knowledgeDialogMeta:
-          "{{count}} Erkenntnisse aus {{evidenceCount}} Evidenzdateien",
+          "Zusammengeführt aus {{evidenceCount}} Evidenzdateien",
         knowledgeDialogEmpty:
           "Für diese Aktivität ist noch keine AI knowledge Ansicht verfügbar.",
         status: {

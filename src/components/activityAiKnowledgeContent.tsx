@@ -92,7 +92,6 @@ export function ActivityAiKnowledgeContent({
     <div className="space-y-4">
       <div className="text-xs text-muted-foreground">
         {t("projectWorkspace.interpretation.simplified.knowledgeDialogMeta", {
-          count: knowledge.insights.length,
           evidenceCount: knowledge.interpretedEvidenceCount,
         })}
       </div>

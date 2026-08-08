@@ -641,7 +641,7 @@ const en = {
         knowledgeDialogLoading: "Loading AI knowledge…",
         knowledgeDialogError: "AI knowledge could not be loaded.",
         knowledgeDialogMeta:
-          "{{count}} insights from {{evidenceCount}} evidence files",
+          "Combined from {{evidenceCount}} evidence files",
         knowledgeDialogEmpty:
           "No activity-level AI knowledge is available yet.",
         status: {
