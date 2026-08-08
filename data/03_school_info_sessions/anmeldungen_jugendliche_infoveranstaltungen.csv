@@ -1,0 +1,181 @@
+interessent_id;vorname;nachname;alter;schule;bezirk;kontakt_email;kontakt_telefon;interesse_mentoring;thema_interesse;einwilligung_kontaktaufnahme
+I001;Mia;Klein;17;Theodor-Heuss-Oberschule;Reinickendorf;;0151-3342984;ja;weiß noch nicht genau;ja
+I002;Erdal;Kilic;15;Jugendzentrum Kiezoase;Friedrichshain-Kreuzberg;;0151-2636698;ja;allgemeine Unterstützung;
+I003;Emma;Ahmadi;19;Theodor-Heuss-Oberschule;Steglitz-Zehlendorf;;0179-1504963;ja;Ausbildung finden;
+I004;Ayse;Hassan;17;Käthe-Kollwitz-Schule;Reinickendorf;;0170-4299856;unsicher;Ausbildung finden;ja
+I005;Frieda;Kilic;19;Nachbarschaftshaus Regenbogen;Lichtenberg;;0170-3093218;eher ja;Selbstvertrauen;ja
+I006;Zeynep;Becker;14;Friedrich-Ebert-Schule;Treptow-Köpenick;zeynep.becker@t-online.de;0179-4370794;ja;Praktikum finden;ja
+I007;Talia;Schwarz;18;Werner-von-Siemens-Schule;Neukölln;talia.schwarz@web.de;0179-9619573;unsicher;Selbstvertrauen;ja
+I008;Elena;Schwarz;16;Sophie-Scholl-Gymnasium;Pankow;elenaschwarz@web.de;0179-8871653;ja;allgemeine Unterstützung;ja
+I009;Frieda;Aksoy;19;Theodor-Heuss-Oberschule;Steglitz-Zehlendorf;;0179-3995768;eher ja;weiß noch nicht genau;ja
+I010;Max;Tran;19;Nachbarschaftshaus Regenbogen;Marzahn-Hellersdorf;maxtran72@t-online.de;0176-8080266;unsicher;Bewerbung schreiben;
+I011;Enes;Sahin;20;Heinrich-Böll-Oberschule;Steglitz-Zehlendorf;enes.sahin@t-online.de;;ja;Ausbildung finden;
+I012;Duygu;Sahin;19;Jugendclub Wedding Ost;Lichtenberg;duygu.sahin@gmx.de;0160-9458257;eher ja;Bewerbung schreiben;ja
+I013;Berkay;Polat;15;Sophie-Scholl-Gymnasium;Neukölln;berkay.polat98@t-online.de;0151-8025757;eher ja;Studium/Ausbildung Entscheidung;
+I014;Sara;Schulz;18;Robert-Koch-Oberschule;Neukölln;sara.schulz@t-online.de;0176-6753107;eher ja;Studium/Ausbildung Entscheidung;ja
+I015;Rania;Schuster;15;Jugendclub Wedding Ost;Lichtenberg;rania.schuster25@posteo.de;;unsicher;Selbstvertrauen;ja
+I016;Simon;Marino;17;Käthe-Kollwitz-Schule;Charlottenburg-Wilmersdorf;;0160-5479740;eher ja;Ausbildung finden;
+I017;Omar;Schmidt;18;Gustav-Freytag-Schule;Tempelhof-Schöneberg;omar.schmidt@posteo.de;0160-7734871;ja;Praktikum finden;
+I018;Cem;Nowak;16;Theodor-Heuss-Oberschule;Tempelhof-Schöneberg;cem.nowak73@web.de;0179-6461494;ja;Bewerbung schreiben;nein
+I019;Alina;Vogel;20;Gustav-Freytag-Schule;Lichtenberg;alina.vogel@t-online.de;0151-2602528;eher ja;Ausbildung finden;ja
+I020;Lea;Demir;16;Jugendzentrum Kiezoase;Spandau;leademir26@gmail.com;0179-1541228;eher ja;Praktikum finden;ja
+I021;Charlotte;Aydin;16;Jugendtreff Nordstern;Mitte;;0170-6150443;ja;Selbstvertrauen;
+I022;Mia;Yilmaz;17;Theodor-Heuss-Oberschule;Mitte;miayilmaz60@posteo.de;0151-1383711;ja;allgemeine Unterstützung;
+I023;Felix;Neumann;20;Käthe-Kollwitz-Schule;Mitte;felix.neumann@t-online.de;0179-3888450;ja;Bewerbung schreiben;
+I024;Finn;Lorenz;19;Jugendzentrum Kiezoase;Pankow;;0179-7995058;eher ja;Selbstvertrauen;ja
+I025;Lea;Krause;16;Theodor-Heuss-Oberschule;Steglitz-Zehlendorf;;0176-5687778;eher ja;Praktikum finden;
+I026;Erik;Andrade;14;Friedrich-Ebert-Schule;Pankow;erik.andrade@t-online.de;0170-6232841;ja;Studium/Ausbildung Entscheidung;nein
+I027;Leon;Hofmann;17;Jugendzentrum Kiezoase;Neukölln;leon.hofmann@gmx.de;0160-8499330;eher ja;Selbstvertrauen;
+I028;Klara;Yilmaz;17;Robert-Koch-Oberschule;Tempelhof-Schöneberg;klara.yilmaz3@gmail.com;0151-3574143;ja;Bewerbung schreiben;ja
+I029;Tom;Kaya;16;Jugendzentrum Kiezoase;Mitte;tom.kaya@gmail.com;0176-2817098;ja;Ausbildung finden;nein
+I030;Moritz;Andrade;19;Ernst-Reuter-Schule;Neukölln;moritzandrade@posteo.de;0170-7323432;ja;Praktikum finden;ja
+I031;Luca;Krüger;19;Robert-Koch-Oberschule;Steglitz-Zehlendorf;luca.krüger@gmx.de;0179-6242863;ja;weiß noch nicht genau;ja
+I032;Melek;Herrmann;18;Theodor-Heuss-Oberschule;Friedrichshain-Kreuzberg;melek.herrmann@gmail.com;0179-1213355;ja;Studium/Ausbildung Entscheidung;ja
+I033;Kaan;Fischer;15;Rosa-Luxemburg-Gymnasium;Reinickendorf;;0176-2330333;ja;Studium/Ausbildung Entscheidung;
+I034;David;Dogan;14;Anna-Seghers-Schule;Reinickendorf;daviddogan@gmx.de;0151-8176326;unsicher;Studium/Ausbildung Entscheidung;ja
+I035;Timur;Aksoy;18;Ernst-Reuter-Schule;Reinickendorf;;0170-1592671;ja;Ausbildung finden;nein
+I036;Melek;Schuster;14;Werner-von-Siemens-Schule;Pankow;melekschuster@t-online.de;0179-3151157;eher ja;allgemeine Unterstützung;nein
+I037;Kaan;Celik;15;Heinrich-Böll-Oberschule;Pankow;kaancelik19@posteo.de;;ja;Selbstvertrauen;
+I038;Ecrin;Schneider;14;Ernst-Reuter-Schule;Reinickendorf;ecrinschneider@posteo.de;0160-4289433;ja;allgemeine Unterstützung;
+I039;Fatima;Wolf;19;Jugendzentrum Kiezoase;Marzahn-Hellersdorf;fatimawolf@gmx.de;0179-2909639;eher ja;Ausbildung finden;
+I040;Mustafa;Braun;20;Gustav-Freytag-Schule;Reinickendorf;;0151-4775521;unsicher;Praktikum finden;ja
+I041;Ida;Wagner;15;Jugendclub Wedding Ost;Spandau;;0160-5749569;eher ja;allgemeine Unterstützung;ja
+I042;Mia;Lorenz;17;Theodor-Heuss-Oberschule;Mitte;mialorenz91@gmx.de;0170-2100374;unsicher;Bewerbung schreiben;nein
+I043;Finn;Becker;14;Robert-Koch-Oberschule;Treptow-Köpenick;finn.becker89@posteo.de;0179-7550385;unsicher;Ausbildung finden;
+I044;Mia;Neumann;18;Anna-Seghers-Schule;Pankow;mianeumann58@t-online.de;0160-1003248;unsicher;Selbstvertrauen;ja
+I045;Nils;Dogan;16;Friedrich-Ebert-Schule;Reinickendorf;nilsdogan@posteo.de;0151-3552313;unsicher;allgemeine Unterstützung;ja
+I046;Simon;Braun;16;Jugendtreff Nordstern;Steglitz-Zehlendorf;simon.braun@web.de;0179-9271420;ja;Ausbildung finden;nein
+I047;Berkay;Peters;20;Theodor-Heuss-Oberschule;Pankow;berkay.peters@web.de;0179-9480413;ja;weiß noch nicht genau;ja
+I048;Ben;Arslan;16;Werner-von-Siemens-Schule;Mitte;ben.arslan@t-online.de;0170-5605551;unsicher;Selbstvertrauen;ja
+I049;Oskar;Fischer;15;Gustav-Freytag-Schule;Lichtenberg;;;ja;Studium/Ausbildung Entscheidung;ja
+I050;Karim;Klein;18;Jugendtreff Nordstern;Spandau;karimklein@posteo.de;0160-8701826;ja;allgemeine Unterstützung;ja
+I051;Talia;Peters;16;Käthe-Kollwitz-Schule;Marzahn-Hellersdorf;taliapeters9@t-online.de;0151-4982659;unsicher;weiß noch nicht genau;ja
+I052;Mia;Wagner;14;Friedrich-Ebert-Schule;Reinickendorf;mia.wagner53@posteo.de;0160-3525552;eher ja;Studium/Ausbildung Entscheidung;
+I053;Jan;Ivanov;16;Käthe-Kollwitz-Schule;Pankow;jan.ivanov44@web.de;0160-4164265;ja;Ausbildung finden;ja
+I054;Ben;Costa;16;Friedrich-Ebert-Schule;Neukölln;ben.costa@posteo.de;0160-4922501;ja;Praktikum finden;
+I055;Duygu;Sahin;19;Jugendtreff Nordstern;Tempelhof-Schöneberg;duygusahin16@web.de;0151-9184251;unsicher;Selbstvertrauen;
+I056;Max;Koch;18;Ernst-Reuter-Schule;Lichtenberg;max.koch74@t-online.de;0170-6915479;eher ja;Praktikum finden;ja
+I057;Ben;Yildiz;19;Sophie-Scholl-Gymnasium;Reinickendorf;benyildiz86@t-online.de;0151-9396740;unsicher;Selbstvertrauen;nein
+I058;Luca;Vogel;15;Jugendtreff Nordstern;Pankow;lucavogel48@gmail.com;0170-8920206;ja;Bewerbung schreiben;ja
+I059;Meryem;Hofmann;16;Käthe-Kollwitz-Schule;Steglitz-Zehlendorf;meryem.hofmann@gmail.com;0151-6345084;ja;Ausbildung finden;ja
+I060;Laura;Neumann;17;Rosa-Luxemburg-Gymnasium;Spandau;lauraneumann@posteo.de;0170-1675341;unsicher;Praktikum finden;nein
+I061;Ali;Kowalski;15;Jugendclub Wedding Ost;Neukölln;alikowalski@web.de;;eher ja;Studium/Ausbildung Entscheidung;nein
+I062;Ali;Sahin;18;Heinrich-Böll-Oberschule;Treptow-Köpenick;ali.sahin2@web.de;0160-8229137;ja;allgemeine Unterstützung;ja
+I063;Sophie;Ivanov;16;Sophie-Scholl-Gymnasium;Treptow-Köpenick;sophie.ivanov@t-online.de;0160-9627851;eher ja;Studium/Ausbildung Entscheidung;ja
+I064;Lea;Zimmermann;16;Rosa-Luxemburg-Gymnasium;Friedrichshain-Kreuzberg;lea.zimmermann49@gmx.de;0179-4442306;ja;Studium/Ausbildung Entscheidung;
+I065;Erik;Ibrahimi;14;Jugendclub Wedding Ost;Friedrichshain-Kreuzberg;erikibrahimi@t-online.de;0179-6333156;eher ja;weiß noch nicht genau;
+I066;Tom;Weber;18;Käthe-Kollwitz-Schule;Steglitz-Zehlendorf;tom.weber@gmx.de;0160-2141276;eher ja;Praktikum finden;
+I067;Ecrin;Yilmaz;17;Werner-von-Siemens-Schule;Steglitz-Zehlendorf;ecrinyilmaz@web.de;;eher ja;Bewerbung schreiben;
+I068;Leyla;Hassan;19;Robert-Koch-Oberschule;Marzahn-Hellersdorf;leyla.hassan@web.de;0179-2251477;ja;Studium/Ausbildung Entscheidung;
+I069;Ben;Kowalski;14;Jugendclub Wedding Ost;Marzahn-Hellersdorf;ben.kowalski55@posteo.de;0160-2829032;ja;Bewerbung schreiben;ja
+I070;Charlotte;Krüger;20;Jugendtreff Nordstern;Reinickendorf;charlotte.krüger@web.de;0179-5256722;unsicher;Selbstvertrauen;nein
+I071;Simon;Ozturk;19;Nachbarschaftshaus Regenbogen;Marzahn-Hellersdorf;simonozturk69@gmx.de;0151-5205491;ja;allgemeine Unterstützung;
+I072;Jonas;Hassan;19;Nachbarschaftshaus Regenbogen;Tempelhof-Schöneberg;jonashassan68@t-online.de;0179-8876938;ja;Bewerbung schreiben;ja
+I073;Emre;Tran;15;Rosa-Luxemburg-Gymnasium;Spandau;emre.tran@gmail.com;0176-7897597;ja;Ausbildung finden;ja
+I074;Bilal;Lorenz;17;Ernst-Reuter-Schule;Neukölln;bilallorenz82@gmail.com;;ja;weiß noch nicht genau;ja
+I075;Jan;Aydin;14;Ernst-Reuter-Schule;Steglitz-Zehlendorf;janaydin@posteo.de;0160-6934325;unsicher;Bewerbung schreiben;nein
+I076;Sara;Krause;20;Nachbarschaftshaus Regenbogen;Mitte;;;unsicher;Ausbildung finden;
+I077;Zeynep;Osei;20;Gustav-Freytag-Schule;Pankow;zeyneposei@gmail.com;0170-2541699;ja;allgemeine Unterstützung;nein
+I078;Tom;Sahin;18;Anna-Seghers-Schule;Steglitz-Zehlendorf;tomsahin3@gmx.de;0170-1211500;ja;Selbstvertrauen;
+I079;Felix;Becker;15;Friedrich-Ebert-Schule;Spandau;felixbecker91@web.de;0176-8248944;ja;Bewerbung schreiben;
+I080;Ronja;Hassan;19;Jugendclub Wedding Ost;Charlottenburg-Wilmersdorf;ronja.hassan@gmail.com;;unsicher;Ausbildung finden;ja
+I081;Amira;Lorenz;19;Jugendzentrum Kiezoase;Reinickendorf;amira.lorenz75@posteo.de;0176-6626883;eher ja;Praktikum finden;ja
+I082;Julian;Nowak;19;Ernst-Reuter-Schule;Neukölln;;0179-2479958;eher ja;Ausbildung finden;
+I083;Timur;Müller;15;Jugendclub Wedding Ost;Mitte;timurmüller90@posteo.de;0179-3872684;ja;allgemeine Unterstützung;ja
+I084;Aylin;Yilmaz;14;Heinrich-Böll-Oberschule;Pankow;aylinyilmaz83@web.de;0179-3167982;unsicher;Studium/Ausbildung Entscheidung;ja
+I085;Duygu;Polat;18;Robert-Koch-Oberschule;Pankow;;0160-6740220;ja;weiß noch nicht genau;
+I086;Zeynep;Lorenz;20;Jugendtreff Nordstern;Marzahn-Hellersdorf;;0170-4169510;eher ja;weiß noch nicht genau;ja
+I087;Elena;Klein;14;Jugendzentrum Kiezoase;Treptow-Köpenick;;0179-4079163;ja;Studium/Ausbildung Entscheidung;ja
+I088;Duygu;Schneider;20;Jugendzentrum Kiezoase;Reinickendorf;;0176-8897896;eher ja;Studium/Ausbildung Entscheidung;
+I089;Serkan;Tran;16;Käthe-Kollwitz-Schule;Mitte;;0151-3230815;unsicher;Selbstvertrauen;nein
+I090;Simon;Arslan;20;Nachbarschaftshaus Regenbogen;Pankow;simonarslan90@web.de;0179-7634440;eher ja;weiß noch nicht genau;ja
+I091;Mustafa;Fischer;14;Werner-von-Siemens-Schule;Spandau;mustafa.fischer29@posteo.de;0151-8949388;unsicher;allgemeine Unterstützung;ja
+I092;Ida;Osei;17;Anna-Seghers-Schule;Steglitz-Zehlendorf;;0176-4993992;eher ja;Ausbildung finden;nein
+I093;Paul;Braun;20;Gustav-Freytag-Schule;Pankow;paul.braun55@posteo.de;0151-1224110;unsicher;Praktikum finden;
+I094;Moritz;Wolf;17;Käthe-Kollwitz-Schule;Spandau;;0151-5903888;ja;Selbstvertrauen;ja
+I095;Berkay;Sahin;18;Jugendclub Wedding Ost;Mitte;berkay.sahin@posteo.de;0160-3381193;ja;allgemeine Unterstützung;ja
+I096;Nils;Aydin;14;Nachbarschaftshaus Regenbogen;Charlottenburg-Wilmersdorf;nils.aydin70@gmail.com;0176-6012484;ja;Praktikum finden;ja
+I097;Emil;Kilic;19;Jugendclub Wedding Ost;Charlottenburg-Wilmersdorf;;0179-6539671;ja;Bewerbung schreiben;ja
+I098;Bilal;Richter;14;Sophie-Scholl-Gymnasium;Steglitz-Zehlendorf;bilalrichter@gmail.com;;eher ja;weiß noch nicht genau;nein
+I099;Til;Krause;14;Ernst-Reuter-Schule;Lichtenberg;til.krause49@web.de;0170-1274338;eher ja;Bewerbung schreiben;
+I100;Enes;Costa;16;Theodor-Heuss-Oberschule;Mitte;enes.costa@gmx.de;0179-4879384;ja;weiß noch nicht genau;ja
+I101;Erik;Sahin;18;Nachbarschaftshaus Regenbogen;Pankow;erik.sahin@gmx.de;0176-7877487;ja;Ausbildung finden;ja
+I102;Ayse;Kilic;14;Heinrich-Böll-Oberschule;Mitte;ayse.kilic@gmx.de;0151-4798323;unsicher;Bewerbung schreiben;
+I103;David;Demir;19;Jugendzentrum Kiezoase;Tempelhof-Schöneberg;daviddemir45@gmail.com;;ja;Ausbildung finden;
+I104;Rania;Hassan;17;Anna-Seghers-Schule;Friedrichshain-Kreuzberg;raniahassan14@gmail.com;0170-4266862;ja;Ausbildung finden;
+I105;Julian;Braun;18;Jugendclub Wedding Ost;Charlottenburg-Wilmersdorf;;0176-4404584;eher ja;weiß noch nicht genau;ja
+I106;Anton;Zimmermann;20;Theodor-Heuss-Oberschule;Friedrichshain-Kreuzberg;anton.zimmermann@gmail.com;0160-5951981;ja;Bewerbung schreiben;ja
+I107;Leyla;Polat;19;Robert-Koch-Oberschule;Marzahn-Hellersdorf;leylapolat59@gmail.com;0160-8377450;ja;Selbstvertrauen;ja
+I108;Talia;Kaya;18;Jugendtreff Nordstern;Treptow-Köpenick;talia.kaya50@posteo.de;0179-3755985;ja;allgemeine Unterstützung;
+I109;Fatima;Hassan;14;Gustav-Freytag-Schule;Steglitz-Zehlendorf;fatimahassan53@t-online.de;0151-6099137;eher ja;Selbstvertrauen;
+I110;Paul;Osei;15;Robert-Koch-Oberschule;Neukölln;paul.osei37@gmx.de;0160-5715520;unsicher;Praktikum finden;nein
+I111;Emil;Wagner;19;Rosa-Luxemburg-Gymnasium;Steglitz-Zehlendorf;emil.wagner13@gmx.de;0179-1968358;ja;allgemeine Unterstützung;ja
+I112;Leon;Yilmaz;18;Sophie-Scholl-Gymnasium;Neukölln;leon.yilmaz@posteo.de;0176-4640270;ja;Studium/Ausbildung Entscheidung;nein
+I113;Timur;Herrmann;16;Robert-Koch-Oberschule;Mitte;timurherrmann80@gmx.de;0170-1642265;unsicher;allgemeine Unterstützung;
+I114;Ibrahim;Bergmann;14;Werner-von-Siemens-Schule;Tempelhof-Schöneberg;ibrahim.bergmann61@gmail.com;0179-1493156;unsicher;Ausbildung finden;ja
+I115;Ecrin;Winkler;15;Friedrich-Ebert-Schule;Charlottenburg-Wilmersdorf;ecrinwinkler24@posteo.de;0179-1978509;ja;weiß noch nicht genau;ja
+I116;Enes;Winkler;18;Robert-Koch-Oberschule;Lichtenberg;enes.winkler51@t-online.de;0160-6325718;ja;Praktikum finden;
+I117;Lea;Sahin;20;Gustav-Freytag-Schule;Tempelhof-Schöneberg;leasahin40@t-online.de;0151-9758737;unsicher;Studium/Ausbildung Entscheidung;ja
+I118;Max;Aksoy;14;Käthe-Kollwitz-Schule;Treptow-Köpenick;max.aksoy@posteo.de;0179-6647652;ja;weiß noch nicht genau;nein
+I119;Nora;Ahmadi;19;Jugendzentrum Kiezoase;Steglitz-Zehlendorf;nora.ahmadi@posteo.de;0176-8387963;ja;weiß noch nicht genau;ja
+I120;Elias;Rossi;18;Rosa-Luxemburg-Gymnasium;Pankow;eliasrossi89@web.de;;ja;Praktikum finden;ja
+I121;Yusuf;Yilmaz;18;Robert-Koch-Oberschule;Mitte;;0179-1329190;unsicher;allgemeine Unterstützung;nein
+I122;Frieda;Polat;19;Gustav-Freytag-Schule;Steglitz-Zehlendorf;;0176-2720705;ja;Bewerbung schreiben;ja
+I123;Meryem;Weber;20;Sophie-Scholl-Gymnasium;Charlottenburg-Wilmersdorf;meryem.weber92@t-online.de;0151-7972870;ja;Selbstvertrauen;ja
+I124;Ibrahim;Arslan;16;Robert-Koch-Oberschule;Lichtenberg;ibrahimarslan44@gmail.com;0179-4254324;eher ja;Studium/Ausbildung Entscheidung;nein
+I125;Jonas;Lange;19;Werner-von-Siemens-Schule;Treptow-Köpenick;jonas.lange@gmail.com;0176-3485978;eher ja;allgemeine Unterstützung;
+I126;Erik;Andrade;20;Ernst-Reuter-Schule;Neukölln;erikandrade3@posteo.de;0170-7470993;unsicher;Ausbildung finden;ja
+I127;Hannah;Vogel;18;Jugendclub Wedding Ost;Neukölln;hannah.vogel17@posteo.de;0176-5155033;ja;Selbstvertrauen;ja
+I128;Leyla;Kowalski;18;Theodor-Heuss-Oberschule;Charlottenburg-Wilmersdorf;leyla.kowalski22@t-online.de;0170-9495582;eher ja;Praktikum finden;
+I129;Greta;Meyer;14;Robert-Koch-Oberschule;Steglitz-Zehlendorf;;0176-6202825;unsicher;Bewerbung schreiben;ja
+I130;Oskar;Rossi;19;Ernst-Reuter-Schule;Mitte;oskarrossi@gmx.de;0170-8283922;ja;Praktikum finden;nein
+I131;Emil;Ahmadi;17;Jugendtreff Nordstern;Tempelhof-Schöneberg;emil.ahmadi3@t-online.de;0179-9157296;ja;allgemeine Unterstützung;ja
+I132;Lena;Costa;15;Robert-Koch-Oberschule;Tempelhof-Schöneberg;;0176-8171797;ja;Selbstvertrauen;ja
+I133;Mustafa;Kaya;20;Rosa-Luxemburg-Gymnasium;Lichtenberg;mustafakaya2@t-online.de;0176-1026601;unsicher;Praktikum finden;ja
+I134;Emil;Nowak;18;Käthe-Kollwitz-Schule;Friedrichshain-Kreuzberg;emilnowak@posteo.de;0176-3128168;unsicher;Studium/Ausbildung Entscheidung;ja
+I135;Ali;Nguyen;15;Gustav-Freytag-Schule;Steglitz-Zehlendorf;ali.nguyen22@posteo.de;0151-9770224;ja;weiß noch nicht genau;ja
+I136;Merve;Lorenz;17;Jugendzentrum Kiezoase;Pankow;;;ja;Selbstvertrauen;
+I137;Mustafa;Schuster;20;Theodor-Heuss-Oberschule;Treptow-Köpenick;mustafaschuster@posteo.de;0160-4031951;eher ja;Selbstvertrauen;ja
+I138;Johanna;Kaya;19;Werner-von-Siemens-Schule;Spandau;johannakaya2@t-online.de;0151-3002985;unsicher;Studium/Ausbildung Entscheidung;
+I139;Berkay;Krause;19;Robert-Koch-Oberschule;Charlottenburg-Wilmersdorf;;0170-8135297;ja;Ausbildung finden;
+I140;Ayse;Neumann;18;Friedrich-Ebert-Schule;Treptow-Köpenick;;;unsicher;weiß noch nicht genau;ja
+I141;Kaan;Koch;19;Friedrich-Ebert-Schule;Mitte;kaan.koch@posteo.de;;ja;Bewerbung schreiben;
+I142;Marlene;Aksoy;17;Sophie-Scholl-Gymnasium;Steglitz-Zehlendorf;marlene.aksoy@t-online.de;0160-2562983;unsicher;weiß noch nicht genau;
+I143;Meryem;Schuster;14;Anna-Seghers-Schule;Mitte;meryemschuster@gmail.com;0160-8938189;eher ja;Praktikum finden;ja
+I144;Meryem;Schmidt;15;Sophie-Scholl-Gymnasium;Friedrichshain-Kreuzberg;meryem.schmidt46@gmail.com;;ja;weiß noch nicht genau;
+I145;Omar;Petrov;16;Käthe-Kollwitz-Schule;Marzahn-Hellersdorf;omarpetrov4@posteo.de;;unsicher;weiß noch nicht genau;ja
+I146;Mert;Arslan;18;Heinrich-Böll-Oberschule;Neukölln;mertarslan3@gmx.de;;unsicher;allgemeine Unterstützung;ja
+I147;Bilal;Wolf;19;Nachbarschaftshaus Regenbogen;Lichtenberg;bilalwolf23@web.de;0160-5769362;unsicher;Bewerbung schreiben;ja
+I148;Johanna;Rossi;20;Jugendclub Wedding Ost;Friedrichshain-Kreuzberg;johanna.rossi89@web.de;0176-7963479;ja;Praktikum finden;nein
+I149;Nils;Fischer;19;Robert-Koch-Oberschule;Charlottenburg-Wilmersdorf;nils.fischer@posteo.de;;eher ja;allgemeine Unterstützung;
+I150;Sude;Arslan;18;Friedrich-Ebert-Schule;Treptow-Köpenick;sude.arslan@web.de;0179-3500445;ja;Praktikum finden;ja
+I151;Jan;Celik;17;Robert-Koch-Oberschule;Treptow-Köpenick;jan.celik@web.de;0160-5765133;ja;Studium/Ausbildung Entscheidung;ja
+I152;Talia;Becker;16;Rosa-Luxemburg-Gymnasium;Spandau;;0170-2810034;unsicher;Praktikum finden;
+I153;Felix;Polat;17;Gustav-Freytag-Schule;Treptow-Köpenick;felixpolat@gmail.com;0179-9579347;unsicher;Selbstvertrauen;ja
+I154;Moritz;Herrmann;17;Jugendzentrum Kiezoase;Steglitz-Zehlendorf;moritz.herrmann@gmx.de;0170-4756122;ja;Ausbildung finden;
+I155;Ibrahim;Kilic;17;Sophie-Scholl-Gymnasium;Mitte;ibrahimkilic@gmail.com;0151-5266389;ja;Selbstvertrauen;nein
+I156;Klara;Krüger;14;Heinrich-Böll-Oberschule;Lichtenberg;klara.krüger88@t-online.de;0151-4333861;ja;Selbstvertrauen;
+I157;Erik;Wolf;20;Heinrich-Böll-Oberschule;Lichtenberg;erik.wolf@gmail.com;0176-1565695;unsicher;allgemeine Unterstützung;
+I158;Paula;Costa;18;Nachbarschaftshaus Regenbogen;Treptow-Köpenick;;0176-2034076;ja;Selbstvertrauen;ja
+I159;Enes;Weber;14;Theodor-Heuss-Oberschule;Neukölln;enesweber@gmx.de;0160-2203927;ja;Bewerbung schreiben;nein
+I160;Leon;Peters;17;Gustav-Freytag-Schule;Charlottenburg-Wilmersdorf;leon.peters@web.de;0176-6200589;eher ja;Studium/Ausbildung Entscheidung;ja
+I161;Jan;Schneider;17;Anna-Seghers-Schule;Pankow;jan.schneider35@posteo.de;0151-3309305;ja;Studium/Ausbildung Entscheidung;ja
+I162;Rania;Berger;16;Jugendzentrum Kiezoase;Steglitz-Zehlendorf;raniaberger83@t-online.de;0179-4681869;unsicher;Selbstvertrauen;
+I163;Berkay;Nowak;20;Robert-Koch-Oberschule;Neukölln;berkaynowak@web.de;0170-9007809;unsicher;allgemeine Unterstützung;nein
+I164;Alina;Polat;15;Anna-Seghers-Schule;Neukölln;alinapolat26@gmail.com;0151-6837789;eher ja;allgemeine Unterstützung;
+I165;Erdal;Hoffmann;14;Sophie-Scholl-Gymnasium;Marzahn-Hellersdorf;erdal.hoffmann@gmail.com;0151-2075842;ja;Selbstvertrauen;ja
+I166;Aylin;Hassan;16;Heinrich-Böll-Oberschule;Spandau;;0160-3443493;ja;Bewerbung schreiben;ja
+I167;Laura;Fischer;15;Werner-von-Siemens-Schule;Steglitz-Zehlendorf;laurafischer65@posteo.de;0151-5498947;ja;Bewerbung schreiben;
+I168;Cem;Costa;17;Gustav-Freytag-Schule;Friedrichshain-Kreuzberg;cemcosta@posteo.de;0176-2739488;eher ja;weiß noch nicht genau;ja
+I169;Nele;Wolf;20;Heinrich-Böll-Oberschule;Friedrichshain-Kreuzberg;;;eher ja;Selbstvertrauen;ja
+I170;Marlene;Hofmann;18;Ernst-Reuter-Schule;Pankow;marlene.hofmann@web.de;0170-1801667;unsicher;Studium/Ausbildung Entscheidung;
+I171;Kaan;Wolf;19;Friedrich-Ebert-Schule;Treptow-Köpenick;kaanwolf89@gmx.de;0170-7334002;unsicher;Ausbildung finden;ja
+I172;Frieda;Wolf;18;Jugendtreff Nordstern;Treptow-Köpenick;;0170-7623088;eher ja;Studium/Ausbildung Entscheidung;ja
+I173;Marlene;Petrov;16;Werner-von-Siemens-Schule;Tempelhof-Schöneberg;marlene.petrov89@gmx.de;0179-5823341;unsicher;Praktikum finden;
+I174;Marlene;Ivanov;18;Jugendzentrum Kiezoase;Lichtenberg;marlene.ivanov45@posteo.de;0160-3277973;eher ja;Praktikum finden;
+I175;Elena;Arslan;20;Rosa-Luxemburg-Gymnasium;Reinickendorf;elena.arslan@web.de;0160-1930816;ja;Praktikum finden;
+I176;Mustafa;Wolf;19;Gustav-Freytag-Schule;Treptow-Köpenick;mustafa.wolf@web.de;0160-7760304;eher ja;allgemeine Unterstützung;ja
+I177;Finn;Müller;17;Heinrich-Böll-Oberschule;Marzahn-Hellersdorf;finn.müller@posteo.de;0179-3115436;unsicher;Praktikum finden;
+I178;Leon;Wagner;15;Heinrich-Böll-Oberschule;Tempelhof-Schöneberg;leonwagner39@gmx.de;0160-8173985;ja;allgemeine Unterstützung;ja
+I179;Moritz;Tran;17;Anna-Seghers-Schule;Charlottenburg-Wilmersdorf;;0160-4541222;ja;Praktikum finden;
+I180;Paula;Costa;18;Gustav-Freytag-Schule;Reinickendorf;paulacosta38@posteo.de;;ja;Bewerbung schreiben;ja
