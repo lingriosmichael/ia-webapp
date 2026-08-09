@@ -131,7 +131,6 @@ export interface ActivitySummary {
   interpretationAcknowledgedAt: string | null;
   interpretationAcknowledgedById: string | null;
   interpretationAcknowledgedByName: string | null;
-  aiKnowledgeGeneratedAt?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -586,6 +585,7 @@ export type InterpretationQuestionStatus = "pending" | "answered";
 
 export interface InterpretationQuestion {
   id: string;
+  goalId?: string | null;
   prompt: string;
   kind: InterpretationQuestionKind;
   questionDomain: InterpretationQuestionDomain;
@@ -981,29 +981,140 @@ export interface StartActivityInterpretationResponse {
   skippedCount: number;
 }
 
-export type ActivityAiKnowledgeInsightSourceType =
-  | "goal_alignment"
-  | "qualitative_finding"
-  | "indicator"
-  | "distribution_signal";
+export type ActivityAnalysisRunV2Status =
+  "collected" | "running" | "needs_clarification" | "completed" | "failed";
 
-export interface ActivityAiKnowledgeInsight {
-  id: string;
-  sourceType: ActivityAiKnowledgeInsightSourceType;
-  text: string;
-  isGoalRelevant: boolean;
-  sourceUploadMetadataIds: string[];
+export type ActivityAnalysisRunV2ValidationStatus =
+  "not_run" | "passed" | "failed";
+
+export type ActivityAnalysisV2GoalAssessmentStatus =
+  | "achieved"
+  | "not_achieved"
+  | "evidence_compiled"
+  | "requires_clarification"
+  | "requires_capability";
+
+export interface ActivityAnalysisV2MissingCapability {
+  kind: "deterministic_calculation";
+  name: string;
+  reason: string;
 }
 
-export interface ActivityAiKnowledgeRecord {
+export interface ActivityAnalysisV2ToolCallRecord {
+  toolCallId: string;
+  toolName: string;
+  arguments: Record<string, unknown>;
+  calculationIds: string[];
+  status: "succeeded" | "failed";
+  errorMessage: string | null;
+  startedAt: string;
+  completedAt: string;
+  durationMs: number;
+}
+
+export interface ActivityAnalysisV2CalculationRecord {
+  calculationId: string;
+  toolName: string;
+  label: string;
+  description: string;
+  formula: string | null;
+  value: number | string | boolean | null;
+  unit: string | null;
+  sourceUploadMetadataIds: string[];
+  sourceTableNames: string[];
+  sourceColumns: string[];
+  grain?: string;
+  numerator?: number | null;
+  denominator?: number | null;
+  denominatorType?: string;
+  identifierColumn?: string | null;
+  result: Record<string, unknown>;
+}
+
+export interface ActivityAnalysisV2GoalAssessmentRecord {
+  goalId: string;
+  goalType: "output" | "outcome";
+  goalText: string;
+  evaluationMode:
+    "numeric_target" | "condition" | "directional_change" | "evidence_only";
+  plannerStatus: "planned" | "requires_clarification" | "requires_capability";
+  assessmentStatus: ActivityAnalysisV2GoalAssessmentStatus;
+  rationale: string;
+  findingText: string;
+  missingCapabilities: ActivityAnalysisV2MissingCapability[];
+  supportingCalculationIds: string[];
+  measuredValue: number | null;
+  targetValue: number | null;
+  comparison: "at_least" | "at_most" | "equal" | null;
+  achieved: boolean | null;
+}
+
+export interface ActivityAssessmentV2 {
+  goalAssessments: ActivityAnalysisV2GoalAssessmentRecord[];
+  limitations: string[];
+}
+
+export interface ActivityAnalysisV2Diagnostics {
+  goalCount: number;
+  outputGoalCount: number;
+  outcomeGoalCount: number;
+  evidenceCount: number;
+  plannedToolRequestCount: number;
+  executedToolCallCount: number;
+  calculationCount: number;
+  validationIssueCount: number;
+  renderedSummarySectionCount: number;
+  renderedSummaryCharacterCount: number;
+  goalStatusCounts: {
+    achieved: number;
+    notAchieved: number;
+    evidenceCompiled: number;
+    requiresClarification: number;
+    requiresCapability: number;
+  };
+}
+
+export interface ActivityAnalysisRunV2Record {
+  analysisRunId: string;
   activityId: string;
   projectId: string;
   activityName: string;
-  interpretedEvidenceCount: number;
-  totalEvidenceCount: number;
-  generatedAt: string | null;
-  summaryText: string;
-  insights: ActivityAiKnowledgeInsight[];
+  phase: string;
+  status: ActivityAnalysisRunV2Status;
+  goalsSnapshot: {
+    activityType: string | null;
+    objectives: string | null;
+    output: string | null;
+    outcome: string | null;
+  };
+  evidence: Array<{
+    uploadMetadataId: string;
+    privacySafeRepresentationId: string;
+    logicalEvidenceId: string;
+    versionNumber: number;
+    originalFileName: string;
+    evidenceModality: string | null;
+    uploadedAt: string;
+  }>;
+  runLimits: {
+    maxToolCalls: number;
+    maxLlmIterations: number;
+    timeoutMs: number;
+    maxEvidenceItems: number;
+  };
+  clarificationQuestions: InterpretationQuestion[];
+  toolCallTrace: ActivityAnalysisV2ToolCallRecord[];
+  calculations: ActivityAnalysisV2CalculationRecord[];
+  assessment: ActivityAssessmentV2 | null;
+  diagnostics: ActivityAnalysisV2Diagnostics;
+  validation: {
+    status: ActivityAnalysisRunV2ValidationStatus;
+    issues: string[];
+  };
+  renderedSummary: string | null;
+  errorMessage: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type ActivityWorkflowStage =
@@ -1780,29 +1891,43 @@ export const apiClient = {
   ): Promise<ProjectInterpretationOverview> {
     return request(`/projects/${projectId}/interpretation`);
   },
-  getActivityAiKnowledge(
-    activityId: string,
-  ): Promise<ActivityAiKnowledgeRecord> {
-    return request(`/activities/${activityId}/ai-knowledge`);
-  },
   getActivityWorkflowStage(
     activityId: string,
   ): Promise<ActivityWorkflowStageRecord> {
     return request(`/activities/${activityId}/workflow-stage`);
   },
-  generateActivityAiKnowledge(
+  getLatestActivityAnalysisV2(
     activityId: string,
-  ): Promise<ActivityAiKnowledgeRecord> {
-    return request(`/activities/${activityId}/ai-knowledge`, {
+  ): Promise<ActivityAnalysisRunV2Record> {
+    return request(`/activities/${activityId}/analysis-v2`);
+  },
+  runActivityAnalysisV2(
+    activityId: string,
+  ): Promise<ActivityAnalysisRunV2Record> {
+    return request(`/activities/${activityId}/analysis-v2`, {
       method: "POST",
     });
   },
-  regenerateActivityAiKnowledge(
+  answerActivityAnalysisV2Question(
     activityId: string,
-  ): Promise<ActivityAiKnowledgeRecord> {
-    return request(`/activities/${activityId}/ai-knowledge`, {
-      method: "PUT",
-    });
+    questionId: string,
+    payload: AnswerInterpretationQuestionPayload,
+  ): Promise<ActivityAnalysisRunV2Record> {
+    return request(
+      `/activities/${activityId}/analysis-v2/questions/${questionId}`,
+      {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      },
+    );
+  },
+  listActivityAnalysisV2Runs(
+    activityId: string,
+    limit?: number,
+  ): Promise<ActivityAnalysisRunV2Record[]> {
+    const query = limit ? `?limit=${limit}` : "";
+    return request(`/activities/${activityId}/analysis-v2/runs${query}`);
   },
   getInterpretation(
     interpretationResultId: string,
@@ -1922,20 +2047,6 @@ export const apiClient = {
   ): Promise<{ success: true }> {
     return request(
       `/projects/${projectId}/activities/${activityId}/analytics/events`,
-      {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(payload),
-      },
-    );
-  },
-  downloadActivityAnalyticsExport(
-    projectId: string,
-    activityId: string,
-    payload: AnalyticsDashboardExportRequestPayload,
-  ): Promise<Blob> {
-    return requestBlob(
-      `/projects/${projectId}/activities/${activityId}/analytics/export`,
       {
         method: "POST",
         headers: { "content-type": "application/json" },

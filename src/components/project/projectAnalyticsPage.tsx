@@ -54,10 +54,7 @@ export function ProjectAnalyticsPage() {
   const allEvidenceActivitiesReviewed =
     evidenceActivities.length > 0 &&
     evidenceActivities.every((activity) =>
-      Boolean(
-        activity.interpretationAcknowledgedAt ||
-        activity.aiKnowledgeGeneratedAt,
-      ),
+      Boolean(activity.interpretationAcknowledgedAt),
     );
   const effectiveReadiness: AnalyticsReadinessSummary =
     allEvidenceActivitiesReviewed && readiness.state !== "ready"

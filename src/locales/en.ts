@@ -572,24 +572,20 @@ const en = {
         'No interpretation results yet. Run "Interpret with AI" on an activity\'s evidence once its privacy review is approved.',
       questionDomainPreparationLabel: "Preparation",
       questionDomainInterpretationLabel: "Interpretation",
-      questionAnsweredLabel: "Answered: {{value}}",
       questionRequiredLabel: "Required for review",
       questionOptionalLabel: "Optional",
-      questionEdit: "Edit answer",
-      questionSave: "Save answer",
-      questionCancel: "Cancel",
       questionFreeTextPlaceholder: "Type your answer…",
       questionSubmit: "Submit",
       questionSubmitting: "Submitting…",
       reviewPrivacyAction: "Review privacy",
       noEvidenceYet: "No evidence uploaded yet.",
       simplified: {
-        pageTitle: "AI knowledge",
-        heroTitle: "One AI knowledge flow per activity.",
+        pageTitle: "Activity analysis",
+        heroTitle: "One goal-based analysis flow per activity.",
         heroDescription:
-          "Add evidence to an activity, run one AI analysis, and then open one AI knowledge view for the activity as a whole.",
+          "Add evidence to an activity, complete interpretation, and then open one goal-based activity analysis as the canonical AI view.",
         statActivities: "Activities",
-        statReady: "AI knowledge ready",
+        statReady: "Analysis ready",
         statAttention: "Need attention",
         activitiesTitle: "Activities",
         activitySummary: {
@@ -600,17 +596,17 @@ const en = {
           processing:
             "AI analysis is currently running across this activity's evidence.",
           questions:
-            "{{count}} clarification question is still open before AI knowledge can be completed.",
+            "{{count}} clarification question is still open before the activity analysis can be opened.",
           questions_other:
-            "{{count}} clarification questions are still open before AI knowledge can be completed.",
+            "{{count}} clarification questions are still open before the activity analysis can be opened.",
           partial:
-            "{{interpreted}} file is already interpreted. {{remaining}} more file is still missing or needs attention before AI knowledge can be completed.",
+            "{{interpreted}} file is already interpreted. {{remaining}} more file is still missing or needs attention before the activity analysis can be opened.",
           partial_other:
-            "{{interpreted}} files are already interpreted. {{remaining}} more files are still missing or need attention before AI knowledge can be completed.",
+            "{{interpreted}} files are already interpreted. {{remaining}} more files are still missing or need attention before the activity analysis can be opened.",
           goalReview:
-            "brindl is finishing cross-file checks across this activity's evidence before AI knowledge can be generated.",
-          ready: "AI knowledge can now be generated for this activity.",
-          reviewed: "AI knowledge is available for this activity.",
+            "brindl is finishing cross-file checks across this activity's evidence before the activity analysis can be opened.",
+          ready: "The activity analysis can now be opened for this activity.",
+          reviewed: "The activity analysis is available for this activity.",
           notStarted: "AI analysis has not been started for this activity yet.",
         },
         activityMeta: "{{uploads}} files · {{interpreted}} interpreted",
@@ -620,7 +616,6 @@ const en = {
         actionRestart: "Restart analysis",
         actionRunKnowledge: "Analyze with AI",
         actionInterpretMissingEvidence: "Interpret missing evidence",
-        actionGenerateKnowledge: "Generate AI knowledge",
         interpretationStarted: "AI interpretation started.",
         interpretationRestarted: "AI interpretation restarted.",
         interpretationRestartNoop:
@@ -631,19 +626,7 @@ const en = {
           "AI interpretation could not be restarted.",
         activityNotReadyToast:
           "This activity is not ready for AI analysis yet. Finish privacy review first or wait for processing to complete.",
-        actionRefreshKnowledge: "Refresh AI knowledge",
-        knowledgeRefreshed: "AI knowledge was regenerated.",
-        actionOpenKnowledge: "Open AI knowledge",
-        actionOpeningKnowledge: "Opening AI knowledge…",
-        knowledgeDialogTitle: "AI knowledge",
-        knowledgeDialogDescription:
-          "brindl combined the interpreted evidence of this activity into one activity-level knowledge view.",
-        knowledgeDialogLoading: "Loading AI knowledge…",
-        knowledgeDialogError: "AI knowledge could not be loaded.",
-        knowledgeDialogMeta:
-          "Combined from {{evidenceCount}} evidence files",
-        knowledgeDialogEmpty:
-          "No activity-level AI knowledge is available yet.",
+        actionOpenAnalysis: "Open activity analysis",
         status: {
           no_evidence: "No evidence",
           privacy_review: "Privacy review",
@@ -1255,6 +1238,67 @@ const en = {
     readyToGenerateDescription:
       "Preparation and deterministic analysis are in place. Generate analytics to assemble this activity dashboard.",
     noVerifiedEvidenceCta: "Go to Overview",
+    v2: {
+      eyebrow: "ActivityAnalyst V2",
+      title: "Goal-based analysis",
+      description:
+        "This activity analysis now uses ActivityAnalyst V2 as the primary view. It evaluates the current activity goals against the latest privacy-safe evidence set.",
+      loading: "Loading the latest activity analysis…",
+      loadFailed: "The latest activity analysis could not be loaded.",
+      staleDataWarning:
+        "The analysis below may be out of date — the last refresh attempt failed.",
+      noRunTitle: "No activity analysis yet",
+      noRunDescription:
+        "Generate the activity analysis to assess this activity against its current privacy-safe evidence.",
+      runAction: "Generate analysis",
+      refreshAction: "Refresh analysis",
+      runPending: "Generating analysis…",
+      runSuccess: "The activity analysis was refreshed.",
+      runFailed:
+        "The activity analysis could not be completed. Please run it again.",
+      latestRunTitle: "Latest analysis",
+      latestRunMeta: "Created {{createdAt}}",
+      errorTitle: "Run error",
+      issuesTitle: "Validation issues",
+      summaryTitle: "Summary",
+      summaryMissing: "This run did not produce a rendered summary.",
+      outputsTitle: "Outputs",
+      outcomesTitle: "Outcomes",
+      noOutputs: "No output goals are defined for this activity.",
+      noOutcomes:
+        "This activity has no outcome goals, so no outcome section is shown.",
+      limitationsTitle: "Current limitations",
+      runHistoryTitle: "Previous runs",
+      metrics: {
+        goals: "Goals",
+        evidence: "Evidence",
+        tools: "Tools",
+        calculations: "Calculations",
+      },
+      runStatus: {
+        collected: "Collected",
+        running: "Running",
+        needs_clarification: "Needs clarification",
+        completed: "Completed",
+        failed: "Failed",
+      },
+      validationStatus: {
+        not_run: "Validation pending",
+        passed: "Validated",
+        failed: "Validation failed",
+      },
+      goalStatus: {
+        achieved: "Achieved",
+        not_achieved: "Not achieved",
+        evidence_compiled: "Evidence compiled",
+        requires_clarification: "Needs clarification",
+        requires_capability: "Missing calculation",
+      },
+      clarificationTitle: "Clarification needed before analysis can continue",
+      clarificationDescription:
+        "ActivityAnalystV2 paused because one or more definitions are still ambiguous. Answer the questions below and the run will resume with those answers.",
+      clarificationAnswered: "Clarification saved. Activity analysis reran.",
+    },
   },
   activityInsights: {
     loading: "Loading AI knowledge…",

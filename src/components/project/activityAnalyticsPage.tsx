@@ -1,33 +1,23 @@
-import { Link, useParams } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ActivityTabs } from "@/components/activityTabs";
 import { PageHeader, PageContainer, TopBar } from "@/components/WorkspaceUI";
 import { useProjectHierarchy } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
-import { useActivityAnalyticsDashboardInteractionTracking } from "@/hooks/useAnalyticsDashboardInteractionTracking";
 import {
-  useActivityAnalyticsQuery,
+  useAcknowledgeInterpretationReviewMutation,
+  useActivityAnalysisV2RunsQuery,
+  useAnswerActivityAnalysisV2QuestionMutation,
   useActivityQuery,
-  useGenerateActivityAnalyticsMutation,
-  useProjectInterpretationsQuery,
+  useLatestActivityAnalysisV2Query,
   useProjectQuery,
-  useResetActivityAnalyticsLayoutMutation,
-  useUpdateActivityAnalyticsLayoutMutation,
+  useRunActivityAnalysisV2Mutation,
 } from "@/hooks/useWorkspaceQueries";
-import {
-  deriveAnalyticsReadinessSummary,
-  type AnalyticsReadinessSummary,
-} from "@/lib/interpretationWorkflow";
-import { useAnalyticsEmptyStateContent } from "@/hooks/useAnalyticsEmptyStateContent";
-import {
-  AnalyticsEmptyState,
-  AnalyticsErrorState,
-  analyticsCtaLinkClassName,
-} from "@/components/analytics/analyticsEmptyState";
-import { AnalyticsStatusBanner } from "@/components/analytics/analyticsStatusBanner";
-import { ConfigurableAnalyticsDashboard } from "@/components/analytics/configurableAnalyticsDashboard";
-import { apiClient, ApiError } from "@/services/apiClient";
+import { AnalyticsErrorState } from "@/components/analytics/analyticsEmptyState";
+import { ActivityAnalysisV2Panel } from "@/components/project/activityAnalysisV2Panel";
+import { ApiError } from "@/services/apiClient";
 
 export function ActivityAnalyticsPage() {
   const { projectId, activityId } = useParams({
@@ -36,104 +26,98 @@ export function ActivityAnalyticsPage() {
   const auth = useRequireAuth();
   const projectQuery = useProjectQuery(projectId, Boolean(auth.token));
   const activityQuery = useActivityQuery(activityId, Boolean(auth.token));
-  const analyticsQuery = useActivityAnalyticsQuery(
-    projectId,
+  const latestAnalysisV2Query = useLatestActivityAnalysisV2Query(
     activityId,
     Boolean(auth.token),
   );
-  const interpretationsQuery = useProjectInterpretationsQuery(
-    projectId,
+  const analysisV2RunsQuery = useActivityAnalysisV2RunsQuery(
+    activityId,
     Boolean(auth.token),
   );
-  const generateMutation = useGenerateActivityAnalyticsMutation(
-    projectId,
+  const runAnalysisV2Mutation = useRunActivityAnalysisV2Mutation(activityId);
+  const answerQuestionMutation =
+    useAnswerActivityAnalysisV2QuestionMutation(activityId);
+  const acknowledgeMutation = useAcknowledgeInterpretationReviewMutation(
     activityId,
-  );
-  const updateLayoutMutation = useUpdateActivityAnalyticsLayoutMutation(
-    projectId,
-    activityId,
-  );
-  const resetLayoutMutation = useResetActivityAnalyticsLayoutMutation(
-    projectId,
-    activityId,
+    projectQuery.data?.organizationId,
   );
   const { t } = useTranslation();
   const hierarchy = useProjectHierarchy();
-  const interpretationResults = (
-    interpretationsQuery.data?.results ?? []
-  ).filter(
-    (interpretationResult) => interpretationResult.activityId === activityId,
-  );
-  const readiness = deriveAnalyticsReadinessSummary(interpretationResults);
-  const activityIsReviewed = Boolean(
-    activityQuery.data?.interpretationAcknowledgedAt ||
-    activityQuery.data?.aiKnowledgeGeneratedAt,
-  );
-  const effectiveReadiness: AnalyticsReadinessSummary =
-    activityIsReviewed && readiness.state !== "ready"
-      ? {
-          ...readiness,
-          state: "ready_to_generate",
-          preparationBlockedCount: 0,
-          awaitingAnalysisCount: 0,
-        }
-      : readiness;
-  const {
-    title: emptyStateTitle,
-    description: emptyStateDescription,
-    showCta: showOverviewCta,
-  } = useAnalyticsEmptyStateContent(effectiveReadiness, "activityAnalytics");
-  useActivityAnalyticsDashboardInteractionTracking(
-    projectId,
-    activityId,
-    Boolean(auth.token),
-  );
 
-  async function handleRegenerate() {
+  useEffect(() => {
+    if (
+      !activityQuery.data ||
+      activityQuery.data.interpretationAcknowledgedAt ||
+      !latestAnalysisV2Query.data ||
+      // Only a run that actually finished successfully represents a
+      // reviewable analysis. A failed run or one still paused on
+      // clarification questions must never be silently acknowledged.
+      latestAnalysisV2Query.data.status !== "completed" ||
+      acknowledgeMutation.isPending ||
+      // Without this, a failed acknowledgment attempt flips isPending back
+      // to false and this effect fires mutate() again on the next render,
+      // retrying indefinitely with no user-visible indication.
+      acknowledgeMutation.isError
+    ) {
+      return;
+    }
+
+    acknowledgeMutation.mutate();
+  }, [acknowledgeMutation, activityQuery.data, latestAnalysisV2Query.data]);
+
+  async function handleRunActivityAnalysisV2() {
     try {
-      await generateMutation.mutateAsync();
+      const run = await runAnalysisV2Mutation.mutateAsync();
+      // A pipeline failure (grounding failure, timeout, tool error) is
+      // returned as a normal 200 response with status "failed" — it does
+      // not throw. Both paths must tell the user to run it again.
+      if (run.status === "failed") {
+        toast.error(t("activityAnalytics.v2.runFailed"));
+      } else {
+        toast.success(t("activityAnalytics.v2.runSuccess"));
+      }
     } catch (error) {
       toast.error(
         error instanceof ApiError
           ? error.message
-          : t("analytics.status.FAILED"),
+          : t("activityAnalytics.v2.runFailed"),
       );
     }
   }
 
-  if (
-    !auth.token ||
-    projectQuery.isLoading ||
-    activityQuery.isLoading ||
-    analyticsQuery.isLoading ||
-    interpretationsQuery.isLoading
-  ) {
+  async function handleAnswerQuestion(input: {
+    questionId: string;
+    answeredValue: string;
+  }) {
+    try {
+      const run = await answerQuestionMutation.mutateAsync({
+        questionId: input.questionId,
+        payload: { answeredValue: input.answeredValue },
+      });
+      if (run.status === "failed") {
+        toast.error(t("activityAnalytics.v2.runFailed"));
+      } else {
+        toast.success(t("activityAnalytics.v2.clarificationAnswered"));
+      }
+    } catch (error) {
+      toast.error(
+        error instanceof ApiError
+          ? error.message
+          : t("activityAnalytics.v2.runFailed"),
+      );
+    }
+  }
+
+  if (!auth.token || projectQuery.isLoading || activityQuery.isLoading) {
     return <AnalyticsErrorState label={t("activityAnalytics.loading")} />;
   }
 
-  if (
-    !projectQuery.data ||
-    !activityQuery.data ||
-    analyticsQuery.isError ||
-    interpretationsQuery.isError
-  ) {
+  if (!projectQuery.data || !activityQuery.data) {
     return <AnalyticsErrorState label={t("activityAnalytics.loadFailed")} />;
   }
 
   const activity = activityQuery.data;
-  const { execution, result } = analyticsQuery.data ?? {
-    execution: null,
-    result: null,
-  };
-  const layoutPreference = analyticsQuery.data?.layoutPreference ?? null;
-  const dashboardCompatibilitySource =
-    analyticsQuery.data?.dashboardCompatibilitySource ?? null;
-  const dashboardUsageSummary =
-    analyticsQuery.data?.dashboardUsageSummary ?? null;
-  const isExecutionComplete = Boolean(
-    execution &&
-    ["COMPLETED", "COMPLETED_WITH_WARNINGS"].includes(execution.status),
-  );
+  const latestAnalysisV2Run = latestAnalysisV2Query.data ?? null;
 
   return (
     <>
@@ -159,50 +143,19 @@ export function ActivityAnalyticsPage() {
         />
 
         <div className="mt-6 space-y-5">
-          <AnalyticsStatusBanner
-            execution={execution}
-            result={result}
-            onRegenerate={handleRegenerate}
-            isRegenerating={generateMutation.isPending}
+          <ActivityAnalysisV2Panel
+            activityName={activity.name}
+            latestRun={latestAnalysisV2Run}
+            latestError={
+              latestAnalysisV2Query.isError ? latestAnalysisV2Query.error : null
+            }
+            isLoading={latestAnalysisV2Query.isLoading}
+            onRun={handleRunActivityAnalysisV2}
+            isRunning={runAnalysisV2Mutation.isPending}
+            onAnswerQuestion={handleAnswerQuestion}
+            isAnsweringQuestion={answerQuestionMutation.isPending}
+            previousRuns={analysisV2RunsQuery.data ?? null}
           />
-
-          {!isExecutionComplete ||
-          !result ||
-          result.catalog.entries.length === 0 ? (
-            <AnalyticsEmptyState
-              title={emptyStateTitle}
-              description={emptyStateDescription}
-              cta={
-                showOverviewCta ? (
-                  <Link
-                    to="/projects/$projectId/activities"
-                    params={{ projectId }}
-                    className={analyticsCtaLinkClassName}
-                  >
-                    {t("activityAnalytics.noVerifiedEvidenceCta")}
-                  </Link>
-                ) : undefined
-              }
-            />
-          ) : (
-            <ConfigurableAnalyticsDashboard
-              result={result}
-              layoutPreference={layoutPreference}
-              dashboardCompatibilitySource={dashboardCompatibilitySource}
-              dashboardUsageSummary={dashboardUsageSummary}
-              onSaveLayout={(payload) => updateLayoutMutation.mutate(payload)}
-              onResetLayout={() => resetLayoutMutation.mutate()}
-              onExport={(payload) =>
-                apiClient.downloadActivityAnalyticsExport(
-                  projectId,
-                  activityId,
-                  payload,
-                )
-              }
-              isSavingLayout={updateLayoutMutation.isPending}
-              isResettingLayout={resetLayoutMutation.isPending}
-            />
-          )}
         </div>
       </PageContainer>
     </>

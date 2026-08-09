@@ -1,34 +1,22 @@
 import { useQueries, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { AlertTriangle, CircleHelp, Loader2, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { PrivacyReviewDialog } from "@/components/privacyReviewDialog";
+import { InterpretationQuestionCard } from "@/components/interpretationQuestionCard";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
-import { ActivityAiKnowledgeContent } from "@/components/activityAiKnowledgeContent";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { useCurrentWorkspaceProject } from "@/contexts/projectWorkspaceContext";
 import {
-  activityAiKnowledgeQueryKey,
   activityJobsQueryKey,
   activityUploadsQueryKey,
   activityWorkflowStageQueryKey,
   jobQueryKey,
   projectInterpretationsQueryKey,
-  useActivityAiKnowledgeQuery,
   useAnswerInterpretationQuestionMutation,
-  useGenerateActivityAiKnowledgeMutation,
-  useRegenerateActivityAiKnowledgeMutation,
   useStartActivityInterpretationMutation,
   useProjectInterpretationsQuery,
 } from "@/hooks/useWorkspaceQueries";
@@ -40,7 +28,6 @@ import {
   type ActivityWorkflowStage,
   type EvidenceModality,
   type InterpretationQuestion,
-  type InterpretationQuestionDomain,
   type InterpretationResultRecord,
   type ParsedRepresentationPreviewRecord,
   type ProcessingJobRecord,
@@ -48,7 +35,6 @@ import {
   type WorkspaceActivity,
 } from "@/services/apiClient";
 import { Card } from "@/components/WorkspaceUI";
-import { cn } from "@/lib/utils";
 
 // Interpretation always takes at least this long, so polling sooner than
 // the first step never finds anything new. Ramps down as the active job
@@ -56,8 +42,6 @@ import { cn } from "@/lib/utils";
 const INTERPRETATION_POLL_INTERVAL_RAMP_MS = [30_000, 20_000] as const;
 const INTERPRETATION_STEADY_POLL_INTERVAL_MS = 10_000;
 const TERMINAL_JOB_STATUSES = ["completed", "failed", "cancelled"];
-const RECOMMENDED_OPTION_CONFIDENCE_THRESHOLD = 0.8;
-
 // Based on elapsed time since the job actually started (job.createdAt),
 // not a poll counter — a counter would drift out of sync with reality on
 // every remount or tab switch, while elapsed time doesn't.
@@ -212,14 +196,12 @@ function SummaryMetric({ label, value }: { label: string; value: string }) {
 
 function ProjectInterpretationPage() {
   const { projectId } = Route.useParams();
+  const navigate = useNavigate();
   const auth = useRequireAuth();
   const { t } = useTranslation();
   const workspaceProject = useCurrentWorkspaceProject();
   const [reviewProcessingJob, setReviewProcessingJob] = useState<
     { jobId: string; activityName: string } | undefined
-  >(undefined);
-  const [knowledgeTarget, setKnowledgeTarget] = useState<
-    { activityId: string; activityName: string } | undefined
   >(undefined);
   const interpretationsQuery = useProjectInterpretationsQuery(
     projectId,
@@ -394,8 +376,11 @@ function ProjectInterpretationPage() {
                   onOpenPrivacyReview={(jobId, activityName) =>
                     setReviewProcessingJob({ jobId, activityName })
                   }
-                  onOpenKnowledge={(activityId, activityName) =>
-                    setKnowledgeTarget({ activityId, activityName })
+                  onOpenAnalysis={(activityId) =>
+                    void navigate({
+                      to: "/projects/$projectId/activities/$activityId/analysis",
+                      params: { projectId, activityId },
+                    })
                   }
                 />
               ))
@@ -415,17 +400,6 @@ function ProjectInterpretationPage() {
           organizationId={workspaceProject?.organizationId ?? ""}
           activityName={reviewProcessingJob?.activityName}
         />
-
-        <ActivityAiKnowledgeDialog
-          open={Boolean(knowledgeTarget)}
-          onOpenChange={(open) => {
-            if (!open) {
-              setKnowledgeTarget(undefined);
-            }
-          }}
-          activityId={knowledgeTarget?.activityId}
-          activityName={knowledgeTarget?.activityName}
-        />
       </section>
     </ProjectWorkspaceShell>
   );
@@ -440,7 +414,7 @@ function ActivityKnowledgeCard({
   results,
   workflowStage,
   onOpenPrivacyReview,
-  onOpenKnowledge,
+  onOpenAnalysis,
 }: {
   activity: WorkspaceActivity;
   projectId: string;
@@ -450,7 +424,7 @@ function ActivityKnowledgeCard({
   results: InterpretationResultRecord[];
   workflowStage: ActivityWorkflowStage | undefined;
   onOpenPrivacyReview: (jobId: string, activityName: string) => void;
-  onOpenKnowledge: (activityId: string, activityName: string) => void;
+  onOpenAnalysis: (activityId: string) => void;
 }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -458,24 +432,6 @@ function ActivityKnowledgeCard({
     activity.id,
     projectId,
   );
-  const generateKnowledgeMutation = useGenerateActivityAiKnowledgeMutation(
-    activity.id,
-    projectId,
-    organizationId,
-  );
-  const regenerateKnowledgeMutation = useRegenerateActivityAiKnowledgeMutation(
-    activity.id,
-    projectId,
-    organizationId,
-  );
-  // A failed generate/regenerate call used to only show a toast — easy to
-  // miss, and once dismissed there was no remaining indication that the
-  // knowledge dialog was still showing a stale, un-refreshed snapshot.
-  // This stays visible until the next successful attempt (or another
-  // attempt is started), independent of whether the toast was seen.
-  const [knowledgeActionError, setKnowledgeActionError] = useState<
-    string | null
-  >(null);
 
   const latestEvidenceJobByUploadId = new Map(
     uploads.map((upload) => [
@@ -545,9 +501,6 @@ function ActivityKnowledgeCard({
       queryKey: projectInterpretationsQueryKey(projectId),
     });
     void queryClient.invalidateQueries({
-      queryKey: activityAiKnowledgeQueryKey(activity.id),
-    });
-    void queryClient.invalidateQueries({
       queryKey: activityWorkflowStageQueryKey(activity.id),
     });
   }, [activeJobSyncQueries, activity.id, projectId, queryClient]);
@@ -574,10 +527,6 @@ function ActivityKnowledgeCard({
   const status = mapWorkflowStageToActivityStatus(
     workflowStage,
     results.length > 0,
-  );
-  const hasPersistedKnowledge = Boolean(
-    activity.aiKnowledgeGeneratedAt ||
-    generateKnowledgeMutation.data?.generatedAt,
   );
   const hasExistingInterpretations = results.length > 0;
 
@@ -616,17 +565,9 @@ function ActivityKnowledgeCard({
     !currentPendingPrivacyReview &&
     !startMutation.isPending &&
     !hasQueuedInterpretationStart;
-  const canGenerateKnowledge =
-    !hasPersistedKnowledge &&
+  const canOpenAnalysis =
     (status === "ready" || status === "reviewed") &&
-    !hasUnresolvedActionableQuestion &&
-    !generateKnowledgeMutation.isPending;
-  const canOpenKnowledge = hasPersistedKnowledge;
-  const canRegenerateKnowledge =
-    hasPersistedKnowledge &&
-    (status === "ready" || status === "reviewed") &&
-    !hasUnresolvedActionableQuestion &&
-    !regenerateKnowledgeMutation.isPending;
+    !hasUnresolvedActionableQuestion;
   const interpretationActionLabel = hasExistingInterpretations
     ? t(
         "projectWorkspace.interpretation.simplified.actionInterpretMissingEvidence",
@@ -678,26 +619,6 @@ function ActivityKnowledgeCard({
                         "projectWorkspace.interpretation.simplified.activitySummary.notStarted",
                       );
 
-  function handleOpenKnowledge() {
-    onOpenKnowledge(activity.id, activity.name);
-  }
-
-  function handleRegenerateKnowledge() {
-    setKnowledgeActionError(null);
-    regenerateKnowledgeMutation.mutate(undefined, {
-      onSuccess: () => {
-        setKnowledgeActionError(null);
-        toast.success(
-          t("projectWorkspace.interpretation.simplified.knowledgeRefreshed"),
-        );
-      },
-      onError: (error) => {
-        setKnowledgeActionError(error.message);
-        toast.error(error.message);
-      },
-    });
-  }
-
   return (
     <Card className="p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -739,9 +660,7 @@ function ActivityKnowledgeCard({
             </Button>
           ) : null}
 
-          {!isInterpretationProcessing &&
-          !canOpenKnowledge &&
-          canStartInterpretation ? (
+          {!isInterpretationProcessing && canStartInterpretation ? (
             <Button
               size="sm"
               variant="outline"
@@ -777,59 +696,19 @@ function ActivityKnowledgeCard({
             </Button>
           ) : null}
 
-          {canGenerateKnowledge ? (
+          {canOpenAnalysis ? (
             <Button
               size="sm"
               variant="outline"
-              onClick={() => {
-                setKnowledgeActionError(null);
-                generateKnowledgeMutation.mutate(undefined, {
-                  onSuccess: () => {
-                    setKnowledgeActionError(null);
-                    onOpenKnowledge(activity.id, activity.name);
-                  },
-                  onError: (error) => {
-                    setKnowledgeActionError(error.message);
-                    toast.error(error.message);
-                  },
-                });
-              }}
+              onClick={() => onOpenAnalysis(activity.id)}
             >
               {t(
-                "projectWorkspace.interpretation.simplified.actionGenerateKnowledge",
-              )}
-            </Button>
-          ) : null}
-
-          {canOpenKnowledge ? (
-            <Button size="sm" onClick={handleOpenKnowledge}>
-              {t(
-                "projectWorkspace.interpretation.simplified.actionOpenKnowledge",
-              )}
-            </Button>
-          ) : null}
-
-          {canRegenerateKnowledge ? (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={handleRegenerateKnowledge}
-              disabled={regenerateKnowledgeMutation.isPending}
-            >
-              {t(
-                "projectWorkspace.interpretation.simplified.actionRefreshKnowledge",
+                "projectWorkspace.interpretation.simplified.actionOpenAnalysis",
               )}
             </Button>
           ) : null}
         </div>
       </div>
-
-      {knowledgeActionError ? (
-        <div className="mt-3 flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-xs text-destructive">
-          <AlertTriangle className="mt-0.5 h-3.5 w-3.5 flex-shrink-0" />
-          <span>{knowledgeActionError}</span>
-        </div>
-      ) : null}
 
       {pendingQuestions.length > 0 ? (
         <div className="mt-4 space-y-3 border-t border-border/70 pt-4">
@@ -910,70 +789,6 @@ function ActivityStatusBadge({
   );
 }
 
-function ActivityAiKnowledgeDialog({
-  open,
-  onOpenChange,
-  activityId,
-  activityName,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  activityId?: string;
-  activityName?: string;
-}) {
-  const { t } = useTranslation();
-  const knowledgeQuery = useActivityAiKnowledgeQuery(
-    activityId ?? "",
-    open && Boolean(activityId),
-  );
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[85vh] max-w-2xl flex-col">
-        <DialogHeader>
-          <DialogTitle>
-            {activityName ??
-              t(
-                "projectWorkspace.interpretation.simplified.knowledgeDialogTitle",
-              )}
-          </DialogTitle>
-          <DialogDescription>
-            {t(
-              "projectWorkspace.interpretation.simplified.knowledgeDialogDescription",
-            )}
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="overflow-y-auto pr-1">
-          {!activityId || knowledgeQuery.isLoading ? (
-            <div className="py-6 text-sm text-muted-foreground">
-              {t(
-                "projectWorkspace.interpretation.simplified.knowledgeDialogLoading",
-              )}
-            </div>
-          ) : knowledgeQuery.isError || !knowledgeQuery.data ? (
-            <div className="py-6 text-sm text-muted-foreground">
-              {t(
-                "projectWorkspace.interpretation.simplified.knowledgeDialogError",
-              )}
-            </div>
-          ) : (
-            <ActivityAiKnowledgeContent knowledge={knowledgeQuery.data} />
-          )}
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-function getQuestionDomainLabelKey(
-  questionDomain: InterpretationQuestionDomain,
-) {
-  return questionDomain === "preparation"
-    ? "projectWorkspace.interpretation.questionDomainPreparationLabel"
-    : "projectWorkspace.interpretation.questionDomainInterpretationLabel";
-}
-
 function QuestionCard({
   activityName,
   interpretationResultId,
@@ -987,137 +802,23 @@ function QuestionCard({
   organizationId: string | undefined;
   question: InterpretationQuestion;
 }) {
-  const { t } = useTranslation();
-  const [freeTextValue, setFreeTextValue] = useState(
-    question.answeredValue ?? "",
-  );
-  const [isEditing, setIsEditing] = useState(question.status === "pending");
   const answerMutation = useAnswerInterpretationQuestionMutation(
     interpretationResultId,
     projectId,
     organizationId,
   );
 
-  useEffect(() => {
-    setFreeTextValue(question.answeredValue ?? "");
-    setIsEditing(question.status === "pending");
-  }, [question.answeredValue, question.id, question.status]);
-
-  function submitAnswer(answeredValue: string) {
-    if (!answeredValue.trim()) {
-      return;
-    }
-    answerMutation.mutate({
-      questionId: question.id,
-      payload: { answeredValue },
-    });
-  }
-
   return (
-    <Card className="p-5">
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="text-sm font-semibold tracking-tight text-foreground">
-          {activityName}
-        </div>
-        <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
-          {question.isBlocking
-            ? t("projectWorkspace.interpretation.questionRequiredLabel")
-            : t("projectWorkspace.interpretation.questionOptionalLabel")}
-        </Badge>
-      </div>
-      <p className="mt-2 text-xs font-medium uppercase tracking-[0.08em] text-muted-foreground">
-        {t(getQuestionDomainLabelKey(question.questionDomain))}
-      </p>
-      <p className="mt-2 text-sm leading-6 text-muted-foreground">
-        {question.prompt}
-      </p>
-      {question.status === "answered" && !isEditing ? (
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          <Badge variant="outline">
-            {t("projectWorkspace.interpretation.questionAnsweredLabel", {
-              value: question.answeredValue ?? "",
-            })}
-          </Badge>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setIsEditing(true)}
-          >
-            {t("projectWorkspace.interpretation.questionEdit")}
-          </Button>
-        </div>
-      ) : question.kind === "free_text" || !question.options?.length ? (
-        <div className="mt-3 flex flex-wrap gap-2">
-          <Input
-            value={freeTextValue}
-            onChange={(event) => setFreeTextValue(event.target.value)}
-            placeholder={t(
-              "projectWorkspace.interpretation.questionFreeTextPlaceholder",
-            )}
-            className="max-w-sm"
-          />
-          <Button
-            size="sm"
-            onClick={() => submitAnswer(freeTextValue)}
-            disabled={!freeTextValue.trim() || answerMutation.isPending}
-          >
-            {answerMutation.isPending
-              ? t("projectWorkspace.interpretation.questionSubmitting")
-              : question.status === "answered"
-                ? t("projectWorkspace.interpretation.questionSave")
-                : t("projectWorkspace.interpretation.questionSubmit")}
-          </Button>
-          {question.status === "answered" ? (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                setFreeTextValue(question.answeredValue ?? "");
-                setIsEditing(false);
-              }}
-              disabled={answerMutation.isPending}
-            >
-              {t("projectWorkspace.interpretation.questionCancel")}
-            </Button>
-          ) : null}
-        </div>
-      ) : (
-        <div className="mt-3 flex flex-wrap gap-2">
-          {question.options.map((option) => {
-            const isSelected = question.answeredValue === option;
-            const isRecommended =
-              question.recommendedOption === option &&
-              (question.recommendedConfidence ?? 0) >=
-                RECOMMENDED_OPTION_CONFIDENCE_THRESHOLD;
-            return (
-              <Button
-                key={option}
-                variant={isSelected ? "secondary" : "outline"}
-                size="sm"
-                onClick={() => submitAnswer(option)}
-                disabled={answerMutation.isPending}
-                className={cn(
-                  isRecommended &&
-                    !isSelected &&
-                    "border-primary/25 bg-primary/8 text-foreground hover:bg-primary/12",
-                )}
-              >
-                {option}
-              </Button>
-            );
-          })}
-          {question.status === "answered" ? (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsEditing(false)}
-              disabled={answerMutation.isPending}
-            >
-              {t("projectWorkspace.interpretation.questionCancel")}
-            </Button>
-          ) : null}
-        </div>
-      )}
-    </Card>
+    <InterpretationQuestionCard
+      activityName={activityName}
+      question={question}
+      isSubmitting={answerMutation.isPending}
+      onSubmit={({ questionId, answeredValue }) =>
+        answerMutation.mutate({
+          questionId,
+          payload: { answeredValue },
+        })
+      }
+    />
   );
 }

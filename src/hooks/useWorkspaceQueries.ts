@@ -1,9 +1,4 @@
-import {
-  type QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { sessionQueryKey } from "@/hooks/useAuth";
 import {
@@ -16,7 +11,7 @@ import {
   ApiError,
   apiClient,
   type ActivitySummary,
-  type ActivityAiKnowledgeRecord,
+  type ActivityAnalysisRunV2Record,
   type ActivityWorkflowStageRecord,
   type CreateActivityPayload,
   type CreateOrganizationPayload,
@@ -59,10 +54,12 @@ export const activityUploadsQueryKey = (activityId: string) =>
   ["activity-uploads", activityId] as const;
 export const activityJobsQueryKey = (activityId: string) =>
   ["activity-jobs", activityId] as const;
-export const activityAiKnowledgeQueryKey = (activityId: string) =>
-  ["activity-ai-knowledge", activityId] as const;
 export const activityWorkflowStageQueryKey = (activityId: string) =>
   ["activity-workflow-stage", activityId] as const;
+export const activityAnalysisV2LatestQueryKey = (activityId: string) =>
+  ["activity-analysis-v2-latest", activityId] as const;
+export const activityAnalysisV2RunsQueryKey = (activityId: string) =>
+  ["activity-analysis-v2-runs", activityId] as const;
 export const jobQueryKey = (jobId: string) => ["job", jobId] as const;
 export const privacyReviewQueryKey = (processingJobId: string) =>
   ["privacy-review", processingJobId] as const;
@@ -175,18 +172,6 @@ export function useActivityJobsQuery(
   });
 }
 
-export function useActivityAiKnowledgeQuery(
-  activityId: string,
-  enabled = true,
-) {
-  return useQuery<ActivityAiKnowledgeRecord, ApiError>({
-    queryKey: activityAiKnowledgeQueryKey(activityId),
-    queryFn: () => apiClient.getActivityAiKnowledge(activityId),
-    enabled,
-    staleTime: Number.POSITIVE_INFINITY,
-  });
-}
-
 export function useActivityWorkflowStageQuery(
   activityId: string,
   enabled = true,
@@ -200,120 +185,77 @@ export function useActivityWorkflowStageQuery(
   });
 }
 
-// Shared by generate and regenerate — both replace the same activity/
-// workspace-level fields and need the same cache invalidations, so this is
-// the one place that has to stay in sync between the two mutations.
-function createAiKnowledgeGeneratedHandler(
-  queryClient: QueryClient,
+export function useLatestActivityAnalysisV2Query(
   activityId: string,
-  projectId?: string,
-  organizationId?: string,
+  enabled = true,
 ) {
-  return (knowledge: ActivityAiKnowledgeRecord) => {
-    const generatedAt = knowledge.generatedAt ?? new Date().toISOString();
-
-    queryClient.setQueryData(
-      activityAiKnowledgeQueryKey(activityId),
-      knowledge,
-    );
-    queryClient.setQueryData<ActivitySummary | undefined>(
-      activityQueryKey(activityId),
-      (currentActivity) =>
-        currentActivity
-          ? {
-              ...currentActivity,
-              aiKnowledgeGeneratedAt: generatedAt,
-              interpretationAcknowledgedAt:
-                currentActivity.interpretationAcknowledgedAt ?? generatedAt,
-            }
-          : currentActivity,
-    );
-    if (organizationId) {
-      queryClient.setQueryData<OrganizationWorkspace | undefined>(
-        workspaceQueryKey(organizationId),
-        (currentWorkspace) =>
-          currentWorkspace
-            ? {
-                ...currentWorkspace,
-                projects: currentWorkspace.projects.map((project) => ({
-                  ...project,
-                  activities: project.activities.map((activity) =>
-                    activity.id === activityId
-                      ? {
-                          ...activity,
-                          aiKnowledgeGeneratedAt: generatedAt,
-                          interpretationAcknowledgedAt:
-                            activity.interpretationAcknowledgedAt ??
-                            generatedAt,
-                        }
-                      : activity,
-                  ),
-                })),
-              }
-            : currentWorkspace,
-      );
-    }
-    void queryClient.invalidateQueries({
-      queryKey: activityQueryKey(activityId),
-    });
-    if (projectId) {
-      void queryClient.invalidateQueries({
-        queryKey: projectInterpretationsQueryKey(projectId),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: projectAnalyticsQueryKey(projectId),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: projectOverviewQueryKey(projectId),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: projectActivitiesQueryKey(projectId),
-      });
-    }
-    void queryClient.invalidateQueries({
-      queryKey: activityAnalyticsQueryKey(activityId),
-    });
-    if (organizationId) {
-      void queryClient.invalidateQueries({
-        queryKey: workspaceQueryKey(organizationId),
-      });
-    }
-  };
-}
-
-export function useGenerateActivityAiKnowledgeMutation(
-  activityId: string,
-  projectId?: string,
-  organizationId?: string,
-) {
-  const queryClient = useQueryClient();
-
-  return useMutation<ActivityAiKnowledgeRecord, ApiError>({
-    mutationFn: () => apiClient.generateActivityAiKnowledge(activityId),
-    onSuccess: createAiKnowledgeGeneratedHandler(
-      queryClient,
-      activityId,
-      projectId,
-      organizationId,
-    ),
+  return useQuery<ActivityAnalysisRunV2Record, ApiError>({
+    queryKey: activityAnalysisV2LatestQueryKey(activityId),
+    queryFn: () => apiClient.getLatestActivityAnalysisV2(activityId),
+    enabled,
+    retry: false,
   });
 }
 
-export function useRegenerateActivityAiKnowledgeMutation(
+export function useActivityAnalysisV2RunsQuery(
   activityId: string,
-  projectId?: string,
-  organizationId?: string,
+  enabled = true,
+) {
+  return useQuery<ActivityAnalysisRunV2Record[], ApiError>({
+    queryKey: activityAnalysisV2RunsQueryKey(activityId),
+    queryFn: () => apiClient.listActivityAnalysisV2Runs(activityId),
+    enabled,
+  });
+}
+
+export function useRunActivityAnalysisV2Mutation(activityId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<ActivityAnalysisRunV2Record, ApiError>({
+    mutationFn: () => apiClient.runActivityAnalysisV2(activityId),
+    onSuccess: (run) => {
+      queryClient.setQueryData(
+        activityAnalysisV2LatestQueryKey(activityId),
+        run,
+      );
+      void queryClient.invalidateQueries({
+        queryKey: activityAnalysisV2RunsQueryKey(activityId),
+      });
+    },
+  });
+}
+
+export function useAnswerActivityAnalysisV2QuestionMutation(
+  activityId: string,
 ) {
   const queryClient = useQueryClient();
 
-  return useMutation<ActivityAiKnowledgeRecord, ApiError>({
-    mutationFn: () => apiClient.regenerateActivityAiKnowledge(activityId),
-    onSuccess: createAiKnowledgeGeneratedHandler(
-      queryClient,
-      activityId,
-      projectId,
-      organizationId,
-    ),
+  return useMutation<
+    ActivityAnalysisRunV2Record,
+    ApiError,
+    { questionId: string; payload: AnswerInterpretationQuestionPayload }
+  >({
+    mutationFn: ({ questionId, payload }) =>
+      apiClient.answerActivityAnalysisV2Question(
+        activityId,
+        questionId,
+        payload,
+      ),
+    onSuccess: (run) => {
+      queryClient.setQueryData(
+        activityAnalysisV2LatestQueryKey(activityId),
+        run,
+      );
+      void queryClient.invalidateQueries({
+        queryKey: activityAnalysisV2RunsQueryKey(activityId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: activityQueryKey(activityId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: activityWorkflowStageQueryKey(activityId),
+      });
+    },
   });
 }
 
@@ -678,7 +620,7 @@ export function useUploadActivityFileMutation(
         queryKey: activityJobsQueryKey(activityId),
       });
       void queryClient.invalidateQueries({
-        queryKey: activityAiKnowledgeQueryKey(activityId),
+        queryKey: activityAnalysisV2LatestQueryKey(activityId),
       });
       if (projectId) {
         void queryClient.invalidateQueries({
@@ -721,7 +663,7 @@ export function useDeleteEvidenceMutation(
         queryKey: activityJobsQueryKey(activityId),
       });
       void queryClient.invalidateQueries({
-        queryKey: activityAiKnowledgeQueryKey(activityId),
+        queryKey: activityAnalysisV2LatestQueryKey(activityId),
       });
       if (projectId) {
         void queryClient.invalidateQueries({
@@ -936,7 +878,7 @@ export function useAcknowledgeInterpretationReviewMutation(
         queryKey: activityQueryKey(activityId),
       });
       void queryClient.invalidateQueries({
-        queryKey: activityAiKnowledgeQueryKey(activityId),
+        queryKey: activityAnalysisV2LatestQueryKey(activityId),
       });
       if (organizationId) {
         void queryClient.invalidateQueries({

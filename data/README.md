@@ -25,18 +25,18 @@ zufällig und nicht beabsichtigt.
 
 ## Ordnerstruktur
 
-| Ordner | Aktivität |
-|---|---|
-| `00_manifest` | Übersicht/Manifest aller Dateien in diesem Paket |
-| `01_mentor_recruitment` | Mentor:innengewinnung und Auswahl |
-| `02_mentor_training` | Mentor:innenschulung |
-| `03_school_info_sessions` | Informationsveranstaltungen an Schulen |
-| `04_matching` | Matching von Jugendlichen und Mentor:innen |
-| `05_monthly_mentoring` | Monatliche Mentoring-Treffen |
-| `06_career_workshops` | Karriere- und Bewerbungstrainings |
-| `07_company_visits` | Unternehmensbesuche und Praxiseinblicke |
-| `08_reflection` | Reflexions- und Feedbackgespräche |
-| `09_final_outcomes` | Abschlussbefragung und Outcome-Erhebung |
+| Ordner                    | Aktivität                                        |
+| ------------------------- | ------------------------------------------------ |
+| `00_manifest`             | Übersicht/Manifest aller Dateien in diesem Paket |
+| `01_mentor_recruitment`   | Mentor:innengewinnung und Auswahl                |
+| `02_mentor_training`      | Mentor:innenschulung                             |
+| `03_school_info_sessions` | Informationsveranstaltungen an Schulen           |
+| `04_matching`             | Matching von Jugendlichen und Mentor:innen       |
+| `05_monthly_mentoring`    | Monatliche Mentoring-Treffen                     |
+| `06_career_workshops`     | Karriere- und Bewerbungstrainings                |
+| `07_company_visits`       | Unternehmensbesuche und Praxiseinblicke          |
+| `08_reflection`           | Reflexions- und Feedbackgespräche                |
+| `09_final_outcomes`       | Abschlussbefragung und Outcome-Erhebung          |
 
 Jeder Ordner enthält eine Mischung aus Dateiformaten (CSV, XLSX, DOCX, PDF, TXT/E-Mail-Auszüge),
 so wie sie in der Projektpraxis tatsächlich anfallen würden – Formularexporte, Teilnahmelisten,

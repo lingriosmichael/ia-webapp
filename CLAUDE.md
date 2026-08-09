@@ -13,6 +13,16 @@ the recommended way to handle server state against ia_backend.
 - `src/services/` — backend-facing API and storage services
 - `src/locales/` — translation dictionaries
 
+## Key feature documentation
+
+For the activity-analysis feature (upload → privacy review → interpretation
+→ `ActivityAnalystV2`), see `CURRENT_ANALYSIS_PIPELINE.md` at the workspace
+root — it lists the canonical frontend files for that flow
+(`activityAnalyticsPage.tsx`, `activityAnalysisV2Panel.tsx`,
+`interpretationQuestionCard.tsx`) plus the cross-service data flow. The
+older `activity.aiKnowledgeSnapshot`-based summary is legacy; new work on
+that page should read/write only the `analysis-v2` routes and hooks.
+
 ## Naming standard
 
 - Use `camelCase` for all multi-word frontend source filenames outside the route system.

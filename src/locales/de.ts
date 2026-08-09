@@ -584,24 +584,20 @@ const de: TranslationDictionary = {
         "Noch keine Interpretationsergebnisse. Starten Sie „Mit KI interpretieren“ für die Evidenz einer Aktivität, sobald deren Datenschutzprüfung genehmigt ist.",
       questionDomainPreparationLabel: "Vorbereitung",
       questionDomainInterpretationLabel: "Interpretation",
-      questionAnsweredLabel: "Beantwortet: {{value}}",
       questionRequiredLabel: "Für die Prüfung erforderlich",
       questionOptionalLabel: "Optional",
-      questionEdit: "Antwort bearbeiten",
-      questionSave: "Antwort speichern",
-      questionCancel: "Abbrechen",
       questionFreeTextPlaceholder: "Antwort eingeben…",
       questionSubmit: "Absenden",
       questionSubmitting: "Wird gesendet…",
       reviewPrivacyAction: "Datenschutz prüfen",
       noEvidenceYet: "Noch keine Evidenz hochgeladen.",
       simplified: {
-        pageTitle: "AI knowledge",
-        heroTitle: "Erkenntnisse aus Ihren Daten",
+        pageTitle: "Aktivitätsanalyse",
+        heroTitle: "Eine zielbasierte Analyse pro Aktivität",
         heroDescription:
-          "Die KI unterstützt Sie dabei, Zusammenhänge, Entwicklungen und mögliche Lücken zu erkennen. Die fachliche Einordnung und Bewertung bleibt bei Ihnen.",
+          "Die KI unterstützt Sie dabei, Zusammenhänge, Entwicklungen und mögliche Lücken zu erkennen. Die fachliche Einordnung erfolgt jetzt über eine zielbasierte Aktivitätsanalyse als kanonische Ansicht.",
         statActivities: "Aktivitäten",
-        statReady: "AI knowledge bereit",
+        statReady: "Analyse bereit",
         statAttention: "Braucht Aufmerksamkeit",
         activitiesTitle: "Aktivitäten",
         activitySummary: {
@@ -612,17 +608,18 @@ const de: TranslationDictionary = {
           processing:
             "Die KI-Analyse läuft gerade über die Evidenz dieser Aktivität.",
           questions:
-            "{{count}} Klärungsfrage ist noch offen, bevor AI knowledge fertig werden kann.",
+            "{{count}} Klärungsfrage ist noch offen, bevor die Aktivitätsanalyse geöffnet werden kann.",
           questions_other:
-            "{{count}} Klärungsfragen sind noch offen, bevor AI knowledge fertig werden kann.",
+            "{{count}} Klärungsfragen sind noch offen, bevor die Aktivitätsanalyse geöffnet werden kann.",
           partial:
-            "{{interpreted}} Datei ist bereits interpretiert. {{remaining}} weitere Datei fehlt noch oder benötigt Aufmerksamkeit, bevor AI knowledge fertig werden kann.",
+            "{{interpreted}} Datei ist bereits interpretiert. {{remaining}} weitere Datei fehlt noch oder benötigt Aufmerksamkeit, bevor die Aktivitätsanalyse geöffnet werden kann.",
           partial_other:
-            "{{interpreted}} Dateien sind bereits interpretiert. {{remaining}} weitere Dateien fehlen noch oder benötigen Aufmerksamkeit, bevor AI knowledge fertig werden kann.",
+            "{{interpreted}} Dateien sind bereits interpretiert. {{remaining}} weitere Dateien fehlen noch oder benötigen Aufmerksamkeit, bevor die Aktivitätsanalyse geöffnet werden kann.",
           goalReview:
-            "brindl schließt gerade die dateiübergreifende Prüfung der Evidenz dieser Aktivität ab, bevor AI knowledge erzeugt werden kann.",
-          ready: "AI knowledge kann jetzt für diese Aktivität erzeugt werden.",
-          reviewed: "AI knowledge ist für diese Aktivität verfügbar.",
+            "brindl schließt gerade die dateiübergreifende Prüfung der Evidenz dieser Aktivität ab, bevor die Aktivitätsanalyse geöffnet werden kann.",
+          ready:
+            "Die Aktivitätsanalyse kann jetzt für diese Aktivität geöffnet werden.",
+          reviewed: "Die Aktivitätsanalyse ist für diese Aktivität verfügbar.",
           notStarted:
             "Die KI-Analyse wurde für diese Aktivität noch nicht gestartet.",
         },
@@ -634,7 +631,6 @@ const de: TranslationDictionary = {
         actionRestart: "Analyse neu starten",
         actionRunKnowledge: "KI analysieren",
         actionInterpretMissingEvidence: "Fehlende Evidenz interpretieren",
-        actionGenerateKnowledge: "AI knowledge erzeugen",
         interpretationStarted: "KI-Interpretation wurde gestartet.",
         interpretationRestarted: "KI-Interpretation wurde neu gestartet.",
         interpretationRestartNoop:
@@ -645,19 +641,7 @@ const de: TranslationDictionary = {
           "KI-Interpretation konnte nicht neu gestartet werden.",
         activityNotReadyToast:
           "Diese Aktivität ist noch nicht bereit für die KI-Analyse. Schließen Sie zuerst die Datenschutzprüfung ab oder warten Sie, bis die Verarbeitung fertig ist.",
-        actionRefreshKnowledge: "AI knowledge aktualisieren",
-        knowledgeRefreshed: "AI knowledge wurde neu erstellt.",
-        actionOpenKnowledge: "AI knowledge öffnen",
-        actionOpeningKnowledge: "AI knowledge wird geöffnet…",
-        knowledgeDialogTitle: "AI knowledge",
-        knowledgeDialogDescription:
-          "brindl hat die interpretierte Evidenz dieser Aktivität zu einem gemeinsamen Wissensstand auf Aktivitätsebene zusammengeführt.",
-        knowledgeDialogLoading: "AI knowledge wird geladen…",
-        knowledgeDialogError: "AI knowledge konnte nicht geladen werden.",
-        knowledgeDialogMeta:
-          "Zusammengeführt aus {{evidenceCount}} Evidenzdateien",
-        knowledgeDialogEmpty:
-          "Für diese Aktivität ist noch keine AI knowledge Ansicht verfügbar.",
+        actionOpenAnalysis: "Aktivitätsanalyse öffnen",
         status: {
           no_evidence: "Keine Evidenz",
           privacy_review: "Datenschutzprüfung",
@@ -1281,6 +1265,69 @@ const de: TranslationDictionary = {
     readyToGenerateDescription:
       "Vorbereitung und deterministische Analyse liegen vor. Erzeugen Sie jetzt die Analysen für dieses Aktivitäts-Dashboard.",
     noVerifiedEvidenceCta: "Zur Übersicht",
+    v2: {
+      eyebrow: "ActivityAnalyst V2",
+      title: "Zielbasierte Analyse",
+      description:
+        "Diese Aktivitätsanalyse nutzt jetzt ActivityAnalyst V2 als primäre Ansicht. Sie bewertet die aktuellen Aktivitätsziele anhand des neuesten datenschutzsicheren Evidenzstands.",
+      loading: "Die neueste Aktivitätsanalyse wird geladen…",
+      loadFailed: "Die neueste Aktivitätsanalyse konnte nicht geladen werden.",
+      staleDataWarning:
+        "Die unten angezeigte Analyse ist möglicherweise veraltet — die letzte Aktualisierung ist fehlgeschlagen.",
+      noRunTitle: "Noch keine Aktivitätsanalyse",
+      noRunDescription:
+        "Erzeugen Sie die Aktivitätsanalyse, um diese Aktivität anhand ihrer aktuellen datenschutzsicheren Evidenz zu bewerten.",
+      runAction: "Analyse erzeugen",
+      refreshAction: "Analyse aktualisieren",
+      runPending: "Analyse wird erzeugt…",
+      runSuccess: "Die Aktivitätsanalyse wurde aktualisiert.",
+      runFailed:
+        "Die Aktivitätsanalyse konnte nicht abgeschlossen werden. Bitte starten Sie sie erneut.",
+      latestRunTitle: "Neueste Analyse",
+      latestRunMeta: "Erstellt {{createdAt}}",
+      errorTitle: "Lauffehler",
+      issuesTitle: "Validierungsprobleme",
+      summaryTitle: "Zusammenfassung",
+      summaryMissing:
+        "Für diesen Lauf wurde keine gerenderte Zusammenfassung erzeugt.",
+      outputsTitle: "Ergebnisse",
+      outcomesTitle: "Wirkung",
+      noOutputs: "Für diese Aktivität sind keine Output-Ziele definiert.",
+      noOutcomes:
+        "Für diese Aktivität sind keine Outcome-Ziele definiert, daher wird kein Wirkungsabschnitt angezeigt.",
+      limitationsTitle: "Aktuelle Einschränkungen",
+      runHistoryTitle: "Frühere Analysen",
+      metrics: {
+        goals: "Ziele",
+        evidence: "Evidenzen",
+        tools: "Tools",
+        calculations: "Berechnungen",
+      },
+      runStatus: {
+        collected: "Erfasst",
+        running: "Läuft",
+        needs_clarification: "Klärung nötig",
+        completed: "Abgeschlossen",
+        failed: "Fehlgeschlagen",
+      },
+      validationStatus: {
+        not_run: "Validierung ausstehend",
+        passed: "Validiert",
+        failed: "Validierung fehlgeschlagen",
+      },
+      goalStatus: {
+        achieved: "Erreicht",
+        not_achieved: "Nicht erreicht",
+        evidence_compiled: "Evidenz zusammengestellt",
+        requires_clarification: "Klärung nötig",
+        requires_capability: "Berechnung fehlt",
+      },
+      clarificationTitle: "Vor der Analyse ist noch eine Klärung erforderlich",
+      clarificationDescription:
+        "ActivityAnalystV2 hat angehalten, weil eine oder mehrere Definitionen noch unklar sind. Beantworte die Fragen unten; danach wird die Analyse mit diesen Antworten erneut gestartet.",
+      clarificationAnswered:
+        "Klärung gespeichert. Die Aktivitätsanalyse wurde erneut ausgeführt.",
+    },
   },
   activityInsights: {
     loading: "AI knowledge wird geladen…",
