@@ -574,6 +574,7 @@ const en = {
       questionDomainInterpretationLabel: "Interpretation",
       questionRequiredLabel: "Required for review",
       questionOptionalLabel: "Optional",
+      questionRecommended: "Recommended",
       questionFreeTextPlaceholder: "Type your answer…",
       questionSubmit: "Submit",
       questionSubmitting: "Submitting…",
@@ -604,14 +605,39 @@ const en = {
           partial_other:
             "{{interpreted}} files are already interpreted. {{remaining}} more files are still missing or need attention before the activity analysis can be opened.",
           goalReview:
-            "brindl is finishing cross-file checks across this activity's evidence before the activity analysis can be opened.",
-          ready: "The activity analysis can now be opened for this activity.",
-          reviewed: "The activity analysis is available for this activity.",
+            "This activity has a proposed cross-file match. Review whether the files should be linked or kept separate before the activity analysis can be opened.",
+          ready:
+            "The prerequisites are satisfied. The activity analysis can now be generated for this activity.",
+          reviewed:
+            "The prerequisites are satisfied. The activity analysis can be run again for this activity.",
+          v2Completed:
+            "The activity analysis can now be opened for this activity.",
+          v2NeedsClarification:
+            "The latest activity analysis still needs {{count}} clarification question before it can be opened.",
+          v2NeedsClarification_other:
+            "The latest activity analysis still needs {{count}} clarification questions before it can be opened.",
+          v2Failed:
+            "The latest activity analysis failed. Run it again.",
           notStarted: "AI analysis has not been started for this activity yet.",
         },
         activityMeta: "{{uploads}} files · {{interpreted}} interpreted",
         activityNoFiles: "No evidence has been uploaded for this activity yet.",
         questionsTitle: "Clarification questions",
+        reviewLinkageAction: "Review linkage",
+        linkageReviewTitle: "Review cross-file linkage",
+        linkageReviewDescription:
+          "brindl found a possible match between multiple evidence files that is not based on a clear identifier. Confirm a proposed column match only if both files truly describe the same entities. Otherwise reject it and the files will stay separate.",
+        linkageReviewLoading: "Loading linkage proposals…",
+        linkageProposalPrompt:
+          "Proposed column linkage: “{{tableA}}.{{columnA}}” with “{{tableB}}.{{columnB}}”. Use this proposed linkage? The overlapping values currently cover about {{overlap}} of the combined distinct values.",
+        linkageAcceptAction: "Use this linkage",
+        linkageRejectAction: "Keep separate",
+        linkageAccepted: "The proposed linkage was accepted.",
+        linkageRejected:
+          "These files will be treated as separate for this activity.",
+        linkageDecisionFailed: "The linkage decision could not be saved.",
+        linkageReviewResolved:
+          "There are no open linkage proposals for this activity right now.",
         actionRunning: "Analyzing…",
         actionRestart: "Restart analysis",
         actionRunKnowledge: "Analyze with AI",
@@ -633,7 +659,7 @@ const en = {
           processing: "In progress",
           questions: "Questions open",
           partial: "Partially complete",
-          goal_review: "Finishing checks",
+          goal_review: "Review linkage",
           ready: "Ready",
           reviewed: "Available",
           not_started: "Not started",
@@ -1251,6 +1277,7 @@ const en = {
       noRunDescription:
         "Generate the activity analysis to assess this activity against its current privacy-safe evidence.",
       runAction: "Generate analysis",
+      openAction: "Open analysis",
       refreshAction: "Refresh analysis",
       runPending: "Generating analysis…",
       runSuccess: "The activity analysis was refreshed.",
@@ -1262,6 +1289,23 @@ const en = {
       issuesTitle: "Validation issues",
       summaryTitle: "Summary",
       summaryMissing: "This run did not produce a rendered summary.",
+      dialogDescription:
+        "brindl condensed the current evidence for this activity into a single activity-level analysis.",
+      dialogMeta:
+        "This analysis considered {{goals}} goals across {{evidence}} evidence files.",
+      goalTarget: "{{target}} goal",
+      goalMet: "Goal met",
+      goalPercentOfTarget: "{{percent}} of target",
+      recommendationSectionTitle: "Recommendation",
+      attentionTitle: "Needs your attention",
+      attentionSectionTitle: "Needs attention",
+      onTrackSectionTitle: "On track",
+      supportingEvidenceTitle: "Additional grounded findings",
+      narrativeSectionTitle: "Narrative assessment",
+      noAttentionItems:
+        "This analysis did not flag any separate action items right now.",
+      noOnTrackItems:
+        "This analysis has not yet rated any goal as clearly achieved.",
       outputsTitle: "Outputs",
       outcomesTitle: "Outcomes",
       noOutputs: "No output goals are defined for this activity.",

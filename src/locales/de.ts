@@ -586,6 +586,7 @@ const de: TranslationDictionary = {
       questionDomainInterpretationLabel: "Interpretation",
       questionRequiredLabel: "Für die Prüfung erforderlich",
       questionOptionalLabel: "Optional",
+      questionRecommended: "Empfohlen",
       questionFreeTextPlaceholder: "Antwort eingeben…",
       questionSubmit: "Absenden",
       questionSubmitting: "Wird gesendet…",
@@ -616,10 +617,19 @@ const de: TranslationDictionary = {
           partial_other:
             "{{interpreted}} Dateien sind bereits interpretiert. {{remaining}} weitere Dateien fehlen noch oder benötigen Aufmerksamkeit, bevor die Aktivitätsanalyse geöffnet werden kann.",
           goalReview:
-            "brindl schließt gerade die dateiübergreifende Prüfung der Evidenz dieser Aktivität ab, bevor die Aktivitätsanalyse geöffnet werden kann.",
+            "Für diese Aktivität liegt ein vorgeschlagener dateiübergreifender Abgleich vor. Prüfen Sie, ob die Dateien verknüpft oder getrennt behandelt werden sollen, bevor die Aktivitätsanalyse geöffnet werden kann.",
           ready:
+            "Die Voraussetzungen sind erfüllt. Die Aktivitätsanalyse kann jetzt für diese Aktivität erzeugt werden.",
+          reviewed:
+            "Die Voraussetzungen sind erfüllt. Die Aktivitätsanalyse kann für diese Aktivität erneut ausgeführt werden.",
+          v2Completed:
             "Die Aktivitätsanalyse kann jetzt für diese Aktivität geöffnet werden.",
-          reviewed: "Die Aktivitätsanalyse ist für diese Aktivität verfügbar.",
+          v2NeedsClarification:
+            "Die neueste Aktivitätsanalyse braucht noch {{count}} Klärungsfrage, bevor sie geöffnet werden kann.",
+          v2NeedsClarification_other:
+            "Die neueste Aktivitätsanalyse braucht noch {{count}} Klärungsfragen, bevor sie geöffnet werden kann.",
+          v2Failed:
+            "Die letzte Aktivitätsanalyse ist fehlgeschlagen. Starten Sie sie erneut.",
           notStarted:
             "Die KI-Analyse wurde für diese Aktivität noch nicht gestartet.",
         },
@@ -627,6 +637,24 @@ const de: TranslationDictionary = {
         activityNoFiles:
           "Für diese Aktivität wurde noch keine Evidenz hochgeladen.",
         questionsTitle: "Klärungsfragen",
+        reviewLinkageAction: "Verknüpfung prüfen",
+        linkageReviewTitle: "Dateiübergreifende Verknüpfung prüfen",
+        linkageReviewDescription:
+          "brindl hat eine mögliche Verknüpfung zwischen mehreren Evidenzdateien erkannt, die nicht auf einem eindeutigen Identifikator beruht. Bestätigen Sie eine vorgeschlagene Spaltenverknüpfung nur dann, wenn beide Dateien tatsächlich dieselben Einheiten beschreiben. Lehnen Sie den Vorschlag andernfalls ab; dann bleiben die Dateien getrennt.",
+        linkageReviewLoading:
+          "Die Verknüpfungsvorschläge werden geladen…",
+        linkageProposalPrompt:
+          "Vorgeschlagene Spaltenverknüpfung: „{{tableA}}.{{columnA}}“ mit „{{tableB}}.{{columnB}}“. Soll diese Verknüpfung verwendet werden? Die überlappenden Werte decken aktuell etwa {{overlap}} der kombinierten Ausprägungen ab.",
+        linkageAcceptAction: "Als Verknüpfung verwenden",
+        linkageRejectAction: "Getrennt behandeln",
+        linkageAccepted:
+          "Die vorgeschlagene Verknüpfung wurde übernommen.",
+        linkageRejected:
+          "Die Dateien werden für diese Aktivität getrennt behandelt.",
+        linkageDecisionFailed:
+          "Die Entscheidung zur Datei-Verknüpfung konnte nicht gespeichert werden.",
+        linkageReviewResolved:
+          "Für diese Aktivität sind aktuell keine offenen Verknüpfungsvorschläge mehr vorhanden.",
         actionRunning: "Wird analysiert…",
         actionRestart: "Analyse neu starten",
         actionRunKnowledge: "KI analysieren",
@@ -648,7 +676,7 @@ const de: TranslationDictionary = {
           processing: "In Bearbeitung",
           questions: "Fragen offen",
           partial: "Teilweise fertig",
-          goal_review: "Prüfung läuft",
+          goal_review: "Verknüpfung prüfen",
           ready: "Bereit",
           reviewed: "Verfügbar",
           not_started: "Noch nicht gestartet",
@@ -1278,6 +1306,7 @@ const de: TranslationDictionary = {
       noRunDescription:
         "Erzeugen Sie die Aktivitätsanalyse, um diese Aktivität anhand ihrer aktuellen datenschutzsicheren Evidenz zu bewerten.",
       runAction: "Analyse erzeugen",
+      openAction: "Analyse öffnen",
       refreshAction: "Analyse aktualisieren",
       runPending: "Analyse wird erzeugt…",
       runSuccess: "Die Aktivitätsanalyse wurde aktualisiert.",
@@ -1290,6 +1319,23 @@ const de: TranslationDictionary = {
       summaryTitle: "Zusammenfassung",
       summaryMissing:
         "Für diesen Lauf wurde keine gerenderte Zusammenfassung erzeugt.",
+      dialogDescription:
+        "brindl hat die aktuelle Evidenz dieser Aktivität zu einer zusammenhängenden Aktivitätsanalyse verdichtet.",
+      dialogMeta:
+        "{{goals}} Ziele aus {{evidence}} Evidenzdateien wurden in dieser Analyse berücksichtigt.",
+      goalTarget: "{{target}} Ziel",
+      goalMet: "Ziel erreicht",
+      goalPercentOfTarget: "{{percent}} des Ziels",
+      recommendationSectionTitle: "Empfehlung",
+      attentionTitle: "Braucht Ihre Aufmerksamkeit",
+      attentionSectionTitle: "Braucht Aufmerksamkeit",
+      onTrackSectionTitle: "Auf Kurs",
+      supportingEvidenceTitle: "Weitere belegte Befunde",
+      narrativeSectionTitle: "Einordnung",
+      noAttentionItems:
+        "Aktuell wurde kein gesonderter Handlungsbedarf in dieser Analyse markiert.",
+      noOnTrackItems:
+        "Aktuell wurde in dieser Analyse noch kein Ziel als klar erreicht bewertet.",
       outputsTitle: "Ergebnisse",
       outcomesTitle: "Wirkung",
       noOutputs: "Für diese Aktivität sind keine Output-Ziele definiert.",

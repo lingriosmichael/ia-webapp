@@ -45,23 +45,6 @@ function badgeVariantForValidationStatus(
   return "secondary";
 }
 
-function badgeVariantForGoalStatus(
-  status: NonNullable<
-    ActivityAnalysisRunV2Record["assessment"]
-  >["goalAssessments"][number]["assessmentStatus"],
-): "default" | "secondary" | "destructive" | "outline" {
-  if (status === "achieved") {
-    return "default";
-  }
-  if (status === "not_achieved") {
-    return "destructive";
-  }
-  if (status === "requires_clarification" || status === "requires_capability") {
-    return "outline";
-  }
-  return "secondary";
-}
-
 function formatRunStatusLabel(
   status: ActivityAnalysisRunV2Record["status"],
   t: ReturnType<typeof useTranslation>["t"],
@@ -74,15 +57,6 @@ function formatValidationStatusLabel(
   t: ReturnType<typeof useTranslation>["t"],
 ): string {
   return t(`activityAnalytics.v2.validationStatus.${status}`);
-}
-
-function formatGoalStatusLabel(
-  status: NonNullable<
-    ActivityAnalysisRunV2Record["assessment"]
-  >["goalAssessments"][number]["assessmentStatus"],
-  t: ReturnType<typeof useTranslation>["t"],
-): string {
-  return t(`activityAnalytics.v2.goalStatus.${status}`);
 }
 
 export function ActivityAnalysisV2Panel({
@@ -117,14 +91,6 @@ export function ActivityAnalysisV2Panel({
   const isBusy = isRunning || isAnsweringQuestion;
   const isMissing =
     latestError?.code === "activity_analysis_v2_not_found" && !latestRun;
-  const outputAssessments =
-    latestRun?.assessment?.goalAssessments.filter(
-      (goalAssessment) => goalAssessment.goalType === "output",
-    ) ?? [];
-  const outcomeAssessments =
-    latestRun?.assessment?.goalAssessments.filter(
-      (goalAssessment) => goalAssessment.goalType === "outcome",
-    ) ?? [];
 
   return (
     <Card className="border-border/70 p-6">
@@ -317,83 +283,16 @@ export function ActivityAnalysisV2Panel({
               </p>
             </div>
 
-            <div className="rounded-[12px] border border-border/70 bg-background px-4 py-4">
-              <h3 className="text-sm font-semibold text-foreground">
-                {t("activityAnalytics.v2.outputsTitle")}
-              </h3>
-              <div className="mt-3 space-y-3">
-                {outputAssessments.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">
-                    {t("activityAnalytics.v2.noOutputs")}
-                  </p>
-                ) : (
-                  outputAssessments.map((goalAssessment) => (
-                    <div
-                      key={goalAssessment.goalId}
-                      className="rounded-[10px] border border-border/70 px-4 py-4"
-                    >
-                      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                        <div className="text-sm font-semibold text-foreground">
-                          {goalAssessment.goalText}
-                        </div>
-                        <Badge
-                          variant={badgeVariantForGoalStatus(
-                            goalAssessment.assessmentStatus,
-                          )}
-                        >
-                          {formatGoalStatusLabel(
-                            goalAssessment.assessmentStatus,
-                            t,
-                          )}
-                        </Badge>
-                      </div>
-                      <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                        {goalAssessment.findingText}
-                      </p>
-                    </div>
-                  ))
-                )}
+            {latestRun.recommendationText ? (
+              <div className="rounded-[12px] border border-border/70 bg-background px-4 py-4">
+                <h3 className="text-sm font-semibold text-foreground">
+                  {t("activityAnalytics.v2.recommendationSectionTitle")}
+                </h3>
+                <p className="mt-3 whitespace-pre-line text-sm leading-6 text-muted-foreground">
+                  {latestRun.recommendationText}
+                </p>
               </div>
-            </div>
-
-            <div className="rounded-[12px] border border-border/70 bg-background px-4 py-4">
-              <h3 className="text-sm font-semibold text-foreground">
-                {t("activityAnalytics.v2.outcomesTitle")}
-              </h3>
-              <div className="mt-3 space-y-3">
-                {outcomeAssessments.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">
-                    {t("activityAnalytics.v2.noOutcomes")}
-                  </p>
-                ) : (
-                  outcomeAssessments.map((goalAssessment) => (
-                    <div
-                      key={goalAssessment.goalId}
-                      className="rounded-[10px] border border-border/70 px-4 py-4"
-                    >
-                      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                        <div className="text-sm font-semibold text-foreground">
-                          {goalAssessment.goalText}
-                        </div>
-                        <Badge
-                          variant={badgeVariantForGoalStatus(
-                            goalAssessment.assessmentStatus,
-                          )}
-                        >
-                          {formatGoalStatusLabel(
-                            goalAssessment.assessmentStatus,
-                            t,
-                          )}
-                        </Badge>
-                      </div>
-                      <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                        {goalAssessment.findingText}
-                      </p>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
+            ) : null}
 
             {latestRun.assessment?.limitations.length ? (
               <div className="rounded-[12px] border border-border/70 bg-background px-4 py-4">

@@ -10,6 +10,7 @@ import {
   type ApprovePrivacyReviewResponse,
   ApiError,
   apiClient,
+  type ActivityEvidenceLinkageResultRecord,
   type ActivitySummary,
   type ActivityAnalysisRunV2Record,
   type ActivityWorkflowStageRecord,
@@ -56,6 +57,8 @@ export const activityJobsQueryKey = (activityId: string) =>
   ["activity-jobs", activityId] as const;
 export const activityWorkflowStageQueryKey = (activityId: string) =>
   ["activity-workflow-stage", activityId] as const;
+export const activityLinkageReviewQueryKey = (activityId: string) =>
+  ["activity-linkage-review", activityId] as const;
 export const activityAnalysisV2LatestQueryKey = (activityId: string) =>
   ["activity-analysis-v2-latest", activityId] as const;
 export const activityAnalysisV2RunsQueryKey = (activityId: string) =>
@@ -185,13 +188,36 @@ export function useActivityWorkflowStageQuery(
   });
 }
 
+export function useActivityLinkageReviewQuery(
+  activityId: string,
+  enabled = true,
+) {
+  return useQuery<ActivityEvidenceLinkageResultRecord | null, ApiError>({
+    queryKey: activityLinkageReviewQueryKey(activityId),
+    queryFn: () => apiClient.getActivityLinkageReview(activityId),
+    enabled,
+  });
+}
+
 export function useLatestActivityAnalysisV2Query(
   activityId: string,
   enabled = true,
 ) {
-  return useQuery<ActivityAnalysisRunV2Record, ApiError>({
+  return useQuery<ActivityAnalysisRunV2Record | null, ApiError>({
     queryKey: activityAnalysisV2LatestQueryKey(activityId),
-    queryFn: () => apiClient.getLatestActivityAnalysisV2(activityId),
+    queryFn: async () => {
+      try {
+        return await apiClient.getLatestActivityAnalysisV2(activityId);
+      } catch (error) {
+        if (
+          error instanceof ApiError &&
+          error.code === "activity_analysis_v2_not_found"
+        ) {
+          return null;
+        }
+        throw error;
+      }
+    },
     enabled,
     retry: false,
   });
@@ -220,6 +246,12 @@ export function useRunActivityAnalysisV2Mutation(activityId: string) {
       );
       void queryClient.invalidateQueries({
         queryKey: activityAnalysisV2RunsQueryKey(activityId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: activityWorkflowStageQueryKey(activityId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: activityQueryKey(activityId),
       });
     },
   });
@@ -254,6 +286,33 @@ export function useAnswerActivityAnalysisV2QuestionMutation(
       });
       void queryClient.invalidateQueries({
         queryKey: activityWorkflowStageQueryKey(activityId),
+      });
+    },
+  });
+}
+
+export function useReviewActivityLinkageProposalMutation(activityId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    ActivityEvidenceLinkageResultRecord,
+    ApiError,
+    { proposalId: string; decision: "accept" | "reject" }
+  >({
+    mutationFn: ({ proposalId, decision }) =>
+      apiClient.reviewActivityLinkageProposal(activityId, proposalId, {
+        decision,
+      }),
+    onSuccess: (result) => {
+      queryClient.setQueryData(
+        activityLinkageReviewQueryKey(activityId),
+        result,
+      );
+      void queryClient.invalidateQueries({
+        queryKey: activityWorkflowStageQueryKey(activityId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: projectInterpretationsQueryKey(result.projectId),
       });
     },
   });

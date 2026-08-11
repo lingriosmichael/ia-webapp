@@ -4,6 +4,7 @@ import { Card } from "@/components/WorkspaceUI";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import type {
   InterpretationQuestion,
   InterpretationQuestionDomain,
@@ -15,6 +16,67 @@ function getQuestionDomainLabelKey(
   return questionDomain === "preparation"
     ? "projectWorkspace.interpretation.questionDomainPreparationLabel"
     : "projectWorkspace.interpretation.questionDomainInterpretationLabel";
+}
+
+function parseCompositePrompt(prompt: string): {
+  intro: string;
+  parts: string[];
+} | null {
+  const lines = prompt
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+  if (lines.length === 0) {
+    return null;
+  }
+
+  const bulletPattern = /^(?:[-*•]+|\d+[.)])\s+(.*)$/;
+  const introParts: string[] = [];
+  const questionParts: string[] = [];
+  let currentQuestion: string | null = null;
+
+  for (const line of lines) {
+    const bulletMatch = line.match(bulletPattern);
+    if (bulletMatch) {
+      if (currentQuestion) {
+        questionParts.push(currentQuestion);
+      }
+      currentQuestion = bulletMatch[1]?.trim() ?? "";
+      continue;
+    }
+
+    if (currentQuestion) {
+      currentQuestion = `${currentQuestion} ${line}`.trim();
+      continue;
+    }
+
+    introParts.push(line);
+  }
+
+  if (currentQuestion) {
+    questionParts.push(currentQuestion);
+  }
+
+  if (questionParts.length < 2) {
+    return null;
+  }
+
+  return {
+    intro: introParts.join("\n\n"),
+    parts: questionParts,
+  };
+}
+
+function buildCompositeAnswer(
+  prompts: string[],
+  values: string[],
+): string {
+  return prompts
+    .map((prompt, index) => {
+      const answer = values[index]?.trim() ?? "";
+      return `${index + 1}. ${prompt}\nAntwort: ${answer}`;
+    })
+    .join("\n\n");
 }
 
 // Both current callers (activityAnalysisV2Panel.tsx, interpretation.tsx)
@@ -33,8 +95,15 @@ export function InterpretationQuestionCard({
   onSubmit: (input: { questionId: string; answeredValue: string }) => void;
 }) {
   const { t } = useTranslation();
+  const compositePrompt =
+    question.kind === "free_text" || !question.options?.length
+      ? parseCompositePrompt(question.prompt)
+      : null;
   const [freeTextValue, setFreeTextValue] = useState(
     question.answeredValue ?? "",
+  );
+  const [compositeValues, setCompositeValues] = useState<string[]>(
+    () => compositePrompt?.parts.map(() => "") ?? [],
   );
 
   function submitAnswer(answeredValue: string) {
@@ -59,29 +128,70 @@ export function InterpretationQuestionCard({
       <p className="mt-2 text-xs font-medium uppercase tracking-[0.08em] text-muted-foreground">
         {t(getQuestionDomainLabelKey(question.questionDomain))}
       </p>
-      <p className="mt-2 text-sm leading-6 text-muted-foreground">
-        {question.prompt}
+      <p className="mt-2 whitespace-pre-line text-sm leading-6 text-muted-foreground">
+        {compositePrompt?.intro || question.prompt}
       </p>
       {question.kind === "free_text" || !question.options?.length ? (
-        <div className="mt-3 flex flex-wrap gap-2">
-          <Input
-            value={freeTextValue}
-            onChange={(event) => setFreeTextValue(event.target.value)}
-            placeholder={t(
-              "projectWorkspace.interpretation.questionFreeTextPlaceholder",
-            )}
-            className="max-w-sm"
-          />
-          <Button
-            size="sm"
-            onClick={() => submitAnswer(freeTextValue)}
-            disabled={!freeTextValue.trim() || isSubmitting}
-          >
-            {isSubmitting
-              ? t("projectWorkspace.interpretation.questionSubmitting")
-              : t("projectWorkspace.interpretation.questionSubmit")}
-          </Button>
-        </div>
+        compositePrompt ? (
+          <div className="mt-4 space-y-4">
+            {compositePrompt.parts.map((part, index) => (
+              <div key={`${question.id}-part-${index}`} className="space-y-2">
+                <p className="text-sm font-medium leading-6 text-foreground">
+                  {index + 1}. {part}
+                </p>
+                <Textarea
+                  value={compositeValues[index] ?? ""}
+                  onChange={(event) =>
+                    setCompositeValues((currentValues) =>
+                      currentValues.map((value, valueIndex) =>
+                        valueIndex === index ? event.target.value : value,
+                      ),
+                    )
+                  }
+                  placeholder={t(
+                    "projectWorkspace.interpretation.questionFreeTextPlaceholder",
+                  )}
+                  className="min-h-24"
+                />
+              </div>
+            ))}
+            <Button
+              size="sm"
+              onClick={() =>
+                submitAnswer(
+                  buildCompositeAnswer(compositePrompt.parts, compositeValues),
+                )
+              }
+              disabled={
+                compositeValues.some((value) => !value.trim()) || isSubmitting
+              }
+            >
+              {isSubmitting
+                ? t("projectWorkspace.interpretation.questionSubmitting")
+                : t("projectWorkspace.interpretation.questionSubmit")}
+            </Button>
+          </div>
+        ) : (
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Input
+              value={freeTextValue}
+              onChange={(event) => setFreeTextValue(event.target.value)}
+              placeholder={t(
+                "projectWorkspace.interpretation.questionFreeTextPlaceholder",
+              )}
+              className="max-w-sm"
+            />
+            <Button
+              size="sm"
+              onClick={() => submitAnswer(freeTextValue)}
+              disabled={!freeTextValue.trim() || isSubmitting}
+            >
+              {isSubmitting
+                ? t("projectWorkspace.interpretation.questionSubmitting")
+                : t("projectWorkspace.interpretation.questionSubmit")}
+            </Button>
+          </div>
+        )
       ) : (
         <div className="mt-3 flex flex-wrap gap-2">
           {question.options.map((option) => {

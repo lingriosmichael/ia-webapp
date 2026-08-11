@@ -1112,7 +1112,45 @@ export interface ActivityAnalysisRunV2Record {
     issues: string[];
   };
   renderedSummary: string | null;
+  recommendationText: string | null;
   errorMessage: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type ActivityEvidenceLinkageStatus = "needs_review" | "resolved";
+
+export interface ActivityEvidenceLinkageProposalRecord {
+  proposalId: string;
+  uploadMetadataIdA: string;
+  uploadMetadataIdB: string;
+  tableNameA: string;
+  tableNameB: string;
+  columnNameA: string;
+  columnNameB: string;
+  matchBasis: "identifier_column" | "name_like_column";
+  confidence: "high" | "medium";
+  overlapRatio: number;
+}
+
+export interface ActivityEvidenceLinkageProposalDecisionRecord {
+  proposalId: string;
+  decision: "accept" | "reject";
+  decidedAt: string;
+}
+
+export interface ActivityEvidenceLinkageResultRecord {
+  id: string;
+  organizationId: string;
+  projectId: string;
+  activityId: string;
+  status: ActivityEvidenceLinkageStatus;
+  groups: Array<{
+    joinKeyLabel: string;
+    linkedUploadMetadataIds: string[];
+  }>;
+  proposals: ActivityEvidenceLinkageProposalRecord[];
+  proposalDecisions: ActivityEvidenceLinkageProposalDecisionRecord[];
   createdAt: string;
   updatedAt: string;
 }
@@ -1537,9 +1575,18 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   });
 
   const text = await response.text();
-  const payload = text
-    ? (JSON.parse(text) as ApiEnvelope<T> | ApiFailureEnvelope)
-    : undefined;
+  let payload: ApiEnvelope<T> | ApiFailureEnvelope | undefined;
+  try {
+    payload = text
+      ? (JSON.parse(text) as ApiEnvelope<T> | ApiFailureEnvelope)
+      : undefined;
+  } catch {
+    // A non-JSON body (proxy error page, truncated response, infra-level
+    // failure) must still surface as an ApiError — otherwise the raw
+    // SyntaxError bypasses every caller's `error instanceof ApiError`
+    // check and callers fall back to a generic, undiagnosable message.
+    throw new ApiError("Request failed.", response.status);
+  }
 
   if (!response.ok) {
     if (
@@ -1895,6 +1942,25 @@ export const apiClient = {
     activityId: string,
   ): Promise<ActivityWorkflowStageRecord> {
     return request(`/activities/${activityId}/workflow-stage`);
+  },
+  getActivityLinkageReview(
+    activityId: string,
+  ): Promise<ActivityEvidenceLinkageResultRecord | null> {
+    return request(`/activities/${activityId}/linkage-review`);
+  },
+  reviewActivityLinkageProposal(
+    activityId: string,
+    proposalId: string,
+    payload: { decision: "accept" | "reject" },
+  ): Promise<ActivityEvidenceLinkageResultRecord> {
+    // proposalId travels in the body, not the URL: it's a synthesized
+    // composite key with no fixed length cap and can exceed Fastify's
+    // default per-path-param length limit if it were a route param.
+    return request(`/activities/${activityId}/linkage-review/decisions`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ proposalId, ...payload }),
+    });
   },
   getLatestActivityAnalysisV2(
     activityId: string,
