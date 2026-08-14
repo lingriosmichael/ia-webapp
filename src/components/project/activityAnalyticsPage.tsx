@@ -1,5 +1,6 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ActivityTabs } from "@/components/activityTabs";
@@ -7,17 +8,27 @@ import { PageHeader, PageContainer, TopBar } from "@/components/WorkspaceUI";
 import { useProjectHierarchy } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
 import {
+  activityAnalysisV2LatestQueryKey,
+  activityAnalysisV2RunsQueryKey,
+  activityQueryKey,
+  activityWorkflowStageQueryKey,
   useAcknowledgeInterpretationReviewMutation,
   useActivityAnalysisV2RunsQuery,
-  useAnswerActivityAnalysisV2QuestionMutation,
+  useAnswerActivityAnalysisV2QuestionsMutation,
   useActivityQuery,
+  useJobQuery,
   useLatestActivityAnalysisV2Query,
   useProjectQuery,
   useRunActivityAnalysisV2Mutation,
 } from "@/hooks/useWorkspaceQueries";
 import { AnalyticsErrorState } from "@/components/analytics/analyticsEmptyState";
 import { ActivityAnalysisV2Panel } from "@/components/project/activityAnalysisV2Panel";
-import { ApiError } from "@/services/apiClient";
+import {
+  ApiError,
+  type ActivityAnalysisRunV2Record,
+} from "@/services/apiClient";
+
+const TERMINAL_JOB_STATUSES = ["completed", "failed", "cancelled"];
 
 export function ActivityAnalyticsPage() {
   const { projectId, activityId } = useParams({
@@ -35,14 +46,96 @@ export function ActivityAnalyticsPage() {
     Boolean(auth.token),
   );
   const runAnalysisV2Mutation = useRunActivityAnalysisV2Mutation(activityId);
-  const answerQuestionMutation =
-    useAnswerActivityAnalysisV2QuestionMutation(activityId);
+  const answerQuestionsMutation =
+    useAnswerActivityAnalysisV2QuestionsMutation(activityId);
   const acknowledgeMutation = useAcknowledgeInterpretationReviewMutation(
     activityId,
     projectQuery.data?.organizationId,
   );
   const { t } = useTranslation();
   const hierarchy = useProjectHierarchy();
+  const queryClient = useQueryClient();
+
+  // Both runAnalysisV2Mutation and answerQuestionsMutation now create an
+  // activity_analysis_v2 job rather than returning the finished run — this
+  // tracks whichever one is currently in flight so a single effect below
+  // can poll it and react once it reaches a terminal status.
+  const [activeAnalysisJob, setActiveAnalysisJob] = useState<
+    | { jobId: string; kind: "run" }
+    | { jobId: string; kind: "answer"; answerCount: number }
+    | null
+  >(null);
+  const activeAnalysisJobQuery = useJobQuery(
+    activeAnalysisJob?.jobId,
+    Boolean(activeAnalysisJob),
+  );
+
+  useEffect(() => {
+    const job = activeAnalysisJobQuery.data;
+    if (
+      !activeAnalysisJob ||
+      !job ||
+      !TERMINAL_JOB_STATUSES.includes(job.status)
+    ) {
+      return;
+    }
+
+    const finishedJob = activeAnalysisJob;
+    setActiveAnalysisJob(null);
+
+    void (async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: activityAnalysisV2LatestQueryKey(activityId),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: activityAnalysisV2RunsQueryKey(activityId),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: activityWorkflowStageQueryKey(activityId),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: activityQueryKey(activityId),
+        }),
+      ]);
+
+      if (job.status !== "completed") {
+        toast.error(job.errorMessage ?? t("activityAnalytics.v2.runFailed"));
+        return;
+      }
+
+      // The job's own status only means "did the worker finish attempting
+      // this" — the analysis run it produced can still be status: "failed"
+      // (e.g. a planner failure), so the success/failure toast reads the
+      // freshly-invalidated run's own status, not the job's.
+      const run = queryClient.getQueryData<ActivityAnalysisRunV2Record | null>(
+        activityAnalysisV2LatestQueryKey(activityId),
+      );
+
+      if (run?.status === "failed") {
+        toast.error(t("activityAnalytics.v2.runFailed"));
+        return;
+      }
+
+      if (finishedJob.kind === "run") {
+        toast.success(t("activityAnalytics.v2.runSuccess"));
+      } else {
+        toast.success(
+          finishedJob.answerCount > 1
+            ? t("activityAnalytics.v2.clarificationAnsweredBatch", {
+                count: finishedJob.answerCount,
+              })
+            : t("activityAnalytics.v2.clarificationAnswered"),
+        );
+      }
+    })();
+  }, [
+    activeAnalysisJobQuery.data,
+    activeAnalysisJob,
+    activityId,
+    queryClient,
+    t,
+  ]);
 
   useEffect(() => {
     if (
@@ -67,15 +160,8 @@ export function ActivityAnalyticsPage() {
 
   async function handleRunActivityAnalysisV2() {
     try {
-      const run = await runAnalysisV2Mutation.mutateAsync();
-      // A pipeline failure (grounding failure, timeout, tool error) is
-      // returned as a normal 200 response with status "failed" — it does
-      // not throw. Both paths must tell the user to run it again.
-      if (run.status === "failed") {
-        toast.error(t("activityAnalytics.v2.runFailed"));
-      } else {
-        toast.success(t("activityAnalytics.v2.runSuccess"));
-      }
+      const job = await runAnalysisV2Mutation.mutateAsync();
+      setActiveAnalysisJob({ jobId: job.id, kind: "run" });
     } catch (error) {
       toast.error(
         error instanceof ApiError
@@ -85,20 +171,16 @@ export function ActivityAnalyticsPage() {
     }
   }
 
-  async function handleAnswerQuestion(input: {
-    questionId: string;
-    answeredValue: string;
+  async function handleAnswerQuestions(payload: {
+    answers: Array<{ questionId: string; answeredValue: string }>;
   }) {
     try {
-      const run = await answerQuestionMutation.mutateAsync({
-        questionId: input.questionId,
-        payload: { answeredValue: input.answeredValue },
+      const job = await answerQuestionsMutation.mutateAsync(payload);
+      setActiveAnalysisJob({
+        jobId: job.id,
+        kind: "answer",
+        answerCount: payload.answers.length,
       });
-      if (run.status === "failed") {
-        toast.error(t("activityAnalytics.v2.runFailed"));
-      } else {
-        toast.success(t("activityAnalytics.v2.clarificationAnswered"));
-      }
     } catch (error) {
       toast.error(
         error instanceof ApiError
@@ -151,9 +233,15 @@ export function ActivityAnalyticsPage() {
             }
             isLoading={latestAnalysisV2Query.isLoading}
             onRun={handleRunActivityAnalysisV2}
-            isRunning={runAnalysisV2Mutation.isPending}
-            onAnswerQuestion={handleAnswerQuestion}
-            isAnsweringQuestion={answerQuestionMutation.isPending}
+            isRunning={
+              runAnalysisV2Mutation.isPending ||
+              activeAnalysisJob?.kind === "run"
+            }
+            onAnswerQuestions={handleAnswerQuestions}
+            isAnsweringQuestions={
+              answerQuestionsMutation.isPending ||
+              activeAnalysisJob?.kind === "answer"
+            }
             previousRuns={analysisV2RunsQuery.data ?? null}
           />
         </div>

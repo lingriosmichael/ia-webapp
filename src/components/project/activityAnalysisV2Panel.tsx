@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { InterpretationQuestionCard } from "@/components/interpretationQuestionCard";
 import { Card } from "@/components/WorkspaceUI";
@@ -5,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type {
   ActivityAnalysisRunV2Record,
+  AnswerActivityAnalysisV2QuestionsPayload,
   ApiError,
 } from "@/services/apiClient";
 
@@ -66,8 +68,8 @@ export function ActivityAnalysisV2Panel({
   isLoading,
   onRun,
   isRunning,
-  onAnswerQuestion,
-  isAnsweringQuestion,
+  onAnswerQuestions,
+  isAnsweringQuestions,
   previousRuns,
 }: {
   activityName: string;
@@ -76,19 +78,49 @@ export function ActivityAnalysisV2Panel({
   isLoading: boolean;
   onRun: () => void;
   isRunning: boolean;
-  onAnswerQuestion: (input: {
-    questionId: string;
-    answeredValue: string;
-  }) => void;
-  isAnsweringQuestion: boolean;
+  onAnswerQuestions: (
+    payload: AnswerActivityAnalysisV2QuestionsPayload,
+  ) => void;
+  isAnsweringQuestions: boolean;
   previousRuns?: ActivityAnalysisRunV2Record[] | null;
 }) {
   const { t, i18n } = useTranslation();
-  // Running an analysis and answering a clarification question both trigger
+  // Running an analysis and answering clarification questions both trigger
   // the same backend pipeline for this activity and write the same "latest
   // run" cache entry, so they must never be in flight at the same time —
   // otherwise whichever response lands last silently overwrites the other.
-  const isBusy = isRunning || isAnsweringQuestion;
+  const isBusy = isRunning || isAnsweringQuestions;
+
+  // Answers are staged locally and sent together in one batch call instead
+  // of one call per question — each call replans every goal for the
+  // activity, so answering questions one at a time was costing one full
+  // replan per question, most of them wasted because the others were still
+  // unanswered anyway. Cleared whenever a new run appears (a fresh set of
+  // questions supersedes any staged answers to the previous run's).
+  const [draftAnswers, setDraftAnswers] = useState<Record<string, string>>({});
+  useEffect(() => {
+    setDraftAnswers({});
+  }, [latestRun?.analysisRunId]);
+
+  const pendingQuestions =
+    latestRun?.clarificationQuestions.filter(
+      (question) => question.status === "pending",
+    ) ?? [];
+  const allPendingQuestionsAnswered =
+    pendingQuestions.length > 0 &&
+    pendingQuestions.every((question) => draftAnswers[question.id]?.trim());
+
+  function handleSubmitDraftAnswers() {
+    const answers = pendingQuestions.flatMap((question) => {
+      const answeredValue = draftAnswers[question.id]?.trim();
+      return answeredValue ? [{ questionId: question.id, answeredValue }] : [];
+    });
+    if (answers.length === 0) {
+      return;
+    }
+    onAnswerQuestions({ answers });
+  }
+
   const isMissing =
     latestError?.code === "activity_analysis_v2_not_found" && !latestRun;
 
@@ -152,28 +184,47 @@ export function ActivityAnalysisV2Panel({
                 {t("activityAnalytics.v2.staleDataWarning")}
               </p>
             ) : null}
-            {latestRun.clarificationQuestions.some(
-              (question) => question.status === "pending",
-            ) ? (
+            {pendingQuestions.length > 0 ? (
               <div className="rounded-[12px] border border-amber-200 bg-amber-50/80 px-4 py-4">
                 <div className="text-sm font-semibold text-foreground">
                   {t("activityAnalytics.v2.clarificationTitle")}
                 </div>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  {t("activityAnalytics.v2.clarificationDescription")}
+                  {pendingQuestions.length > 1
+                    ? t("activityAnalytics.v2.clarificationDescriptionBatch")
+                    : t("activityAnalytics.v2.clarificationDescription")}
                 </p>
                 <div className="mt-4 space-y-3">
-                  {latestRun.clarificationQuestions
-                    .filter((question) => question.status === "pending")
-                    .map((question) => (
-                      <InterpretationQuestionCard
-                        key={question.id}
-                        activityName={activityName}
-                        question={question}
-                        isSubmitting={isBusy}
-                        onSubmit={onAnswerQuestion}
-                      />
-                    ))}
+                  {pendingQuestions.map((question) => (
+                    <InterpretationQuestionCard
+                      key={question.id}
+                      mode="select"
+                      activityName={activityName}
+                      question={question}
+                      isSubmitting={isBusy}
+                      selectedValue={draftAnswers[question.id] ?? null}
+                      onSelectionChange={({ questionId, answeredValue }) =>
+                        setDraftAnswers((current) => ({
+                          ...current,
+                          [questionId]: answeredValue,
+                        }))
+                      }
+                    />
+                  ))}
+                </div>
+                <div className="mt-4 flex justify-end">
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={handleSubmitDraftAnswers}
+                    disabled={!allPendingQuestionsAnswered || isBusy}
+                  >
+                    {isAnsweringQuestions
+                      ? t("activityAnalytics.v2.submitAnswersPending")
+                      : t("activityAnalytics.v2.submitAnswersAction", {
+                          count: pendingQuestions.length,
+                        })}
+                  </Button>
                 </div>
               </div>
             ) : null}

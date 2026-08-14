@@ -67,10 +67,7 @@ function parseCompositePrompt(prompt: string): {
   };
 }
 
-function buildCompositeAnswer(
-  prompts: string[],
-  values: string[],
-): string {
+function buildCompositeAnswer(prompts: string[], values: string[]): string {
   return prompts
     .map((prompt, index) => {
       const answer = values[index]?.trim() ?? "";
@@ -79,38 +76,86 @@ function buildCompositeAnswer(
     .join("\n\n");
 }
 
+type InterpretationQuestionCardProps =
+  // Default mode: each answer submits (and triggers a replan) immediately.
+  | {
+      mode?: "submit";
+      activityName: string;
+      question: InterpretationQuestion;
+      isSubmitting: boolean;
+      onSubmit: (input: { questionId: string; answeredValue: string }) => void;
+    }
+  // Batch mode: picking/typing an answer only stages it in the parent's
+  // draft state — nothing is submitted until the parent sends every staged
+  // answer together in one call. selectedValue reflects the current draft
+  // so a chosen option can be shown visually selected.
+  | {
+      mode: "select";
+      activityName: string;
+      question: InterpretationQuestion;
+      isSubmitting: boolean;
+      selectedValue: string | null;
+      onSelectionChange: (input: {
+        questionId: string;
+        answeredValue: string;
+      }) => void;
+    };
+
 // Both current callers (activityAnalysisV2Panel.tsx, interpretation.tsx)
 // pre-filter to status === "pending" before rendering this card, so it only
 // ever needs to render the answer-collection form — there is no "already
 // answered, click to edit" state to support here.
-export function InterpretationQuestionCard({
-  activityName,
-  question,
-  isSubmitting,
-  onSubmit,
-}: {
-  activityName: string;
-  question: InterpretationQuestion;
-  isSubmitting: boolean;
-  onSubmit: (input: { questionId: string; answeredValue: string }) => void;
-}) {
+export function InterpretationQuestionCard(
+  props: InterpretationQuestionCardProps,
+) {
+  const { activityName, question, isSubmitting } = props;
   const { t } = useTranslation();
   const compositePrompt =
     question.kind === "free_text" || !question.options?.length
       ? parseCompositePrompt(question.prompt)
       : null;
   const [freeTextValue, setFreeTextValue] = useState(
-    question.answeredValue ?? "",
+    question.answeredValue ??
+      (props.mode === "select" ? (props.selectedValue ?? "") : ""),
   );
   const [compositeValues, setCompositeValues] = useState<string[]>(
     () => compositePrompt?.parts.map(() => "") ?? [],
   );
 
-  function submitAnswer(answeredValue: string) {
+  function commitAnswer(answeredValue: string) {
+    if (props.mode === "select") {
+      props.onSelectionChange({ questionId: question.id, answeredValue });
+      return;
+    }
     if (!answeredValue.trim()) {
       return;
     }
-    onSubmit({ questionId: question.id, answeredValue });
+    props.onSubmit({ questionId: question.id, answeredValue });
+  }
+
+  function updateFreeTextValue(value: string) {
+    setFreeTextValue(value);
+    if (props.mode === "select") {
+      commitAnswer(value.trim());
+    }
+  }
+
+  function updateCompositeValue(index: number, value: string) {
+    const nextValues = compositeValues.map((current, currentIndex) =>
+      currentIndex === index ? value : current,
+    );
+    setCompositeValues(nextValues);
+    if (props.mode === "select" && compositePrompt) {
+      // Only stage a combined answer once every part has something in it —
+      // otherwise the parent would treat this question as "answered" with
+      // a partially blank composite response.
+      const isComplete = nextValues.every((current) => current.trim());
+      commitAnswer(
+        isComplete
+          ? buildCompositeAnswer(compositePrompt.parts, nextValues)
+          : "",
+      );
+    }
   }
 
   return (
@@ -142,11 +187,7 @@ export function InterpretationQuestionCard({
                 <Textarea
                   value={compositeValues[index] ?? ""}
                   onChange={(event) =>
-                    setCompositeValues((currentValues) =>
-                      currentValues.map((value, valueIndex) =>
-                        valueIndex === index ? event.target.value : value,
-                      ),
-                    )
+                    updateCompositeValue(index, event.target.value)
                   }
                   placeholder={t(
                     "projectWorkspace.interpretation.questionFreeTextPlaceholder",
@@ -155,41 +196,48 @@ export function InterpretationQuestionCard({
                 />
               </div>
             ))}
-            <Button
-              size="sm"
-              onClick={() =>
-                submitAnswer(
-                  buildCompositeAnswer(compositePrompt.parts, compositeValues),
-                )
-              }
-              disabled={
-                compositeValues.some((value) => !value.trim()) || isSubmitting
-              }
-            >
-              {isSubmitting
-                ? t("projectWorkspace.interpretation.questionSubmitting")
-                : t("projectWorkspace.interpretation.questionSubmit")}
-            </Button>
+            {props.mode === "select" ? null : (
+              <Button
+                size="sm"
+                onClick={() =>
+                  commitAnswer(
+                    buildCompositeAnswer(
+                      compositePrompt.parts,
+                      compositeValues,
+                    ),
+                  )
+                }
+                disabled={
+                  compositeValues.some((value) => !value.trim()) || isSubmitting
+                }
+              >
+                {isSubmitting
+                  ? t("projectWorkspace.interpretation.questionSubmitting")
+                  : t("projectWorkspace.interpretation.questionSubmit")}
+              </Button>
+            )}
           </div>
         ) : (
           <div className="mt-3 flex flex-wrap gap-2">
             <Input
               value={freeTextValue}
-              onChange={(event) => setFreeTextValue(event.target.value)}
+              onChange={(event) => updateFreeTextValue(event.target.value)}
               placeholder={t(
                 "projectWorkspace.interpretation.questionFreeTextPlaceholder",
               )}
               className="max-w-sm"
             />
-            <Button
-              size="sm"
-              onClick={() => submitAnswer(freeTextValue)}
-              disabled={!freeTextValue.trim() || isSubmitting}
-            >
-              {isSubmitting
-                ? t("projectWorkspace.interpretation.questionSubmitting")
-                : t("projectWorkspace.interpretation.questionSubmit")}
-            </Button>
+            {props.mode === "select" ? null : (
+              <Button
+                size="sm"
+                onClick={() => commitAnswer(freeTextValue)}
+                disabled={!freeTextValue.trim() || isSubmitting}
+              >
+                {isSubmitting
+                  ? t("projectWorkspace.interpretation.questionSubmitting")
+                  : t("projectWorkspace.interpretation.questionSubmit")}
+              </Button>
+            )}
           </div>
         )
       ) : (
@@ -198,14 +246,17 @@ export function InterpretationQuestionCard({
             const isRecommended =
               question.recommendedOption === option &&
               (question.recommendedConfidence ?? 0) >= 0.8;
+            const isSelected =
+              props.mode === "select" && props.selectedValue === option;
             return (
               <Button
                 key={option}
-                variant="outline"
+                variant={isSelected ? "default" : "outline"}
                 size="sm"
                 className="gap-2"
-                onClick={() => submitAnswer(option)}
+                onClick={() => commitAnswer(option)}
                 disabled={isSubmitting}
+                aria-pressed={props.mode === "select" ? isSelected : undefined}
               >
                 <span>{option}</span>
                 {isRecommended ? (

@@ -58,3 +58,23 @@ export function isSupportedEvidenceFileType(fileName: string): boolean {
     lowerCaseFileName.endsWith(extension),
   );
 }
+
+// Kept in sync with `isWorkbookUpload` in
+// ia_backend/src/modules/processing/evidenceProcessingService.ts — update
+// both together. A workbook upload's first analysis job splits it into
+// per-sheet CSV files rather than running a privacy review, so the UI needs
+// to know this ahead of that first click, not just after.
+export function isWorkbookEvidenceFile(input: {
+  originalFileName: string;
+  contentType: string | null;
+}): boolean {
+  const lowerFileName = input.originalFileName.toLowerCase();
+  const normalizedContentType = input.contentType?.toLowerCase() ?? "";
+
+  return (
+    lowerFileName.endsWith(".xlsx") ||
+    lowerFileName.endsWith(".xls") ||
+    normalizedContentType.includes("spreadsheetml") ||
+    normalizedContentType.includes("ms-excel")
+  );
+}

@@ -37,6 +37,7 @@ import {
 } from "@/hooks/useWorkspaceQueries";
 import {
   isSupportedEvidenceFileType,
+  isWorkbookEvidenceFile,
   SUPPORTED_EVIDENCE_FILE_ACCEPT,
   validateEvidenceFileName,
 } from "@/lib/evidenceFileTypes";
@@ -696,7 +697,9 @@ function EvidenceFileRow({
     canStartEvidenceAnalysisFromLatestJob(job);
 
   const analyzeButtonLabel = !job
-    ? t("projectWorkspace.evidence.analyzeFile")
+    ? isWorkbookEvidenceFile(upload)
+      ? t("projectWorkspace.evidence.prepareWorkbookFile")
+      : t("projectWorkspace.evidence.analyzeFile")
     : job.status === "failed"
       ? t("projectWorkspace.evidence.retryAnalysis")
       : t(`projectWorkspace.evidence.analysisStates.${job.status}`);

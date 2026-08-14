@@ -6,7 +6,8 @@ import {
   type AnalyticsExecutionRecord,
   type AnalyticsDashboardPreferenceRecord,
   type AnalyticsQueryResponse,
-  type AnswerInterpretationQuestionPayload,
+  type AnswerActivityAnalysisV2QuestionsPayload,
+  type AnswerInterpretationQuestionsPayload,
   type ApprovePrivacyReviewResponse,
   ApiError,
   apiClient,
@@ -14,6 +15,7 @@ import {
   type ActivitySummary,
   type ActivityAnalysisRunV2Record,
   type ActivityWorkflowStageRecord,
+  type ApproveQualitativeCodingReviewResponse,
   type CreateActivityPayload,
   type CreateOrganizationPayload,
   type CreateProjectPayload,
@@ -29,6 +31,8 @@ import {
   type ProcessingJobRecord,
   type PrivacyReviewDecisionsInput,
   type PrivacyReviewRecord,
+  type QualitativeCodingReviewDecisionsInput,
+  type QualitativeCodingReviewRecord,
   type ProjectInterpretationOverview,
   type ProjectOverview,
   type ProjectSummary,
@@ -66,6 +70,8 @@ export const activityAnalysisV2RunsQueryKey = (activityId: string) =>
 export const jobQueryKey = (jobId: string) => ["job", jobId] as const;
 export const privacyReviewQueryKey = (processingJobId: string) =>
   ["privacy-review", processingJobId] as const;
+export const qualitativeCodingReviewQueryKey = (uploadMetadataId: string) =>
+  ["qualitative-coding-review", uploadMetadataId] as const;
 export const projectInterpretationsQueryKey = (projectId: string) =>
   ["project-interpretations", projectId] as const;
 export const interpretationQueryKey = (interpretationResultId: string) =>
@@ -234,60 +240,33 @@ export function useActivityAnalysisV2RunsQuery(
   });
 }
 
+// Creates an activity_analysis_v2 processing job — it does not return the
+// finished run. The caller is expected to poll the job with useJobQuery and
+// invalidate the analysis-v2 read queries once the job reaches a terminal
+// status (see activityAnalyticsPage.tsx); invalidating here, on job
+// creation, would be premature since nothing has actually changed yet.
 export function useRunActivityAnalysisV2Mutation(activityId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation<ActivityAnalysisRunV2Record, ApiError>({
+  return useMutation<ProcessingJobRecord, ApiError>({
     mutationFn: () => apiClient.runActivityAnalysisV2(activityId),
-    onSuccess: (run) => {
-      queryClient.setQueryData(
-        activityAnalysisV2LatestQueryKey(activityId),
-        run,
-      );
-      void queryClient.invalidateQueries({
-        queryKey: activityAnalysisV2RunsQueryKey(activityId),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: activityWorkflowStageQueryKey(activityId),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: activityQueryKey(activityId),
-      });
-    },
   });
 }
 
-export function useAnswerActivityAnalysisV2QuestionMutation(
+// Answers a batch of clarification questions in one call, then creates a
+// fresh activity_analysis_v2 replan job. Triggers exactly one replan
+// regardless of how many answers are in the batch — see
+// apiClient.answerActivityAnalysisV2Questions for why that matters. Like
+// useRunActivityAnalysisV2Mutation above, the caller polls the returned job
+// and invalidates read queries once it's terminal.
+export function useAnswerActivityAnalysisV2QuestionsMutation(
   activityId: string,
 ) {
-  const queryClient = useQueryClient();
-
   return useMutation<
-    ActivityAnalysisRunV2Record,
+    ProcessingJobRecord,
     ApiError,
-    { questionId: string; payload: AnswerInterpretationQuestionPayload }
+    AnswerActivityAnalysisV2QuestionsPayload
   >({
-    mutationFn: ({ questionId, payload }) =>
-      apiClient.answerActivityAnalysisV2Question(
-        activityId,
-        questionId,
-        payload,
-      ),
-    onSuccess: (run) => {
-      queryClient.setQueryData(
-        activityAnalysisV2LatestQueryKey(activityId),
-        run,
-      );
-      void queryClient.invalidateQueries({
-        queryKey: activityAnalysisV2RunsQueryKey(activityId),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: activityQueryKey(activityId),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: activityWorkflowStageQueryKey(activityId),
-      });
-    },
+    mutationFn: (payload) =>
+      apiClient.answerActivityAnalysisV2Questions(activityId, payload),
   });
 }
 
@@ -341,6 +320,39 @@ export function usePrivacyReviewQuery(
     queryFn: () => apiClient.getPrivacyReview(processingJobId!),
     enabled: enabled && Boolean(processingJobId),
   });
+}
+
+export function useQualitativeCodingReviewQuery(
+  uploadMetadataId: string | undefined,
+  enabled = true,
+) {
+  return useQuery<QualitativeCodingReviewRecord | null, ApiError>(
+    qualitativeCodingReviewQueryOptions(uploadMetadataId, enabled),
+  );
+}
+
+export function qualitativeCodingReviewQueryOptions(
+  uploadMetadataId: string | undefined,
+  enabled = true,
+) {
+  return {
+    queryKey: qualitativeCodingReviewQueryKey(uploadMetadataId ?? "missing"),
+    queryFn: async () => {
+      try {
+        return await apiClient.getQualitativeCodingReview(uploadMetadataId!);
+      } catch (error) {
+        if (
+          error instanceof ApiError &&
+          error.code === "qualitative_coding_review_not_found"
+        ) {
+          return null;
+        }
+        throw error;
+      }
+    },
+    enabled: enabled && Boolean(uploadMetadataId),
+    retry: false,
+  };
 }
 
 export function useProjectInterpretationsQuery(
@@ -819,6 +831,68 @@ export function useApprovePrivacyReviewMutation(
   });
 }
 
+// Creates a qualitative_coding_review processing job — it does not return
+// the proposal directly. The caller is expected to poll the job with
+// useJobQuery and, once it reaches a terminal status, re-fetch the review
+// and invalidate the same read queries this hook used to invalidate
+// directly in onSuccess (see qualitativeCodingReviewDialog.tsx) —
+// invalidating here, on job creation, would be premature since nothing has
+// actually changed yet.
+export function useGenerateQualitativeCodingReviewMutation() {
+  return useMutation<ProcessingJobRecord, ApiError, string>({
+    mutationFn: (uploadMetadataId: string) =>
+      apiClient.generateQualitativeCodingReview(uploadMetadataId),
+  });
+}
+
+export function useApproveQualitativeCodingReviewMutation(
+  activityId: string,
+  projectId?: string,
+  organizationId?: string,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    ApproveQualitativeCodingReviewResponse,
+    ApiError,
+    {
+      uploadMetadataId: string;
+      decisions?: QualitativeCodingReviewDecisionsInput;
+    }
+  >({
+    mutationFn: ({ uploadMetadataId, decisions }) =>
+      apiClient.approveQualitativeCodingReview(uploadMetadataId, { decisions }),
+    onSuccess: ({ review }) => {
+      queryClient.setQueryData(
+        qualitativeCodingReviewQueryKey(review.uploadMetadataId),
+        review,
+      );
+      void queryClient.invalidateQueries({
+        queryKey: activityWorkflowStageQueryKey(activityId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: activityAnalysisV2LatestQueryKey(activityId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: activityUploadsQueryKey(activityId),
+      });
+      if (projectId) {
+        void queryClient.invalidateQueries({
+          queryKey: projectOverviewQueryKey(projectId),
+        });
+        void queryClient.invalidateQueries({
+          queryKey: projectInterpretationsQueryKey(projectId),
+        });
+      }
+      if (organizationId) {
+        void queryClient.invalidateQueries({
+          queryKey: workspaceQueryKey(organizationId),
+        });
+      }
+    },
+  });
+}
+
 export function useStartInterpretationMutation(
   activityId: string,
   projectId?: string,
@@ -883,8 +957,12 @@ export function useStartActivityInterpretationMutation(
   });
 }
 
-export function useAnswerInterpretationQuestionMutation(
-  interpretationResultId: string,
+// interpretationResultId is a mutate-time argument (not bound at hook
+// creation) because a single "answer all pending questions" submit can
+// span questions from several different InterpretationResults (one per
+// uploaded file) — the caller groups answers by result and reuses this one
+// mutation for each group.
+export function useAnswerInterpretationQuestionsMutation(
   projectId?: string,
   organizationId?: string,
 ) {
@@ -893,19 +971,15 @@ export function useAnswerInterpretationQuestionMutation(
   return useMutation<
     InterpretationResultRecord,
     ApiError,
-    { questionId: string; payload: AnswerInterpretationQuestionPayload }
+    {
+      interpretationResultId: string;
+      payload: AnswerInterpretationQuestionsPayload;
+    }
   >({
-    mutationFn: ({ questionId, payload }) =>
-      apiClient.answerInterpretationQuestion(
-        interpretationResultId,
-        questionId,
-        payload,
-      ),
+    mutationFn: ({ interpretationResultId, payload }) =>
+      apiClient.answerInterpretationQuestions(interpretationResultId, payload),
     onSuccess: (result) => {
-      queryClient.setQueryData(
-        interpretationQueryKey(interpretationResultId),
-        result,
-      );
+      queryClient.setQueryData(interpretationQueryKey(result.id), result);
       if (projectId) {
         void queryClient.invalidateQueries({
           queryKey: projectInterpretationsQueryKey(projectId),

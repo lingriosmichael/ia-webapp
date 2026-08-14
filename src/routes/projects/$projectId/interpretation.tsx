@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { PrivacyReviewDialog } from "@/components/privacyReviewDialog";
+import { QualitativeCodingReviewDialog } from "@/components/qualitativeCodingReviewDialog";
 import { InterpretationQuestionCard } from "@/components/interpretationQuestionCard";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
 import { Badge } from "@/components/ui/badge";
@@ -27,14 +28,17 @@ import {
   activityJobsQueryKey,
   activityAnalysisV2LatestQueryKey,
   activityAnalysisV2RunsQueryKey,
+  activityQueryKey,
   activityUploadsQueryKey,
   activityWorkflowStageQueryKey,
   jobQueryKey,
+  qualitativeCodingReviewQueryOptions,
   projectInterpretationsQueryKey,
-  useAnswerActivityAnalysisV2QuestionMutation,
-  useAnswerInterpretationQuestionMutation,
+  useAnswerActivityAnalysisV2QuestionsMutation,
+  useAnswerInterpretationQuestionsMutation,
   useActivityAnalysisV2RunsQuery,
   useActivityLinkageReviewQuery,
+  useJobQuery,
   useLatestActivityAnalysisV2Query,
   useReviewActivityLinkageProposalMutation,
   useRunActivityAnalysisV2Mutation,
@@ -66,11 +70,16 @@ import { Card } from "@/components/WorkspaceUI";
 const INTERPRETATION_POLL_INTERVAL_RAMP_MS = [30_000, 20_000] as const;
 const INTERPRETATION_STEADY_POLL_INTERVAL_MS = 10_000;
 const TERMINAL_JOB_STATUSES = ["completed", "failed", "cancelled"];
-const FIRST_LAYER_CLARIFICATION_QUESTION_CODES = new Set([
+const MIN_NON_EMPTY_ROWS_FOR_QUALITATIVE_CODING_REVIEW = 3;
+const FIRST_LAYER_CLARIFICATION_QUESTION_CODES = new Set<
+  InterpretationQuestion["questionCode"]
+>([
   "normalization_merge",
   "row_grain",
   "duplicate_identifier_resolution",
-] as const);
+  "epistemic_role_clarification",
+  "validated_scale_confirmation",
+]);
 // Based on elapsed time since the job actually started (job.createdAt),
 // not a poll counter — a counter would drift out of sync with reality on
 // every remount or tab switch, while elapsed time doesn't.
@@ -108,6 +117,7 @@ export const Route = createFileRoute("/projects/$projectId/interpretation")({
 type ActivityWorkflowStatus =
   | "no_evidence"
   | "privacy_review"
+  | "qualitative_review"
   | "processing"
   | "questions"
   | "goal_review"
@@ -134,6 +144,30 @@ function getEvidenceSupportState(
   return evidenceModality === "insufficiently_extracted"
     ? "insufficiently_extracted"
     : "supported";
+}
+
+function requiresQualitativeCodingReview(
+  result: InterpretationResultRecord | undefined,
+): boolean {
+  return (result?.datasetProfile?.tables ?? []).some((table) => {
+    const hasFreeText = table.columns.some((column) => {
+      if (column.epistemicRole !== "free_text") {
+        return false;
+      }
+
+      const estimatedNonEmptyRows = Math.round(
+        table.rowCount * (1 - column.nullPercentage / 100),
+      );
+      return (
+        estimatedNonEmptyRows >=
+        MIN_NON_EMPTY_ROWS_FOR_QUALITATIVE_CODING_REVIEW
+      );
+    });
+    const hasSubjectiveCode = table.columns.some(
+      (column) => column.epistemicRole === "subjective_code",
+    );
+    return hasFreeText && !hasSubjectiveCode;
+  });
 }
 
 function isPrivacyPreviewAvailable(job: ProcessingJobRecord | undefined) {
@@ -200,6 +234,8 @@ function mapWorkflowStageToActivityStatus(
       return "no_evidence";
     case "privacy_review":
       return "privacy_review";
+    case "qualitative_review":
+      return "qualitative_review";
     case "analysis_running":
       return "processing";
     case "needs_clarification":
@@ -238,20 +274,8 @@ function formatAnalysisNumber(value: number, language: string): string {
   }).format(value);
 }
 
-function isAnalysisGoalAttentionStatus(
-  status: NonNullable<ActivityAnalysisRunV2Record["assessment"]>["goalAssessments"][number]["assessmentStatus"],
-): boolean {
-  return (
-    status === "not_achieved" ||
-    status === "requires_clarification" ||
-    status === "requires_capability"
-  );
-}
-
-function isAnalysisGoalPositiveStatus(
-  status: NonNullable<ActivityAnalysisRunV2Record["assessment"]>["goalAssessments"][number]["assessmentStatus"],
-): boolean {
-  return status === "achieved";
+function readArray<T>(value: T[] | null | undefined): T[] {
+  return Array.isArray(value) ? value : [];
 }
 
 function AnalysisOpenDialog({
@@ -267,11 +291,29 @@ function AnalysisOpenDialog({
 }) {
   const { t, i18n } = useTranslation();
   const goalAssessments = run?.assessment?.goalAssessments ?? [];
+  const qualitativeFindingsById = new Map(
+    (run?.qualitativeFindings ?? []).map((finding) => [
+      finding.findingId,
+      finding,
+    ]),
+  );
+  const hasEvidenceTension = goalAssessments.some(
+    (goalAssessment) => goalAssessment.evidenceTensionFlag,
+  );
+  const qualitativeGoalAssessments = goalAssessments.filter(
+    (goalAssessment) =>
+      readArray(goalAssessment.supportingQualitativeFindingIds).length > 0,
+  );
+  // A mixed_evidence goal has both a measured/target value and qualitative
+  // support — the qualitative section below already narrates the measured
+  // value in its findingText, so it must not also render as a compact
+  // metric card here, or the same goal shows up twice on the page.
   const topMetricAssessments = goalAssessments.filter(
     (goalAssessment) =>
       goalAssessment.goalType === "output" &&
       goalAssessment.measuredValue !== null &&
-      goalAssessment.targetValue !== null,
+      goalAssessment.targetValue !== null &&
+      readArray(goalAssessment.supportingQualitativeFindingIds).length === 0,
   );
 
   return (
@@ -284,6 +326,18 @@ function AnalysisOpenDialog({
         </DialogHeader>
 
         <div className="space-y-5">
+          {hasEvidenceTension ? (
+            <div className="rounded-[16px] border border-amber-300/40 bg-amber-50/80 px-4 py-4">
+              <div className="flex items-center gap-2 text-sm font-semibold text-amber-900">
+                <AlertTriangle className="h-4 w-4" />
+                {t("activityAnalytics.v2.tensionTitle")}
+              </div>
+              <p className="mt-2 text-sm leading-6 text-amber-900/90">
+                {t("activityAnalytics.v2.tensionDescription")}
+              </p>
+            </div>
+          ) : null}
+
           {topMetricAssessments.length > 0 ? (
             <div className="grid gap-3 sm:grid-cols-2">
               {topMetricAssessments.map((goalAssessment) => {
@@ -304,6 +358,15 @@ function AnalysisOpenDialog({
                         : "rounded-[16px] border border-rose-200 bg-rose-50 px-4 py-4"
                     }
                   >
+                    {goalAssessment.evidenceTensionFlag ? (
+                      <Badge
+                        variant="outline"
+                        className="border-amber-200 bg-amber-50 text-amber-800"
+                      >
+                        <AlertTriangle className="mr-1 h-3.5 w-3.5" />
+                        {t("activityAnalytics.v2.tensionBadge")}
+                      </Badge>
+                    ) : null}
                     <div className="text-xs font-medium leading-5 text-foreground">
                       {goalAssessment.goalText}
                     </div>
@@ -366,6 +429,118 @@ function AnalysisOpenDialog({
             </p>
           )}
 
+          {qualitativeGoalAssessments.length > 0 ? (
+            <section className="rounded-[16px] border border-border/80 bg-background/70 px-4 py-4">
+              <div className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                {t("activityAnalytics.v2.qualitativeSectionTitle")}
+              </div>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                {t("activityAnalytics.v2.qualitativeSectionDescription")}
+              </p>
+              <div className="mt-4 space-y-3">
+                {qualitativeGoalAssessments.map((goalAssessment) => {
+                  const supportingFindings = readArray(
+                    goalAssessment.supportingQualitativeFindingIds,
+                  ).flatMap((findingId) => {
+                    const finding = qualitativeFindingsById.get(findingId);
+                    return finding ? [finding] : [];
+                  });
+
+                  return (
+                    <div
+                      key={goalAssessment.goalId}
+                      className="rounded-[14px] border border-border/70 bg-[#f7f0e2] px-4 py-4"
+                    >
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge variant="outline">
+                          {t(
+                            `activityAnalytics.v2.goalStatus.${goalAssessment.assessmentStatus}`,
+                          )}
+                        </Badge>
+                        {goalAssessment.evidenceTensionFlag ? (
+                          <Badge
+                            variant="outline"
+                            className="border-amber-200 bg-amber-50 text-amber-800"
+                          >
+                            <AlertTriangle className="mr-1 h-3.5 w-3.5" />
+                            {t("activityAnalytics.v2.tensionBadge")}
+                          </Badge>
+                        ) : null}
+                      </div>
+                      <div className="mt-3 text-sm font-semibold leading-6 text-foreground">
+                        {goalAssessment.goalText}
+                      </div>
+                      <p className="mt-2 whitespace-pre-line text-sm leading-6 text-foreground/90">
+                        {goalAssessment.findingText}
+                      </p>
+
+                      <div className="mt-4 space-y-3">
+                        {supportingFindings.map((finding) => (
+                          <div
+                            key={finding.findingId}
+                            className="rounded-[12px] border border-border/60 bg-background/80 px-3 py-3"
+                          >
+                            <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                              {finding.themeOrCode ? (
+                                <span>
+                                  {t("activityAnalytics.v2.themeLabel", {
+                                    theme: finding.themeOrCode,
+                                  })}
+                                </span>
+                              ) : null}
+                              <span>
+                                {t("activityAnalytics.v2.excerptSampleMeta", {
+                                  returned: finding.excerptsReturned,
+                                  total: finding.totalMatchingRows,
+                                })}
+                              </span>
+                            </div>
+                            <div className="mt-2 space-y-2">
+                              {finding.excerpts.map((excerpt, index) => (
+                                <blockquote
+                                  key={`${finding.findingId}_${index + 1}`}
+                                  className="border-l-2 border-border/70 pl-3 text-sm leading-6 text-foreground"
+                                >
+                                  “{excerpt.verbatimText}”
+                                </blockquote>
+                              ))}
+                            </div>
+                            <p className="mt-3 text-xs leading-5 text-muted-foreground">
+                              {t("activityAnalytics.v2.reliabilityLabel", {
+                                missingValuePct:
+                                  finding.reliabilitySignal.missingValuePct ===
+                                  null
+                                    ? "—"
+                                    : new Intl.NumberFormat(
+                                        i18n.language === "de"
+                                          ? "de-DE"
+                                          : "en-US",
+                                        {
+                                          maximumFractionDigits: 0,
+                                        },
+                                      ).format(
+                                        finding.reliabilitySignal
+                                          .missingValuePct,
+                                      ),
+                                raterCount:
+                                  finding.reliabilitySignal.raterCount ===
+                                    null ||
+                                  finding.reliabilitySignal.raterCount ===
+                                    "unknown"
+                                    ? t("activityAnalytics.v2.raterUnknown")
+                                    : finding.reliabilitySignal.raterCount,
+                              })}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          ) : null}
+
           {run?.renderedSummary ? (
             <section className="rounded-[16px] border border-border/80 bg-background/70 px-4 py-4">
               <div className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
@@ -410,15 +585,13 @@ function LinkageReviewDialog({
   isLoading: boolean;
   isSubmitting: boolean;
   onOpenChange: (open: boolean) => void;
-  onDecision: (
-    proposalId: string,
-    decision: "accept" | "reject",
-  ) => void;
+  onDecision: (proposalId: string, decision: "accept" | "reject") => void;
 }) {
   const { t, i18n } = useTranslation();
   const uploadNameById = new Map(
     uploads.map((upload) => [upload.id, upload.originalFileName] as const),
   );
+  const proposals = readArray(review?.proposals);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -432,7 +605,9 @@ function LinkageReviewDialog({
         <div className="space-y-5">
           <section className="rounded-[16px] border border-border/80 bg-background/70 px-4 py-4">
             <div className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-              {t("projectWorkspace.interpretation.simplified.linkageReviewTitle")}
+              {t(
+                "projectWorkspace.interpretation.simplified.linkageReviewTitle",
+              )}
             </div>
             <p className="mt-3 text-sm leading-7 text-foreground">
               {t(
@@ -447,9 +622,9 @@ function LinkageReviewDialog({
                 "projectWorkspace.interpretation.simplified.linkageReviewLoading",
               )}
             </section>
-          ) : review?.proposals.length ? (
+          ) : proposals.length > 0 ? (
             <div className="space-y-4">
-              {review.proposals.map((proposal) => (
+              {proposals.map((proposal) => (
                 <LinkageProposalCard
                   key={proposal.proposalId}
                   proposal={proposal}
@@ -484,10 +659,7 @@ function LinkageProposalCard({
   uploadNameById: Map<string, string>;
   language: string;
   isSubmitting: boolean;
-  onDecision: (
-    proposalId: string,
-    decision: "accept" | "reject",
-  ) => void;
+  onDecision: (proposalId: string, decision: "accept" | "reject") => void;
 }) {
   const { t } = useTranslation();
   const overlapText = new Intl.NumberFormat(
@@ -515,16 +687,13 @@ function LinkageProposalCard({
         {proposal.tableNameB} · {proposal.columnNameB}
       </div>
       <p className="mt-4 text-sm leading-6 text-foreground">
-        {t(
-          "projectWorkspace.interpretation.simplified.linkageProposalPrompt",
-          {
-            tableA: proposal.tableNameA,
-            columnA: proposal.columnNameA,
-            tableB: proposal.tableNameB,
-            columnB: proposal.columnNameB,
-            overlap: overlapText,
-          },
-        )}
+        {t("projectWorkspace.interpretation.simplified.linkageProposalPrompt", {
+          tableA: proposal.tableNameA,
+          columnA: proposal.columnNameA,
+          tableB: proposal.tableNameB,
+          columnB: proposal.columnNameB,
+          overlap: overlapText,
+        })}
       </p>
       <div className="mt-4 flex flex-wrap gap-2">
         <Button
@@ -555,6 +724,15 @@ function ProjectInterpretationPage() {
   const workspaceProject = useCurrentWorkspaceProject();
   const [reviewProcessingJob, setReviewProcessingJob] = useState<
     { jobId: string; activityName: string } | undefined
+  >(undefined);
+  const [qualitativeReviewTarget, setQualitativeReviewTarget] = useState<
+    | {
+        uploadMetadataId: string;
+        activityId: string;
+        activityName: string;
+        originalFileName: string;
+      }
+    | undefined
   >(undefined);
   const interpretationsQuery = useProjectInterpretationsQuery(
     projectId,
@@ -658,6 +836,7 @@ function ProjectInterpretationPage() {
   const needsAttentionActivityCount = activityStatuses.filter(
     (entry) =>
       entry.status === "privacy_review" ||
+      entry.status === "qualitative_review" ||
       entry.status === "questions" ||
       entry.status === "partial",
   ).length;
@@ -729,6 +908,19 @@ function ProjectInterpretationPage() {
                   onOpenPrivacyReview={(jobId, activityName) =>
                     setReviewProcessingJob({ jobId, activityName })
                   }
+                  onOpenQualitativeReview={(
+                    uploadMetadataId,
+                    activityId,
+                    activityName,
+                    originalFileName,
+                  ) =>
+                    setQualitativeReviewTarget({
+                      uploadMetadataId,
+                      activityId,
+                      activityName,
+                      originalFileName,
+                    })
+                  }
                 />
               ))
             )}
@@ -747,6 +939,20 @@ function ProjectInterpretationPage() {
           organizationId={workspaceProject?.organizationId ?? ""}
           activityName={reviewProcessingJob?.activityName}
         />
+        <QualitativeCodingReviewDialog
+          open={Boolean(qualitativeReviewTarget)}
+          onOpenChange={(open) => {
+            if (!open) {
+              setQualitativeReviewTarget(undefined);
+            }
+          }}
+          uploadMetadataId={qualitativeReviewTarget?.uploadMetadataId}
+          activityId={qualitativeReviewTarget?.activityId ?? ""}
+          projectId={projectId}
+          organizationId={workspaceProject?.organizationId ?? ""}
+          activityName={qualitativeReviewTarget?.activityName}
+          originalFileName={qualitativeReviewTarget?.originalFileName}
+        />
       </section>
     </ProjectWorkspaceShell>
   );
@@ -761,6 +967,7 @@ function ActivityKnowledgeCard({
   results,
   workflowStage,
   onOpenPrivacyReview,
+  onOpenQualitativeReview,
 }: {
   activity: WorkspaceActivity;
   projectId: string;
@@ -770,6 +977,12 @@ function ActivityKnowledgeCard({
   results: InterpretationResultRecord[];
   workflowStage: ActivityWorkflowStage | undefined;
   onOpenPrivacyReview: (jobId: string, activityName: string) => void;
+  onOpenQualitativeReview: (
+    uploadMetadataId: string,
+    activityId: string,
+    activityName: string,
+    originalFileName: string,
+  ) => void;
 }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -780,8 +993,103 @@ function ActivityKnowledgeCard({
     projectId,
   );
   const runAnalysisMutation = useRunActivityAnalysisV2Mutation(activity.id);
-  const answerActivityAnalysisV2QuestionMutation =
-    useAnswerActivityAnalysisV2QuestionMutation(activity.id);
+  // Both runAnalysisMutation and answerActivityAnalysisV2QuestionsMutation
+  // now create an activity_analysis_v2 job rather than returning the
+  // finished run — this tracks whichever one is currently in flight so a
+  // single effect below can poll it and react once it reaches a terminal
+  // status, regardless of which action started it.
+  const [activeAnalysisJob, setActiveAnalysisJob] = useState<
+    | { jobId: string; kind: "run" }
+    | { jobId: string; kind: "answer"; answerCount: number }
+    | null
+  >(null);
+  const activeAnalysisJobQuery = useJobQuery(
+    activeAnalysisJob?.jobId,
+    Boolean(activeAnalysisJob),
+  );
+  useEffect(() => {
+    const job = activeAnalysisJobQuery.data;
+    if (
+      !activeAnalysisJob ||
+      !job ||
+      !TERMINAL_JOB_STATUSES.includes(job.status)
+    ) {
+      return;
+    }
+
+    const finishedJob = activeAnalysisJob;
+    setActiveAnalysisJob(null);
+
+    void (async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: activityAnalysisV2LatestQueryKey(activity.id),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: activityAnalysisV2RunsQueryKey(activity.id),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: activityWorkflowStageQueryKey(activity.id),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: activityQueryKey(activity.id),
+        }),
+      ]);
+
+      if (job.status !== "completed") {
+        toast.error(job.errorMessage ?? t("activityAnalytics.v2.runFailed"));
+        return;
+      }
+
+      // The job's own status only means "did the worker finish attempting
+      // this" — the analysis run it produced can still be status: "failed"
+      // (e.g. a planner failure), so the success/failure toast reads the
+      // freshly-invalidated run's own status, not the job's.
+      const run = queryClient.getQueryData<ActivityAnalysisRunV2Record | null>(
+        activityAnalysisV2LatestQueryKey(activity.id),
+      );
+
+      if (run?.status === "failed") {
+        toast.error(t("activityAnalytics.v2.runFailed"));
+        return;
+      }
+
+      if (finishedJob.kind === "run") {
+        toast.success(t("activityAnalytics.v2.runSuccess"));
+      } else {
+        toast.success(
+          finishedJob.answerCount > 1
+            ? t("activityAnalytics.v2.clarificationAnsweredBatch", {
+                count: finishedJob.answerCount,
+              })
+            : t("activityAnalytics.v2.clarificationAnswered"),
+        );
+      }
+
+      if (run?.status === "completed" && run.renderedSummary) {
+        setIsAnalysisDialogOpen(true);
+      }
+    })();
+  }, [
+    activeAnalysisJobQuery.data,
+    activeAnalysisJob,
+    activity.id,
+    queryClient,
+    t,
+  ]);
+  const answerActivityAnalysisV2QuestionsMutation =
+    useAnswerActivityAnalysisV2QuestionsMutation(activity.id);
+  const [analysisV2DraftAnswers, setAnalysisV2DraftAnswers] = useState<
+    Record<string, string>
+  >({});
+  const answerInterpretationQuestionsMutation =
+    useAnswerInterpretationQuestionsMutation(projectId, organizationId);
+  const [datasetQuestionDraftAnswers, setDatasetQuestionDraftAnswers] =
+    useState<Record<string, string>>({});
+  const [
+    isSubmittingDatasetQuestionAnswers,
+    setIsSubmittingDatasetQuestionAnswers,
+  ] = useState(false);
   const linkageReviewQuery = useActivityLinkageReviewQuery(
     activity.id,
     workflowStage === "goal_review" || isLinkageDialogOpen,
@@ -792,6 +1100,11 @@ function ActivityKnowledgeCard({
     activity.id,
     uploads.length > 0,
   );
+  // Staged answers are cleared whenever a new run appears — a fresh set of
+  // questions supersedes any answers staged against the previous run's.
+  useEffect(() => {
+    setAnalysisV2DraftAnswers({});
+  }, [latestAnalysisV2Query.data?.analysisRunId]);
   const activityAnalysisRunsQuery = useActivityAnalysisV2RunsQuery(
     activity.id,
     uploads.length > 0,
@@ -886,9 +1199,37 @@ function ActivityKnowledgeCard({
       .filter(isFirstLayerClarificationQuestion)
       .map((question) => ({ result, question })),
   );
+  const allPendingDatasetQuestionsAnswered =
+    pendingQuestions.length > 0 &&
+    pendingQuestions.every(({ question }) =>
+      datasetQuestionDraftAnswers[question.id]?.trim(),
+    );
   const resultByUploadId = new Map(
     results.map((result) => [result.uploadMetadataId, result] as const),
   );
+  const qualitativeReviewCandidateUploads = uploads.filter((upload) =>
+    requiresQualitativeCodingReview(resultByUploadId.get(upload.id)),
+  );
+  const qualitativeCodingReviewQueries = useQueries({
+    queries: qualitativeReviewCandidateUploads.map((upload) =>
+      qualitativeCodingReviewQueryOptions(upload.id),
+    ),
+  });
+  const qualitativeReviewByUploadId = new Map(
+    qualitativeReviewCandidateUploads.map((upload, index) => [
+      upload.id,
+      qualitativeCodingReviewQueries[index]?.data ?? null,
+    ]),
+  );
+  const unresolvedQualitativeReviewUploads =
+    qualitativeReviewCandidateUploads.filter(
+      (upload) =>
+        qualitativeReviewByUploadId.get(upload.id)?.status !== "approved",
+    );
+  const currentPendingQualitativeReviewUpload =
+    unresolvedQualitativeReviewUploads[0] ?? null;
+  const pendingQualitativeReviewCount =
+    unresolvedQualitativeReviewUploads.length;
   const totalPendingQuestionCount = pendingQuestions.length;
   const hasUnresolvedActionableQuestion = results.some((result) =>
     hasPendingBlockingQuestions(result.questions),
@@ -943,19 +1284,29 @@ function ActivityKnowledgeCard({
       )
     : t("projectWorkspace.interpretation.simplified.actionRunKnowledge");
   const latestAnalysisRun = latestAnalysisV2Query.data ?? null;
+  const latestAnalysisClarificationQuestions = readArray(
+    latestAnalysisRun?.clarificationQuestions,
+  );
+  const pendingAnalysisClarificationQuestions =
+    latestAnalysisClarificationQuestions.filter(
+      (question) => question.status === "pending",
+    );
   const latestOpenableAnalysisRun =
     activityAnalysisRunsQuery.data?.find(
       (run) => run.status === "completed" && Boolean(run.renderedSummary),
     ) ?? null;
   const hasOpenableAnalysis = Boolean(latestOpenableAnalysisRun);
   const pendingAnalysisClarificationCount =
-    latestAnalysisRun?.clarificationQuestions.filter(
-      (question) => question.status === "pending",
-    ).length ?? 0;
+    pendingAnalysisClarificationQuestions.length ?? 0;
   const latestAnalysisNeedsClarification =
     latestAnalysisRun?.status === "needs_clarification" &&
     pendingAnalysisClarificationCount > 0;
   const latestAnalysisFailed = latestAnalysisRun?.status === "failed";
+  const allPendingAnalysisQuestionsAnswered =
+    pendingAnalysisClarificationQuestions.length > 0 &&
+    pendingAnalysisClarificationQuestions.every((question) =>
+      analysisV2DraftAnswers[question.id]?.trim(),
+    );
 
   const summary =
     status === "no_evidence"
@@ -971,51 +1322,117 @@ function ActivityKnowledgeCard({
                 count: pendingPrivacyReviewCount,
               },
             )
-          : status === "questions"
+          : status === "qualitative_review"
             ? t(
-                "projectWorkspace.interpretation.simplified.activitySummary.questions",
+                "projectWorkspace.interpretation.simplified.activitySummary.qualitativeReview",
                 {
-                  count: totalPendingQuestionCount,
+                  count: pendingQualitativeReviewCount,
                 },
               )
-            : status === "partial"
+            : status === "questions"
               ? t(
-                  "projectWorkspace.interpretation.simplified.activitySummary.partial",
+                  "projectWorkspace.interpretation.simplified.activitySummary.questions",
                   {
-                    interpreted: results.length,
-                    remaining: Math.max(uploads.length - results.length, 0),
+                    count: totalPendingQuestionCount,
                   },
                 )
-              : status === "goal_review"
+              : status === "partial"
                 ? t(
-                    "projectWorkspace.interpretation.simplified.activitySummary.goalReview",
+                    "projectWorkspace.interpretation.simplified.activitySummary.partial",
+                    {
+                      interpreted: results.length,
+                      remaining: Math.max(uploads.length - results.length, 0),
+                    },
                   )
-                : hasOpenableAnalysis
+                : status === "goal_review"
                   ? t(
-                      "projectWorkspace.interpretation.simplified.activitySummary.v2Completed",
+                      "projectWorkspace.interpretation.simplified.activitySummary.goalReview",
                     )
-                  : latestAnalysisNeedsClarification
+                  : hasOpenableAnalysis
                     ? t(
-                        "projectWorkspace.interpretation.simplified.activitySummary.v2NeedsClarification",
-                        {
-                          count: pendingAnalysisClarificationCount,
-                        },
+                        "projectWorkspace.interpretation.simplified.activitySummary.v2Completed",
                       )
-                    : latestAnalysisFailed
+                    : latestAnalysisNeedsClarification
                       ? t(
-                          "projectWorkspace.interpretation.simplified.activitySummary.v2Failed",
+                          "projectWorkspace.interpretation.simplified.activitySummary.v2NeedsClarification",
+                          {
+                            count: pendingAnalysisClarificationCount,
+                          },
                         )
-                : status === "ready"
-                  ? t(
-                      "projectWorkspace.interpretation.simplified.activitySummary.ready",
-                    )
-                  : status === "reviewed"
-                    ? t(
-                        "projectWorkspace.interpretation.simplified.activitySummary.reviewed",
-                      )
-                  : t(
-                      "projectWorkspace.interpretation.simplified.activitySummary.notStarted",
-                    );
+                      : latestAnalysisFailed
+                        ? t(
+                            "projectWorkspace.interpretation.simplified.activitySummary.v2Failed",
+                          )
+                        : status === "ready"
+                          ? t(
+                              "projectWorkspace.interpretation.simplified.activitySummary.ready",
+                            )
+                          : status === "reviewed"
+                            ? t(
+                                "projectWorkspace.interpretation.simplified.activitySummary.reviewed",
+                              )
+                            : t(
+                                "projectWorkspace.interpretation.simplified.activitySummary.notStarted",
+                              );
+
+  async function handleSubmitDatasetQuestionAnswers() {
+    // pendingQuestions can span multiple InterpretationResults (one per
+    // uploaded file), so a single "send" click groups drafted answers by
+    // their owning result and fires one batch call per group — still one
+    // user action, but each result only re-syncs once regardless of how
+    // many of its questions were answered.
+    const answersByResultId = new Map<
+      string,
+      Array<{ questionId: string; answeredValue: string }>
+    >();
+    for (const { result, question } of pendingQuestions) {
+      const answeredValue = datasetQuestionDraftAnswers[question.id]?.trim();
+      if (!answeredValue) {
+        continue;
+      }
+      const existing = answersByResultId.get(result.id) ?? [];
+      existing.push({ questionId: question.id, answeredValue });
+      answersByResultId.set(result.id, existing);
+    }
+
+    if (answersByResultId.size === 0) {
+      return;
+    }
+
+    const answeredCount = Array.from(answersByResultId.values()).reduce(
+      (total, answers) => total + answers.length,
+      0,
+    );
+
+    setIsSubmittingDatasetQuestionAnswers(true);
+    try {
+      for (const [interpretationResultId, answers] of answersByResultId) {
+        await answerInterpretationQuestionsMutation.mutateAsync({
+          interpretationResultId,
+          payload: { answers },
+        });
+      }
+      setDatasetQuestionDraftAnswers({});
+      toast.success(
+        answeredCount > 1
+          ? t(
+              "projectWorkspace.interpretation.simplified.questionsAnsweredBatch",
+              { count: answeredCount },
+            )
+          : t("projectWorkspace.interpretation.simplified.questionsAnswered"),
+      );
+    } catch (error) {
+      toast.error(
+        error instanceof ApiError
+          ? error.message
+          : t(
+              "projectWorkspace.interpretation.simplified.questionsAnswerFailed",
+            ),
+      );
+    } finally {
+      setIsSubmittingDatasetQuestionAnswers(false);
+    }
+  }
 
   return (
     <>
@@ -1040,7 +1457,9 @@ function ActivityKnowledgeCard({
                     uploads: uploads.length,
                     interpreted: results.length,
                   })
-                : t("projectWorkspace.interpretation.simplified.activityNoFiles")}
+                : t(
+                    "projectWorkspace.interpretation.simplified.activityNoFiles",
+                  )}
             </p>
           </div>
 
@@ -1056,6 +1475,25 @@ function ActivityKnowledgeCard({
                 }
               >
                 {t("projectWorkspace.interpretation.reviewPrivacyAction")}
+              </Button>
+            ) : null}
+
+            {status === "qualitative_review" &&
+            currentPendingQualitativeReviewUpload ? (
+              <Button
+                size="sm"
+                onClick={() =>
+                  onOpenQualitativeReview(
+                    currentPendingQualitativeReviewUpload.id,
+                    activity.id,
+                    activity.name,
+                    currentPendingQualitativeReviewUpload.originalFileName,
+                  )
+                }
+              >
+                {t(
+                  "projectWorkspace.interpretation.reviewQualitativeCodingAction",
+                )}
               </Button>
             ) : null}
 
@@ -1111,21 +1549,8 @@ function ActivityKnowledgeCard({
                 variant="outline"
                 onClick={() =>
                   runAnalysisMutation.mutate(undefined, {
-                    onSuccess: async (run) => {
-                      await Promise.all([
-                        queryClient.invalidateQueries({
-                          queryKey: activityAnalysisV2LatestQueryKey(
-                            activity.id,
-                          ),
-                        }),
-                        queryClient.invalidateQueries({
-                          queryKey: activityAnalysisV2RunsQueryKey(activity.id),
-                        }),
-                      ]);
-                      toast.success(t("activityAnalytics.v2.runSuccess"));
-                      if (run.status === "completed" && run.renderedSummary) {
-                        setIsAnalysisDialogOpen(true);
-                      }
+                    onSuccess: (job) => {
+                      setActiveAnalysisJob({ jobId: job.id, kind: "run" });
                     },
                     onError: (error) => {
                       toast.error(
@@ -1136,9 +1561,11 @@ function ActivityKnowledgeCard({
                     },
                   })
                 }
-                disabled={runAnalysisMutation.isPending}
+                disabled={
+                  runAnalysisMutation.isPending || Boolean(activeAnalysisJob)
+                }
               >
-                {runAnalysisMutation.isPending
+                {runAnalysisMutation.isPending || Boolean(activeAnalysisJob)
                   ? t("activityAnalytics.v2.runPending")
                   : latestAnalysisRun
                     ? t("activityAnalytics.v2.refreshAction")
@@ -1166,16 +1593,49 @@ function ActivityKnowledgeCard({
               <CircleHelp className="h-4 w-4 text-primary" />
               {t("projectWorkspace.interpretation.simplified.questionsTitle")}
             </div>
-            {pendingQuestions.map(({ result, question }) => (
-              <QuestionCard
+            {pendingQuestions.length > 1 ? (
+              <p className="text-sm leading-6 text-muted-foreground">
+                {t(
+                  "projectWorkspace.interpretation.simplified.questionsDescriptionBatch",
+                )}
+              </p>
+            ) : null}
+            {pendingQuestions.map(({ question }) => (
+              <InterpretationQuestionCard
                 key={question.id}
+                mode="select"
                 activityName={activity.name}
-                interpretationResultId={result.id}
-                projectId={projectId}
-                organizationId={organizationId}
                 question={question}
+                isSubmitting={isSubmittingDatasetQuestionAnswers}
+                selectedValue={datasetQuestionDraftAnswers[question.id] ?? null}
+                onSelectionChange={({ questionId, answeredValue }) =>
+                  setDatasetQuestionDraftAnswers((current) => ({
+                    ...current,
+                    [questionId]: answeredValue,
+                  }))
+                }
               />
             ))}
+            <div className="flex justify-end">
+              <Button
+                type="button"
+                size="sm"
+                disabled={
+                  !allPendingDatasetQuestionsAnswered ||
+                  isSubmittingDatasetQuestionAnswers
+                }
+                onClick={handleSubmitDatasetQuestionAnswers}
+              >
+                {isSubmittingDatasetQuestionAnswers
+                  ? t(
+                      "projectWorkspace.interpretation.simplified.submitAnswersPending",
+                    )
+                  : t(
+                      "projectWorkspace.interpretation.simplified.submitAnswersAction",
+                      { count: pendingQuestions.length },
+                    )}
+              </Button>
+            </div>
           </div>
         ) : null}
 
@@ -1186,49 +1646,80 @@ function ActivityKnowledgeCard({
               {t("activityAnalytics.v2.clarificationTitle")}
             </div>
             <p className="text-sm leading-6 text-muted-foreground">
-              {t("activityAnalytics.v2.clarificationDescription")}
+              {pendingAnalysisClarificationQuestions.length > 1
+                ? t("activityAnalytics.v2.clarificationDescriptionBatch")
+                : t("activityAnalytics.v2.clarificationDescription")}
             </p>
-            {latestAnalysisRun?.clarificationQuestions
-              .filter((question) => question.status === "pending")
-              .map((question) => (
-                <InterpretationQuestionCard
-                  key={question.id}
-                  activityName={activity.name}
-                  question={question}
-                  isSubmitting={
-                    answerActivityAnalysisV2QuestionMutation.isPending
+            {pendingAnalysisClarificationQuestions.map((question) => (
+              <InterpretationQuestionCard
+                key={question.id}
+                mode="select"
+                activityName={activity.name}
+                question={question}
+                isSubmitting={
+                  answerActivityAnalysisV2QuestionsMutation.isPending ||
+                  Boolean(activeAnalysisJob)
+                }
+                selectedValue={analysisV2DraftAnswers[question.id] ?? null}
+                onSelectionChange={({ questionId, answeredValue }) =>
+                  setAnalysisV2DraftAnswers((current) => ({
+                    ...current,
+                    [questionId]: answeredValue,
+                  }))
+                }
+              />
+            ))}
+            <div className="flex justify-end">
+              <Button
+                type="button"
+                size="sm"
+                disabled={
+                  !allPendingAnalysisQuestionsAnswered ||
+                  answerActivityAnalysisV2QuestionsMutation.isPending ||
+                  Boolean(activeAnalysisJob)
+                }
+                onClick={() => {
+                  const answers = pendingAnalysisClarificationQuestions.flatMap(
+                    (question) => {
+                      const answeredValue =
+                        analysisV2DraftAnswers[question.id]?.trim();
+                      return answeredValue
+                        ? [{ questionId: question.id, answeredValue }]
+                        : [];
+                    },
+                  );
+                  if (answers.length === 0) {
+                    return;
                   }
-                  onSubmit={({ questionId, answeredValue }) =>
-                    answerActivityAnalysisV2QuestionMutation.mutate(
-                      {
-                        questionId,
-                        payload: { answeredValue },
+                  answerActivityAnalysisV2QuestionsMutation.mutate(
+                    { answers },
+                    {
+                      onSuccess: (job) => {
+                        setActiveAnalysisJob({
+                          jobId: job.id,
+                          kind: "answer",
+                          answerCount: answers.length,
+                        });
                       },
-                      {
-                        onSuccess: (run) => {
-                          if (run.status === "failed") {
-                            toast.error(t("activityAnalytics.v2.runFailed"));
-                            return;
-                          }
-                          toast.success(
-                            t("activityAnalytics.v2.clarificationAnswered"),
-                          );
-                          if (run.status === "completed" && run.renderedSummary) {
-                            setIsAnalysisDialogOpen(true);
-                          }
-                        },
-                        onError: (error) => {
-                          toast.error(
-                            error instanceof ApiError
-                              ? error.message
-                              : t("activityAnalytics.v2.runFailed"),
-                          );
-                        },
+                      onError: (error) => {
+                        toast.error(
+                          error instanceof ApiError
+                            ? error.message
+                            : t("activityAnalytics.v2.runFailed"),
+                        );
                       },
-                    )
-                  }
-                />
-              ))}
+                    },
+                  );
+                }}
+              >
+                {answerActivityAnalysisV2QuestionsMutation.isPending ||
+                Boolean(activeAnalysisJob)
+                  ? t("activityAnalytics.v2.submitAnswersPending")
+                  : t("activityAnalytics.v2.submitAnswersAction", {
+                      count: pendingAnalysisClarificationQuestions.length,
+                    })}
+              </Button>
+            </div>
           </div>
         ) : null}
       </Card>
@@ -1259,7 +1750,10 @@ function ActivityKnowledgeCard({
                       : "projectWorkspace.interpretation.simplified.linkageRejected",
                   ),
                 );
-                if (result.status === "resolved" && result.proposals.length === 0) {
+                if (
+                  result.status === "resolved" &&
+                  readArray(result.proposals).length === 0
+                ) {
                   setIsLinkageDialogOpen(false);
                 }
               },
@@ -1316,6 +1810,7 @@ function ActivityStatusBadge({
 
   if (
     status === "privacy_review" ||
+    status === "qualitative_review" ||
     status === "questions" ||
     status === "partial"
   ) {
@@ -1335,39 +1830,5 @@ function ActivityStatusBadge({
       <CircleHelp className="h-3.5 w-3.5" />
       {t(`projectWorkspace.interpretation.simplified.status.${status}`)}
     </Badge>
-  );
-}
-
-function QuestionCard({
-  activityName,
-  interpretationResultId,
-  projectId,
-  organizationId,
-  question,
-}: {
-  activityName: string;
-  interpretationResultId: string;
-  projectId: string;
-  organizationId: string | undefined;
-  question: InterpretationQuestion;
-}) {
-  const answerMutation = useAnswerInterpretationQuestionMutation(
-    interpretationResultId,
-    projectId,
-    organizationId,
-  );
-
-  return (
-    <InterpretationQuestionCard
-      activityName={activityName}
-      question={question}
-      isSubmitting={answerMutation.isPending}
-      onSubmit={({ questionId, answeredValue }) =>
-        answerMutation.mutate({
-          questionId,
-          payload: { answeredValue },
-        })
-      }
-    />
   );
 }

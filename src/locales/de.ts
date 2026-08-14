@@ -435,6 +435,7 @@ const de: TranslationDictionary = {
       noFiles: "Für diese Aktivität wurde noch keine Evidenz hochgeladen.",
       openFile: "Datei öffnen",
       analyzeFile: "Datenschutz prüfen",
+      prepareWorkbookFile: "Excel-Datei vorbereiten",
       retryAnalysis: "Analyse erneut starten",
       restartStuckAnalysis: "Verarbeitung neu starten",
       reviewPrivacy: "Datenschutz prüfen",
@@ -591,6 +592,35 @@ const de: TranslationDictionary = {
       questionSubmit: "Absenden",
       questionSubmitting: "Wird gesendet…",
       reviewPrivacyAction: "Datenschutz prüfen",
+      reviewQualitativeCodingAction: "Codierung prüfen",
+      reviewFile: "Datei",
+      reviewActivity: "Aktivität",
+      loadingQualitativeReview: "Qualitative Codierungsprüfung wird geladen…",
+      qualitativeReviewTitle: "Qualitative Codierungsprüfung",
+      qualitativeReviewDescription:
+        "Prüfen Sie die vorgeschlagenen Codierungs-Overlays für Freitext-Evidenz, bevor die Aktivitätsanalyse fortgesetzt werden kann.",
+      qualitativeReviewApprove: "Codierungsprüfung freigeben",
+      qualitativeReviewApproving: "Wird freigegeben…",
+      qualitativeReviewApproveSuccess:
+        "Die qualitative Codierungsprüfung wurde freigegeben.",
+      qualitativeReviewApproveFailed:
+        "Die qualitative Codierungsprüfung konnte nicht freigegeben werden.",
+      qualitativeReviewGenerateFailed:
+        "Die qualitative Codierungsprüfung konnte nicht erzeugt werden.",
+      qualitativeReviewUnavailableTitle:
+        "Qualitative Codierungsprüfung nicht verfügbar",
+      qualitativeReviewUnavailableDescription:
+        "Die vorgeschlagene Codierungsprüfung konnte gerade nicht geladen werden.",
+      qualitativeReviewNoFindingsTitle: "Keine Codierungsvorschläge erzeugt",
+      qualitativeReviewNoFindingsDescription:
+        "Für diese Datei wurden keine vorgeschlagenen Codierungsbefunde zurückgegeben.",
+      qualitativeReviewFindings: "Vorgeschlagene Codierungsbefunde",
+      qualitativeReviewFindingMeta:
+        "{{rows}} Zeilen · {{codedRows}} codierte Zeilen · synthetische Spalte: {{syntheticColumnName}}",
+      qualitativeReviewCodebook: "Quell-Codebuch: {{fileName}}",
+      qualitativeReviewExcerpts: "Beispielauszüge",
+      qualitativeReviewDecisionApprove: "Wie vorgeschlagen freigeben",
+      qualitativeReviewDecisionReject: "Vorerst ablehnen",
       noEvidenceYet: "Noch keine Evidenz hochgeladen.",
       simplified: {
         pageTitle: "Aktivitätsanalyse",
@@ -606,6 +636,10 @@ const de: TranslationDictionary = {
             "Für diese Aktivität wartet noch {{count}} Datei auf Datenschutzprüfung.",
           privacyReview_other:
             "Für diese Aktivität warten noch {{count}} Dateien auf Datenschutzprüfung.",
+          qualitativeReview:
+            "Für diese Aktivität braucht noch {{count}} Datei die Freigabe der qualitativen Codierungsprüfung.",
+          qualitativeReview_other:
+            "Für diese Aktivität brauchen noch {{count}} Dateien die Freigabe der qualitativen Codierungsprüfung.",
           processing:
             "Die KI-Analyse läuft gerade über die Evidenz dieser Aktivität.",
           questions:
@@ -637,18 +671,23 @@ const de: TranslationDictionary = {
         activityNoFiles:
           "Für diese Aktivität wurde noch keine Evidenz hochgeladen.",
         questionsTitle: "Klärungsfragen",
+        questionsDescriptionBatch:
+          "Mehrere Fragen müssen beantwortet werden, bevor diese Evidenz interpretiert werden kann. Wähle unten für jede Frage eine Antwort aus und sende dann alle zusammen — die Analyse nach jeder einzelnen Antwort neu zu starten wäre langsam.",
+        questionsAnswered: "Antwort gespeichert.",
+        questionsAnsweredBatch: "{{count}} Antworten gespeichert.",
+        questionsAnswerFailed: "Diese Antwort konnte nicht gespeichert werden.",
+        submitAnswersAction: "{{count}} Antworten senden",
+        submitAnswersPending: "Wird gesendet…",
         reviewLinkageAction: "Verknüpfung prüfen",
         linkageReviewTitle: "Dateiübergreifende Verknüpfung prüfen",
         linkageReviewDescription:
           "brindl hat eine mögliche Verknüpfung zwischen mehreren Evidenzdateien erkannt, die nicht auf einem eindeutigen Identifikator beruht. Bestätigen Sie eine vorgeschlagene Spaltenverknüpfung nur dann, wenn beide Dateien tatsächlich dieselben Einheiten beschreiben. Lehnen Sie den Vorschlag andernfalls ab; dann bleiben die Dateien getrennt.",
-        linkageReviewLoading:
-          "Die Verknüpfungsvorschläge werden geladen…",
+        linkageReviewLoading: "Die Verknüpfungsvorschläge werden geladen…",
         linkageProposalPrompt:
           "Vorgeschlagene Spaltenverknüpfung: „{{tableA}}.{{columnA}}“ mit „{{tableB}}.{{columnB}}“. Soll diese Verknüpfung verwendet werden? Die überlappenden Werte decken aktuell etwa {{overlap}} der kombinierten Ausprägungen ab.",
         linkageAcceptAction: "Als Verknüpfung verwenden",
         linkageRejectAction: "Getrennt behandeln",
-        linkageAccepted:
-          "Die vorgeschlagene Verknüpfung wurde übernommen.",
+        linkageAccepted: "Die vorgeschlagene Verknüpfung wurde übernommen.",
         linkageRejected:
           "Die Dateien werden für diese Aktivität getrennt behandelt.",
         linkageDecisionFailed:
@@ -673,6 +712,7 @@ const de: TranslationDictionary = {
         status: {
           no_evidence: "Keine Evidenz",
           privacy_review: "Datenschutzprüfung",
+          qualitative_review: "Codierungsprüfung",
           processing: "In Bearbeitung",
           questions: "Fragen offen",
           partial: "Teilweise fertig",
@@ -1365,14 +1405,35 @@ const de: TranslationDictionary = {
         achieved: "Erreicht",
         not_achieved: "Nicht erreicht",
         evidence_compiled: "Evidenz zusammengestellt",
+        qualitative_evidence_only: "Nur qualitative Evidenz",
+        mixed_evidence: "Gemischte Evidenz",
         requires_clarification: "Klärung nötig",
         requires_capability: "Berechnung fehlt",
       },
+      tensionTitle: "Spannung zwischen Evidenzsignalen",
+      tensionDescription:
+        "Diese Analyse enthält quantitative und qualitative Evidenz, die bewusst nebeneinander gelesen werden sollte, statt sie zu einem einfachen Gesamturteil zu verdichten.",
+      tensionBadge: "Evidenzspannung",
+      qualitativeSectionTitle: "Verankerte qualitative Auszüge",
+      qualitativeSectionDescription:
+        "Diese Ziele werden durch ausgewählte wörtliche Auszüge aus den verknüpften Evidenztabellen gestützt. Lesen Sie sie als verankerte Beispiele, nicht als vollständige Sicht auf alle passenden Zeilen.",
+      excerptSampleMeta:
+        "{{returned}} Auszug/Auszüge angezeigt aus {{total}} passender/passenden Zeile(n)",
+      themeLabel: "Thema/Code: {{theme}}",
+      reliabilityLabel:
+        "Fehlende Textzeilen: {{missingValuePct}} %. Anzahl Rater:innen: {{raterCount}}.",
+      raterUnknown: "unbekannt",
       clarificationTitle: "Vor der Analyse ist noch eine Klärung erforderlich",
       clarificationDescription:
         "ActivityAnalystV2 hat angehalten, weil eine oder mehrere Definitionen noch unklar sind. Beantworte die Fragen unten; danach wird die Analyse mit diesen Antworten erneut gestartet.",
+      clarificationDescriptionBatch:
+        "ActivityAnalystV2 hat angehalten, weil mehrere Definitionen noch unklar sind. Wähle unten für jede Frage eine Antwort aus und sende dann alle zusammen — die Analyse nach jeder einzelnen Antwort neu zu starten wäre langsam.",
       clarificationAnswered:
         "Klärung gespeichert. Die Aktivitätsanalyse wurde erneut ausgeführt.",
+      clarificationAnsweredBatch:
+        "{{count}} Antworten gespeichert. Die Aktivitätsanalyse wurde erneut ausgeführt.",
+      submitAnswersAction: "{{count}} Antworten senden",
+      submitAnswersPending: "Wird gesendet…",
     },
   },
   activityInsights: {

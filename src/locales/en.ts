@@ -430,6 +430,7 @@ const en = {
       noFiles: "No evidence uploaded yet for this activity.",
       openFile: "Open file",
       analyzeFile: "Review privacy",
+      prepareWorkbookFile: "Prepare Excel file",
       retryAnalysis: "Retry analysis",
       restartStuckAnalysis: "Restart processing",
       reviewPrivacy: "Review privacy",
@@ -579,6 +580,35 @@ const en = {
       questionSubmit: "Submit",
       questionSubmitting: "Submitting…",
       reviewPrivacyAction: "Review privacy",
+      reviewQualitativeCodingAction: "Review coding",
+      reviewFile: "File",
+      reviewActivity: "Activity",
+      loadingQualitativeReview: "Loading qualitative coding review…",
+      qualitativeReviewTitle: "Qualitative coding review",
+      qualitativeReviewDescription:
+        "Review the proposed coding overlays for free-text evidence before this activity analysis can continue.",
+      qualitativeReviewApprove: "Approve coding review",
+      qualitativeReviewApproving: "Approving…",
+      qualitativeReviewApproveSuccess:
+        "The qualitative coding review was approved.",
+      qualitativeReviewApproveFailed:
+        "The qualitative coding review could not be approved.",
+      qualitativeReviewGenerateFailed:
+        "The qualitative coding review could not be generated.",
+      qualitativeReviewUnavailableTitle:
+        "Qualitative coding review unavailable",
+      qualitativeReviewUnavailableDescription:
+        "The proposed coding review could not be loaded right now.",
+      qualitativeReviewNoFindingsTitle: "No coding findings generated",
+      qualitativeReviewNoFindingsDescription:
+        "No proposed coding findings were returned for this file.",
+      qualitativeReviewFindings: "Proposed coding findings",
+      qualitativeReviewFindingMeta:
+        "{{rows}} rows · {{codedRows}} coded rows · synthetic column: {{syntheticColumnName}}",
+      qualitativeReviewCodebook: "Source codebook: {{fileName}}",
+      qualitativeReviewExcerpts: "Sample excerpts",
+      qualitativeReviewDecisionApprove: "Approve as proposed",
+      qualitativeReviewDecisionReject: "Reject for now",
       noEvidenceYet: "No evidence uploaded yet.",
       simplified: {
         pageTitle: "Activity analysis",
@@ -594,6 +624,10 @@ const en = {
             "{{count}} file in this activity is still waiting for privacy review.",
           privacyReview_other:
             "{{count}} files in this activity are still waiting for privacy review.",
+          qualitativeReview:
+            "{{count}} file in this activity still needs qualitative coding review approval.",
+          qualitativeReview_other:
+            "{{count}} files in this activity still need qualitative coding review approval.",
           processing:
             "AI analysis is currently running across this activity's evidence.",
           questions:
@@ -616,13 +650,19 @@ const en = {
             "The latest activity analysis still needs {{count}} clarification question before it can be opened.",
           v2NeedsClarification_other:
             "The latest activity analysis still needs {{count}} clarification questions before it can be opened.",
-          v2Failed:
-            "The latest activity analysis failed. Run it again.",
+          v2Failed: "The latest activity analysis failed. Run it again.",
           notStarted: "AI analysis has not been started for this activity yet.",
         },
         activityMeta: "{{uploads}} files · {{interpreted}} interpreted",
         activityNoFiles: "No evidence has been uploaded for this activity yet.",
         questionsTitle: "Clarification questions",
+        questionsDescriptionBatch:
+          "Several questions need an answer before this evidence can be interpreted. Select an answer for each question below, then send them all at once — re-running the analysis after every single answer would be slow.",
+        questionsAnswered: "Answer saved.",
+        questionsAnsweredBatch: "{{count}} answers saved.",
+        questionsAnswerFailed: "This answer could not be saved.",
+        submitAnswersAction: "Send {{count}} answers",
+        submitAnswersPending: "Sending…",
         reviewLinkageAction: "Review linkage",
         linkageReviewTitle: "Review cross-file linkage",
         linkageReviewDescription:
@@ -656,6 +696,7 @@ const en = {
         status: {
           no_evidence: "No evidence",
           privacy_review: "Privacy review",
+          qualitative_review: "Coding review",
           processing: "In progress",
           questions: "Questions open",
           partial: "Partially complete",
@@ -1335,13 +1376,34 @@ const en = {
         achieved: "Achieved",
         not_achieved: "Not achieved",
         evidence_compiled: "Evidence compiled",
+        qualitative_evidence_only: "Qualitative evidence only",
+        mixed_evidence: "Mixed evidence",
         requires_clarification: "Needs clarification",
         requires_capability: "Missing calculation",
       },
+      tensionTitle: "Evidence tension flagged",
+      tensionDescription:
+        "This analysis found quantitative and qualitative evidence that should be read carefully together rather than collapsed into one simple verdict.",
+      tensionBadge: "Evidence tension",
+      qualitativeSectionTitle: "Grounded qualitative excerpts",
+      qualitativeSectionDescription:
+        "These goals are supported by sampled verbatim excerpts from the linked evidence tables. Treat them as grounded examples, not as a full census of every matching row.",
+      excerptSampleMeta:
+        "{{returned}} excerpt(s) shown from {{total}} matching row(s)",
+      themeLabel: "Theme/code: {{theme}}",
+      reliabilityLabel:
+        "Missing text rows: {{missingValuePct}}%. Rater count: {{raterCount}}.",
+      raterUnknown: "unknown",
       clarificationTitle: "Clarification needed before analysis can continue",
       clarificationDescription:
         "ActivityAnalystV2 paused because one or more definitions are still ambiguous. Answer the questions below and the run will resume with those answers.",
+      clarificationDescriptionBatch:
+        "ActivityAnalystV2 paused because several definitions are still ambiguous. Select an answer for each question below, then send them all at once — re-running the analysis after every single answer would be slow.",
       clarificationAnswered: "Clarification saved. Activity analysis reran.",
+      clarificationAnsweredBatch:
+        "{{count}} answers saved. Activity analysis reran.",
+      submitAnswersAction: "Send {{count}} answers",
+      submitAnswersPending: "Sending…",
     },
   },
   activityInsights: {

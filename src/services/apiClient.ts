@@ -325,7 +325,9 @@ export interface ProcessingJobRecord {
     | "insight_generation"
     | "report_generation"
     | "chat"
-    | "other";
+    | "other"
+    | "activity_analysis_v2"
+    | "qualitative_coding_review";
   status:
     | "queued"
     | "processing"
@@ -377,6 +379,15 @@ export type EvidenceModality =
 
 export type PrivacyReviewDecisionValue =
   "keep" | "tokenize" | "generalize" | "remove" | "restrict";
+export type EpistemicRole =
+  | "identifier"
+  | "temporal"
+  | "validated_scale"
+  | "metric_count"
+  | "subjective_code"
+  | "free_text"
+  | "flag"
+  | "categorical";
 
 export interface ParsedRepresentationPreviewTable {
   name: string;
@@ -457,6 +468,81 @@ export interface ApprovePrivacyReviewPayload {
 export interface ApprovePrivacyReviewResponse {
   review: PrivacyReviewRecord;
   job: ProcessingJobRecord;
+}
+
+export interface QualitativeCodingReviewSuggestedCode {
+  code: string;
+  label: string;
+  description: string;
+  exampleExcerpts: string[];
+}
+
+export interface QualitativeCodingReviewProposedAssignment {
+  rowIndex: number;
+  assignedCode: string | null;
+}
+
+export interface QualitativeCodingReviewFindingRecord {
+  findingKey: string;
+  tableName: string;
+  textColumnName: string;
+  syntheticCodeColumnName: string;
+  rowCount: number;
+  nonEmptyRowCount: number;
+  sampleExcerpts: string[];
+  existingCodeColumnNames: string[];
+  proposedCodes: QualitativeCodingReviewSuggestedCode[];
+  proposedAssignments: QualitativeCodingReviewProposedAssignment[];
+  sourceCodebookUploadMetadataId: string | null;
+  sourceCodebookOriginalFileName: string | null;
+}
+
+export interface QualitativeCodingReviewColumnDecisionInput {
+  findingKey: string;
+  decision: "approve_as_proposed" | "reject_for_now";
+  note?: string;
+}
+
+export interface QualitativeCodingReviewColumnDecisionRecord extends QualitativeCodingReviewColumnDecisionInput {
+  decidedById: string;
+  decidedAt: string;
+}
+
+export interface QualitativeCodingReviewDecisions {
+  columnDecisions?: QualitativeCodingReviewColumnDecisionRecord[];
+}
+
+export interface QualitativeCodingReviewDecisionsInput {
+  columnDecisions?: QualitativeCodingReviewColumnDecisionInput[];
+}
+
+export interface QualitativeCodingReviewRecord {
+  id: string;
+  organizationId: string;
+  projectId: string;
+  activityId: string | null;
+  uploadMetadataId: string;
+  privacySafeRepresentationId: string;
+  interpretationResultId: string;
+  status: "pending" | "approved" | "rejected";
+  findings: Record<string, unknown>;
+  decisions: QualitativeCodingReviewDecisions | null;
+  approvedById: string | null;
+  approvedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GenerateQualitativeCodingReviewResponse {
+  review: QualitativeCodingReviewRecord;
+}
+
+export interface ApproveQualitativeCodingReviewPayload {
+  decisions?: QualitativeCodingReviewDecisionsInput;
+}
+
+export interface ApproveQualitativeCodingReviewResponse {
+  review: QualitativeCodingReviewRecord;
 }
 
 export interface AuthResponse {
@@ -580,7 +666,9 @@ export type InterpretationQuestionCode =
   | "duplicate_identifier_resolution"
   | "primary_status_field"
   | "positive_status_values"
-  | "primary_date_field";
+  | "primary_date_field"
+  | "epistemic_role_clarification"
+  | "validated_scale_confirmation";
 export type InterpretationQuestionStatus = "pending" | "answered";
 
 export interface InterpretationQuestion {
@@ -644,6 +732,8 @@ export interface DatasetProfileColumn {
   numericSummary: DatasetProfileNumericSummary | null;
   dateSummary: DatasetProfileDateSummary | null;
   duplicateNonNullValueCount: number;
+  epistemicRole: EpistemicRole | null;
+  isValidatedScaleCandidate: boolean;
 }
 
 export type DatasetProfileIssueCode =
@@ -747,6 +837,7 @@ export interface PreparedDatasetColumn {
   positiveStatusValues: string[];
   positiveStatusDefinitionText: string | null;
   normalizationAccepted: boolean | null;
+  epistemicRole: EpistemicRole | null;
 }
 
 export interface PreparedDatasetTable {
@@ -991,6 +1082,8 @@ export type ActivityAnalysisV2GoalAssessmentStatus =
   | "achieved"
   | "not_achieved"
   | "evidence_compiled"
+  | "qualitative_evidence_only"
+  | "mixed_evidence"
   | "requires_clarification"
   | "requires_capability";
 
@@ -1005,6 +1098,7 @@ export interface ActivityAnalysisV2ToolCallRecord {
   toolName: string;
   arguments: Record<string, unknown>;
   calculationIds: string[];
+  qualitativeFindingIds?: string[];
   status: "succeeded" | "failed";
   errorMessage: string | null;
   startedAt: string;
@@ -1023,12 +1117,67 @@ export interface ActivityAnalysisV2CalculationRecord {
   sourceUploadMetadataIds: string[];
   sourceTableNames: string[];
   sourceColumns: string[];
+  sourceColumnEpistemicRoles?: Array<{
+    columnName: string;
+    epistemicRole:
+      | "identifier"
+      | "temporal"
+      | "validated_scale"
+      | "metric_count"
+      | "subjective_code"
+      | "free_text"
+      | "flag"
+      | "categorical"
+      | null;
+  }>;
   grain?: string;
   numerator?: number | null;
   denominator?: number | null;
   denominatorType?: string;
   identifierColumn?: string | null;
   result: Record<string, unknown>;
+}
+
+export interface ActivityAnalysisV2QualitativeFindingRecord {
+  findingId: string;
+  toolName: string;
+  label: string;
+  description: string;
+  themeOrCode: string | null;
+  excerpts: Array<{
+    sourceRowId: string | null;
+    verbatimText: string;
+    sourceColumn: string;
+  }>;
+  totalMatchingRows: number;
+  excerptsReturned: number;
+  frequency: {
+    count: number;
+    denominator: number | null;
+    denominatorType: string | null;
+  } | null;
+  codingMethod: "source_provided" | "llm_assisted_reviewed";
+  reliabilitySignal: {
+    missingValuePct: number | null;
+    raterCount: number | "unknown" | null;
+  };
+  sourceUploadMetadataIds: string[];
+  sourceTableNames: string[];
+  sourceColumns: string[];
+  sourceColumnEpistemicRoles?: Array<{
+    columnName: string;
+    epistemicRole:
+      | "identifier"
+      | "temporal"
+      | "validated_scale"
+      | "metric_count"
+      | "subjective_code"
+      | "free_text"
+      | "flag"
+      | "categorical"
+      | null;
+  }>;
+  identifierColumn: string | null;
 }
 
 export interface ActivityAnalysisV2GoalAssessmentRecord {
@@ -1043,6 +1192,8 @@ export interface ActivityAnalysisV2GoalAssessmentRecord {
   findingText: string;
   missingCapabilities: ActivityAnalysisV2MissingCapability[];
   supportingCalculationIds: string[];
+  supportingQualitativeFindingIds: string[];
+  evidenceTensionFlag: boolean;
   measuredValue: number | null;
   targetValue: number | null;
   comparison: "at_least" | "at_most" | "equal" | null;
@@ -1069,6 +1220,8 @@ export interface ActivityAnalysisV2Diagnostics {
     achieved: number;
     notAchieved: number;
     evidenceCompiled: number;
+    qualitativeEvidenceOnly: number;
+    mixedEvidence: number;
     requiresClarification: number;
     requiresCapability: number;
   };
@@ -1105,6 +1258,7 @@ export interface ActivityAnalysisRunV2Record {
   clarificationQuestions: InterpretationQuestion[];
   toolCallTrace: ActivityAnalysisV2ToolCallRecord[];
   calculations: ActivityAnalysisV2CalculationRecord[];
+  qualitativeFindings: ActivityAnalysisV2QualitativeFindingRecord[];
   assessment: ActivityAssessmentV2 | null;
   diagnostics: ActivityAnalysisV2Diagnostics;
   validation: {
@@ -1161,6 +1315,7 @@ export type ActivityWorkflowStage =
   | "analysis_pending"
   | "analysis_running"
   | "needs_clarification"
+  | "qualitative_review"
   | "goal_review"
   | "assessment_ready"
   | "reviewed";
@@ -1174,8 +1329,12 @@ export interface StartInterpretationPayload {
   language: "de" | "en";
 }
 
-export interface AnswerInterpretationQuestionPayload {
-  answeredValue: string;
+export interface AnswerInterpretationQuestionsPayload {
+  answers: Array<{ questionId: string; answeredValue: string }>;
+}
+
+export interface AnswerActivityAnalysisV2QuestionsPayload {
+  answers: Array<{ questionId: string; answeredValue: string }>;
 }
 
 // ============================================================
@@ -1903,11 +2062,37 @@ export const apiClient = {
   getPrivacyReview(processingJobId: string): Promise<PrivacyReviewRecord> {
     return request(`/privacy-review/${processingJobId}`);
   },
+  getQualitativeCodingReview(
+    uploadMetadataId: string,
+  ): Promise<QualitativeCodingReviewRecord> {
+    return request(`/qualitative-coding-review/${uploadMetadataId}`);
+  },
+  // Creates a qualitative_coding_review processing job instead of returning
+  // the proposal directly — the actual LLM-round-trip generation now runs
+  // in activityAnalysisWorker.ts (ia_backend). Poll the returned job with
+  // useJobQuery, then re-fetch getQualitativeCodingReview once it's terminal.
+  generateQualitativeCodingReview(
+    uploadMetadataId: string,
+  ): Promise<ProcessingJobRecord> {
+    return request(`/qualitative-coding-review/${uploadMetadataId}/generate`, {
+      method: "POST",
+    });
+  },
   approvePrivacyReview(
     processingJobId: string,
     payload: ApprovePrivacyReviewPayload,
   ): Promise<ApprovePrivacyReviewResponse> {
     return request(`/privacy-review/${processingJobId}/approve`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  },
+  approveQualitativeCodingReview(
+    uploadMetadataId: string,
+    payload: ApproveQualitativeCodingReviewPayload,
+  ): Promise<ApproveQualitativeCodingReviewResponse> {
+    return request(`/qualitative-coding-review/${uploadMetadataId}/approve`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(payload),
@@ -1967,26 +2152,31 @@ export const apiClient = {
   ): Promise<ActivityAnalysisRunV2Record> {
     return request(`/activities/${activityId}/analysis-v2`);
   },
-  runActivityAnalysisV2(
-    activityId: string,
-  ): Promise<ActivityAnalysisRunV2Record> {
+  // Creates an activity_analysis_v2 processing job instead of returning the
+  // finished run directly — the plan/execute/narrate pipeline now runs in
+  // activityAnalysisWorker.ts (ia_backend), not inline in this request. Poll
+  // the returned job with useJobQuery, then re-fetch
+  // getLatestActivityAnalysisV2 once it's terminal.
+  runActivityAnalysisV2(activityId: string): Promise<ProcessingJobRecord> {
     return request(`/activities/${activityId}/analysis-v2`, {
       method: "POST",
     });
   },
-  answerActivityAnalysisV2Question(
+  // Answers a batch of clarification questions in one call so the replan
+  // job only replans once instead of once per question — answering N
+  // questions individually used to cost N full replan jobs, most of them
+  // wasted since the others were still unanswered anyway. Persisting the
+  // answers is synchronous; the resulting replan runs as a new
+  // activity_analysis_v2 job, same as runActivityAnalysisV2 above.
+  answerActivityAnalysisV2Questions(
     activityId: string,
-    questionId: string,
-    payload: AnswerInterpretationQuestionPayload,
-  ): Promise<ActivityAnalysisRunV2Record> {
-    return request(
-      `/activities/${activityId}/analysis-v2/questions/${questionId}`,
-      {
-        method: "PATCH",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(payload),
-      },
-    );
+    payload: AnswerActivityAnalysisV2QuestionsPayload,
+  ): Promise<ProcessingJobRecord> {
+    return request(`/activities/${activityId}/analysis-v2/questions`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
   },
   listActivityAnalysisV2Runs(
     activityId: string,
@@ -2000,19 +2190,15 @@ export const apiClient = {
   ): Promise<InterpretationResultRecord> {
     return request(`/interpretations/${interpretationResultId}`);
   },
-  answerInterpretationQuestion(
+  answerInterpretationQuestions(
     interpretationResultId: string,
-    questionId: string,
-    payload: AnswerInterpretationQuestionPayload,
+    payload: AnswerInterpretationQuestionsPayload,
   ): Promise<InterpretationResultRecord> {
-    return request(
-      `/interpretations/${interpretationResultId}/questions/${questionId}`,
-      {
-        method: "PATCH",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(payload),
-      },
-    );
+    return request(`/interpretations/${interpretationResultId}/questions`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
   },
   acknowledgeInterpretationReview(
     activityId: string,
