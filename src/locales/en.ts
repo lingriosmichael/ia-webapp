@@ -611,12 +611,12 @@ const en = {
       qualitativeReviewDecisionReject: "Reject for now",
       noEvidenceYet: "No evidence uploaded yet.",
       simplified: {
-        pageTitle: "Activity analysis",
-        heroTitle: "One goal-based analysis flow per activity.",
+        pageTitle: "Goal check",
+        heroTitle: "One goal check per activity.",
         heroDescription:
-          "Add evidence to an activity, complete interpretation, and then open one goal-based activity analysis as the canonical AI view.",
+          "brindl checks whether the defined activity goals are supported by the current evidence. Before that, evidence is prepared and interpreted in a privacy-safe way.",
         statActivities: "Activities",
-        statReady: "Analysis ready",
+        statReady: "Goal check ready",
         statAttention: "Need attention",
         activitiesTitle: "Activities",
         activitySummary: {
@@ -629,7 +629,7 @@ const en = {
           qualitativeReview_other:
             "{{count}} files in this activity still need qualitative coding review approval.",
           processing:
-            "AI analysis is currently running across this activity's evidence.",
+            "This activity's evidence is currently being interpreted.",
           questions:
             "{{count}} clarification question is still open before the activity analysis can be opened.",
           questions_other:
@@ -641,17 +641,17 @@ const en = {
           goalReview:
             "This activity has a proposed cross-file match. Review whether the files should be linked or kept separate before the activity analysis can be opened.",
           ready:
-            "The prerequisites are satisfied. The activity analysis can now be generated for this activity.",
+            "The prerequisites are satisfied. The goal check can now be generated for this activity.",
           reviewed:
-            "The prerequisites are satisfied. The activity analysis can be run again for this activity.",
-          v2Completed:
-            "The activity analysis can now be opened for this activity.",
+            "The prerequisites are satisfied. The goal check can be run again for this activity.",
+          v2Completed: "The goal check can now be opened for this activity.",
           v2NeedsClarification:
-            "The latest activity analysis still needs {{count}} clarification question before it can be opened.",
+            "The latest goal check still needs {{count}} clarification question before it can be opened.",
           v2NeedsClarification_other:
-            "The latest activity analysis still needs {{count}} clarification questions before it can be opened.",
-          v2Failed: "The latest activity analysis failed. Run it again.",
-          notStarted: "AI analysis has not been started for this activity yet.",
+            "The latest goal check still needs {{count}} clarification questions before it can be opened.",
+          v2Failed: "The latest goal check failed. Run it again.",
+          notStarted:
+            "The evidence has not been interpreted for this activity yet.",
         },
         activityMeta: "{{uploads}} files · {{interpreted}} interpreted",
         activityNoFiles: "No evidence has been uploaded for this activity yet.",
@@ -678,9 +678,9 @@ const en = {
         linkageDecisionFailed: "The linkage decision could not be saved.",
         linkageReviewResolved:
           "There are no open linkage proposals for this activity right now.",
-        actionRunning: "Analyzing…",
-        actionRestart: "Restart analysis",
-        actionRunKnowledge: "Analyze with AI",
+        actionRunning: "Interpreting evidence…",
+        actionRestart: "Restart interpretation",
+        actionRunKnowledge: "Interpret evidence",
         actionInterpretMissingEvidence: "Interpret missing evidence",
         interpretationStarted: "AI interpretation started.",
         interpretationRestarted: "AI interpretation restarted.",
@@ -691,8 +691,8 @@ const en = {
         interpretationRestartFailed:
           "AI interpretation could not be restarted.",
         activityNotReadyToast:
-          "This activity is not ready for AI analysis yet. Finish privacy review first or wait for processing to complete.",
-        actionOpenAnalysis: "Open activity analysis",
+          "This activity is not ready for goal checking yet. Finish privacy review first or wait for processing to complete.",
+        actionOpenAnalysis: "View goal check",
         status: {
           no_evidence: "No evidence",
           privacy_review: "Privacy review",
@@ -726,164 +726,32 @@ const en = {
       nextSteps: "Suggested next steps",
     },
   },
-  analytics: {
-    aiCurated: "AI-curated",
-    notDeduplicatedNote: "Sum across sources — not a deduplicated count.",
-    narrativeTitle: "What the data suggests",
-    fullCatalogTitle: "Explore more metrics",
-    barChartSectionTitle: "Additional metrics in bar charts",
-    qualitativeSignalsTitle: "Additional qualitative signals",
-    featured: "Featured on this dashboard",
-    notFeatured: "Not featured this time",
-    omittedTitle: "Not yet calculable",
-    quoteCount: "{{count}} supporting quote",
-    quoteCount_other: "{{count}} supporting quotes",
-    dataQualityTitle: "Data quality",
-    groundingFallbackNotice:
-      "Analytics were generated, but the automatic curation could not be confirmed; only metrics are shown, without narrative.",
-    generatedAt: "Generated {{date}}",
-    actions: {
-      generate: "Refresh analytics",
-      generating: "Generating…",
-    },
-    status: {
-      NOT_STARTED: "Analytics have not been generated yet.",
-      QUEUED: "Analytics are queued.",
-      RUNNING: "Analytics are being generated…",
-      COMPLETED: "Analytics are up to date.",
-      COMPLETED_WITH_WARNINGS:
-        "Analytics were generated. Some values are based on incomplete data.",
-      FAILED: "Analytics could not be generated.",
-      STALE:
-        "New or changed verified evidence is available since the last calculation.",
-    },
-    dashboard: {
-      eyebrow: "Configurable dashboard",
-      title: "Evidence dashboard",
-      exportLabel: "Export",
-      exportJson: "Export JSON",
-      exportText: "Export text",
-      exportDocumentTitle: "brindl dashboard export",
-      exportDocumentScopeLabel: "Scope",
-      exportDocumentProjectLabel: "Project",
-      exportDocumentActivityLabel: "Activity",
-      exportDocumentSchemaLabel: "Schema",
-      exportDocumentCompatibilitySourceLabel: "Compatibility source",
-      exportDocumentWarningsTitle: "Data quality warnings",
-      exportSuccess: "Dashboard export created.",
-      exportFailed: "Dashboard export could not be created.",
-      compatibilityFallback: "Legacy analytics record",
-      showCustomizer: "Customize widgets",
-      hideCustomizer: "Hide customizer",
-      restoreRecommended: "Restore recommended layout",
-      customizerTitle: "Visible widgets",
-      customizerDescription:
-        "Show, hide, and reorder widgets to match how this project should be reviewed.",
-      savingLayout: "Saving layout…",
-      hideWidget: "Hide widget",
-      hiddenBadge: "Hidden",
-      visibleBadge: "Visible",
-      hiddenWidgetsTitle: "{{count}} hidden widget",
-      hiddenWidgetsTitle_other: "{{count}} hidden widgets",
-      fallbackSummaryTitle: "In plain language",
-      fallbackSummaryDescription:
-        "A grounded summary assembled from the deterministic evidence catalog.",
-      fallbackThemesDescription:
-        "Repeated themes surfaced in the current catalog.",
-      hiddenWidgetsDescription:
-        "Keep this area compact, then review hidden widgets in a clearer library with labels, context, and restore actions.",
-      hiddenWidgetsPreview: "Recently hidden",
-      hiddenWidgetsManage: "Browse hidden widgets",
-      hiddenWidgetsManagerTitle: "{{count}} hidden widgets",
-      hiddenWidgetsManagerDescription:
-        "Search and review hidden widgets by widget type before adding them back to the dashboard.",
-      hiddenWidgetsSearchPlaceholder:
-        "Search by widget title, subtitle, or description…",
-      hiddenWidgetsNoResults: "No hidden widgets match this search.",
-      hiddenWidgetsNoResultsHint:
-        "Try fewer words or search for a broader topic.",
-      hiddenWidgetShow: "Show widget",
-      hiddenWidgetTypeHorizontalBar: "Distribution chart",
-      hiddenWidgetTypeLineSeries: "Timeline chart",
-      hiddenWidgetTypeCategoryRank: "Ranking chart",
-      hiddenWidgetTypeKpi: "KPI card",
-      hiddenWidgetTypeThemeList: "Theme list",
-      hiddenWidgetTypeSummary: "Narrative summary",
-      hiddenWidgetSectionHorizontalBarTitle: "Distribution charts",
-      hiddenWidgetSectionHorizontalBarDescription:
-        "Comparisons across categories that are easier to scan as horizontal bars.",
-      hiddenWidgetSectionLineSeriesTitle: "Timeline charts",
-      hiddenWidgetSectionLineSeriesDescription:
-        "Changes over time, milestones, and other time-based patterns.",
-      hiddenWidgetSectionCategoryRankTitle: "Ranking charts",
-      hiddenWidgetSectionCategoryRankDescription:
-        "Top segments, strongest categories, and sorted comparisons.",
-      hiddenWidgetSectionKpiTitle: "KPI cards",
-      hiddenWidgetSectionKpiDescription:
-        "Single headline values for fast reference and reporting.",
-      hiddenWidgetSectionThemeListTitle: "Theme lists",
-      hiddenWidgetSectionThemeListDescription:
-        "Repeated qualitative patterns and supporting evidence themes.",
-      hiddenWidgetSectionSummaryTitle: "Narrative summaries",
-      hiddenWidgetSectionSummaryDescription:
-        "Plain-language interpretations generated for this dashboard.",
-      summaryEyebrow: "Plain-language view",
-      comparisonTitle: "Comparable metrics",
-      timelineTitle: "Timeline",
-      rankTitle: "Strongest segments",
-      themesTitle: "Qualitative signals",
-      goalLinked: "Goal-linked: {{value}}",
-      usageTitle: "Dashboard usage",
-      usageDescription:
-        "Internal telemetry from this dashboard view, based on persisted widget interactions.",
-      usageViews: "Views",
-      usageHidden: "Hidden",
-      usageShown: "Shown",
-      usageReordered: "Reordered",
-      usageRestored: "Restored",
-      usageLastViewed: "Last viewed: {{value}}",
-      usageLastUpdated: "Last interaction: {{value}}",
-      usageNoDate: "No data yet",
-      usageEmpty: "No dashboard interactions have been recorded yet.",
-    },
-  },
-  projectAnalytics: {
-    loading: "Loading analytics…",
-    loadFailed: "Analytics could not be loaded.",
-    eyebrow: "Programme Analytics",
-    title: "Analytics",
-    subtitle:
-      "Analytics are based exclusively on privacy-safe, structured evidence.",
-    noVerifiedEvidenceTitle: "No suitable evidence yet",
-    noVerifiedEvidenceDescription:
-      "This project does not yet have structured evidence that is ready for analytics generation.",
-    awaitingPreparationTitle: "Resolve interpretation questions first",
-    awaitingPreparationDescription:
-      "{{count}} dataset is still blocked on preparation questions. Answer the remaining questions on the interpretation page before generating the dashboard.",
-    awaitingPreparationDescription_other:
-      "{{count}} datasets are still blocked on preparation questions. Answer the remaining questions on the interpretation page before generating the dashboard.",
-    awaitingAnalysisTitle: "Deterministic analysis is still in progress",
-    awaitingAnalysisDescription:
-      "{{count}} prepared dataset still needs deterministic analysis before the dashboard can be assembled.",
-    awaitingAnalysisDescription_other:
-      "{{count}} prepared datasets still need deterministic analysis before the dashboard can be assembled.",
-    readyToGenerateTitle: "Dashboard is ready to generate",
-    readyToGenerateDescription:
-      "Preparation and deterministic analysis are in place. Generate analytics to assemble the dashboard view.",
-    noVerifiedEvidenceCta: "Go to Interpretation",
-    dashboard: {
-      summaryEyebrow: "Plain-language view",
-      summaryTitle: "What stands out in this project",
-      comparisonTitle: "Comparable metrics",
-      comparisonDescription:
-        "A fixed comparison of deterministic metrics that share the same unit.",
-      timelineTitle: "Timeline",
-      rankTitle: "Strongest segments",
-      themesTitle: "Qualitative signals",
-      themesDescription:
-        "The most repeated themes carried into the project knowledge model.",
-      latestValue: "Latest value: {{value}}",
-    },
+  impactStory: {
+    loading: "Loading…",
+    loadFailed: "The progress story could not be loaded.",
+    narrativeTitle: "Progress & Impact",
+    generatedAt: "Generated on {{timestamp}}",
+    runAction: "Generate progress story",
+    refreshAction: "Refresh",
+    runPending: "Generating…",
+    runSuccess: "The progress story has been updated.",
+    runFailed: "The progress story could not be generated.",
+    narrativeFailed:
+      "The narrative could not be generated. The figures below are still reliable.",
+    staleNotice:
+      "New evidence has arrived since this was last generated. Refresh to see the latest figures.",
+    notYetAnalyzedFootnote: "No analyzed metrics yet for: {{names}}.",
+    emptyTitle: "No progress story generated yet",
+    emptyDescription:
+      "Generate a summary of this project's progress and impact based on the evidence already analyzed.",
+    rankedBarsAriaLabel: "{{label}}: {{summary}}",
+    trendChartAriaLabel: "{{label}} over time: {{summary}}",
+    byActivityTitle: "By activity",
+    barChartAriaLabel: "{{label}}: {{summary}}",
+    distributionChartAriaLabel: "{{label}}: {{summary}}",
+    pieChartAriaLabel: "{{label}}: {{summary}}",
+    timelineTitle: "Activities through the year",
+    timelineUndated: "Undated",
   },
   activityTabs: {
     brief: "Overview",
@@ -915,7 +783,7 @@ const en = {
         attention: "This dataset needs another look",
       },
       descriptions: {
-        empty: "Upload CSV or Excel monitoring data to start AI analysis.",
+        empty: "Upload CSV or Excel monitoring data to prepare evidence.",
         uploading: "Your file is on its way into the evidence workflow now.",
         processing:
           "The latest dataset is being checked for structure, privacy risks, and analysis readiness.",
@@ -1307,37 +1175,34 @@ const en = {
     noVerifiedEvidenceCta: "Go to Overview",
     v2: {
       eyebrow: "ActivityAnalyst V2",
-      title: "Goal-based analysis",
+      title: "Goal check",
       description:
-        "This activity analysis now uses ActivityAnalyst V2 as the primary view. It evaluates the current activity goals against the latest privacy-safe evidence set.",
-      loading: "Loading the latest activity analysis…",
-      loadFailed: "The latest activity analysis could not be loaded.",
+        "This view checks the current activity goals against the latest privacy-safe evidence set.",
+      loading: "Loading the latest goal check…",
+      loadFailed: "The latest goal check could not be loaded.",
       staleDataWarning:
-        "The analysis below may be out of date — the last refresh attempt failed.",
-      noRunTitle: "No activity analysis yet",
+        "The goal check below may be out of date — the last refresh attempt failed.",
+      noRunTitle: "No goal check yet",
       noRunDescription:
-        "Generate the activity analysis to assess this activity against its current privacy-safe evidence.",
-      runAction: "Generate analysis",
-      openAction: "Open analysis",
-      refreshAction: "Refresh analysis",
-      runPending: "Generating analysis…",
-      runSuccess: "The activity analysis was refreshed.",
-      runFailed:
-        "The activity analysis could not be completed. Please run it again.",
-      latestRunTitle: "Latest analysis",
+        "Check whether this activity has reached its defined goals based on the current privacy-safe evidence.",
+      runAction: "Check goals",
+      openAction: "View",
+      refreshAction: "Refresh",
+      runPending: "Checking goals…",
+      runSuccess: "The goal check was refreshed.",
+      runFailed: "The goal check could not be completed. Please run it again.",
+      latestRunTitle: "Latest goal check",
       latestRunMeta: "Created {{createdAt}}",
       errorTitle: "Run error",
       issuesTitle: "Validation issues",
-      summaryTitle: "Summary",
-      summaryMissing: "This run did not produce a rendered summary.",
+      summaryMissing: "This run did not produce numeric goal cards.",
       dialogDescription:
-        "brindl condensed the current evidence for this activity into a single activity-level analysis.",
+        "brindl checked whether the current evidence supports this activity's defined goals.",
       dialogMeta:
-        "This analysis considered {{goals}} goals across {{evidence}} evidence files.",
+        "This goal check considered {{goals}} goals across {{evidence}} evidence files.",
       goalTarget: "{{target}} goal",
       goalMet: "Goal met",
       goalPercentOfTarget: "{{percent}} of target",
-      recommendationSectionTitle: "Recommendation",
       attentionTitle: "Needs your attention",
       attentionSectionTitle: "Needs attention",
       onTrackSectionTitle: "On track",
@@ -1348,10 +1213,7 @@ const en = {
       noOnTrackItems:
         "This analysis has not yet rated any goal as clearly achieved.",
       outputsTitle: "Outputs",
-      outcomesTitle: "Outcomes",
       noOutputs: "No output goals are defined for this activity.",
-      noOutcomes:
-        "This activity has no outcome goals, so no outcome section is shown.",
       limitationsTitle: "Current limitations",
       runHistoryTitle: "Previous runs",
       metrics: {
@@ -1405,19 +1267,6 @@ const en = {
       submitAnswersAction: "Send {{count}} answers",
       submitAnswersPending: "Sending…",
     },
-  },
-  activityInsights: {
-    loading: "Loading AI knowledge…",
-    loadFailed: "AI knowledge could not be loaded.",
-    crumb: "AI knowledge",
-    eyebrow: "Activity AI knowledge",
-    title: "Read the activity as one knowledge view",
-    description:
-      "brindl combines the interpreted evidence of this activity into one narrative AI knowledge view.",
-    notReadyTitle: "AI knowledge is not ready yet",
-    notReadyDescription:
-      "Return to the interpretation page to finish privacy review, answer clarification questions, or run AI analysis for this activity.",
-    notReadyCta: "Go to Interpretation",
   },
   activitySettings: {
     loading: "Loading activity settings…",
@@ -1504,15 +1353,6 @@ const en = {
     mobileNavigationTitle: "Workspace navigation",
     mobileNavigationDescription:
       "Navigate between workspace areas and projects.",
-    overview: "Overview",
-    analytics: "Analytics",
-    insights: "Insights",
-    brief: "Overview",
-    dataReview: "Data Review",
-    activityAnalysis: "Analysis",
-    activityInsights: "Insights",
-    activitySettings: "Settings",
-    projectSettings: "Project Settings",
     organizationSettings: "Organization Settings",
     projectActions: "Project actions",
     archiveProject: "Archive",
@@ -1767,7 +1607,7 @@ const en = {
       initialSituation: "Initial situation",
       timeline: "Timeline",
       overarchingTargetGroup: "Overarching target group(s)",
-      intendedChanges: "Intended changes",
+      intendedChanges: "Intended long-term effect / impact",
       fundingProgram: "Funding programme",
       fundingOrganization: "Funding organization",
       targetGroups: "Target groups",
@@ -1834,7 +1674,7 @@ const en = {
       intendedChangesPlaceholder:
         "Which long-term changes for the target groups should the project support?",
       intendedChangesValidation:
-        "Please provide one to three intended long-term effects / impacts.",
+        "Please provide one to six intended long-term effects / impacts.",
       intendedChangesAddRow: "Add another impact",
       intendedChangesRemoveRow: "Remove impact",
       fundingProgram: "Funding programme",
@@ -1886,11 +1726,6 @@ const en = {
       outputTooltip: "What is directly carried out or created?",
       outputPlaceholder:
         "• Conduct 12 workshops within one year\n• Reach 150 participants\n• At least 80% of participants complete the programme\n• At least 75% of participants are satisfied with the programme",
-      outcome: "Change targets (Outcome)",
-      outcomeTooltipLabel: "Guidance on outcome",
-      outcomeTooltip: "What should change for the target group?",
-      outcomePlaceholder:
-        "• 80% of participants know their support options after the workshop\n• 70% can independently apply the methods they learned afterwards\n• 60% apply what they learned in everyday life within three months\n• 50 participants improve their professional situation within one year",
       status: "Status",
     },
     options: {

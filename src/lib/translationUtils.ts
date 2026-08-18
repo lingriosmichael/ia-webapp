@@ -80,6 +80,36 @@ export function translateTransformation(
   return t(`enums.transformation.${keyMap[transformation]}`);
 }
 
+// ActivityAnalysisV2GoalAssessmentStatus values, as they appear verbatim in
+// a project-impact-story chart datum's `label` when dataKind === "status"
+// (see projectImpactStoryCatalog.ts on the backend). Reuses
+// activityAnalytics.goalStatus.* rather than a second translated copy of the
+// same enum — the activity-level analysis page (activityAnalysisV2Panel.tsx)
+// already renders these exact status values.
+const GOAL_ASSESSMENT_STATUS_VALUES = [
+  "achieved",
+  "not_achieved",
+  "evidence_compiled",
+  "qualitative_evidence_only",
+  "mixed_evidence",
+  "requires_clarification",
+  "requires_capability",
+] as const;
+
+export function translateGoalAssessmentStatus(t: TFunction, status: string) {
+  const isKnownStatus = (
+    GOAL_ASSESSMENT_STATUS_VALUES as readonly string[]
+  ).includes(status);
+
+  // Unlike translateStatus above, there is no safe default status to fall
+  // back to here — mislabeling an unrecognized status as e.g. "Achieved"
+  // would misrepresent real project data, so an unmapped value is shown
+  // as-is rather than guessed.
+  return isKnownStatus
+    ? t(`activityAnalytics.v2.goalStatus.${status}`)
+    : status;
+}
+
 export function formatDateTime(value: string, language: string) {
   return new Intl.DateTimeFormat(language === "de" ? "de-DE" : "en-US", {
     dateStyle: "medium",

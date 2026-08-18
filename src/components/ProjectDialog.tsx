@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Check, ChevronDown, Info, Plus, X } from "lucide-react";
-import { ProjectImpactListField } from "@/components/ProjectImpactListField";
+import {
+  PROJECT_INTENDED_CHANGES_MAX_ITEMS,
+  ProjectImpactListField,
+} from "@/components/ProjectImpactListField";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import type { CreateProjectPayload } from "@/services/apiClient";
 import { Badge } from "@/components/ui/badge";
@@ -245,13 +248,13 @@ export function ProjectDialog({
     setTargetGroupsError(normalizedTargetGroups.length === 0);
     setIntendedChangesError(
       normalizedIntendedChanges.length === 0 ||
-        normalizedIntendedChanges.length > 3,
+        normalizedIntendedChanges.length > PROJECT_INTENDED_CHANGES_MAX_ITEMS,
     );
 
     if (
       normalizedTargetGroups.length === 0 ||
       normalizedIntendedChanges.length === 0 ||
-      normalizedIntendedChanges.length > 3 ||
+      normalizedIntendedChanges.length > PROJECT_INTENDED_CHANGES_MAX_ITEMS ||
       Object.values(nextErrors).some(Boolean)
     ) {
       return;

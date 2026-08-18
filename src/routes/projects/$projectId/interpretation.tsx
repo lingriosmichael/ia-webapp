@@ -7,7 +7,7 @@ import {
   Loader2,
   Sparkles,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { PrivacyReviewDialog } from "@/components/privacyReviewDialog";
@@ -278,6 +278,26 @@ function readArray<T>(value: T[] | null | undefined): T[] {
   return Array.isArray(value) ? value : [];
 }
 
+function hasSameStringSet(left: Set<string>, right: Set<string>): boolean {
+  if (left.size !== right.size) {
+    return false;
+  }
+
+  for (const value of left) {
+    if (!right.has(value)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function getActivityAnalysisEvidenceUploadIds(
+  run: ActivityAnalysisRunV2Record,
+): Set<string> {
+  return new Set(run.evidence.map((evidence) => evidence.uploadMetadataId));
+}
+
 function AnalysisOpenDialog({
   activityName,
   run,
@@ -304,16 +324,13 @@ function AnalysisOpenDialog({
     (goalAssessment) =>
       readArray(goalAssessment.supportingQualitativeFindingIds).length > 0,
   );
-  // A mixed_evidence goal has both a measured/target value and qualitative
-  // support — the qualitative section below already narrates the measured
-  // value in its findingText, so it must not also render as a compact
-  // metric card here, or the same goal shows up twice on the page.
+  // Numeric goal results should stay visible as KPI cards even when the same
+  // goal has qualitative support. Hiding mixed-evidence goals made completed
+  // runs look like they had no rendered metrics after reload.
   const topMetricAssessments = goalAssessments.filter(
     (goalAssessment) =>
-      goalAssessment.goalType === "output" &&
       goalAssessment.measuredValue !== null &&
-      goalAssessment.targetValue !== null &&
-      readArray(goalAssessment.supportingQualitativeFindingIds).length === 0,
+      goalAssessment.targetValue !== null,
   );
 
   return (
@@ -537,28 +554,6 @@ function AnalysisOpenDialog({
                     </div>
                   );
                 })}
-              </div>
-            </section>
-          ) : null}
-
-          {run?.renderedSummary ? (
-            <section className="rounded-[16px] border border-border/80 bg-background/70 px-4 py-4">
-              <div className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                {t("activityAnalytics.v2.summaryTitle")}
-              </div>
-              <div className="mt-3 whitespace-pre-line text-sm leading-7 text-foreground">
-                {run.renderedSummary}
-              </div>
-            </section>
-          ) : null}
-
-          {run?.recommendationText ? (
-            <section className="rounded-[16px] border border-border/80 bg-background/70 px-4 py-4">
-              <div className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                {t("activityAnalytics.v2.recommendationSectionTitle")}
-              </div>
-              <div className="mt-3 whitespace-pre-line text-sm leading-7 text-foreground">
-                {run.recommendationText}
               </div>
             </section>
           ) : null}
@@ -1003,20 +998,41 @@ function ActivityKnowledgeCard({
     | { jobId: string; kind: "answer"; answerCount: number }
     | null
   >(null);
+  const handledTerminalAnalysisJobIdsRef = useRef(new Set<string>());
   const activeAnalysisJobQuery = useJobQuery(
     activeAnalysisJob?.jobId,
     Boolean(activeAnalysisJob),
   );
+  const activeActivityAnalysisV2Job = jobs.find(
+    (job) =>
+      job.jobType === "activity_analysis_v2" &&
+      !TERMINAL_JOB_STATUSES.includes(job.status),
+  );
+  const hasActiveActivityAnalysisV2Job = Boolean(
+    activeAnalysisJob || activeActivityAnalysisV2Job,
+  );
+  useEffect(() => {
+    if (activeAnalysisJob || !activeActivityAnalysisV2Job) {
+      return;
+    }
+
+    setActiveAnalysisJob({
+      jobId: activeActivityAnalysisV2Job.id,
+      kind: "run",
+    });
+  }, [activeAnalysisJob, activeActivityAnalysisV2Job]);
   useEffect(() => {
     const job = activeAnalysisJobQuery.data;
     if (
       !activeAnalysisJob ||
       !job ||
-      !TERMINAL_JOB_STATUSES.includes(job.status)
+      !TERMINAL_JOB_STATUSES.includes(job.status) ||
+      handledTerminalAnalysisJobIdsRef.current.has(job.id)
     ) {
       return;
     }
 
+    handledTerminalAnalysisJobIdsRef.current.add(job.id);
     const finishedJob = activeAnalysisJob;
     setActiveAnalysisJob(null);
 
@@ -1066,7 +1082,7 @@ function ActivityKnowledgeCard({
         );
       }
 
-      if (run?.status === "completed" && run.renderedSummary) {
+      if (run?.status === "completed") {
         setIsAnalysisDialogOpen(true);
       }
     })();
@@ -1160,15 +1176,25 @@ function ActivityKnowledgeCard({
       },
     })),
   });
+  const handledTerminalInterpretationJobIdsRef = useRef(new Set<string>());
+  const terminalInterpretationJobIds = activeInterpretationJobs
+    .flatMap((job, index) => {
+      const status = activeJobSyncQueries[index]?.data?.status;
+      return status &&
+        TERMINAL_JOB_STATUSES.includes(status) &&
+        !handledTerminalInterpretationJobIdsRef.current.has(job.id)
+        ? [job.id]
+        : [];
+    })
+    .join("|");
 
   useEffect(() => {
-    const hasFreshTerminalUpdate = activeJobSyncQueries.some((query) => {
-      const status = query.data?.status;
-      return Boolean(status && TERMINAL_JOB_STATUSES.includes(status));
-    });
-
-    if (!hasFreshTerminalUpdate) {
+    if (!terminalInterpretationJobIds) {
       return;
+    }
+
+    for (const jobId of terminalInterpretationJobIds.split("|")) {
+      handledTerminalInterpretationJobIdsRef.current.add(jobId);
     }
 
     void queryClient.invalidateQueries({
@@ -1183,7 +1209,7 @@ function ActivityKnowledgeCard({
     void queryClient.invalidateQueries({
       queryKey: activityLinkageReviewQueryKey(activity.id),
     });
-  }, [activeJobSyncQueries, activity.id, projectId, queryClient]);
+  }, [terminalInterpretationJobIds, activity.id, projectId, queryClient]);
 
   const currentPendingPrivacyReview = latestEvidenceJobs.find(
     (job) => job.status === "awaiting_privacy_review",
@@ -1238,6 +1264,8 @@ function ActivityKnowledgeCard({
     workflowStage,
     results.length > 0,
   );
+  const shouldShowDatasetQuestions =
+    status === "questions" && pendingQuestions.length > 0;
   const hasExistingInterpretations = results.length > 0;
 
   const readyToInterpretUploadCount = uploads.filter((upload) => {
@@ -1276,6 +1304,7 @@ function ActivityKnowledgeCard({
     !startMutation.isPending &&
     !hasQueuedInterpretationStart;
   const canGenerateAnalysis =
+    !activity.systemType &&
     (status === "ready" || status === "reviewed") &&
     !hasUnresolvedActionableQuestion;
   const interpretationActionLabel = hasExistingInterpretations
@@ -1291,11 +1320,28 @@ function ActivityKnowledgeCard({
     latestAnalysisClarificationQuestions.filter(
       (question) => question.status === "pending",
     );
+  const activeUploadIds = new Set(uploads.map((upload) => upload.id));
+  const latestCompletedAnalysisRun =
+    activityAnalysisRunsQuery.data?.find((run) => run.status === "completed") ??
+    null;
   const latestOpenableAnalysisRun =
     activityAnalysisRunsQuery.data?.find(
-      (run) => run.status === "completed" && Boolean(run.renderedSummary),
+      (run) =>
+        run.status === "completed" &&
+        run.evidence.length > 0 &&
+        hasSameStringSet(
+          getActivityAnalysisEvidenceUploadIds(run),
+          activeUploadIds,
+        ),
     ) ?? null;
   const hasOpenableAnalysis = Boolean(latestOpenableAnalysisRun);
+  const hasEvidenceChangedSinceLatestCompletedAnalysis =
+    latestCompletedAnalysisRun
+      ? !hasSameStringSet(
+          getActivityAnalysisEvidenceUploadIds(latestCompletedAnalysisRun),
+          activeUploadIds,
+        )
+      : true;
   const pendingAnalysisClarificationCount =
     pendingAnalysisClarificationQuestions.length ?? 0;
   const latestAnalysisNeedsClarification =
@@ -1537,6 +1583,7 @@ function ActivityKnowledgeCard({
               <Button
                 size="sm"
                 variant="outline"
+                className="border-signal/30 bg-signal-soft text-signal hover:border-signal/35 hover:bg-signal-soft/80"
                 onClick={() => setIsAnalysisDialogOpen(true)}
               >
                 {t("activityAnalytics.v2.openAction")}
@@ -1562,10 +1609,13 @@ function ActivityKnowledgeCard({
                   })
                 }
                 disabled={
-                  runAnalysisMutation.isPending || Boolean(activeAnalysisJob)
+                  runAnalysisMutation.isPending ||
+                  hasActiveActivityAnalysisV2Job ||
+                  (Boolean(latestCompletedAnalysisRun) &&
+                    !hasEvidenceChangedSinceLatestCompletedAnalysis)
                 }
               >
-                {runAnalysisMutation.isPending || Boolean(activeAnalysisJob)
+                {runAnalysisMutation.isPending || hasActiveActivityAnalysisV2Job
                   ? t("activityAnalytics.v2.runPending")
                   : latestAnalysisRun
                     ? t("activityAnalytics.v2.refreshAction")
@@ -1587,7 +1637,7 @@ function ActivityKnowledgeCard({
           </div>
         </div>
 
-        {pendingQuestions.length > 0 ? (
+        {shouldShowDatasetQuestions ? (
           <div className="mt-4 space-y-3 border-t border-border/70 pt-4">
             <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
               <CircleHelp className="h-4 w-4 text-primary" />
@@ -1658,7 +1708,7 @@ function ActivityKnowledgeCard({
                 question={question}
                 isSubmitting={
                   answerActivityAnalysisV2QuestionsMutation.isPending ||
-                  Boolean(activeAnalysisJob)
+                  hasActiveActivityAnalysisV2Job
                 }
                 selectedValue={analysisV2DraftAnswers[question.id] ?? null}
                 onSelectionChange={({ questionId, answeredValue }) =>
@@ -1676,7 +1726,7 @@ function ActivityKnowledgeCard({
                 disabled={
                   !allPendingAnalysisQuestionsAnswered ||
                   answerActivityAnalysisV2QuestionsMutation.isPending ||
-                  Boolean(activeAnalysisJob)
+                  hasActiveActivityAnalysisV2Job
                 }
                 onClick={() => {
                   const answers = pendingAnalysisClarificationQuestions.flatMap(
@@ -1713,7 +1763,7 @@ function ActivityKnowledgeCard({
                 }}
               >
                 {answerActivityAnalysisV2QuestionsMutation.isPending ||
-                Boolean(activeAnalysisJob)
+                hasActiveActivityAnalysisV2Job
                   ? t("activityAnalytics.v2.submitAnswersPending")
                   : t("activityAnalytics.v2.submitAnswersAction", {
                       count: pendingAnalysisClarificationQuestions.length,

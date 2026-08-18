@@ -56,8 +56,8 @@ function ProjectActivitiesPage() {
       activity,
     ]),
   );
-  const activities: WorkspaceActivity[] = (activitiesQuery.data ?? []).map(
-    (activity) => {
+  const activities: WorkspaceActivity[] = sortActivitiesForDisplay(
+    (activitiesQuery.data ?? []).map((activity) => {
       const workspaceActivity = countsByActivityId[activity.id];
 
       return {
@@ -65,7 +65,7 @@ function ProjectActivitiesPage() {
         uploadMetadataCount: workspaceActivity?.uploadMetadataCount ?? 0,
         processingJobCount: workspaceActivity?.processingJobCount ?? 0,
       };
-    },
+    }),
   );
 
   return (
@@ -98,7 +98,7 @@ function ProjectActivitiesPage() {
             ) : null}
           </Card>
         ) : (
-          <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-6 grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-3">
             {activities.map((activity) => (
               <ActivityCard
                 key={activity.id}
@@ -112,6 +112,31 @@ function ProjectActivitiesPage() {
       </section>
     </ProjectWorkspaceShell>
   );
+}
+
+function sortActivitiesForDisplay(activities: WorkspaceActivity[]) {
+  return activities
+    .map((activity, index) => ({ activity, index }))
+    .sort((left, right) => {
+      const rankDelta =
+        getActivityDisplayRank(left.activity.systemType) -
+        getActivityDisplayRank(right.activity.systemType);
+
+      return rankDelta === 0 ? left.index - right.index : rankDelta;
+    })
+    .map(({ activity }) => activity);
+}
+
+function getActivityDisplayRank(systemType: WorkspaceActivity["systemType"]) {
+  if (systemType === "baseline") {
+    return 0;
+  }
+
+  if (systemType === "impact_measurement") {
+    return 2;
+  }
+
+  return 1;
 }
 
 function CenteredState({ label }: { label: string }) {

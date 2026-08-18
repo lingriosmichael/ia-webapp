@@ -547,15 +547,15 @@ function DecisionFindingCard({
               type="button"
               size="sm"
               variant={isSelected ? "default" : "outline"}
+              className={
+                isRecommended && !isSelected
+                  ? "border-primary/35 bg-primary-soft text-primary hover:bg-primary-soft/80"
+                  : undefined
+              }
               disabled={disabled}
               onClick={() => onDecide(action)}
             >
               {getActionLabel(action, t)}
-              {isRecommended ? (
-                <span className="ml-2 text-[10px] uppercase tracking-[0.08em]">
-                  {t("projectWorkspace.evidence.recommendedActionBadge")}
-                </span>
-              ) : null}
             </Button>
           );
         })}

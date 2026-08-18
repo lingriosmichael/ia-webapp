@@ -172,7 +172,6 @@ export function WorkspaceShell({
         targetAudience: payload.targetAudience ?? null,
         objectives: payload.objectives ?? null,
         output: payload.output ?? null,
-        outcome: payload.outcome ?? null,
         status: payload.status,
       };
 

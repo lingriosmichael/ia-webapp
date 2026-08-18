@@ -4,7 +4,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { FieldLabel } from "@/components/EntityDialog";
-import { ProjectImpactListField } from "@/components/ProjectImpactListField";
+import {
+  PROJECT_INTENDED_CHANGES_MAX_ITEMS,
+  ProjectImpactListField,
+} from "@/components/ProjectImpactListField";
 import { StatusBadge } from "@/components/statusBadge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -131,7 +134,7 @@ export function ProjectSettingsPanel({
       : locale.projectSettings.notSet;
   const intendedChangesDisplay =
     project.intendedChanges.length > 0
-      ? project.intendedChanges.join(" · ")
+      ? renderOverviewList(project.intendedChanges)
       : locale.projectSettings.notSet;
 
   function updateField<Key extends keyof ProjectSettingsFormState>(
@@ -604,6 +607,16 @@ export function ProjectSettingsPanel({
   );
 }
 
+function renderOverviewList(values: string[]) {
+  return (
+    <ul className="list-disc space-y-1 pl-5">
+      {values.map((value) => (
+        <li key={value}>{value}</li>
+      ))}
+    </ul>
+  );
+}
+
 function createFormState(project: ProjectSummary): ProjectSettingsFormState {
   return {
     name: project.name,
@@ -659,7 +672,10 @@ function validateFormState(
   const parsedIntendedChanges = normalizeImpactValues(
     formState.intendedChanges,
   );
-  if (parsedIntendedChanges.length === 0 || parsedIntendedChanges.length > 3) {
+  if (
+    parsedIntendedChanges.length === 0 ||
+    parsedIntendedChanges.length > PROJECT_INTENDED_CHANGES_MAX_ITEMS
+  ) {
     errors.intendedChanges = locale.intendedChangesValidation;
   }
 

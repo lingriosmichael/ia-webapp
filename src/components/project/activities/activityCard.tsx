@@ -15,6 +15,7 @@ import { useWorkspaceShell } from "@/components/WorkspaceShell";
 import { useDeleteActivityMutation } from "@/hooks/useWorkspaceQueries";
 import { Card } from "@/components/WorkspaceUI";
 import { formatDateTime, translateStatus } from "@/lib/translationUtils";
+import { cn } from "@/lib/utils";
 import { ApiError, type WorkspaceActivity } from "@/services/apiClient";
 
 export function ActivityCard({
@@ -34,6 +35,7 @@ export function ActivityCard({
     projectId,
     organizationId,
   );
+  const isSystemActivity = Boolean(activity.systemType);
   const dateLabel = activity.startDate
     ? formatDateTime(activity.startDate, i18n.language)
     : t("projectWorkspace.activities.noDate");
@@ -53,10 +55,21 @@ export function ActivityCard({
   }
 
   return (
-    <Card className="flex h-full flex-col p-5">
+    <Card
+      className={cn(
+        "flex h-full flex-col p-5",
+        isSystemActivity &&
+          "border-border/60 bg-muted/30 text-muted-foreground shadow-none",
+      )}
+    >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <h3 className="text-[17px] font-semibold tracking-tight text-foreground">
+          <h3
+            className={cn(
+              "text-[17px] font-semibold tracking-tight text-foreground",
+              isSystemActivity && "text-muted-foreground",
+            )}
+          >
             {activity.name}
           </h3>
         </div>
@@ -91,15 +104,20 @@ export function ActivityCard({
         ) : null}
       </div>
 
-      <p className="mt-3 line-clamp-3 text-sm leading-6 text-muted-foreground">
-        {activity.description ?? t("projectWorkspace.activities.noDescription")}
-      </p>
+      {!isSystemActivity ? (
+        <p className="mt-3 line-clamp-3 text-sm leading-6 text-muted-foreground">
+          {activity.description ??
+            t("projectWorkspace.activities.noDescription")}
+        </p>
+      ) : null}
 
       <div className="mt-4 grid gap-2 text-sm text-muted-foreground">
-        <div className="flex items-center gap-2">
-          <CalendarDays className="h-4 w-4 text-primary" />
-          {dateLabel}
-        </div>
+        {!isSystemActivity ? (
+          <div className="flex items-center gap-2">
+            <CalendarDays className="h-4 w-4 text-primary" />
+            {dateLabel}
+          </div>
+        ) : null}
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Database className="h-4 w-4 text-primary" />
@@ -107,10 +125,12 @@ export function ActivityCard({
               count: activity.uploadMetadataCount,
             })}
           </div>
-          <StatusBadge
-            status={activity.status}
-            label={translateStatus(t, activity.status)}
-          />
+          {!isSystemActivity ? (
+            <StatusBadge
+              status={activity.status}
+              label={translateStatus(t, activity.status)}
+            />
+          ) : null}
         </div>
       </div>
 

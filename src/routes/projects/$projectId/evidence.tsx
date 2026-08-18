@@ -78,13 +78,6 @@ function getLatestEvidenceJob(
     })[0];
 }
 
-function isEvidenceReviewed(
-  activity: Pick<WorkspaceActivity, "interpretationAcknowledgedAt">,
-  uploadCount: number,
-) {
-  return activity.interpretationAcknowledgedAt !== null && uploadCount > 0;
-}
-
 function isPrivacyReviewCompleted(latestJob: ProcessingJobRecord | undefined) {
   return Boolean(
     latestJob && ["transforming", "completed"].includes(latestJob.status),
@@ -130,16 +123,7 @@ function ProjectEvidencePage() {
   const workspaceProject = useCurrentWorkspaceProject();
   const activities = workspaceProject?.activities ?? [];
   const { t } = useTranslation();
-  const orderedActivities = [...activities].sort((left, right) => {
-    const leftReviewed = isEvidenceReviewed(left, left.uploadMetadataCount);
-    const rightReviewed = isEvidenceReviewed(right, right.uploadMetadataCount);
-
-    if (leftReviewed === rightReviewed) {
-      return 0;
-    }
-
-    return leftReviewed ? 1 : -1;
-  });
+  const orderedActivities = activities;
 
   // This route's file lives alongside an `evidence/` folder (the privacy
   // review page below), which makes this the technical parent of that
@@ -228,7 +212,6 @@ function EvidenceActivityGroup({
   const pendingPrivacyReviewCount = latestEvidenceJobs.filter(
     (job) => job.status === "awaiting_privacy_review",
   ).length;
-  const isReviewedActivity = isEvidenceReviewed(activity, evidenceCount);
   const isPrivacyReviewSettled =
     evidenceCount > 0 &&
     uploads.length === evidenceCount &&
@@ -479,12 +462,6 @@ function EvidenceActivityGroup({
                 <StatusBadge
                   status="awaiting_privacy_review"
                   label={t("projectWorkspace.evidence.reviewPrivacy")}
-                />
-              ) : null}
-              {isReviewedActivity ? (
-                <StatusBadge
-                  status="available"
-                  label={t("projectWorkspace.evidence.reviewedStatus")}
                 />
               ) : null}
             </div>

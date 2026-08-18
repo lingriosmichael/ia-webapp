@@ -1,207 +1,207 @@
-treffen_id;tandem_id;datum;dauer_minuten;ort;thema;dokumentiert_von;naechster_schritt;teilnahme_jugendliche;teilnahme_mentor
-TR0001;T002;28.04.2026;60;zuhause bei Mentor:in;Zukunftspläne;Jugendliche/r;nichts Konkretes vereinbart;ja;ja
-TR0002;T002;27.05.2026;90;Park;Praktikumssuche;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja
-TR0003;T003;01.05.2026;60;Bibliothek;Berufsorientierung allgemein;Jugendliche/r;nichts Konkretes vereinbart;ja;ja
-TR0004;T003;26.06.2026;60;Bibliothek;freies Gespräch;Mentor:in;nichts Konkretes vereinbart;ja;nein, verschoben
-TR0005;T005;14.04.2026;60;Jugendzentrum;Kennenlernen;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;nein, verschoben
-TR0006;T005;17.06.2026;120;Jugendzentrum;gemeinsamer Spaziergang;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja
-TR0007;T006;18.04.2026;45;Park;Zukunftspläne;Mentor:in;Kontakt zu Unternehmen X herstellen;nein, abgesagt;ja
-TR0008;T006;16.05.2026;120;Park;Lebenslauf besprochen;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;ja
-TR0009;T006;01.06.2026;60;Jugendzentrum;Vorbereitung Vorstellungsgespräch;Mentor:in;gemeinsam Lebenslauf fertigstellen;ja;nein, verschoben
-TR0010;T007;16.04.2026;120;online (Video-Call);Lebenslauf besprochen;Koordination (telefonisch berichtet);;ja;ja
-TR0011;T007;16.05.2026;90;Park;Lebenslauf besprochen;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;ja;nein, verschoben
-TR0012;T007;21.06.2026;45;zuhause bei Mentor:in;Praktikumssuche;Jugendliche/r;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja
-TR0013;T009;13.04.2026;60;Bibliothek;gemeinsamer Spaziergang;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja
-TR0014;T009;15.05.2026;45;online (Video-Call);Kennenlernen;Mentor:in;nichts Konkretes vereinbart;nein, abgesagt;ja
-TR0015;T010;18.04.2026;;Café;Lebenslauf besprochen;Koordination (telefonisch berichtet);gemeinsam Lebenslauf fertigstellen;ja;nein, verschoben
-TR0016;T010;10.06.2026;60;online (Video-Call);Kennenlernen;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja
-TR0017;T012;15.04.2026;60;Bibliothek;freies Gespräch;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja
-TR0018;T012;11.06.2026;60;Park;gemeinsamer Spaziergang;Mentor:in;;ja;ja
-TR0019;T013;16.05.2026;120;Park;Praktikumssuche;Koordination (telefonisch berichtet);nichts Konkretes vereinbart;ja;ja
-TR0020;T013;04.06.2026;90;Jugendzentrum;Bewerbungsschreiben;Jugendliche/r;gemeinsam Lebenslauf fertigstellen;ja;ja
-TR0021;T014;14.05.2026;60;Jugendzentrum;Vorbereitung Vorstellungsgespräch;Jugendliche/r;;ja;ja
-TR0022;T015;23.04.2026;45;Park;Zukunftspläne;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja
-TR0023;T015;01.06.2026;90;Bibliothek;Café-Treffen, offenes Gespräch;Jugendliche/r;nichts Konkretes vereinbart;ja;ja
-TR0024;T019;19.04.2026;45;Café;gemeinsamer Spaziergang;Mentor:in;gemeinsam Lebenslauf fertigstellen;nein, abgesagt;nein, verschoben
-TR0025;T019;07.05.2026;;online (Video-Call);Berufsorientierung allgemein;Jugendliche/r;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja
-TR0026;T019;01.06.2026;90;Bibliothek;Lebenslauf besprochen;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja
-TR0027;T020;09.04.2026;45;Café;Vorbereitung Vorstellungsgespräch;Jugendliche/r;Kontakt zu Unternehmen X herstellen;nein, abgesagt;nein, verschoben
-TR0028;T020;19.05.2026;120;Park;Café-Treffen, offenes Gespräch;Koordination (telefonisch berichtet);gemeinsam Lebenslauf fertigstellen;ja;ja
-TR0029;T020;12.06.2026;90;Park;Café-Treffen, offenes Gespräch;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja
-TR0030;T022;13.04.2026;90;Park;Berufsorientierung allgemein;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja
-TR0031;T022;17.05.2026;;online (Video-Call);Café-Treffen, offenes Gespräch;Jugendliche/r;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja
-TR0032;T022;18.06.2026;;online (Video-Call);gemeinsamer Spaziergang;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja
-TR0033;T025;03.04.2026;120;Jugendzentrum;gemeinsamer Spaziergang;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;nein, abgesagt;ja
-TR0034;T025;19.05.2026;60;zuhause bei Mentor:in;Ausbildungsmöglichkeiten recherchiert;Koordination (telefonisch berichtet);gemeinsam Lebenslauf fertigstellen;ja;ja
-TR0035;T026;15.04.2026;60;Café;Kennenlernen;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja
-TR0036;T026;17.06.2026;60;online (Video-Call);freies Gespräch;Koordination (telefonisch berichtet);nichts Konkretes vereinbart;ja;ja
-TR0037;T027;27.04.2026;60;zuhause bei Mentor:in;Vorbereitung Vorstellungsgespräch;Mentor:in;gemeinsam Lebenslauf fertigstellen;nein, abgesagt;ja
-TR0038;T027;28.05.2026;90;Jugendzentrum;Berufsorientierung allgemein;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;ja
-TR0039;T029;04.04.2026;60;Café;Kennenlernen;Jugendliche/r;gemeinsam Lebenslauf fertigstellen;ja;ja
-TR0040;T029;15.05.2026;60;Bibliothek;Berufsorientierung allgemein;Mentor:in;;nein, abgesagt;ja
-TR0041;T029;15.06.2026;;Bibliothek;Praktikumssuche;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja
-TR0042;T031;24.04.2026;60;Park;Café-Treffen, offenes Gespräch;Mentor:in;nichts Konkretes vereinbart;ja;ja
-TR0043;T031;02.05.2026;60;Jugendzentrum;Zukunftspläne;Mentor:in;Kontakt zu Unternehmen X herstellen;nein, abgesagt;ja
-TR0044;T031;01.06.2026;;Café;Schule/Noten;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja
-TR0045;T032;28.05.2026;60;Jugendzentrum;Bewerbungsschreiben;Jugendliche/r;;nein, abgesagt;ja
-TR0046;T032;17.06.2026;90;Bibliothek;Ausbildungsmöglichkeiten recherchiert;Mentor:in;;ja;ja
-TR0047;T033;22.04.2026;;zuhause bei Mentor:in;Zukunftspläne;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja
-TR0048;T033;28.05.2026;45;Café;Praktikumssuche;Mentor:in;nichts Konkretes vereinbart;ja;ja
-TR0049;T033;01.06.2026;60;Bibliothek;Lebenslauf besprochen;Mentor:in;;nein, abgesagt;ja
-TR0050;T034;01.05.2026;90;online (Video-Call);Kennenlernen;Mentor:in;;ja;ja
-TR0051;T034;09.06.2026;;Park;Lebenslauf besprochen;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;nein, verschoben
-TR0052;T035;20.05.2026;;Jugendzentrum;Schule/Noten;Mentor:in;Kontakt zu Unternehmen X herstellen;ja;ja
-TR0053;T035;02.06.2026;120;zuhause bei Mentor:in;Bewerbungsschreiben;Jugendliche/r;nichts Konkretes vereinbart;ja;nein, verschoben
-TR0054;T036;09.06.2026;45;Jugendzentrum;freies Gespräch;Jugendliche/r;nichts Konkretes vereinbart;nein, abgesagt;nein, verschoben
-TR0055;T037;31.04.2026;45;Bibliothek;Berufsorientierung allgemein;Mentor:in;nichts Konkretes vereinbart;ja;nein, verschoben
-TR0056;T039;25.04.2026;60;Café;Vorbereitung Vorstellungsgespräch;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;nein, verschoben
-TR0057;T039;10.05.2026;60;zuhause bei Mentor:in;Lebenslauf besprochen;Koordination (telefonisch berichtet);;nein, abgesagt;nein, verschoben
-TR0058;T039;21.06.2026;60;online (Video-Call);Bewerbungsschreiben;Koordination (telefonisch berichtet);gemeinsam Lebenslauf fertigstellen;ja;ja
-TR0059;T040;12.04.2026;60;zuhause bei Mentor:in;freies Gespräch;Mentor:in;Kontakt zu Unternehmen X herstellen;ja;nein, verschoben
-TR0060;T040;01.05.2026;;Bibliothek;Zukunftspläne;Mentor:in;;ja;ja
-TR0061;T041;27.04.2026;;zuhause bei Mentor:in;Vorbereitung Vorstellungsgespräch;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja
-TR0062;T043;05.04.2026;45;Bibliothek;Café-Treffen, offenes Gespräch;Koordination (telefonisch berichtet);nichts Konkretes vereinbart;nein, abgesagt;ja
-TR0063;T043;28.05.2026;60;zuhause bei Mentor:in;Ausbildungsmöglichkeiten recherchiert;Jugendliche/r;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja
-TR0064;T045;15.04.2026;60;Café;Bewerbungsschreiben;Mentor:in;nichts Konkretes vereinbart;ja;ja
-TR0065;T045;10.06.2026;45;online (Video-Call);Café-Treffen, offenes Gespräch;Koordination (telefonisch berichtet);;ja;ja
-TR0066;T046;19.05.2026;60;online (Video-Call);Zukunftspläne;Jugendliche/r;;ja;nein, verschoben
-TR0067;T046;15.06.2026;45;zuhause bei Mentor:in;Lebenslauf besprochen;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;nein, verschoben
-TR0068;T047;17.04.2026;60;online (Video-Call);gemeinsamer Spaziergang;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja
-TR0069;T047;08.05.2026;;zuhause bei Mentor:in;Lebenslauf besprochen;Jugendliche/r;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja
-TR0070;T047;28.06.2026;60;online (Video-Call);Praktikumssuche;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja
-TR0071;T048;01.04.2026;60;Café;Vorbereitung Vorstellungsgespräch;Mentor:in;Kontakt zu Unternehmen X herstellen;ja;nein, verschoben
-TR0072;T048;11.06.2026;60;Park;Zukunftspläne;Jugendliche/r;gemeinsam Lebenslauf fertigstellen;ja;ja
-TR0073;T049;08.05.2026;120;Jugendzentrum;Café-Treffen, offenes Gespräch;Koordination (telefonisch berichtet);nichts Konkretes vereinbart;ja;ja
-TR0074;T049;06.06.2026;;zuhause bei Mentor:in;Zukunftspläne;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;nein, abgesagt;ja
-TR0075;T050;13.04.2026;60;zuhause bei Mentor:in;Bewerbungsschreiben;Jugendliche/r;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja
-TR0076;T050;26.06.2026;45;Park;Kennenlernen;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja
-TR0077;T052;04.04.2026;45;Bibliothek;Zukunftspläne;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja
-TR0078;T052;28.05.2026;45;Jugendzentrum;Kennenlernen;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja
-TR0079;T052;20.06.2026;60;zuhause bei Mentor:in;freies Gespräch;Jugendliche/r;gemeinsam Lebenslauf fertigstellen;ja;ja
-TR0080;T053;23.04.2026;45;Jugendzentrum;Schule/Noten;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;nein, abgesagt;ja
-TR0081;T054;04.04.2026;90;Café;gemeinsamer Spaziergang;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja
-TR0082;T054;21.06.2026;;zuhause bei Mentor:in;Berufsorientierung allgemein;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja
-TR0083;T055;04.05.2026;60;Jugendzentrum;gemeinsamer Spaziergang;Koordination (telefonisch berichtet);nichts Konkretes vereinbart;ja;nein, verschoben
-TR0084;T055;01.06.2026;90;Bibliothek;Ausbildungsmöglichkeiten recherchiert;Jugendliche/r;nichts Konkretes vereinbart;ja;ja
-TR0085;T056;23.06.2026;45;Jugendzentrum;Schule/Noten;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;nein, verschoben
-TR0086;T057;03.04.2026;;Bibliothek;Ausbildungsmöglichkeiten recherchiert;Koordination (telefonisch berichtet);nichts Konkretes vereinbart;nein, abgesagt;nein, verschoben
-TR0087;T057;09.05.2026;120;Café;Ausbildungsmöglichkeiten recherchiert;Jugendliche/r;gemeinsam Lebenslauf fertigstellen;ja;ja
-TR0088;T058;20.04.2026;120;Café;Bewerbungsschreiben;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;nein, verschoben
-TR0089;T059;15.04.2026;60;Jugendzentrum;freies Gespräch;Koordination (telefonisch berichtet);gemeinsam Lebenslauf fertigstellen;ja;ja
-TR0090;T059;07.05.2026;90;Bibliothek;Zukunftspläne;Koordination (telefonisch berichtet);gemeinsam Lebenslauf fertigstellen;ja;ja
-TR0091;T059;15.06.2026;45;online (Video-Call);Vorbereitung Vorstellungsgespräch;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;nein, abgesagt;ja
-TR0092;T060;17.04.2026;;zuhause bei Mentor:in;Zukunftspläne;Jugendliche/r;nichts Konkretes vereinbart;ja;ja
-TR0093;T060;18.06.2026;60;Café;Schule/Noten;Jugendliche/r;;ja;ja
-TR0094;T061;28.04.2026;90;Park;freies Gespräch;Koordination (telefonisch berichtet);;ja;ja
-TR0095;T061;17.06.2026;;Café;Lebenslauf besprochen;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja
-TR0096;T062;13.04.2026;45;Jugendzentrum;freies Gespräch;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja
-TR0097;T062;08.05.2026;60;zuhause bei Mentor:in;Ausbildungsmöglichkeiten recherchiert;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja
-TR0098;T062;10.06.2026;120;Jugendzentrum;Bewerbungsschreiben;Mentor:in;Kontakt zu Unternehmen X herstellen;ja;ja
-TR0099;T063;12.05.2026;;Café;Lebenslauf besprochen;Koordination (telefonisch berichtet);;ja;nein, verschoben
-TR0100;T063;02.06.2026;60;Bibliothek;Zukunftspläne;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;ja
-TR0101;T064;05.04.2026;90;Jugendzentrum;Berufsorientierung allgemein;Jugendliche/r;nichts Konkretes vereinbart;ja;ja
-TR0102;T064;21.05.2026;120;Jugendzentrum;gemeinsamer Spaziergang;Jugendliche/r;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja
-TR0103;T064;23.06.2026;90;zuhause bei Mentor:in;Schule/Noten;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja
-TR0104;T065;09.04.2026;60;Bibliothek;Vorbereitung Vorstellungsgespräch;Mentor:in;nichts Konkretes vereinbart;nein, abgesagt;ja
-TR0105;T065;03.05.2026;;zuhause bei Mentor:in;Ausbildungsmöglichkeiten recherchiert;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;nein, abgesagt;ja
-TR0106;T065;01.06.2026;;zuhause bei Mentor:in;Bewerbungsschreiben;Jugendliche/r;nichts Konkretes vereinbart;ja;ja
-TR0107;T066;12.04.2026;90;online (Video-Call);Bewerbungsschreiben;Jugendliche/r;gemeinsam Lebenslauf fertigstellen;nein, abgesagt;ja
-TR0108;T066;31.04.2026;;zuhause bei Mentor:in;Schule/Noten;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja
-TR0109;T066;05.06.2026;;Jugendzentrum;Praktikumssuche;Jugendliche/r;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;nein, verschoben
-TR0110;T067;26.04.2026;60;Park;freies Gespräch;Mentor:in;nichts Konkretes vereinbart;ja;ja
-TR0111;T067;05.05.2026;60;zuhause bei Mentor:in;freies Gespräch;Mentor:in;nichts Konkretes vereinbart;ja;nein, verschoben
-TR0112;T069;28.04.2026;;online (Video-Call);Lebenslauf besprochen;Mentor:in;nichts Konkretes vereinbart;ja;nein, verschoben
-TR0113;T069;04.06.2026;;Park;Praktikumssuche;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja
-TR0114;T070;28.05.2026;;Park;gemeinsamer Spaziergang;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja
-TR0115;T070;17.06.2026;45;Jugendzentrum;Vorbereitung Vorstellungsgespräch;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;nein, verschoben
-TR0116;T071;01.06.2026;45;Bibliothek;Praktikumssuche;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja
-TR0117;T073;07.06.2026;120;online (Video-Call);Vorbereitung Vorstellungsgespräch;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;ja
-TR0118;T074;28.04.2026;;online (Video-Call);freies Gespräch;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;ja
-TR0119;T074;24.05.2026;45;Jugendzentrum;Zukunftspläne;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja
-TR0120;T074;20.06.2026;45;Jugendzentrum;Berufsorientierung allgemein;Jugendliche/r;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;nein, verschoben
-TR0121;T075;09.04.2026;;zuhause bei Mentor:in;gemeinsamer Spaziergang;Koordination (telefonisch berichtet);;ja;nein, verschoben
-TR0122;T075;27.06.2026;60;Bibliothek;Praktikumssuche;Mentor:in;nichts Konkretes vereinbart;ja;nein, verschoben
-TR0123;T080;22.04.2026;45;Bibliothek;Zukunftspläne;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;nein, verschoben
-TR0124;T080;12.05.2026;60;zuhause bei Mentor:in;Praktikumssuche;Mentor:in;nichts Konkretes vereinbart;ja;ja
-TR0125;T081;11.04.2026;60;online (Video-Call);Café-Treffen, offenes Gespräch;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;ja
-TR0126;T081;21.05.2026;60;zuhause bei Mentor:in;gemeinsamer Spaziergang;Koordination (telefonisch berichtet);;ja;ja
-TR0127;T081;28.06.2026;60;Bibliothek;Zukunftspläne;Koordination (telefonisch berichtet);;ja;ja
-TR0128;T082;14.04.2026;120;Bibliothek;gemeinsamer Spaziergang;Mentor:in;gemeinsam Lebenslauf fertigstellen;ja;ja
-TR0129;T082;15.05.2026;45;Jugendzentrum;Praktikumssuche;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja
-TR0130;T082;26.06.2026;120;Jugendzentrum;Berufsorientierung allgemein;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja
-TR0131;T083;15.04.2026;60;Park;Schule/Noten;Jugendliche/r;;ja;ja
-TR0132;T083;19.06.2026;60;zuhause bei Mentor:in;gemeinsamer Spaziergang;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja
-TR0133;T084;07.05.2026;;Bibliothek;gemeinsamer Spaziergang;Mentor:in;Kontakt zu Unternehmen X herstellen;nein, abgesagt;nein, verschoben
-TR0134;T084;02.06.2026;60;Café;Schule/Noten;Jugendliche/r;;nein, abgesagt;ja
-TR0135;T085;01.05.2026;;online (Video-Call);Berufsorientierung allgemein;Jugendliche/r;Kontakt zu Unternehmen X herstellen;nein, abgesagt;ja
-TR0136;T085;20.06.2026;90;Café;Café-Treffen, offenes Gespräch;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;nein, abgesagt;ja
-TR0137;T087;15.04.2026;45;Café;Ausbildungsmöglichkeiten recherchiert;Mentor:in;Kontakt zu Unternehmen X herstellen;nein, abgesagt;nein, verschoben
-TR0138;T087;19.05.2026;90;Café;Zukunftspläne;Koordination (telefonisch berichtet);nichts Konkretes vereinbart;ja;nein, verschoben
-TR0139;T087;27.06.2026;;Café;Bewerbungsschreiben;Mentor:in;Kontakt zu Unternehmen X herstellen;ja;ja
-TR0140;T088;22.05.2026;;Park;Ausbildungsmöglichkeiten recherchiert;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;nein, verschoben
-TR0141;T089;15.05.2026;60;online (Video-Call);gemeinsamer Spaziergang;Jugendliche/r;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja
-TR0142;T090;11.04.2026;60;Bibliothek;Berufsorientierung allgemein;Mentor:in;gemeinsam Lebenslauf fertigstellen;ja;ja
-TR0143;T090;17.06.2026;60;Jugendzentrum;Vorbereitung Vorstellungsgespräch;Mentor:in;Kontakt zu Unternehmen X herstellen;ja;nein, verschoben
-TR0144;T091;12.04.2026;90;Café;Café-Treffen, offenes Gespräch;Koordination (telefonisch berichtet);gemeinsam Lebenslauf fertigstellen;ja;ja
-TR0145;T091;13.05.2026;;Café;Vorbereitung Vorstellungsgespräch;Mentor:in;;nein, abgesagt;ja
-TR0146;T091;01.06.2026;45;zuhause bei Mentor:in;gemeinsamer Spaziergang;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;ja
-TR0147;T092;05.04.2026;90;Jugendzentrum;freies Gespräch;Jugendliche/r;nichts Konkretes vereinbart;ja;ja
-TR0148;T092;08.05.2026;120;Park;Bewerbungsschreiben;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja
-TR0149;T093;24.04.2026;90;online (Video-Call);freies Gespräch;Jugendliche/r;gemeinsam Lebenslauf fertigstellen;ja;ja
-TR0150;T093;04.05.2026;120;Café;Bewerbungsschreiben;Jugendliche/r;nichts Konkretes vereinbart;ja;ja
-TR0151;T093;07.06.2026;60;Bibliothek;Ausbildungsmöglichkeiten recherchiert;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;nein, verschoben
-TR0152;T094;01.04.2026;120;online (Video-Call);Berufsorientierung allgemein;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja
-TR0153;T094;13.05.2026;60;zuhause bei Mentor:in;Schule/Noten;Mentor:in;;ja;ja
-TR0154;T095;28.04.2026;60;Café;Vorbereitung Vorstellungsgespräch;Jugendliche/r;Kontakt zu Unternehmen X herstellen;nein, abgesagt;ja
-TR0155;T095;14.05.2026;60;zuhause bei Mentor:in;Ausbildungsmöglichkeiten recherchiert;Mentor:in;gemeinsam Lebenslauf fertigstellen;nein, abgesagt;ja
-TR0156;T096;26.06.2026;;Jugendzentrum;Berufsorientierung allgemein;Koordination (telefonisch berichtet);nichts Konkretes vereinbart;ja;ja
-TR0157;T097;26.05.2026;;Park;Praktikumssuche;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;nein, verschoben
-TR0158;T098;19.04.2026;60;Park;Café-Treffen, offenes Gespräch;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja
-TR0159;T098;03.05.2026;60;Bibliothek;Lebenslauf besprochen;Jugendliche/r;nichts Konkretes vereinbart;ja;ja
-TR0160;T098;26.06.2026;60;zuhause bei Mentor:in;Lebenslauf besprochen;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja
-TR0161;T099;10.04.2026;60;Café;Berufsorientierung allgemein;Jugendliche/r;Kontakt zu Unternehmen X herstellen;nein, abgesagt;ja
-TR0162;T100;26.04.2026;90;online (Video-Call);Schule/Noten;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;nein, abgesagt;ja
-TR0163;T101;04.06.2026;60;zuhause bei Mentor:in;Vorbereitung Vorstellungsgespräch;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;ja
-TR0164;T103;24.05.2026;45;online (Video-Call);Ausbildungsmöglichkeiten recherchiert;Jugendliche/r;gemeinsam Lebenslauf fertigstellen;nein, abgesagt;ja
-TR0165;T103;02.06.2026;60;Café;gemeinsamer Spaziergang;Jugendliche/r;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja
-TR0166;T104;04.06.2026;60;Park;Zukunftspläne;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja
-TR0167;T106;26.05.2026;120;Bibliothek;Berufsorientierung allgemein;Jugendliche/r;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja
-TR0168;T106;04.06.2026;45;Café;gemeinsamer Spaziergang;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;nein, verschoben
-TR0169;T108;03.04.2026;;online (Video-Call);Berufsorientierung allgemein;Mentor:in;;nein, abgesagt;ja
-TR0170;T108;02.05.2026;90;zuhause bei Mentor:in;Bewerbungsschreiben;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja
-TR0171;T108;04.06.2026;90;Café;Lebenslauf besprochen;Mentor:in;nichts Konkretes vereinbart;ja;nein, verschoben
-TR0172;T109;15.05.2026;45;Park;Kennenlernen;Jugendliche/r;nichts Konkretes vereinbart;ja;nein, verschoben
-TR0173;T109;26.06.2026;45;online (Video-Call);Café-Treffen, offenes Gespräch;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja
-TR0174;T110;15.06.2026;120;Café;Kennenlernen;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja
-TR0175;T111;09.06.2026;45;online (Video-Call);Praktikumssuche;Koordination (telefonisch berichtet);nichts Konkretes vereinbart;ja;ja
-TR0176;T112;27.04.2026;60;Park;Bewerbungsschreiben;Jugendliche/r;;nein, abgesagt;ja
-TR0177;T112;12.05.2026;120;Café;Zukunftspläne;Jugendliche/r;;ja;ja
-TR0178;T116;12.04.2026;120;zuhause bei Mentor:in;freies Gespräch;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja
-TR0179;T116;04.05.2026;45;Park;Kennenlernen;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja
-TR0180;T116;12.06.2026;120;Bibliothek;freies Gespräch;Mentor:in;nichts Konkretes vereinbart;ja;ja
-TR0181;T117;06.04.2026;90;Café;Schule/Noten;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja
-TR0182;T117;08.05.2026;;zuhause bei Mentor:in;Vorbereitung Vorstellungsgespräch;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja
-TR0183;T117;21.06.2026;120;Park;gemeinsamer Spaziergang;Jugendliche/r;nächstes Treffen: Bewerbungsunterlagen mitbringen;nein, abgesagt;nein, verschoben
-TR0184;T118;19.04.2026;45;Café;Berufsorientierung allgemein;Jugendliche/r;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja
-TR0185;T118;07.06.2026;45;Park;Ausbildungsmöglichkeiten recherchiert;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;ja
-TR0186;T119;20.04.2026;60;Café;Berufsorientierung allgemein;Jugendliche/r;nichts Konkretes vereinbart;ja;nein, verschoben
-TR0187;T120;31.04.2026;45;zuhause bei Mentor:in;Zukunftspläne;Mentor:in;nichts Konkretes vereinbart;nein, abgesagt;ja
-TR0188;T120;15.05.2026;45;Jugendzentrum;Vorbereitung Vorstellungsgespräch;Mentor:in;nichts Konkretes vereinbart;ja;nein, verschoben
-TR0189;T120;06.06.2026;60;Jugendzentrum;Bewerbungsschreiben;Jugendliche/r;Praktikumsplätze recherchieren bis nächstes Mal;ja;nein, verschoben
-TR0190;T121;04.05.2026;120;zuhause bei Mentor:in;Bewerbungsschreiben;Mentor:in;;ja;ja
-TR0191;T123;17.04.2026;60;Park;Praktikumssuche;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja
-TR0192;T123;18.06.2026;120;online (Video-Call);Café-Treffen, offenes Gespräch;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja
-TR0193;T124;25.05.2026;60;Café;Schule/Noten;Jugendliche/r;;ja;ja
-TR0194;T124;18.06.2026;60;Jugendzentrum;Ausbildungsmöglichkeiten recherchiert;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja
-TR0195;T125;31.04.2026;45;Bibliothek;Vorbereitung Vorstellungsgespräch;Jugendliche/r;nichts Konkretes vereinbart;ja;ja
-TR0196;T125;14.06.2026;60;Park;Ausbildungsmöglichkeiten recherchiert;Jugendliche/r;;ja;nein, verschoben
-TR0197;T126;06.05.2026;60;Bibliothek;Kennenlernen;Jugendliche/r;gemeinsam Lebenslauf fertigstellen;ja;ja
-TR0198;T126;09.06.2026;;Bibliothek;Kennenlernen;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja
-TR0199;T127;26.04.2026;;Jugendzentrum;Café-Treffen, offenes Gespräch;Mentor:in;;ja;ja
-TR0200;T127;03.06.2026;120;online (Video-Call);freies Gespräch;Jugendliche/r;;ja;nein, verschoben
-TR0201;T129;27.06.2026;;Jugendzentrum;Kennenlernen;Jugendliche/r;;ja;ja
-TR0202;T130;20.04.2026;;Jugendzentrum;Praktikumssuche;Jugendliche/r;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja
-TR0203;T130;17.05.2026;120;Café;gemeinsamer Spaziergang;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;nein, verschoben
-TR0204;T130;15.06.2026;60;zuhause bei Mentor:in;Vorbereitung Vorstellungsgespräch;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja
-TR0205;T900;12.05.2026;60;Café;freies Gespräch;Mentor:in;;ja;ja
-TR0206;T901;20.05.2026;;Jugendzentrum;Kennenlernen;Jugendliche/r;;ja;ja
+treffen_id;tandem_id;datum;dauer_minuten;ort;thema;dokumentiert_von;naechster_schritt;teilnahme_jugendliche;teilnahme_mentor;berichtszeitraum;tandem_gebildet_2026;programm_gesamt_tandems_gebildet_2026;treffen_durchgefuehrt;zaehlt_fuer_10_treffen_ziel;kumulierte_durchgefuehrte_treffen_2026;tandem_bisherige_durchgefuehrte_treffen_2026_bis_30_09;zielwert_mindest_treffen_pro_tandem_2026;tandem_geplante_weitere_treffen_bis_31_03_2027;tandem_erwartete_treffen_innerhalb_eines_jahres;ziel_output_90_prozent_tandems_10_treffen_unterstuetzt;karriereschritt_evidenz;karriereschritt_typ;ziel_outcome_80_prozent_karriereschritte_unterstuetzt;jugendliche_mehr_selbstvertrauen_beobachtet;ziel_outcome_100_prozent_mehr_selbstvertrauen_unterstuetzt;jugendliche_selbstwirksamkeit_basiswert_1_5;jugendliche_selbstwirksamkeit_aktueller_wert_1_5;selbstwirksamkeit_verbesserung_prozent;ziel_outcome_selbstwirksamkeit_plus_20_prozent_unterstuetzt;mentor_sozial_eingebunden_beobachtet;mentor_selbstwirksam_beobachtet;ziel_outcome_mentorinnen_sozial_eingebunden_selbstwirksam_unterstuetzt
+TR0001;T002;28.04.2026;60;zuhause bei Mentor:in;Zukunftspläne;Jugendliche/r;nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;1;3;10;7;10;ja;vorbereitet;konkrete Zukunftsplaene geklaert;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0002;T002;27.05.2026;90;Park;Praktikumssuche;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;2;3;10;7;10;ja;vorbereitet;"Praktikumssuche oder Praktikumsplatz vorbereitet; Kontakt zu Unternehmen vorbereitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0003;T003;01.05.2026;60;Bibliothek;Berufsorientierung allgemein;Jugendliche/r;nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;vorbereitet;Berufsorientierung bearbeitet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0004;T003;26.06.2026;60;Bibliothek;freies Gespräch;Mentor:in;nichts Konkretes vereinbart;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;1;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0005;T005;14.04.2026;60;Jugendzentrum;Kennenlernen;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;3;10;7;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0006;T005;17.06.2026;120;Jugendzentrum;gemeinsamer Spaziergang;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;3;10;7;10;ja;vorbereitet;Kontakt zu Unternehmen vorbereitet;ja;nein;nein;3;4;33;ja;ja;ja;ja
+TR0007;T006;18.04.2026;45;Park;Zukunftspläne;Mentor:in;Kontakt zu Unternehmen X herstellen;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0008;T006;16.05.2026;120;Park;Lebenslauf besprochen;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;ja;April-Juni 2026;ja;130;ja;1;1;1;10;9;10;ja;umgesetzt;"Praktikumssuche oder Praktikumsplatz vorbereitet; Lebenslauf erstellt oder verbessert";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0009;T006;01.06.2026;60;Jugendzentrum;Vorbereitung Vorstellungsgespräch;Mentor:in;gemeinsam Lebenslauf fertigstellen;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;1;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0010;T007;16.04.2026;120;online (Video-Call);Lebenslauf besprochen;Koordination (telefonisch berichtet);;ja;ja;April-Juni 2026;ja;130;ja;1;1;4;10;6;10;ja;umgesetzt;Lebenslauf erstellt oder verbessert;ja;ja;ja;3;4;33;ja;ja;nein;nein
+TR0011;T007;16.05.2026;90;Park;Lebenslauf besprochen;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;1;4;10;6;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0012;T007;21.06.2026;45;zuhause bei Mentor:in;Praktikumssuche;Jugendliche/r;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja;April-Juni 2026;ja;130;ja;1;2;4;10;6;10;ja;umgesetzt;"Praktikumssuche oder Praktikumsplatz vorbereitet; Bewerbung erstellt oder versendet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0013;T009;13.04.2026;60;Bibliothek;gemeinsamer Spaziergang;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;umgesetzt;Bewerbung erstellt oder versendet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0014;T009;15.05.2026;45;online (Video-Call);Kennenlernen;Mentor:in;nichts Konkretes vereinbart;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;1;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0015;T010;18.04.2026;;Café;Lebenslauf besprochen;Koordination (telefonisch berichtet);gemeinsam Lebenslauf fertigstellen;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0016;T010;10.06.2026;60;online (Video-Call);Kennenlernen;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;umgesetzt;Bewerbung erstellt oder versendet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0017;T012;15.04.2026;60;Bibliothek;freies Gespräch;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;3;10;7;10;ja;vorbereitet;Kontakt zu Unternehmen vorbereitet;ja;nein;nein;3;4;33;ja;ja;ja;ja
+TR0018;T012;11.06.2026;60;Park;gemeinsamer Spaziergang;Mentor:in;;ja;ja;April-Juni 2026;ja;130;ja;1;2;3;10;7;10;ja;keine_evidenz;;nein;nein;nein;3;3;0;nein;ja;nein;nein
+TR0019;T013;16.05.2026;120;Park;Praktikumssuche;Koordination (telefonisch berichtet);nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;1;4;10;6;10;ja;vorbereitet;Praktikumssuche oder Praktikumsplatz vorbereitet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0020;T013;04.06.2026;90;Jugendzentrum;Bewerbungsschreiben;Jugendliche/r;gemeinsam Lebenslauf fertigstellen;ja;ja;April-Juni 2026;ja;130;ja;1;2;4;10;6;10;ja;umgesetzt;"Lebenslauf erstellt oder verbessert; Bewerbung erstellt oder versendet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0021;T014;14.05.2026;60;Jugendzentrum;Vorbereitung Vorstellungsgespräch;Jugendliche/r;;ja;ja;April-Juni 2026;ja;130;ja;1;1;3;10;7;10;ja;umgesetzt;Vorstellungsgespraech vorbereitet;ja;ja;ja;3;4;33;ja;ja;nein;nein
+TR0022;T015;23.04.2026;45;Park;Zukunftspläne;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja;April-Juni 2026;ja;130;ja;1;1;4;10;6;10;ja;umgesetzt;"Bewerbung erstellt oder versendet; konkrete Zukunftsplaene geklaert";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0023;T015;01.06.2026;90;Bibliothek;Café-Treffen, offenes Gespräch;Jugendliche/r;nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;2;4;10;6;10;ja;keine_evidenz;;nein;nein;nein;3;3;0;nein;ja;ja;ja
+TR0024;T019;19.04.2026;45;Café;gemeinsamer Spaziergang;Mentor:in;gemeinsam Lebenslauf fertigstellen;nein, abgesagt;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0025;T019;07.05.2026;;online (Video-Call);Berufsorientierung allgemein;Jugendliche/r;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0026;T019;01.06.2026;90;Bibliothek;Lebenslauf besprochen;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;umgesetzt;"Lebenslauf erstellt oder verbessert; Kontakt zu Unternehmen vorbereitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0027;T020;09.04.2026;45;Café;Vorbereitung Vorstellungsgespräch;Jugendliche/r;Kontakt zu Unternehmen X herstellen;nein, abgesagt;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;4;10;6;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0028;T020;19.05.2026;120;Park;Café-Treffen, offenes Gespräch;Koordination (telefonisch berichtet);gemeinsam Lebenslauf fertigstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;4;10;6;10;ja;umgesetzt;Lebenslauf erstellt oder verbessert;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0029;T020;12.06.2026;90;Park;Café-Treffen, offenes Gespräch;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja;April-Juni 2026;ja;130;ja;1;2;4;10;6;10;ja;umgesetzt;Bewerbung erstellt oder versendet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0030;T022;13.04.2026;90;Park;Berufsorientierung allgemein;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;4;10;6;10;ja;vorbereitet;"Berufsorientierung bearbeitet; Kontakt zu Unternehmen vorbereitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0031;T022;17.05.2026;;online (Video-Call);Café-Treffen, offenes Gespräch;Jugendliche/r;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja;April-Juni 2026;ja;130;ja;1;2;4;10;6;10;ja;umgesetzt;Bewerbung erstellt oder versendet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0032;T022;18.06.2026;;online (Video-Call);gemeinsamer Spaziergang;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;3;4;10;6;10;ja;vorbereitet;Kontakt zu Unternehmen vorbereitet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0033;T025;03.04.2026;120;Jugendzentrum;gemeinsamer Spaziergang;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0034;T025;19.05.2026;60;zuhause bei Mentor:in;Ausbildungsmöglichkeiten recherchiert;Koordination (telefonisch berichtet);gemeinsam Lebenslauf fertigstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;1;10;9;10;ja;umgesetzt;"Lebenslauf erstellt oder verbessert; Ausbildungsmoeglichkeiten recherchiert";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0035;T026;15.04.2026;60;Café;Kennenlernen;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;vorbereitet;Praktikumssuche oder Praktikumsplatz vorbereitet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0036;T026;17.06.2026;60;online (Video-Call);freies Gespräch;Koordination (telefonisch berichtet);nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;2;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;3;3;0;nein;ja;ja;ja
+TR0037;T027;27.04.2026;60;zuhause bei Mentor:in;Vorbereitung Vorstellungsgespräch;Mentor:in;gemeinsam Lebenslauf fertigstellen;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0038;T027;28.05.2026;90;Jugendzentrum;Berufsorientierung allgemein;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;vorbereitet;"Praktikumssuche oder Praktikumsplatz vorbereitet; Berufsorientierung bearbeitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0039;T029;04.04.2026;60;Café;Kennenlernen;Jugendliche/r;gemeinsam Lebenslauf fertigstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;umgesetzt;Lebenslauf erstellt oder verbessert;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0040;T029;15.05.2026;60;Bibliothek;Berufsorientierung allgemein;Mentor:in;;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;1;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0041;T029;15.06.2026;;Bibliothek;Praktikumssuche;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja;April-Juni 2026;ja;130;ja;1;2;2;10;8;10;ja;vorbereitet;Praktikumssuche oder Praktikumsplatz vorbereitet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0042;T031;24.04.2026;60;Park;Café-Treffen, offenes Gespräch;Mentor:in;nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;1;3;10;7;10;ja;keine_evidenz;;nein;nein;nein;3;3;0;nein;ja;ja;ja
+TR0043;T031;02.05.2026;60;Jugendzentrum;Zukunftspläne;Mentor:in;Kontakt zu Unternehmen X herstellen;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;1;3;10;7;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0044;T031;01.06.2026;;Café;Schule/Noten;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;2;3;10;7;10;ja;vorbereitet;Kontakt zu Unternehmen vorbereitet;ja;nein;nein;3;4;33;ja;ja;ja;ja
+TR0045;T032;28.05.2026;60;Jugendzentrum;Bewerbungsschreiben;Jugendliche/r;;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0046;T032;17.06.2026;90;Bibliothek;Ausbildungsmöglichkeiten recherchiert;Mentor:in;;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;umgesetzt;Ausbildungsmoeglichkeiten recherchiert;ja;ja;ja;3;4;33;ja;ja;nein;nein
+TR0047;T033;22.04.2026;;zuhause bei Mentor:in;Zukunftspläne;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0048;T033;28.05.2026;45;Café;Praktikumssuche;Mentor:in;nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;vorbereitet;Praktikumssuche oder Praktikumsplatz vorbereitet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0049;T033;01.06.2026;60;Bibliothek;Lebenslauf besprochen;Mentor:in;;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;1;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0050;T034;01.05.2026;90;online (Video-Call);Kennenlernen;Mentor:in;;ja;ja;April-Juni 2026;ja;130;ja;1;1;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;3;3;0;nein;ja;nein;nein
+TR0051;T034;09.06.2026;;Park;Lebenslauf besprochen;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;1;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0052;T035;20.05.2026;;Jugendzentrum;Schule/Noten;Mentor:in;Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;3;10;7;10;ja;vorbereitet;Kontakt zu Unternehmen vorbereitet;ja;nein;nein;3;4;33;ja;ja;ja;ja
+TR0053;T035;02.06.2026;120;zuhause bei Mentor:in;Bewerbungsschreiben;Jugendliche/r;nichts Konkretes vereinbart;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;1;3;10;7;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0054;T036;09.06.2026;45;Jugendzentrum;freies Gespräch;Jugendliche/r;nichts Konkretes vereinbart;nein, abgesagt;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;0;10;10;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0055;T037;31.04.2026;45;Bibliothek;Berufsorientierung allgemein;Mentor:in;nichts Konkretes vereinbart;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;0;10;10;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0056;T039;25.04.2026;60;Café;Vorbereitung Vorstellungsgespräch;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0057;T039;10.05.2026;60;zuhause bei Mentor:in;Lebenslauf besprochen;Koordination (telefonisch berichtet);;nein, abgesagt;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0058;T039;21.06.2026;60;online (Video-Call);Bewerbungsschreiben;Koordination (telefonisch berichtet);gemeinsam Lebenslauf fertigstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;umgesetzt;"Lebenslauf erstellt oder verbessert; Bewerbung erstellt oder versendet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0059;T040;12.04.2026;60;zuhause bei Mentor:in;freies Gespräch;Mentor:in;Kontakt zu Unternehmen X herstellen;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0060;T040;01.05.2026;;Bibliothek;Zukunftspläne;Mentor:in;;ja;ja;April-Juni 2026;ja;130;ja;1;1;1;10;9;10;ja;vorbereitet;konkrete Zukunftsplaene geklaert;ja;ja;ja;3;4;33;ja;ja;nein;nein
+TR0061;T041;27.04.2026;;zuhause bei Mentor:in;Vorbereitung Vorstellungsgespräch;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;umgesetzt;"Bewerbung erstellt oder versendet; Vorstellungsgespraech vorbereitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0062;T043;05.04.2026;45;Bibliothek;Café-Treffen, offenes Gespräch;Koordination (telefonisch berichtet);nichts Konkretes vereinbart;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0063;T043;28.05.2026;60;zuhause bei Mentor:in;Ausbildungsmöglichkeiten recherchiert;Jugendliche/r;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0064;T045;15.04.2026;60;Café;Bewerbungsschreiben;Mentor:in;nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;1;4;10;6;10;ja;umgesetzt;Bewerbung erstellt oder versendet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0065;T045;10.06.2026;45;online (Video-Call);Café-Treffen, offenes Gespräch;Koordination (telefonisch berichtet);;ja;ja;April-Juni 2026;ja;130;ja;1;2;4;10;6;10;ja;keine_evidenz;;nein;nein;nein;3;3;0;nein;ja;nein;nein
+TR0066;T046;19.05.2026;60;online (Video-Call);Zukunftspläne;Jugendliche/r;;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0067;T046;15.06.2026;45;zuhause bei Mentor:in;Lebenslauf besprochen;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0068;T047;17.04.2026;60;online (Video-Call);gemeinsamer Spaziergang;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;4;10;6;10;ja;vorbereitet;Kontakt zu Unternehmen vorbereitet;ja;nein;nein;3;4;33;ja;ja;ja;ja
+TR0069;T047;08.05.2026;;zuhause bei Mentor:in;Lebenslauf besprochen;Jugendliche/r;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja;April-Juni 2026;ja;130;ja;1;2;4;10;6;10;ja;umgesetzt;"Praktikumssuche oder Praktikumsplatz vorbereitet; Lebenslauf erstellt oder verbessert";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0070;T047;28.06.2026;60;online (Video-Call);Praktikumssuche;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja;April-Juni 2026;ja;130;ja;1;3;4;10;6;10;ja;umgesetzt;"Praktikumssuche oder Praktikumsplatz vorbereitet; Bewerbung erstellt oder versendet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0071;T048;01.04.2026;60;Café;Vorbereitung Vorstellungsgespräch;Mentor:in;Kontakt zu Unternehmen X herstellen;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0072;T048;11.06.2026;60;Park;Zukunftspläne;Jugendliche/r;gemeinsam Lebenslauf fertigstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;1;10;9;10;ja;umgesetzt;"Lebenslauf erstellt oder verbessert; konkrete Zukunftsplaene geklaert";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0073;T049;08.05.2026;120;Jugendzentrum;Café-Treffen, offenes Gespräch;Koordination (telefonisch berichtet);nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;1;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;3;3;0;nein;ja;ja;ja
+TR0074;T049;06.06.2026;;zuhause bei Mentor:in;Zukunftspläne;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;1;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0075;T050;13.04.2026;60;zuhause bei Mentor:in;Bewerbungsschreiben;Jugendliche/r;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja;April-Juni 2026;ja;130;ja;1;1;4;10;6;10;ja;umgesetzt;"Praktikumssuche oder Praktikumsplatz vorbereitet; Bewerbung erstellt oder versendet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0076;T050;26.06.2026;45;Park;Kennenlernen;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja;April-Juni 2026;ja;130;ja;1;2;4;10;6;10;ja;umgesetzt;Bewerbung erstellt oder versendet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0077;T052;04.04.2026;45;Bibliothek;Zukunftspläne;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja;April-Juni 2026;ja;130;ja;1;1;3;10;7;10;ja;umgesetzt;"Bewerbung erstellt oder versendet; konkrete Zukunftsplaene geklaert";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0078;T052;28.05.2026;45;Jugendzentrum;Kennenlernen;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja;April-Juni 2026;ja;130;ja;1;2;3;10;7;10;ja;umgesetzt;Bewerbung erstellt oder versendet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0079;T052;20.06.2026;60;zuhause bei Mentor:in;freies Gespräch;Jugendliche/r;gemeinsam Lebenslauf fertigstellen;ja;ja;April-Juni 2026;ja;130;ja;1;3;3;10;7;10;ja;umgesetzt;Lebenslauf erstellt oder verbessert;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0080;T053;23.04.2026;45;Jugendzentrum;Schule/Noten;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;0;10;10;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0081;T054;04.04.2026;90;Café;gemeinsamer Spaziergang;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0082;T054;21.06.2026;;zuhause bei Mentor:in;Berufsorientierung allgemein;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0083;T055;04.05.2026;60;Jugendzentrum;gemeinsamer Spaziergang;Koordination (telefonisch berichtet);nichts Konkretes vereinbart;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0084;T055;01.06.2026;90;Bibliothek;Ausbildungsmöglichkeiten recherchiert;Jugendliche/r;nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;umgesetzt;Ausbildungsmoeglichkeiten recherchiert;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0085;T056;23.06.2026;45;Jugendzentrum;Schule/Noten;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0086;T057;03.04.2026;;Bibliothek;Ausbildungsmöglichkeiten recherchiert;Koordination (telefonisch berichtet);nichts Konkretes vereinbart;nein, abgesagt;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;3;10;7;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0087;T057;09.05.2026;120;Café;Ausbildungsmöglichkeiten recherchiert;Jugendliche/r;gemeinsam Lebenslauf fertigstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;3;10;7;10;ja;umgesetzt;"Lebenslauf erstellt oder verbessert; Ausbildungsmoeglichkeiten recherchiert";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0088;T058;20.04.2026;120;Café;Bewerbungsschreiben;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0089;T059;15.04.2026;60;Jugendzentrum;freies Gespräch;Koordination (telefonisch berichtet);gemeinsam Lebenslauf fertigstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;4;10;6;10;ja;umgesetzt;Lebenslauf erstellt oder verbessert;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0090;T059;07.05.2026;90;Bibliothek;Zukunftspläne;Koordination (telefonisch berichtet);gemeinsam Lebenslauf fertigstellen;ja;ja;April-Juni 2026;ja;130;ja;1;2;4;10;6;10;ja;umgesetzt;"Lebenslauf erstellt oder verbessert; konkrete Zukunftsplaene geklaert";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0091;T059;15.06.2026;45;online (Video-Call);Vorbereitung Vorstellungsgespräch;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;2;4;10;6;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0092;T060;17.04.2026;;zuhause bei Mentor:in;Zukunftspläne;Jugendliche/r;nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;1;4;10;6;10;ja;vorbereitet;konkrete Zukunftsplaene geklaert;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0093;T060;18.06.2026;60;Café;Schule/Noten;Jugendliche/r;;ja;ja;April-Juni 2026;ja;130;ja;1;2;4;10;6;10;ja;keine_evidenz;;nein;nein;nein;3;3;0;nein;ja;nein;nein
+TR0094;T061;28.04.2026;90;Park;freies Gespräch;Koordination (telefonisch berichtet);;ja;ja;April-Juni 2026;ja;130;ja;1;1;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;3;3;0;nein;ja;nein;nein
+TR0095;T061;17.06.2026;;Café;Lebenslauf besprochen;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;1;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0096;T062;13.04.2026;45;Jugendzentrum;freies Gespräch;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;3;10;7;10;ja;vorbereitet;Kontakt zu Unternehmen vorbereitet;ja;nein;nein;3;4;33;ja;ja;ja;ja
+TR0097;T062;08.05.2026;60;zuhause bei Mentor:in;Ausbildungsmöglichkeiten recherchiert;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;2;3;10;7;10;ja;umgesetzt;"Ausbildungsmoeglichkeiten recherchiert; Kontakt zu Unternehmen vorbereitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0098;T062;10.06.2026;120;Jugendzentrum;Bewerbungsschreiben;Mentor:in;Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;3;3;10;7;10;ja;umgesetzt;"Bewerbung erstellt oder versendet; Kontakt zu Unternehmen vorbereitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0099;T063;12.05.2026;;Café;Lebenslauf besprochen;Koordination (telefonisch berichtet);;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;4;10;6;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0100;T063;02.06.2026;60;Bibliothek;Zukunftspläne;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;ja;April-Juni 2026;ja;130;ja;1;1;4;10;6;10;ja;vorbereitet;"Praktikumssuche oder Praktikumsplatz vorbereitet; konkrete Zukunftsplaene geklaert";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0101;T064;05.04.2026;90;Jugendzentrum;Berufsorientierung allgemein;Jugendliche/r;nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;vorbereitet;Berufsorientierung bearbeitet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0102;T064;21.05.2026;120;Jugendzentrum;gemeinsamer Spaziergang;Jugendliche/r;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;1;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0103;T064;23.06.2026;90;zuhause bei Mentor:in;Schule/Noten;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;2;2;10;8;10;ja;vorbereitet;Kontakt zu Unternehmen vorbereitet;ja;nein;nein;3;4;33;ja;ja;ja;ja
+TR0104;T065;09.04.2026;60;Bibliothek;Vorbereitung Vorstellungsgespräch;Mentor:in;nichts Konkretes vereinbart;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0105;T065;03.05.2026;;zuhause bei Mentor:in;Ausbildungsmöglichkeiten recherchiert;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0106;T065;01.06.2026;;zuhause bei Mentor:in;Bewerbungsschreiben;Jugendliche/r;nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;umgesetzt;Bewerbung erstellt oder versendet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0107;T066;12.04.2026;90;online (Video-Call);Bewerbungsschreiben;Jugendliche/r;gemeinsam Lebenslauf fertigstellen;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;0;10;10;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0108;T066;31.04.2026;;zuhause bei Mentor:in;Schule/Noten;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;0;10;10;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0109;T066;05.06.2026;;Jugendzentrum;Praktikumssuche;Jugendliche/r;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;0;10;10;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0110;T067;26.04.2026;60;Park;freies Gespräch;Mentor:in;nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;1;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;3;3;0;nein;ja;ja;ja
+TR0111;T067;05.05.2026;60;zuhause bei Mentor:in;freies Gespräch;Mentor:in;nichts Konkretes vereinbart;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;1;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0112;T069;28.04.2026;;online (Video-Call);Lebenslauf besprochen;Mentor:in;nichts Konkretes vereinbart;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0113;T069;04.06.2026;;Park;Praktikumssuche;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja;April-Juni 2026;ja;130;ja;1;1;1;10;9;10;ja;vorbereitet;Praktikumssuche oder Praktikumsplatz vorbereitet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0114;T070;28.05.2026;;Park;gemeinsamer Spaziergang;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;vorbereitet;Praktikumssuche oder Praktikumsplatz vorbereitet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0115;T070;17.06.2026;45;Jugendzentrum;Vorbereitung Vorstellungsgespräch;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;1;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0116;T071;01.06.2026;45;Bibliothek;Praktikumssuche;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;vorbereitet;"Praktikumssuche oder Praktikumsplatz vorbereitet; Kontakt zu Unternehmen vorbereitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0117;T073;07.06.2026;120;online (Video-Call);Vorbereitung Vorstellungsgespräch;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;ja;April-Juni 2026;ja;130;ja;1;1;1;10;9;10;ja;umgesetzt;"Praktikumssuche oder Praktikumsplatz vorbereitet; Vorstellungsgespraech vorbereitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0118;T074;28.04.2026;;online (Video-Call);freies Gespräch;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;vorbereitet;Praktikumssuche oder Praktikumsplatz vorbereitet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0119;T074;24.05.2026;45;Jugendzentrum;Zukunftspläne;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;2;2;10;8;10;ja;vorbereitet;"konkrete Zukunftsplaene geklaert; Kontakt zu Unternehmen vorbereitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0120;T074;20.06.2026;45;Jugendzentrum;Berufsorientierung allgemein;Jugendliche/r;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;2;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0121;T075;09.04.2026;;zuhause bei Mentor:in;gemeinsamer Spaziergang;Koordination (telefonisch berichtet);;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;0;10;10;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0122;T075;27.06.2026;60;Bibliothek;Praktikumssuche;Mentor:in;nichts Konkretes vereinbart;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;0;10;10;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0123;T080;22.04.2026;45;Bibliothek;Zukunftspläne;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0124;T080;12.05.2026;60;zuhause bei Mentor:in;Praktikumssuche;Mentor:in;nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;vorbereitet;Praktikumssuche oder Praktikumsplatz vorbereitet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0125;T081;11.04.2026;60;online (Video-Call);Café-Treffen, offenes Gespräch;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;ja;April-Juni 2026;ja;130;ja;1;1;3;10;7;10;ja;vorbereitet;Praktikumssuche oder Praktikumsplatz vorbereitet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0126;T081;21.05.2026;60;zuhause bei Mentor:in;gemeinsamer Spaziergang;Koordination (telefonisch berichtet);;ja;ja;April-Juni 2026;ja;130;ja;1;2;3;10;7;10;ja;keine_evidenz;;nein;nein;nein;3;3;0;nein;ja;nein;nein
+TR0127;T081;28.06.2026;60;Bibliothek;Zukunftspläne;Koordination (telefonisch berichtet);;ja;ja;April-Juni 2026;ja;130;ja;1;3;3;10;7;10;ja;vorbereitet;konkrete Zukunftsplaene geklaert;ja;ja;ja;3;4;33;ja;ja;nein;nein
+TR0128;T082;14.04.2026;120;Bibliothek;gemeinsamer Spaziergang;Mentor:in;gemeinsam Lebenslauf fertigstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;3;10;7;10;ja;umgesetzt;Lebenslauf erstellt oder verbessert;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0129;T082;15.05.2026;45;Jugendzentrum;Praktikumssuche;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;1;3;10;7;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0130;T082;26.06.2026;120;Jugendzentrum;Berufsorientierung allgemein;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja;April-Juni 2026;ja;130;ja;1;2;3;10;7;10;ja;umgesetzt;"Bewerbung erstellt oder versendet; Berufsorientierung bearbeitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0131;T083;15.04.2026;60;Park;Schule/Noten;Jugendliche/r;;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;3;3;0;nein;ja;nein;nein
+TR0132;T083;19.06.2026;60;zuhause bei Mentor:in;gemeinsamer Spaziergang;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;1;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0133;T084;07.05.2026;;Bibliothek;gemeinsamer Spaziergang;Mentor:in;Kontakt zu Unternehmen X herstellen;nein, abgesagt;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;0;10;10;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0134;T084;02.06.2026;60;Café;Schule/Noten;Jugendliche/r;;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;0;10;10;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0135;T085;01.05.2026;;online (Video-Call);Berufsorientierung allgemein;Jugendliche/r;Kontakt zu Unternehmen X herstellen;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;0;10;10;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0136;T085;20.06.2026;90;Café;Café-Treffen, offenes Gespräch;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;0;10;10;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0137;T087;15.04.2026;45;Café;Ausbildungsmöglichkeiten recherchiert;Mentor:in;Kontakt zu Unternehmen X herstellen;nein, abgesagt;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0138;T087;19.05.2026;90;Café;Zukunftspläne;Koordination (telefonisch berichtet);nichts Konkretes vereinbart;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0139;T087;27.06.2026;;Café;Bewerbungsschreiben;Mentor:in;Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;umgesetzt;"Bewerbung erstellt oder versendet; Kontakt zu Unternehmen vorbereitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0140;T088;22.05.2026;;Park;Ausbildungsmöglichkeiten recherchiert;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;0;10;10;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0141;T089;15.05.2026;60;online (Video-Call);gemeinsamer Spaziergang;Jugendliche/r;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;vorbereitet;Praktikumssuche oder Praktikumsplatz vorbereitet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0142;T090;11.04.2026;60;Bibliothek;Berufsorientierung allgemein;Mentor:in;gemeinsam Lebenslauf fertigstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;3;10;7;10;ja;umgesetzt;"Lebenslauf erstellt oder verbessert; Berufsorientierung bearbeitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0143;T090;17.06.2026;60;Jugendzentrum;Vorbereitung Vorstellungsgespräch;Mentor:in;Kontakt zu Unternehmen X herstellen;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;1;3;10;7;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0144;T091;12.04.2026;90;Café;Café-Treffen, offenes Gespräch;Koordination (telefonisch berichtet);gemeinsam Lebenslauf fertigstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;3;10;7;10;ja;umgesetzt;Lebenslauf erstellt oder verbessert;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0145;T091;13.05.2026;;Café;Vorbereitung Vorstellungsgespräch;Mentor:in;;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;1;3;10;7;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0146;T091;01.06.2026;45;zuhause bei Mentor:in;gemeinsamer Spaziergang;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;ja;April-Juni 2026;ja;130;ja;1;2;3;10;7;10;ja;vorbereitet;Praktikumssuche oder Praktikumsplatz vorbereitet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0147;T092;05.04.2026;90;Jugendzentrum;freies Gespräch;Jugendliche/r;nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;1;3;10;7;10;ja;keine_evidenz;;nein;nein;nein;3;3;0;nein;ja;ja;ja
+TR0148;T092;08.05.2026;120;Park;Bewerbungsschreiben;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja;April-Juni 2026;ja;130;ja;1;2;3;10;7;10;ja;umgesetzt;Bewerbung erstellt oder versendet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0149;T093;24.04.2026;90;online (Video-Call);freies Gespräch;Jugendliche/r;gemeinsam Lebenslauf fertigstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;umgesetzt;Lebenslauf erstellt oder verbessert;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0150;T093;04.05.2026;120;Café;Bewerbungsschreiben;Jugendliche/r;nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;2;2;10;8;10;ja;umgesetzt;Bewerbung erstellt oder versendet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0151;T093;07.06.2026;60;Bibliothek;Ausbildungsmöglichkeiten recherchiert;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;2;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0152;T094;01.04.2026;120;online (Video-Call);Berufsorientierung allgemein;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja;April-Juni 2026;ja;130;ja;1;1;3;10;7;10;ja;vorbereitet;"Praktikumssuche oder Praktikumsplatz vorbereitet; Berufsorientierung bearbeitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0153;T094;13.05.2026;60;zuhause bei Mentor:in;Schule/Noten;Mentor:in;;ja;ja;April-Juni 2026;ja;130;ja;1;2;3;10;7;10;ja;keine_evidenz;;nein;nein;nein;3;3;0;nein;ja;nein;nein
+TR0154;T095;28.04.2026;60;Café;Vorbereitung Vorstellungsgespräch;Jugendliche/r;Kontakt zu Unternehmen X herstellen;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;0;10;10;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0155;T095;14.05.2026;60;zuhause bei Mentor:in;Ausbildungsmöglichkeiten recherchiert;Mentor:in;gemeinsam Lebenslauf fertigstellen;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;0;10;10;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0156;T096;26.06.2026;;Jugendzentrum;Berufsorientierung allgemein;Koordination (telefonisch berichtet);nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;1;1;10;9;10;ja;vorbereitet;Berufsorientierung bearbeitet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0157;T097;26.05.2026;;Park;Praktikumssuche;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;0;10;10;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0158;T098;19.04.2026;60;Park;Café-Treffen, offenes Gespräch;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja;April-Juni 2026;ja;130;ja;1;1;4;10;6;10;ja;vorbereitet;Praktikumssuche oder Praktikumsplatz vorbereitet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0159;T098;03.05.2026;60;Bibliothek;Lebenslauf besprochen;Jugendliche/r;nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;2;4;10;6;10;ja;umgesetzt;Lebenslauf erstellt oder verbessert;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0160;T098;26.06.2026;60;zuhause bei Mentor:in;Lebenslauf besprochen;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja;April-Juni 2026;ja;130;ja;1;3;4;10;6;10;ja;umgesetzt;"Lebenslauf erstellt oder verbessert; Bewerbung erstellt oder versendet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0161;T099;10.04.2026;60;Café;Berufsorientierung allgemein;Jugendliche/r;Kontakt zu Unternehmen X herstellen;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;0;10;10;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0162;T100;26.04.2026;90;online (Video-Call);Schule/Noten;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0163;T101;04.06.2026;60;zuhause bei Mentor:in;Vorbereitung Vorstellungsgespräch;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;ja;April-Juni 2026;ja;130;ja;1;1;1;10;9;10;ja;umgesetzt;"Praktikumssuche oder Praktikumsplatz vorbereitet; Vorstellungsgespraech vorbereitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0164;T103;24.05.2026;45;online (Video-Call);Ausbildungsmöglichkeiten recherchiert;Jugendliche/r;gemeinsam Lebenslauf fertigstellen;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0165;T103;02.06.2026;60;Café;gemeinsamer Spaziergang;Jugendliche/r;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja;April-Juni 2026;ja;130;ja;1;1;1;10;9;10;ja;umgesetzt;Bewerbung erstellt oder versendet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0166;T104;04.06.2026;60;Park;Zukunftspläne;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;vorbereitet;"konkrete Zukunftsplaene geklaert; Kontakt zu Unternehmen vorbereitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0167;T106;26.05.2026;120;Bibliothek;Berufsorientierung allgemein;Jugendliche/r;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;umgesetzt;"Bewerbung erstellt oder versendet; Berufsorientierung bearbeitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0168;T106;04.06.2026;45;Café;gemeinsamer Spaziergang;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;nein, verschoben;April-Juni 2026;ja;130;nein;0;1;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0169;T108;03.04.2026;;online (Video-Call);Berufsorientierung allgemein;Mentor:in;;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;3;10;7;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0170;T108;02.05.2026;90;zuhause bei Mentor:in;Bewerbungsschreiben;Mentor:in;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja;April-Juni 2026;ja;130;ja;1;1;3;10;7;10;ja;umgesetzt;Bewerbung erstellt oder versendet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0171;T108;04.06.2026;90;Café;Lebenslauf besprochen;Mentor:in;nichts Konkretes vereinbart;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;1;3;10;7;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0172;T109;15.05.2026;45;Park;Kennenlernen;Jugendliche/r;nichts Konkretes vereinbart;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0173;T109;26.06.2026;45;online (Video-Call);Café-Treffen, offenes Gespräch;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;1;10;9;10;ja;vorbereitet;Kontakt zu Unternehmen vorbereitet;ja;nein;nein;3;4;33;ja;ja;ja;ja
+TR0174;T110;15.06.2026;120;Café;Kennenlernen;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;0;10;10;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0175;T111;09.06.2026;45;online (Video-Call);Praktikumssuche;Koordination (telefonisch berichtet);nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;vorbereitet;Praktikumssuche oder Praktikumsplatz vorbereitet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0176;T112;27.04.2026;60;Park;Bewerbungsschreiben;Jugendliche/r;;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;0;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0177;T112;12.05.2026;120;Café;Zukunftspläne;Jugendliche/r;;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;vorbereitet;konkrete Zukunftsplaene geklaert;ja;ja;ja;3;4;33;ja;ja;nein;nein
+TR0178;T116;12.04.2026;120;zuhause bei Mentor:in;freies Gespräch;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;4;10;6;10;ja;vorbereitet;Kontakt zu Unternehmen vorbereitet;ja;nein;nein;3;4;33;ja;ja;ja;ja
+TR0179;T116;04.05.2026;45;Park;Kennenlernen;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;2;4;10;6;10;ja;vorbereitet;Kontakt zu Unternehmen vorbereitet;ja;nein;nein;3;4;33;ja;ja;ja;ja
+TR0180;T116;12.06.2026;120;Bibliothek;freies Gespräch;Mentor:in;nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;3;4;10;6;10;ja;keine_evidenz;;nein;ja;ja;3;3;0;nein;ja;ja;ja
+TR0181;T117;06.04.2026;90;Café;Schule/Noten;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;1;10;9;10;ja;vorbereitet;Kontakt zu Unternehmen vorbereitet;ja;nein;nein;3;4;33;ja;ja;ja;ja
+TR0182;T117;08.05.2026;;zuhause bei Mentor:in;Vorbereitung Vorstellungsgespräch;Mentor:in;Praktikumsplätze recherchieren bis nächstes Mal;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;1;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0183;T117;21.06.2026;120;Park;gemeinsamer Spaziergang;Jugendliche/r;nächstes Treffen: Bewerbungsunterlagen mitbringen;nein, abgesagt;nein, verschoben;April-Juni 2026;ja;130;nein;0;1;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0184;T118;19.04.2026;45;Café;Berufsorientierung allgemein;Jugendliche/r;nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja;April-Juni 2026;ja;130;ja;1;1;4;10;6;10;ja;umgesetzt;"Bewerbung erstellt oder versendet; Berufsorientierung bearbeitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0185;T118;07.06.2026;45;Park;Ausbildungsmöglichkeiten recherchiert;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;ja;April-Juni 2026;ja;130;ja;1;2;4;10;6;10;ja;umgesetzt;"Praktikumssuche oder Praktikumsplatz vorbereitet; Ausbildungsmoeglichkeiten recherchiert";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0186;T119;20.04.2026;60;Café;Berufsorientierung allgemein;Jugendliche/r;nichts Konkretes vereinbart;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;0;10;10;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0187;T120;31.04.2026;45;zuhause bei Mentor:in;Zukunftspläne;Mentor:in;nichts Konkretes vereinbart;nein, abgesagt;ja;April-Juni 2026;ja;130;nein;0;2;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0188;T120;15.05.2026;45;Jugendzentrum;Vorbereitung Vorstellungsgespräch;Mentor:in;nichts Konkretes vereinbart;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0189;T120;06.06.2026;60;Jugendzentrum;Bewerbungsschreiben;Jugendliche/r;Praktikumsplätze recherchieren bis nächstes Mal;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0190;T121;04.05.2026;120;zuhause bei Mentor:in;Bewerbungsschreiben;Mentor:in;;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;umgesetzt;Bewerbung erstellt oder versendet;ja;ja;ja;3;4;33;ja;ja;nein;nein
+TR0191;T123;17.04.2026;60;Park;Praktikumssuche;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;vorbereitet;"Praktikumssuche oder Praktikumsplatz vorbereitet; Kontakt zu Unternehmen vorbereitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0192;T123;18.06.2026;120;online (Video-Call);Café-Treffen, offenes Gespräch;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;2;2;10;8;10;ja;vorbereitet;Kontakt zu Unternehmen vorbereitet;ja;nein;nein;3;4;33;ja;ja;ja;ja
+TR0193;T124;25.05.2026;60;Café;Schule/Noten;Jugendliche/r;;ja;ja;April-Juni 2026;ja;130;ja;1;1;2;10;8;10;ja;keine_evidenz;;nein;nein;nein;3;3;0;nein;ja;nein;nein
+TR0194;T124;18.06.2026;60;Jugendzentrum;Ausbildungsmöglichkeiten recherchiert;Jugendliche/r;Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;2;2;10;8;10;ja;umgesetzt;"Ausbildungsmoeglichkeiten recherchiert; Kontakt zu Unternehmen vorbereitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0195;T125;31.04.2026;45;Bibliothek;Vorbereitung Vorstellungsgespräch;Jugendliche/r;nichts Konkretes vereinbart;ja;ja;April-Juni 2026;ja;130;ja;1;1;1;10;9;10;ja;umgesetzt;Vorstellungsgespraech vorbereitet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0196;T125;14.06.2026;60;Park;Ausbildungsmöglichkeiten recherchiert;Jugendliche/r;;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;0;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0197;T126;06.05.2026;60;Bibliothek;Kennenlernen;Jugendliche/r;gemeinsam Lebenslauf fertigstellen;ja;ja;April-Juni 2026;ja;130;ja;1;1;3;10;7;10;ja;umgesetzt;Lebenslauf erstellt oder verbessert;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0198;T126;09.06.2026;;Bibliothek;Kennenlernen;Koordination (telefonisch berichtet);Kontakt zu Unternehmen X herstellen;ja;ja;April-Juni 2026;ja;130;ja;1;2;3;10;7;10;ja;vorbereitet;Kontakt zu Unternehmen vorbereitet;ja;nein;nein;3;4;33;ja;ja;ja;ja
+TR0199;T127;26.04.2026;;Jugendzentrum;Café-Treffen, offenes Gespräch;Mentor:in;;ja;ja;April-Juni 2026;ja;130;ja;1;1;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;3;3;0;nein;ja;nein;nein
+TR0200;T127;03.06.2026;120;online (Video-Call);freies Gespräch;Jugendliche/r;;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;1;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0201;T129;27.06.2026;;Jugendzentrum;Kennenlernen;Jugendliche/r;;ja;ja;April-Juni 2026;ja;130;ja;1;1;3;10;7;10;ja;keine_evidenz;;nein;nein;nein;3;3;0;nein;ja;nein;nein
+TR0202;T130;20.04.2026;;Jugendzentrum;Praktikumssuche;Jugendliche/r;Praktikumsplätze recherchieren bis nächstes Mal;ja;ja;April-Juni 2026;ja;130;ja;1;1;3;10;7;10;ja;vorbereitet;Praktikumssuche oder Praktikumsplatz vorbereitet;ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0203;T130;17.05.2026;120;Café;gemeinsamer Spaziergang;Koordination (telefonisch berichtet);Praktikumsplätze recherchieren bis nächstes Mal;ja;nein, verschoben;April-Juni 2026;ja;130;nein;0;1;3;10;7;10;ja;keine_evidenz;;nein;nein;nein;;;;nein;nein;nein;nein
+TR0204;T130;15.06.2026;60;zuhause bei Mentor:in;Vorbereitung Vorstellungsgespräch;Koordination (telefonisch berichtet);nächstes Treffen: Bewerbungsunterlagen mitbringen;ja;ja;April-Juni 2026;ja;130;ja;1;2;3;10;7;10;ja;umgesetzt;"Bewerbung erstellt oder versendet; Vorstellungsgespraech vorbereitet";ja;ja;ja;3;4;33;ja;ja;ja;ja
+TR0205;T900;12.05.2026;60;Café;freies Gespräch;Mentor:in;;ja;ja;April-Juni 2026;ja;130;ja;1;1;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;3;3;0;nein;ja;nein;nein
+TR0206;T901;20.05.2026;;Jugendzentrum;Kennenlernen;Jugendliche/r;;ja;ja;April-Juni 2026;ja;130;ja;1;1;1;10;9;10;ja;keine_evidenz;;nein;nein;nein;3;3;0;nein;ja;nein;nein

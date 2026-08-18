@@ -17,6 +17,7 @@ interface ApiFailureEnvelope {
 export type OrganizationRole = "ORGANIZATION_ADMIN" | "PROJECT_MANAGER";
 export type ProjectStatus = "planning" | "active" | "completed";
 export type ActivityStatus = "active" | "completed";
+export type ActivitySystemType = "baseline" | "impact_measurement";
 
 export interface OrganizationPermissions {
   canManageMembers: boolean;
@@ -117,6 +118,7 @@ export interface ProjectSummary {
 export interface ActivitySummary {
   id: string;
   projectId: string;
+  systemType: ActivitySystemType | null;
   name: string;
   description: string | null;
   activityType: string | null;
@@ -125,7 +127,6 @@ export interface ActivitySummary {
   targetAudience: string | null;
   objectives: string | null;
   output: string | null;
-  outcome: string | null;
   status: ActivityStatus;
   permissions: ActivityPermissions;
   interpretationAcknowledgedAt: string | null;
@@ -222,7 +223,6 @@ export interface CreateActivityPayload {
   targetAudience?: string;
   objectives?: string;
   output?: string;
-  outcome?: string;
   status?: ActivityStatus;
 }
 
@@ -235,7 +235,6 @@ export interface UpdateActivityPayload {
   targetAudience?: string | null;
   objectives?: string | null;
   output?: string | null;
-  outcome?: string | null;
   status?: ActivityStatus;
 }
 
@@ -387,7 +386,8 @@ export type EpistemicRole =
   | "subjective_code"
   | "free_text"
   | "flag"
-  | "categorical";
+  | "categorical"
+  | "constant";
 
 export interface ParsedRepresentationPreviewTable {
   name: string;
@@ -1119,16 +1119,7 @@ export interface ActivityAnalysisV2CalculationRecord {
   sourceColumns: string[];
   sourceColumnEpistemicRoles?: Array<{
     columnName: string;
-    epistemicRole:
-      | "identifier"
-      | "temporal"
-      | "validated_scale"
-      | "metric_count"
-      | "subjective_code"
-      | "free_text"
-      | "flag"
-      | "categorical"
-      | null;
+    epistemicRole: EpistemicRole | null;
   }>;
   grain?: string;
   numerator?: number | null;
@@ -1166,23 +1157,14 @@ export interface ActivityAnalysisV2QualitativeFindingRecord {
   sourceColumns: string[];
   sourceColumnEpistemicRoles?: Array<{
     columnName: string;
-    epistemicRole:
-      | "identifier"
-      | "temporal"
-      | "validated_scale"
-      | "metric_count"
-      | "subjective_code"
-      | "free_text"
-      | "flag"
-      | "categorical"
-      | null;
+    epistemicRole: EpistemicRole | null;
   }>;
   identifierColumn: string | null;
 }
 
 export interface ActivityAnalysisV2GoalAssessmentRecord {
   goalId: string;
-  goalType: "output" | "outcome";
+  goalType: "output";
   goalText: string;
   evaluationMode:
     "numeric_target" | "condition" | "directional_change" | "evidence_only";
@@ -1208,14 +1190,11 @@ export interface ActivityAssessmentV2 {
 export interface ActivityAnalysisV2Diagnostics {
   goalCount: number;
   outputGoalCount: number;
-  outcomeGoalCount: number;
   evidenceCount: number;
   plannedToolRequestCount: number;
   executedToolCallCount: number;
   calculationCount: number;
   validationIssueCount: number;
-  renderedSummarySectionCount: number;
-  renderedSummaryCharacterCount: number;
   goalStatusCounts: {
     achieved: number;
     notAchieved: number;
@@ -1238,7 +1217,6 @@ export interface ActivityAnalysisRunV2Record {
     activityType: string | null;
     objectives: string | null;
     output: string | null;
-    outcome: string | null;
   };
   evidence: Array<{
     uploadMetadataId: string;
@@ -1265,11 +1243,133 @@ export interface ActivityAnalysisRunV2Record {
     status: ActivityAnalysisRunV2ValidationStatus;
     issues: string[];
   };
-  renderedSummary: string | null;
-  recommendationText: string | null;
   errorMessage: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+// Project-level "impact story" dashboard — a read model over already-
+// grounded indicator values, grouped per activity with no cross-activity
+// summation. Deliberately a separate type family from
+// AnalyticsDashboardWidgetKind (the legacy "Analysen" dashboard's widget
+// vocabulary) to keep this surface decoupled from that inert code.
+export type ImpactIndicatorTileFormat = "number" | "percentage";
+
+export interface ImpactStoryKpiTile {
+  kind: "kpi";
+  indicatorId: string;
+  label: string;
+  description: string;
+  value: number | null;
+  formatAs: ImpactIndicatorTileFormat;
+}
+
+export interface ImpactStoryCategoryRankTile {
+  kind: "category_rank";
+  indicatorId: string;
+  label: string;
+  description: string;
+  buckets: Array<{ category: string; count: number }>;
+}
+
+export interface ImpactStoryTrendPoint {
+  period: string;
+  count: number | null;
+  numeratorCount: number | null;
+  denominatorCount: number | null;
+}
+
+export interface ImpactStoryTrendTile {
+  kind: "line_series";
+  indicatorId: string;
+  label: string;
+  description: string;
+  points: ImpactStoryTrendPoint[];
+}
+
+export type ImpactIndicatorTile =
+  ImpactStoryKpiTile | ImpactStoryCategoryRankTile | ImpactStoryTrendTile;
+
+export interface ActivityImpactStoryCard {
+  activityId: string;
+  activityName: string;
+  tiles: ImpactIndicatorTile[];
+}
+
+export interface ProjectImpactStorySourceSnapshotItem {
+  activityId: string;
+  activityAnalysisRunId: string;
+}
+
+export interface ProjectImpactStoryDiagnostics {
+  activityCount: number;
+  indicatorCount: number;
+  excludedIndicatorCount: number;
+  activitiesWithNoGroundedIndicators: string[];
+}
+
+export type ProjectImpactStoryStatus = "completed" | "failed";
+
+// Project-level headline KPIs and chart plan — the LLM-planned,
+// backend-executed story layer on top of activityCards. Every `value`/`data`
+// field is computed entirely by ia_backend from real V2 calculations; see
+// projectImpactStoryChartPlanExecution.ts on the backend.
+export interface ProjectImpactStoryHeadlineKpi {
+  kpiId: string;
+  label: string;
+  value: number;
+  formatAs: ImpactIndicatorTileFormat;
+  narrativeReason: string;
+}
+
+export type ProjectImpactStoryChartType =
+  "bar" | "pie" | "line" | "comparison" | "distribution";
+
+export interface ProjectImpactStoryChartDatum {
+  label: string;
+  value: number;
+}
+
+// What each datum's `label` means, set deterministically by the backend —
+// never inferred from the label text. "status" labels are
+// ActivityAnalysisV2GoalAssessmentStatus values and get the reserved status
+// palette + a legend, since each segment is a distinct identity a viewer
+// needs to recognize; the other three kinds repeat the same measure across
+// categories/periods/activities and stay single-hue.
+export type ProjectImpactStoryChartDataKind =
+  "category" | "period" | "status" | "activity";
+
+export interface ProjectImpactStoryChartSpec {
+  chartId: string;
+  chartType: ProjectImpactStoryChartType;
+  dataKind: ProjectImpactStoryChartDataKind;
+  valueFormat: ImpactIndicatorTileFormat;
+  title: string;
+  subtitle: string | null;
+  narrativeReason: string;
+  data: ProjectImpactStoryChartDatum[];
+}
+
+export interface ProjectImpactStoryRecord {
+  id: string;
+  organizationId: string;
+  projectId: string;
+  status: ProjectImpactStoryStatus;
+  sourceSnapshot: ProjectImpactStorySourceSnapshotItem[];
+  activityCards: ActivityImpactStoryCard[];
+  headlineKpis: ProjectImpactStoryHeadlineKpi[];
+  chartPlan: ProjectImpactStoryChartSpec[];
+  narrativeSummary: string | null;
+  diagnostics: ProjectImpactStoryDiagnostics;
+  llmUsage: Record<string, unknown> | null;
+  errorMessage: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProjectImpactStoryReadResult {
+  story: ProjectImpactStoryRecord | null;
+  isStale: boolean;
 }
 
 export type ActivityEvidenceLinkageStatus = "needs_review" | "resolved";
@@ -1709,6 +1809,21 @@ function resolveConfiguredApiBaseUrl() {
 
 const apiBaseUrl = resolveConfiguredApiBaseUrl();
 
+function resolveRequestLanguageHeader() {
+  const language = (i18n.resolvedLanguage ?? i18n.language)
+    .toLowerCase()
+    .slice(0, 2);
+  return language === "en" ? "en" : "de";
+}
+
+function withLanguageHeader(headers: RequestInit["headers"] | undefined) {
+  const nextHeaders = new Headers(headers);
+  if (!nextHeaders.has("accept-language")) {
+    nextHeaders.set("accept-language", resolveRequestLanguageHeader());
+  }
+  return nextHeaders;
+}
+
 export function resolveApiUrl(path: string | null | undefined) {
   if (!path) {
     return null;
@@ -1730,7 +1845,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${apiBaseUrl}${path}`, {
     ...init,
     credentials: "include",
-    headers: init?.headers ?? {},
+    headers: withLanguageHeader(init?.headers),
   });
 
   const text = await response.text();
@@ -1775,20 +1890,6 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   }
 
   return payload.data;
-}
-
-async function requestBlob(path: string, init?: RequestInit): Promise<Blob> {
-  const response = await fetch(`${apiBaseUrl}${path}`, {
-    ...init,
-    credentials: "include",
-    headers: init?.headers ?? {},
-  });
-
-  if (!response.ok) {
-    throw new ApiError("Request failed.", response.status);
-  }
-
-  return response.blob();
 }
 
 export const apiClient = {
@@ -2185,6 +2286,20 @@ export const apiClient = {
     const query = limit ? `?limit=${limit}` : "";
     return request(`/activities/${activityId}/analysis-v2/runs${query}`);
   },
+  getProjectImpactStory(
+    projectId: string,
+  ): Promise<ProjectImpactStoryReadResult> {
+    return request(`/projects/${projectId}/impact-story`);
+  },
+  // Creates a project_impact_story processing job instead of returning the
+  // finished story directly, same job-then-poll contract as
+  // runActivityAnalysisV2 above. Poll the returned job with useJobQuery,
+  // then re-fetch getProjectImpactStory once it's terminal.
+  runProjectImpactStory(projectId: string): Promise<ProcessingJobRecord> {
+    return request(`/projects/${projectId}/impact-story`, {
+      method: "POST",
+    });
+  },
   getInterpretation(
     interpretationResultId: string,
   ): Promise<InterpretationResultRecord> {
@@ -2207,103 +2322,5 @@ export const apiClient = {
       method: "POST",
     });
   },
-  generateProjectAnalytics(
-    projectId: string,
-  ): Promise<AnalyticsExecutionRecord> {
-    return request(`/projects/${projectId}/analytics/generate`, {
-      method: "POST",
-    });
-  },
-  getProjectAnalytics(projectId: string): Promise<AnalyticsQueryResponse> {
-    return request(`/projects/${projectId}/analytics`);
-  },
-  updateProjectAnalyticsLayout(
-    projectId: string,
-    payload: UpdateAnalyticsDashboardPreferencePayload,
-  ): Promise<AnalyticsDashboardPreferenceRecord> {
-    return request(`/projects/${projectId}/analytics/layout`, {
-      method: "PUT",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-  },
-  resetProjectAnalyticsLayout(projectId: string): Promise<{ success: true }> {
-    return request(`/projects/${projectId}/analytics/layout`, {
-      method: "DELETE",
-    });
-  },
-  trackProjectAnalyticsInteraction(
-    projectId: string,
-    payload: AnalyticsDashboardInteractionPayload,
-  ): Promise<{ success: true }> {
-    return request(`/projects/${projectId}/analytics/events`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-  },
-  downloadProjectAnalyticsExport(
-    projectId: string,
-    payload: AnalyticsDashboardExportRequestPayload,
-  ): Promise<Blob> {
-    return requestBlob(`/projects/${projectId}/analytics/export`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-  },
-  generateActivityAnalytics(
-    projectId: string,
-    activityId: string,
-  ): Promise<AnalyticsExecutionRecord> {
-    return request(
-      `/projects/${projectId}/activities/${activityId}/analytics/generate`,
-      { method: "POST" },
-    );
-  },
-  getActivityAnalytics(
-    projectId: string,
-    activityId: string,
-  ): Promise<AnalyticsQueryResponse> {
-    return request(`/projects/${projectId}/activities/${activityId}/analytics`);
-  },
-  updateActivityAnalyticsLayout(
-    projectId: string,
-    activityId: string,
-    payload: UpdateAnalyticsDashboardPreferencePayload,
-  ): Promise<AnalyticsDashboardPreferenceRecord> {
-    return request(
-      `/projects/${projectId}/activities/${activityId}/analytics/layout`,
-      {
-        method: "PUT",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(payload),
-      },
-    );
-  },
-  resetActivityAnalyticsLayout(
-    projectId: string,
-    activityId: string,
-  ): Promise<{ success: true }> {
-    return request(
-      `/projects/${projectId}/activities/${activityId}/analytics/layout`,
-      {
-        method: "DELETE",
-      },
-    );
-  },
-  trackActivityAnalyticsInteraction(
-    projectId: string,
-    activityId: string,
-    payload: AnalyticsDashboardInteractionPayload,
-  ): Promise<{ success: true }> {
-    return request(
-      `/projects/${projectId}/activities/${activityId}/analytics/events`,
-      {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(payload),
-      },
-    );
-  },
 };
+import i18n from "@/lib/i18n";

@@ -8,15 +8,15 @@ export const Route = createFileRoute(
 });
 
 function LegacyInsightsRedirect() {
-  const { projectId, activityId } = Route.useParams();
+  const { projectId } = Route.useParams();
   const navigate = useNavigate();
 
   return (
     <LegacyRedirect
       onRedirect={() => {
         void navigate({
-          to: "/projects/$projectId/activities/$activityId/analysis",
-          params: { projectId, activityId },
+          to: "/projects/$projectId/analytics",
+          params: { projectId },
           replace: true,
         });
       }}

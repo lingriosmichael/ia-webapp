@@ -40,7 +40,6 @@ interface ActivityDialogState {
   targetAudience: string;
   objectives: string;
   output: string;
-  outcome: string;
   status: ActivityStatus;
 }
 
@@ -54,7 +53,6 @@ const initialState: ActivityDialogState = {
   targetAudience: "",
   objectives: "",
   output: "",
-  outcome: "",
   status: "active",
 };
 
@@ -154,7 +152,6 @@ export function ActivityDialog({
         targetAudience: initialActivity.targetAudience ?? "",
         objectives: initialActivity.objectives ?? "",
         output: initialActivity.output ?? "",
-        outcome: initialActivity.outcome ?? "",
         status: initialActivity.status,
       });
       return;
@@ -187,7 +184,6 @@ export function ActivityDialog({
       targetAudience: form.targetAudience || undefined,
       objectives: form.objectives || undefined,
       output: form.output || undefined,
-      outcome: form.outcome || undefined,
       status: form.status,
     });
 
@@ -221,29 +217,6 @@ export function ActivityDialog({
     >
       <DialogSection>
         <div className="grid gap-5 md:grid-cols-2">
-          <div className="space-y-2 md:col-span-2">
-            <FieldLabel>{locale.dialogs.activity.name}</FieldLabel>
-            <Input
-              value={form.name}
-              onChange={(event) =>
-                setForm((current) => ({ ...current, name: event.target.value }))
-              }
-              required
-            />
-          </div>
-          <div className="space-y-2 md:col-span-2">
-            <FieldLabel>{locale.dialogs.activity.description}</FieldLabel>
-            <Textarea
-              value={form.description}
-              onChange={(event) =>
-                setForm((current) => ({
-                  ...current,
-                  description: event.target.value,
-                }))
-              }
-              rows={4}
-            />
-          </div>
           <div className="space-y-2">
             <FieldLabel>{locale.dialogs.activity.activityType}</FieldLabel>
             <Select
@@ -304,6 +277,29 @@ export function ActivityDialog({
               </SelectContent>
             </Select>
           </div>
+          <div className="space-y-2 md:col-span-2">
+            <FieldLabel>{locale.dialogs.activity.name}</FieldLabel>
+            <Input
+              value={form.name}
+              onChange={(event) =>
+                setForm((current) => ({ ...current, name: event.target.value }))
+              }
+              required
+            />
+          </div>
+          <div className="space-y-2 md:col-span-2">
+            <FieldLabel>{locale.dialogs.activity.description}</FieldLabel>
+            <Textarea
+              value={form.description}
+              onChange={(event) =>
+                setForm((current) => ({
+                  ...current,
+                  description: event.target.value,
+                }))
+              }
+              rows={4}
+            />
+          </div>
           <div className="space-y-2">
             <FieldLabel>{locale.dialogs.activity.startDate}</FieldLabel>
             <Input
@@ -360,19 +356,6 @@ export function ActivityDialog({
                 setForm((current) => ({ ...current, output: value }))
               }
               placeholder={locale.dialogs.activity.outputPlaceholder}
-              rows={5}
-            />
-          </div>
-          <div className="space-y-2 md:col-span-2">
-            <ActivityTextareaField
-              label={locale.dialogs.activity.outcome}
-              tooltipLabel={locale.dialogs.activity.outcomeTooltipLabel}
-              tooltip={locale.dialogs.activity.outcomeTooltip}
-              value={form.outcome}
-              onChange={(value) =>
-                setForm((current) => ({ ...current, outcome: value }))
-              }
-              placeholder={locale.dialogs.activity.outcomePlaceholder}
               rows={5}
             />
           </div>

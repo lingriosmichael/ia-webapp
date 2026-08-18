@@ -1,303 +1,358 @@
-workshop_id;datum;thema;jugend_id;anwesend;checkin_zeit;feedback_abgegeben
-W01;14.03.2026;Lebenslauf schreiben;J121;nein - krank;10:10;ja
-W01;14.03.2026;Lebenslauf schreiben;J144;ja;;nein
-W01;14.03.2026;Lebenslauf schreiben;J115;ja;10:22;ja
-W01;14.03.2026;Lebenslauf schreiben;J047;verspätet;10:10;ja
-W01;14.03.2026;Lebenslauf schreiben;J151;ja;10:03;ja
-W01;14.03.2026;Lebenslauf schreiben;J158;ja;10:03;nein
-W01;14.03.2026;Lebenslauf schreiben;J150;ja;10:10;nein
-W01;14.03.2026;Lebenslauf schreiben;J055;nein - krank;10:10;ja
-W01;14.03.2026;Lebenslauf schreiben;J063;ja;09:58;ja
-W01;14.03.2026;Lebenslauf schreiben;J100;nein - krank;09:58;ja
-W01;14.03.2026;Lebenslauf schreiben;J007;ja;09:58;ja
-W01;14.03.2026;Lebenslauf schreiben;J110;verspätet;09:58;nein
-W01;14.03.2026;Lebenslauf schreiben;J136;ja;10:00;ja
-W01;14.03.2026;Lebenslauf schreiben;J111;ja;09:58;nein
-W01;14.03.2026;Lebenslauf schreiben;J030;nein - krank;10:03;ja
-W01;14.03.2026;Lebenslauf schreiben;J125;ja;10:10;nein
-W01;14.03.2026;Lebenslauf schreiben;J068;ja;10:22;nein
-W01;14.03.2026;Lebenslauf schreiben;J015;ja;10:22;ja
-W01;14.03.2026;Lebenslauf schreiben;J073;ja;10:22;ja
-W01;14.03.2026;Lebenslauf schreiben;J089;nein - krank;10:22;ja
-W01;14.03.2026;Lebenslauf schreiben;J175;ja;;nein
-W01;14.03.2026;Lebenslauf schreiben;J126;nein - krank;09:58;ja
-W01;14.03.2026;Lebenslauf schreiben;J901;ja;10:22;ja
-W01;14.03.2026;Lebenslauf schreiben;J083;nein - krank;10:10;ja
-W01;14.03.2026;Lebenslauf schreiben;J034;ja;10:22;ja
-W01;14.03.2026;Lebenslauf schreiben;J084;verspätet;10:10;ja
-W01;14.03.2026;Lebenslauf schreiben;J130;verspätet;;ja
-W01;14.03.2026;Lebenslauf schreiben;J902;ja;10:22;nein
-W01;14.03.2026;Lebenslauf schreiben;J092;nein - krank;10:10;ja
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J172;nein - krank;;ja
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J129;ja;;ja
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J903;ja;09:58;nein
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J052;verspätet;10:10;nein
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J063;ja;09:58;ja
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J069;ja;10:00;nein
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J098;ja;10:03;ja
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J016;ja;09:58;ja
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J169;verspätet;10:10;nein
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J131;verspätet;10:03;nein
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J090;ja;;ja
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J904;ja;10:10;ja
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J009;verspätet;10:22;ja
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J024;verspätet;10:22;ja
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J013;verspätet;;ja
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J145;ja;10:00;nein
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J179;ja;10:10;ja
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J097;ja;09:58;nein
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J114;verspätet;10:03;nein
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J151;ja;10:22;nein
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J050;ja;09:58;ja
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J072;ja;10:22;nein
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J079;verspätet;10:10;nein
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J136;ja;;ja
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J094;ja;10:00;ja
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J064;ja;10:10;nein
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J076;ja;09:58;nein
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J060;ja;09:58;ja
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J049;nein - krank;10:22;ja
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J152;nein - krank;10:10;ja
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J070;nein - krank;10:00;nein
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J087;verspätet;10:00;nein
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J042;ja;;ja
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J104;nein - krank;10:03;nein
-W02;28.03.2026;Anschreiben & Bewerbungsunterlagen;J905;verspätet;09:58;nein
-W03;18.04.2026;Vorstellungsgespräch üben;J014;nein - krank;10:03;nein
-W03;18.04.2026;Vorstellungsgespräch üben;J166;ja;10:00;ja
-W03;18.04.2026;Vorstellungsgespräch üben;J906;ja;10:22;nein
-W03;18.04.2026;Vorstellungsgespräch üben;J107;ja;09:58;ja
-W03;18.04.2026;Vorstellungsgespräch üben;J079;ja;10:00;ja
-W03;18.04.2026;Vorstellungsgespräch üben;J017;verspätet;;nein
-W03;18.04.2026;Vorstellungsgespräch üben;J105;ja;10:22;ja
-W03;18.04.2026;Vorstellungsgespräch üben;J023;ja;10:03;ja
-W03;18.04.2026;Vorstellungsgespräch üben;J178;ja;10:22;ja
-W03;18.04.2026;Vorstellungsgespräch üben;J020;nein - krank;;nein
-W03;18.04.2026;Vorstellungsgespräch üben;J163;ja;10:22;ja
-W03;18.04.2026;Vorstellungsgespräch üben;J169;ja;10:10;nein
-W03;18.04.2026;Vorstellungsgespräch üben;J907;ja;10:10;nein
-W03;18.04.2026;Vorstellungsgespräch üben;J152;verspätet;09:58;nein
-W03;18.04.2026;Vorstellungsgespräch üben;J050;ja;10:22;ja
-W03;18.04.2026;Vorstellungsgespräch üben;J142;verspätet;10:22;nein
-W03;18.04.2026;Vorstellungsgespräch üben;J133;ja;10:22;nein
-W03;18.04.2026;Vorstellungsgespräch üben;J076;ja;10:10;nein
-W03;18.04.2026;Vorstellungsgespräch üben;J120;ja;09:58;nein
-W03;18.04.2026;Vorstellungsgespräch üben;J025;ja;10:22;ja
-W03;18.04.2026;Vorstellungsgespräch üben;J070;verspätet;10:22;ja
-W03;18.04.2026;Vorstellungsgespräch üben;J006;ja;09:58;nein
-W03;18.04.2026;Vorstellungsgespräch üben;J100;ja;09:58;nein
-W03;18.04.2026;Vorstellungsgespräch üben;J065;ja;10:00;ja
-W03;18.04.2026;Vorstellungsgespräch üben;J042;ja;;nein
-W03;18.04.2026;Vorstellungsgespräch üben;J124;nein - krank;10:10;nein
-W03;18.04.2026;Vorstellungsgespräch üben;J177;ja;10:10;nein
-W03;18.04.2026;Vorstellungsgespräch üben;J055;ja;10:22;ja
-W03;18.04.2026;Vorstellungsgespräch üben;J121;nein - krank;10:00;nein
-W03;18.04.2026;Vorstellungsgespräch üben;J138;nein - krank;;ja
-W03;18.04.2026;Vorstellungsgespräch üben;J029;nein - krank;10:03;ja
-W03;18.04.2026;Vorstellungsgespräch üben;J176;ja;10:10;ja
-W03;18.04.2026;Vorstellungsgespräch üben;J033;ja;;ja
-W03;18.04.2026;Vorstellungsgespräch üben;J153;nein - krank;10:03;nein
-W04;09.05.2026;Stärken erkennen;J175;ja;10:10;nein
-W04;09.05.2026;Stärken erkennen;J908;verspätet;09:58;nein
-W04;09.05.2026;Stärken erkennen;J007;ja;10:10;ja
-W04;09.05.2026;Stärken erkennen;J044;ja;09:58;nein
-W04;09.05.2026;Stärken erkennen;J009;ja;;ja
-W04;09.05.2026;Stärken erkennen;J075;ja;10:22;nein
-W04;09.05.2026;Stärken erkennen;J074;ja;10:00;ja
-W04;09.05.2026;Stärken erkennen;J059;verspätet;09:58;nein
-W04;09.05.2026;Stärken erkennen;J169;ja;10:00;ja
-W04;09.05.2026;Stärken erkennen;J909;ja;10:00;nein
-W04;09.05.2026;Stärken erkennen;J107;verspätet;10:10;ja
-W04;09.05.2026;Stärken erkennen;J104;verspätet;10:03;nein
-W04;09.05.2026;Stärken erkennen;J013;ja;10:22;ja
-W04;09.05.2026;Stärken erkennen;J133;verspätet;;ja
-W04;09.05.2026;Stärken erkennen;J110;ja;10:00;nein
-W04;09.05.2026;Stärken erkennen;J171;ja;10:10;ja
-W04;09.05.2026;Stärken erkennen;J027;ja;10:03;ja
-W04;09.05.2026;Stärken erkennen;J024;ja;10:22;nein
-W04;09.05.2026;Stärken erkennen;J052;verspätet;10:22;ja
-W04;09.05.2026;Stärken erkennen;J136;verspätet;10:00;ja
-W04;09.05.2026;Stärken erkennen;J094;ja;10:00;ja
-W04;09.05.2026;Stärken erkennen;J135;ja;09:58;ja
-W04;09.05.2026;Stärken erkennen;J003;ja;10:22;ja
-W04;09.05.2026;Stärken erkennen;J166;nein - krank;10:00;ja
-W04;09.05.2026;Stärken erkennen;J103;ja;10:22;ja
-W04;09.05.2026;Stärken erkennen;J154;ja;10:00;nein
-W04;09.05.2026;Stärken erkennen;J035;nein - krank;10:22;nein
-W04;09.05.2026;Stärken erkennen;J072;ja;10:10;nein
-W04;09.05.2026;Stärken erkennen;J025;verspätet;09:58;ja
-W04;09.05.2026;Stärken erkennen;J101;ja;09:58;nein
-W04;09.05.2026;Stärken erkennen;J096;ja;10:10;ja
-W04;09.05.2026;Stärken erkennen;J910;nein - krank;;nein
-W04;09.05.2026;Stärken erkennen;J911;ja;10:22;nein
-W04;09.05.2026;Stärken erkennen;J912;nein - krank;;nein
-W04;09.05.2026;Stärken erkennen;J913;ja;10:00;nein
-W04;09.05.2026;Stärken erkennen;J029;nein - krank;10:00;nein
-W04;09.05.2026;Stärken erkennen;J134;verspätet;09:58;nein
-W04;09.05.2026;Stärken erkennen;J077;verspätet;09:58;nein
-W04;09.05.2026;Stärken erkennen;J012;ja;10:00;nein
-W05;23.05.2026;Kommunikation & Auftreten;J133;nein - krank;09:58;ja
-W05;23.05.2026;Kommunikation & Auftreten;J140;verspätet;10:22;ja
-W05;23.05.2026;Kommunikation & Auftreten;J057;ja;10:03;ja
-W05;23.05.2026;Kommunikation & Auftreten;J097;ja;;ja
-W05;23.05.2026;Kommunikation & Auftreten;J011;ja;;nein
-W05;23.05.2026;Kommunikation & Auftreten;J143;verspätet;09:58;nein
-W05;23.05.2026;Kommunikation & Auftreten;J176;ja;;ja
-W05;23.05.2026;Kommunikation & Auftreten;J124;ja;10:03;nein
-W05;23.05.2026;Kommunikation & Auftreten;J914;verspätet;;nein
-W05;23.05.2026;Kommunikation & Auftreten;J152;verspätet;10:10;ja
-W05;23.05.2026;Kommunikation & Auftreten;J019;ja;10:22;nein
-W05;23.05.2026;Kommunikation & Auftreten;J006;ja;10:00;nein
-W05;23.05.2026;Kommunikation & Auftreten;J063;ja;;nein
-W05;23.05.2026;Kommunikation & Auftreten;J034;ja;10:22;ja
-W05;23.05.2026;Kommunikation & Auftreten;J121;ja;10:22;ja
-W05;23.05.2026;Kommunikation & Auftreten;J053;ja;;nein
-W05;23.05.2026;Kommunikation & Auftreten;J025;ja;09:58;nein
-W05;23.05.2026;Kommunikation & Auftreten;J015;verspätet;10:03;ja
-W05;23.05.2026;Kommunikation & Auftreten;J064;ja;09:58;ja
-W05;23.05.2026;Kommunikation & Auftreten;J154;verspätet;;ja
-W05;23.05.2026;Kommunikation & Auftreten;J178;nein - krank;10:03;ja
-W05;23.05.2026;Kommunikation & Auftreten;J012;ja;10:03;nein
-W05;23.05.2026;Kommunikation & Auftreten;J005;nein - krank;10:00;nein
-W05;23.05.2026;Kommunikation & Auftreten;J069;verspätet;10:03;ja
-W05;23.05.2026;Kommunikation & Auftreten;J029;nein - krank;09:58;ja
-W05;23.05.2026;Kommunikation & Auftreten;J092;ja;10:10;ja
-W05;23.05.2026;Kommunikation & Auftreten;J047;ja;;nein
-W05;23.05.2026;Kommunikation & Auftreten;J020;verspätet;;nein
-W05;23.05.2026;Kommunikation & Auftreten;J110;verspätet;10:10;nein
-W05;23.05.2026;Kommunikation & Auftreten;J104;verspätet;;nein
-W05;23.05.2026;Kommunikation & Auftreten;J100;nein - krank;10:10;ja
-W05;23.05.2026;Kommunikation & Auftreten;J030;ja;10:10;nein
-W05;23.05.2026;Kommunikation & Auftreten;J163;ja;10:00;ja
-W05;23.05.2026;Kommunikation & Auftreten;J094;ja;09:58;ja
-W05;23.05.2026;Kommunikation & Auftreten;J008;ja;09:58;nein
-W05;23.05.2026;Kommunikation & Auftreten;J142;ja;10:10;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J057;verspätet;10:22;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J132;verspätet;10:22;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J111;ja;10:22;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J046;nein - krank;10:03;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J125;ja;09:58;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J168;verspätet;10:10;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J115;ja;10:10;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J068;nein - krank;10:03;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J129;ja;;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J178;ja;09:58;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J098;nein - krank;10:10;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J052;ja;09:58;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J123;ja;09:58;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J055;ja;;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J025;ja;10:22;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J161;nein - krank;10:22;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J153;ja;09:58;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J086;verspätet;09:58;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J007;nein - krank;10:00;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J095;ja;09:58;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J064;nein - krank;09:58;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J154;ja;10:03;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J915;ja;;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J146;nein - krank;;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J164;verspätet;;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J028;verspätet;;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J101;nein - krank;;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J013;ja;10:03;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J087;ja;10:22;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J005;ja;;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J075;ja;10:22;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J020;ja;10:22;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J072;nein - krank;10:03;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J027;ja;10:00;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J143;verspätet;10:10;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J130;nein - krank;;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J124;ja;09:58;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J106;verspätet;10:22;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J171;ja;10:10;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J043;ja;10:03;nein
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J044;ja;10:22;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J179;ja;10:00;ja
-W06;13.06.2026;Bewerbungsunterlagen (Wiederholung);J159;ja;10:22;ja
-W07;27.06.2026;Online-Bewerbungen & Portale;J127;ja;;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J009;ja;10:22;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J168;ja;;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J916;ja;10:03;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J144;ja;10:03;ja
-W07;27.06.2026;Online-Bewerbungen & Portale;J019;ja;10:00;ja
-W07;27.06.2026;Online-Bewerbungen & Portale;J024;ja;10:03;ja
-W07;27.06.2026;Online-Bewerbungen & Portale;J086;ja;10:22;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J115;ja;10:10;ja
-W07;27.06.2026;Online-Bewerbungen & Portale;J150;ja;09:58;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J042;ja;10:00;ja
-W07;27.06.2026;Online-Bewerbungen & Portale;J101;ja;10:03;ja
-W07;27.06.2026;Online-Bewerbungen & Portale;J143;ja;10:00;ja
-W07;27.06.2026;Online-Bewerbungen & Portale;J091;ja;10:22;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J074;ja;09:58;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J033;nein - krank;09:58;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J092;ja;10:22;ja
-W07;27.06.2026;Online-Bewerbungen & Portale;J094;verspätet;09:58;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J023;nein - krank;10:03;ja
-W07;27.06.2026;Online-Bewerbungen & Portale;J063;ja;10:22;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J107;verspätet;09:58;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J053;ja;10:00;ja
-W07;27.06.2026;Online-Bewerbungen & Portale;J152;ja;10:00;ja
-W07;27.06.2026;Online-Bewerbungen & Portale;J077;ja;09:58;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J177;nein - krank;10:03;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J100;verspätet;09:58;ja
-W07;27.06.2026;Online-Bewerbungen & Portale;J176;ja;10:03;ja
-W07;27.06.2026;Online-Bewerbungen & Portale;J112;ja;10:03;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J135;ja;10:10;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J917;ja;10:10;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J022;ja;10:10;ja
-W07;27.06.2026;Online-Bewerbungen & Portale;J121;ja;10:00;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J020;ja;10:00;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J106;nein - krank;;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J034;ja;09:58;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J014;ja;10:03;ja
-W07;27.06.2026;Online-Bewerbungen & Portale;J049;ja;09:58;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J140;nein - krank;10:00;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J002;ja;10:03;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J110;nein - krank;;nein
-W07;27.06.2026;Online-Bewerbungen & Portale;J059;nein - krank;;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J114;ja;;nein
-W08;11.07.2026;Vorstellungsgespräch üben;J119;ja;10:03;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J009;ja;10:00;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J164;nein - krank;10:22;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J159;ja;10:03;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J011;nein - krank;10:00;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J142;nein - krank;10:03;nein
-W08;11.07.2026;Vorstellungsgespräch üben;J100;nein - krank;10:03;nein
-W08;11.07.2026;Vorstellungsgespräch üben;J042;ja;;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J046;nein - krank;10:03;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J007;verspätet;09:58;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J126;ja;10:22;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J034;ja;10:03;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J173;ja;;nein
-W08;11.07.2026;Vorstellungsgespräch üben;J168;ja;10:22;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J140;ja;09:58;nein
-W08;11.07.2026;Vorstellungsgespräch üben;J165;ja;10:22;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J120;ja;;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J139;verspätet;10:00;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J095;verspätet;10:10;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J075;ja;09:58;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J174;ja;10:10;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J047;ja;10:22;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J079;nein - krank;10:00;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J130;verspätet;10:00;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J163;nein - krank;10:10;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J134;nein - krank;10:03;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J064;ja;10:22;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J050;ja;10:10;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J169;verspätet;;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J065;ja;10:03;nein
-W08;11.07.2026;Vorstellungsgespräch üben;J072;ja;10:00;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J110;ja;09:58;nein
-W08;11.07.2026;Vorstellungsgespräch üben;J176;ja;;nein
-W08;11.07.2026;Vorstellungsgespräch üben;J918;ja;10:22;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J108;ja;10:22;nein
-W08;11.07.2026;Vorstellungsgespräch üben;J086;verspätet;10:00;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J172;nein - krank;10:00;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J090;ja;10:00;nein
-W08;11.07.2026;Vorstellungsgespräch üben;J157;ja;10:10;nein
-W08;11.07.2026;Vorstellungsgespräch üben;J051;ja;10:03;nein
-W08;11.07.2026;Vorstellungsgespräch üben;J078;nein - krank;10:22;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J060;nein - krank;10:03;ja
-W08;11.07.2026;Vorstellungsgespräch üben;J144;nein - krank;;nein
-W08;11.07.2026;Vorstellungsgespräch üben;J053;verspätet;10:00;nein
+workshop_id;workshop_datum;workshop_thema;jugend_id;teilgenommen;workshop_durchgefuehrt;zaehlt_als_erreichte_jugendliche;feedback_formular_abgegeben;programm_gesamt_workshops_durchgefuehrt_2026;ziel_output_24_workshops_durchgefuehrt_unterstuetzt;programm_gesamt_teilnehmende_jugendliche_erreicht_2026;ziel_output_140_teilnehmende_jugendliche_unterstuetzt
+W01;2026-03-14;Berufliche Möglichkeiten erkunden;J001;true;true;true;true;24;true;150;true
+W01;2026-03-14;Berufliche Möglichkeiten erkunden;J004;true;true;true;true;24;true;150;true
+W01;2026-03-14;Berufliche Möglichkeiten erkunden;J025;true;true;true;true;24;true;150;true
+W01;2026-03-14;Berufliche Möglichkeiten erkunden;J049;true;true;true;true;24;true;150;true
+W01;2026-03-14;Berufliche Möglichkeiten erkunden;J073;true;true;true;true;24;true;150;true
+W01;2026-03-14;Berufliche Möglichkeiten erkunden;J078;true;true;true;true;24;true;150;true
+W01;2026-03-14;Berufliche Möglichkeiten erkunden;J094;true;true;true;true;24;true;150;true
+W01;2026-03-14;Berufliche Möglichkeiten erkunden;J097;true;true;true;true;24;true;150;true
+W01;2026-03-14;Berufliche Möglichkeiten erkunden;J101;true;true;true;true;24;true;150;true
+W01;2026-03-14;Berufliche Möglichkeiten erkunden;J121;true;true;true;true;24;true;150;true
+W01;2026-03-14;Berufliche Möglichkeiten erkunden;J126;true;true;true;true;24;true;150;true
+W01;2026-03-14;Berufliche Möglichkeiten erkunden;J127;true;true;true;true;24;true;150;true
+W01;2026-03-14;Berufliche Möglichkeiten erkunden;J145;true;true;true;true;24;true;150;true
+W02;2026-03-21;Lebenslauf schreiben;J002;true;true;true;true;24;true;150;true
+W02;2026-03-21;Lebenslauf schreiben;J026;true;true;true;true;24;true;150;true
+W02;2026-03-21;Lebenslauf schreiben;J040;true;true;true;true;24;true;150;true
+W02;2026-03-21;Lebenslauf schreiben;J050;true;true;true;true;24;true;150;true
+W02;2026-03-21;Lebenslauf schreiben;J054;true;true;true;true;24;true;150;true
+W02;2026-03-21;Lebenslauf schreiben;J074;true;true;true;true;24;true;150;true
+W02;2026-03-21;Lebenslauf schreiben;J088;true;true;true;true;24;true;150;true
+W02;2026-03-21;Lebenslauf schreiben;J096;true;true;true;true;24;true;150;true
+W02;2026-03-21;Lebenslauf schreiben;J098;true;true;true;true;24;true;150;true
+W02;2026-03-21;Lebenslauf schreiben;J108;true;true;true;true;24;true;150;true
+W02;2026-03-21;Lebenslauf schreiben;J122;true;true;true;true;24;true;150;true
+W02;2026-03-21;Lebenslauf schreiben;J125;true;true;true;true;24;true;150;true
+W02;2026-03-21;Lebenslauf schreiben;J131;true;true;true;true;24;true;150;true
+W02;2026-03-21;Lebenslauf schreiben;J146;true;true;true;true;24;true;150;true
+W03;2026-03-28;Anschreiben und Bewerbungsunterlagen;J003;true;true;true;false;24;true;150;true
+W03;2026-03-28;Anschreiben und Bewerbungsunterlagen;J017;true;true;true;true;24;true;150;true
+W03;2026-03-28;Anschreiben und Bewerbungsunterlagen;J027;true;true;true;true;24;true;150;true
+W03;2026-03-28;Anschreiben und Bewerbungsunterlagen;J036;true;true;true;true;24;true;150;true
+W03;2026-03-28;Anschreiben und Bewerbungsunterlagen;J048;true;true;true;true;24;true;150;true
+W03;2026-03-28;Anschreiben und Bewerbungsunterlagen;J051;true;true;true;true;24;true;150;true
+W03;2026-03-28;Anschreiben und Bewerbungsunterlagen;J060;true;true;true;true;24;true;150;true
+W03;2026-03-28;Anschreiben und Bewerbungsunterlagen;J075;true;true;true;true;24;true;150;true
+W03;2026-03-28;Anschreiben und Bewerbungsunterlagen;J079;true;true;true;true;24;true;150;true
+W03;2026-03-28;Anschreiben und Bewerbungsunterlagen;J093;true;true;true;true;24;true;150;true
+W03;2026-03-28;Anschreiben und Bewerbungsunterlagen;J099;true;true;true;true;24;true;150;true
+W03;2026-03-28;Anschreiben und Bewerbungsunterlagen;J103;true;true;true;true;24;true;150;true
+W03;2026-03-28;Anschreiben und Bewerbungsunterlagen;J111;true;true;true;true;24;true;150;true
+W03;2026-03-28;Anschreiben und Bewerbungsunterlagen;J123;true;true;true;true;24;true;150;true
+W03;2026-03-28;Anschreiben und Bewerbungsunterlagen;J147;true;true;true;true;24;true;150;true
+W04;2026-04-04;Online-Bewerbungen und Portale;J004;true;true;true;true;24;true;150;true
+W04;2026-04-04;Online-Bewerbungen und Portale;J007;true;true;true;true;24;true;150;true
+W04;2026-04-04;Online-Bewerbungen und Portale;J010;true;true;true;true;24;true;150;true
+W04;2026-04-04;Online-Bewerbungen und Portale;J028;true;true;true;true;24;true;150;true
+W04;2026-04-04;Online-Bewerbungen und Portale;J031;true;true;true;true;24;true;150;true
+W04;2026-04-04;Online-Bewerbungen und Portale;J039;true;true;true;true;24;true;150;true
+W04;2026-04-04;Online-Bewerbungen und Portale;J043;true;true;true;true;24;true;150;true
+W04;2026-04-04;Online-Bewerbungen und Portale;J052;true;true;true;true;24;true;150;true
+W04;2026-04-04;Online-Bewerbungen und Portale;J075;true;true;true;true;24;true;150;true
+W04;2026-04-04;Online-Bewerbungen und Portale;J076;true;true;true;false;24;true;150;true
+W04;2026-04-04;Online-Bewerbungen und Portale;J084;true;true;true;true;24;true;150;true
+W04;2026-04-04;Online-Bewerbungen und Portale;J085;true;true;true;true;24;true;150;true
+W04;2026-04-04;Online-Bewerbungen und Portale;J100;true;true;true;true;24;true;150;true
+W04;2026-04-04;Online-Bewerbungen und Portale;J124;true;true;true;true;24;true;150;true
+W04;2026-04-04;Online-Bewerbungen und Portale;J143;true;true;true;true;24;true;150;true
+W04;2026-04-04;Online-Bewerbungen und Portale;J148;true;true;true;true;24;true;150;true
+W05;2026-04-11;Kommunikation und Auftreten;J005;true;true;true;true;24;true;150;true
+W05;2026-04-11;Kommunikation und Auftreten;J011;true;true;true;true;24;true;150;true
+W05;2026-04-11;Kommunikation und Auftreten;J013;true;true;true;true;24;true;150;true
+W05;2026-04-11;Kommunikation und Auftreten;J019;true;true;true;true;24;true;150;true
+W05;2026-04-11;Kommunikation und Auftreten;J029;true;true;true;true;24;true;150;true
+W05;2026-04-11;Kommunikation und Auftreten;J053;true;true;true;true;24;true;150;true
+W05;2026-04-11;Kommunikation und Auftreten;J057;true;true;true;true;24;true;150;true
+W05;2026-04-11;Kommunikation und Auftreten;J059;true;true;true;true;24;true;150;true
+W05;2026-04-11;Kommunikation und Auftreten;J076;true;true;true;true;24;true;150;true
+W05;2026-04-11;Kommunikation und Auftreten;J077;true;true;true;true;24;true;150;true
+W05;2026-04-11;Kommunikation und Auftreten;J088;true;true;true;true;24;true;150;true
+W05;2026-04-11;Kommunikation und Auftreten;J101;true;true;true;true;24;true;150;true
+W05;2026-04-11;Kommunikation und Auftreten;J108;true;true;true;true;24;true;150;true
+W05;2026-04-11;Kommunikation und Auftreten;J113;true;true;true;true;24;true;150;true
+W05;2026-04-11;Kommunikation und Auftreten;J125;true;true;true;true;24;true;150;true
+W05;2026-04-11;Kommunikation und Auftreten;J142;true;true;true;true;24;true;150;true
+W05;2026-04-11;Kommunikation und Auftreten;J149;true;true;true;true;24;true;150;true
+W06;2026-04-18;Vorstellungsgespräch üben;J006;true;true;true;true;24;true;150;true
+W06;2026-04-18;Vorstellungsgespräch üben;J009;true;true;true;true;24;true;150;true
+W06;2026-04-18;Vorstellungsgespräch üben;J017;true;true;true;true;24;true;150;true
+W06;2026-04-18;Vorstellungsgespräch üben;J024;true;true;true;true;24;true;150;true
+W06;2026-04-18;Vorstellungsgespräch üben;J030;true;true;true;true;24;true;150;true
+W06;2026-04-18;Vorstellungsgespräch üben;J038;true;true;true;true;24;true;150;true
+W06;2026-04-18;Vorstellungsgespräch üben;J054;true;true;true;true;24;true;150;true
+W06;2026-04-18;Vorstellungsgespräch üben;J061;true;true;true;true;24;true;150;true
+W06;2026-04-18;Vorstellungsgespräch üben;J065;true;true;true;true;24;true;150;true
+W06;2026-04-18;Vorstellungsgespräch üben;J067;true;true;true;true;24;true;150;true
+W06;2026-04-18;Vorstellungsgespräch üben;J078;true;true;true;true;24;true;150;true
+W06;2026-04-18;Vorstellungsgespräch üben;J097;true;true;true;true;24;true;150;true
+W06;2026-04-18;Vorstellungsgespräch üben;J102;true;true;true;true;24;true;150;true
+W06;2026-04-18;Vorstellungsgespräch üben;J126;true;true;true;true;24;true;150;true
+W06;2026-04-18;Vorstellungsgespräch üben;J139;true;true;true;true;24;true;150;true
+W06;2026-04-18;Vorstellungsgespräch üben;J143;true;true;true;true;24;true;150;true
+W06;2026-04-18;Vorstellungsgespräch üben;J147;true;true;true;true;24;true;150;true
+W06;2026-04-18;Vorstellungsgespräch üben;J150;true;true;true;true;24;true;150;true
+W07;2026-04-25;Stärken erkennen;J007;true;true;true;false;24;true;150;true
+W07;2026-04-25;Stärken erkennen;J017;true;true;true;true;24;true;150;true
+W07;2026-04-25;Stärken erkennen;J023;true;true;true;true;24;true;150;true
+W07;2026-04-25;Stärken erkennen;J031;true;true;true;true;24;true;150;true
+W07;2026-04-25;Stärken erkennen;J042;true;true;true;true;24;true;150;true
+W07;2026-04-25;Stärken erkennen;J055;true;true;true;true;24;true;150;true
+W07;2026-04-25;Stärken erkennen;J058;true;true;true;true;24;true;150;true
+W07;2026-04-25;Stärken erkennen;J079;true;true;true;false;24;true;150;true
+W07;2026-04-25;Stärken erkennen;J103;true;true;true;true;24;true;150;true
+W07;2026-04-25;Stärken erkennen;J127;true;true;true;true;24;true;150;true
+W07;2026-04-25;Stärken erkennen;J129;true;true;true;true;24;true;150;true
+W07;2026-04-25;Stärken erkennen;J133;true;true;true;true;24;true;150;true
+W08;2026-05-02;Bewerbungsunterlagen vertiefen;J008;true;true;true;true;24;true;150;true
+W08;2026-05-02;Bewerbungsunterlagen vertiefen;J032;true;true;true;true;24;true;150;true
+W08;2026-05-02;Bewerbungsunterlagen vertiefen;J056;true;true;true;true;24;true;150;true
+W08;2026-05-02;Bewerbungsunterlagen vertiefen;J057;true;true;true;true;24;true;150;true
+W08;2026-05-02;Bewerbungsunterlagen vertiefen;J063;true;true;true;false;24;true;150;true
+W08;2026-05-02;Bewerbungsunterlagen vertiefen;J065;true;true;true;true;24;true;150;true
+W08;2026-05-02;Bewerbungsunterlagen vertiefen;J080;true;true;true;true;24;true;150;true
+W08;2026-05-02;Bewerbungsunterlagen vertiefen;J104;true;true;true;true;24;true;150;true
+W08;2026-05-02;Bewerbungsunterlagen vertiefen;J105;true;true;true;true;24;true;150;true
+W08;2026-05-02;Bewerbungsunterlagen vertiefen;J128;true;true;true;true;24;true;150;true
+W08;2026-05-02;Bewerbungsunterlagen vertiefen;J139;true;true;true;true;24;true;150;true
+W08;2026-05-02;Bewerbungsunterlagen vertiefen;J142;true;true;true;true;24;true;150;true
+W08;2026-05-02;Bewerbungsunterlagen vertiefen;J148;true;true;true;true;24;true;150;true
+W09;2026-05-09;Berufliche Möglichkeiten erkunden;J008;true;true;true;true;24;true;150;true
+W09;2026-05-09;Berufliche Möglichkeiten erkunden;J009;true;true;true;true;24;true;150;true
+W09;2026-05-09;Berufliche Möglichkeiten erkunden;J012;true;true;true;true;24;true;150;true
+W09;2026-05-09;Berufliche Möglichkeiten erkunden;J033;true;true;true;true;24;true;150;true
+W09;2026-05-09;Berufliche Möglichkeiten erkunden;J039;true;true;true;true;24;true;150;true
+W09;2026-05-09;Berufliche Möglichkeiten erkunden;J057;true;true;true;false;24;true;150;true
+W09;2026-05-09;Berufliche Möglichkeiten erkunden;J065;true;true;true;true;24;true;150;true
+W09;2026-05-09;Berufliche Möglichkeiten erkunden;J071;true;true;true;true;24;true;150;true
+W09;2026-05-09;Berufliche Möglichkeiten erkunden;J081;true;true;true;true;24;true;150;true
+W09;2026-05-09;Berufliche Möglichkeiten erkunden;J098;true;true;true;true;24;true;150;true
+W09;2026-05-09;Berufliche Möglichkeiten erkunden;J100;true;true;true;true;24;true;150;true
+W09;2026-05-09;Berufliche Möglichkeiten erkunden;J105;true;true;true;true;24;true;150;true
+W09;2026-05-09;Berufliche Möglichkeiten erkunden;J126;true;true;true;true;24;true;150;true
+W09;2026-05-09;Berufliche Möglichkeiten erkunden;J129;true;true;true;true;24;true;150;true
+W10;2026-05-16;Lebenslauf schreiben;J001;true;true;true;true;24;true;150;true
+W10;2026-05-16;Lebenslauf schreiben;J010;true;true;true;false;24;true;150;true
+W10;2026-05-16;Lebenslauf schreiben;J033;true;true;true;true;24;true;150;true
+W10;2026-05-16;Lebenslauf schreiben;J034;true;true;true;true;24;true;150;true
+W10;2026-05-16;Lebenslauf schreiben;J058;true;true;true;true;24;true;150;true
+W10;2026-05-16;Lebenslauf schreiben;J078;true;true;true;true;24;true;150;true
+W10;2026-05-16;Lebenslauf schreiben;J079;true;true;true;true;24;true;150;true
+W10;2026-05-16;Lebenslauf schreiben;J082;true;true;true;true;24;true;150;true
+W10;2026-05-16;Lebenslauf schreiben;J091;true;true;true;true;24;true;150;true
+W10;2026-05-16;Lebenslauf schreiben;J097;true;true;true;true;24;true;150;true
+W10;2026-05-16;Lebenslauf schreiben;J101;true;true;true;true;24;true;150;true
+W10;2026-05-16;Lebenslauf schreiben;J106;true;true;true;false;24;true;150;true
+W10;2026-05-16;Lebenslauf schreiben;J130;true;true;true;true;24;true;150;true
+W10;2026-05-16;Lebenslauf schreiben;J134;true;true;true;true;24;true;150;true
+W10;2026-05-16;Lebenslauf schreiben;J135;true;true;true;true;24;true;150;true
+W11;2026-05-23;Anschreiben und Bewerbungsunterlagen;J011;true;true;true;true;24;true;150;true
+W11;2026-05-23;Anschreiben und Bewerbungsunterlagen;J020;true;true;true;true;24;true;150;true
+W11;2026-05-23;Anschreiben und Bewerbungsunterlagen;J022;true;true;true;true;24;true;150;true
+W11;2026-05-23;Anschreiben und Bewerbungsunterlagen;J025;true;true;true;true;24;true;150;true
+W11;2026-05-23;Anschreiben und Bewerbungsunterlagen;J031;true;true;true;true;24;true;150;true
+W11;2026-05-23;Anschreiben und Bewerbungsunterlagen;J035;true;true;true;true;24;true;150;true
+W11;2026-05-23;Anschreiben und Bewerbungsunterlagen;J047;true;true;true;true;24;true;150;true
+W11;2026-05-23;Anschreiben und Bewerbungsunterlagen;J059;true;true;true;true;24;true;150;true
+W11;2026-05-23;Anschreiben und Bewerbungsunterlagen;J068;true;true;true;true;24;true;150;true
+W11;2026-05-23;Anschreiben und Bewerbungsunterlagen;J083;true;true;true;true;24;true;150;true
+W11;2026-05-23;Anschreiben und Bewerbungsunterlagen;J089;true;true;true;true;24;true;150;true
+W11;2026-05-23;Anschreiben und Bewerbungsunterlagen;J092;true;true;true;true;24;true;150;true
+W11;2026-05-23;Anschreiben und Bewerbungsunterlagen;J106;true;true;true;true;24;true;150;true
+W11;2026-05-23;Anschreiben und Bewerbungsunterlagen;J107;true;true;true;true;24;true;150;true
+W11;2026-05-23;Anschreiben und Bewerbungsunterlagen;J131;true;true;true;true;24;true;150;true
+W11;2026-05-23;Anschreiben und Bewerbungsunterlagen;J141;true;true;true;true;24;true;150;true
+W12;2026-05-30;Online-Bewerbungen und Portale;J012;true;true;true;true;24;true;150;true
+W12;2026-05-30;Online-Bewerbungen und Portale;J014;true;true;true;true;24;true;150;true
+W12;2026-05-30;Online-Bewerbungen und Portale;J018;true;true;true;true;24;true;150;true
+W12;2026-05-30;Online-Bewerbungen und Portale;J032;true;true;true;true;24;true;150;true
+W12;2026-05-30;Online-Bewerbungen und Portale;J036;true;true;true;true;24;true;150;true
+W12;2026-05-30;Online-Bewerbungen und Portale;J042;true;true;true;true;24;true;150;true
+W12;2026-05-30;Online-Bewerbungen und Portale;J049;true;true;true;true;24;true;150;true
+W12;2026-05-30;Online-Bewerbungen und Portale;J060;true;true;true;true;24;true;150;true
+W12;2026-05-30;Online-Bewerbungen und Portale;J069;true;true;true;true;24;true;150;true
+W12;2026-05-30;Online-Bewerbungen und Portale;J077;true;true;true;true;24;true;150;true
+W12;2026-05-30;Online-Bewerbungen und Portale;J080;true;true;true;true;24;true;150;true
+W12;2026-05-30;Online-Bewerbungen und Portale;J084;true;true;true;true;24;true;150;true
+W12;2026-05-30;Online-Bewerbungen und Portale;J088;true;true;true;true;24;true;150;true
+W12;2026-05-30;Online-Bewerbungen und Portale;J108;true;true;true;true;24;true;150;true
+W12;2026-05-30;Online-Bewerbungen und Portale;J110;true;true;true;true;24;true;150;true
+W12;2026-05-30;Online-Bewerbungen und Portale;J132;true;true;true;true;24;true;150;true
+W12;2026-05-30;Online-Bewerbungen und Portale;J139;true;true;true;false;24;true;150;true
+W13;2026-06-06;Kommunikation und Auftreten;J013;true;true;true;true;24;true;150;true
+W13;2026-06-06;Kommunikation und Auftreten;J037;true;true;true;true;24;true;150;true
+W13;2026-06-06;Kommunikation und Auftreten;J038;true;true;true;true;24;true;150;true
+W13;2026-06-06;Kommunikation und Auftreten;J041;true;true;true;true;24;true;150;true
+W13;2026-06-06;Kommunikation und Auftreten;J043;true;true;true;true;24;true;150;true
+W13;2026-06-06;Kommunikation und Auftreten;J061;true;true;true;true;24;true;150;true
+W13;2026-06-06;Kommunikation und Auftreten;J062;true;true;true;true;24;true;150;true
+W13;2026-06-06;Kommunikation und Auftreten;J068;true;true;true;true;24;true;150;true
+W13;2026-06-06;Kommunikation und Auftreten;J074;true;true;true;true;24;true;150;true
+W13;2026-06-06;Kommunikation und Auftreten;J085;true;true;true;true;24;true;150;true
+W13;2026-06-06;Kommunikation und Auftreten;J092;true;true;true;true;24;true;150;true
+W13;2026-06-06;Kommunikation und Auftreten;J109;true;true;true;true;24;true;150;true
+W13;2026-06-06;Kommunikation und Auftreten;J118;true;true;true;false;24;true;150;true
+W13;2026-06-06;Kommunikation und Auftreten;J133;true;true;true;true;24;true;150;true
+W13;2026-06-06;Kommunikation und Auftreten;J135;true;true;true;false;24;true;150;true
+W13;2026-06-06;Kommunikation und Auftreten;J136;true;true;true;true;24;true;150;true
+W13;2026-06-06;Kommunikation und Auftreten;J143;true;true;true;true;24;true;150;true
+W13;2026-06-06;Kommunikation und Auftreten;J150;true;true;true;false;24;true;150;true
+W14;2026-06-13;Vorstellungsgespräch üben;J014;true;true;true;true;24;true;150;true
+W14;2026-06-13;Vorstellungsgespräch üben;J025;true;true;true;true;24;true;150;true
+W14;2026-06-13;Vorstellungsgespräch üben;J038;true;true;true;true;24;true;150;true
+W14;2026-06-13;Vorstellungsgespräch üben;J062;true;true;true;true;24;true;150;true
+W14;2026-06-13;Vorstellungsgespräch üben;J067;true;true;true;true;24;true;150;true
+W14;2026-06-13;Vorstellungsgespräch üben;J086;true;true;true;false;24;true;150;true
+W14;2026-06-13;Vorstellungsgespräch üben;J088;true;true;true;true;24;true;150;true
+W14;2026-06-13;Vorstellungsgespräch üben;J110;true;true;true;true;24;true;150;true
+W14;2026-06-13;Vorstellungsgespräch üben;J134;true;true;true;true;24;true;150;true
+W14;2026-06-13;Vorstellungsgespräch üben;J142;true;true;true;true;24;true;150;true
+W14;2026-06-13;Vorstellungsgespräch üben;J144;true;true;true;true;24;true;150;true
+W14;2026-06-13;Vorstellungsgespräch üben;J147;true;true;true;true;24;true;150;true
+W15;2026-06-20;Stärken erkennen;J015;true;true;true;true;24;true;150;true
+W15;2026-06-20;Stärken erkennen;J039;true;true;true;true;24;true;150;true
+W15;2026-06-20;Stärken erkennen;J061;true;true;true;true;24;true;150;true
+W15;2026-06-20;Stärken erkennen;J063;true;true;true;true;24;true;150;true
+W15;2026-06-20;Stärken erkennen;J069;true;true;true;true;24;true;150;true
+W15;2026-06-20;Stärken erkennen;J087;true;true;true;true;24;true;150;true
+W15;2026-06-20;Stärken erkennen;J090;true;true;true;true;24;true;150;true
+W15;2026-06-20;Stärken erkennen;J099;true;true;true;true;24;true;150;true
+W15;2026-06-20;Stärken erkennen;J100;true;true;true;true;24;true;150;true
+W15;2026-06-20;Stärken erkennen;J101;true;true;true;true;24;true;150;true
+W15;2026-06-20;Stärken erkennen;J111;true;true;true;true;24;true;150;true
+W15;2026-06-20;Stärken erkennen;J135;true;true;true;true;24;true;150;true
+W15;2026-06-20;Stärken erkennen;J147;true;true;true;true;24;true;150;true
+W16;2026-06-27;Bewerbungsunterlagen vertiefen;J007;true;true;true;true;24;true;150;true
+W16;2026-06-27;Bewerbungsunterlagen vertiefen;J016;true;true;true;true;24;true;150;true
+W16;2026-06-27;Bewerbungsunterlagen vertiefen;J040;true;true;true;true;24;true;150;true
+W16;2026-06-27;Bewerbungsunterlagen vertiefen;J052;true;true;true;true;24;true;150;true
+W16;2026-06-27;Bewerbungsunterlagen vertiefen;J064;true;true;true;true;24;true;150;true
+W16;2026-06-27;Bewerbungsunterlagen vertiefen;J077;true;true;true;true;24;true;150;true
+W16;2026-06-27;Bewerbungsunterlagen vertiefen;J078;true;true;true;true;24;true;150;true
+W16;2026-06-27;Bewerbungsunterlagen vertiefen;J088;true;true;true;true;24;true;150;true
+W16;2026-06-27;Bewerbungsunterlagen vertiefen;J089;true;true;true;true;24;true;150;true
+W16;2026-06-27;Bewerbungsunterlagen vertiefen;J091;true;true;true;true;24;true;150;true
+W16;2026-06-27;Bewerbungsunterlagen vertiefen;J108;true;true;true;true;24;true;150;true
+W16;2026-06-27;Bewerbungsunterlagen vertiefen;J112;true;true;true;true;24;true;150;true
+W16;2026-06-27;Bewerbungsunterlagen vertiefen;J129;true;true;true;true;24;true;150;true
+W16;2026-06-27;Bewerbungsunterlagen vertiefen;J136;true;true;true;true;24;true;150;true
+W17;2026-07-04;Berufliche Möglichkeiten erkunden;J006;true;true;true;true;24;true;150;true
+W17;2026-07-04;Berufliche Möglichkeiten erkunden;J008;true;true;true;true;24;true;150;true
+W17;2026-07-04;Berufliche Möglichkeiten erkunden;J011;true;true;true;true;24;true;150;true
+W17;2026-07-04;Berufliche Möglichkeiten erkunden;J017;true;true;true;true;24;true;150;true
+W17;2026-07-04;Berufliche Möglichkeiten erkunden;J019;true;true;true;true;24;true;150;true
+W17;2026-07-04;Berufliche Möglichkeiten erkunden;J020;true;true;true;true;24;true;150;true
+W17;2026-07-04;Berufliche Möglichkeiten erkunden;J041;true;true;true;true;24;true;150;true
+W17;2026-07-04;Berufliche Möglichkeiten erkunden;J065;true;true;true;true;24;true;150;true
+W17;2026-07-04;Berufliche Möglichkeiten erkunden;J089;true;true;true;true;24;true;150;true
+W17;2026-07-04;Berufliche Möglichkeiten erkunden;J092;true;true;true;true;24;true;150;true
+W17;2026-07-04;Berufliche Möglichkeiten erkunden;J113;true;true;true;true;24;true;150;true
+W17;2026-07-04;Berufliche Möglichkeiten erkunden;J123;true;true;true;true;24;true;150;true
+W17;2026-07-04;Berufliche Möglichkeiten erkunden;J124;true;true;true;true;24;true;150;true
+W17;2026-07-04;Berufliche Möglichkeiten erkunden;J133;true;true;true;true;24;true;150;true
+W17;2026-07-04;Berufliche Möglichkeiten erkunden;J137;true;true;true;true;24;true;150;true
+W18;2026-07-11;Lebenslauf schreiben;J001;true;true;true;true;24;true;150;true
+W18;2026-07-11;Lebenslauf schreiben;J014;true;true;true;true;24;true;150;true
+W18;2026-07-11;Lebenslauf schreiben;J018;true;true;true;true;24;true;150;true
+W18;2026-07-11;Lebenslauf schreiben;J035;true;true;true;true;24;true;150;true
+W18;2026-07-11;Lebenslauf schreiben;J036;true;true;true;true;24;true;150;true
+W18;2026-07-11;Lebenslauf schreiben;J042;true;true;true;true;24;true;150;true
+W18;2026-07-11;Lebenslauf schreiben;J047;true;true;true;true;24;true;150;true
+W18;2026-07-11;Lebenslauf schreiben;J066;true;true;true;true;24;true;150;true
+W18;2026-07-11;Lebenslauf schreiben;J090;true;true;true;true;24;true;150;true
+W18;2026-07-11;Lebenslauf schreiben;J097;true;true;true;false;24;true;150;true
+W18;2026-07-11;Lebenslauf schreiben;J106;true;true;true;true;24;true;150;true
+W18;2026-07-11;Lebenslauf schreiben;J114;true;true;true;true;24;true;150;true
+W18;2026-07-11;Lebenslauf schreiben;J130;true;true;true;true;24;true;150;true
+W18;2026-07-11;Lebenslauf schreiben;J138;true;true;true;true;24;true;150;true
+W18;2026-07-11;Lebenslauf schreiben;J141;true;true;true;true;24;true;150;true
+W18;2026-07-11;Lebenslauf schreiben;J142;true;true;true;true;24;true;150;true
+W19;2026-07-18;Anschreiben und Bewerbungsunterlagen;J013;true;true;true;true;24;true;150;true
+W19;2026-07-18;Anschreiben und Bewerbungsunterlagen;J015;true;true;true;true;24;true;150;true
+W19;2026-07-18;Anschreiben und Bewerbungsunterlagen;J016;true;true;true;true;24;true;150;true
+W19;2026-07-18;Anschreiben und Bewerbungsunterlagen;J019;true;true;true;false;24;true;150;true
+W19;2026-07-18;Anschreiben und Bewerbungsunterlagen;J021;true;true;true;true;24;true;150;true
+W19;2026-07-18;Anschreiben und Bewerbungsunterlagen;J043;true;true;true;true;24;true;150;true
+W19;2026-07-18;Anschreiben und Bewerbungsunterlagen;J067;true;true;true;true;24;true;150;true
+W19;2026-07-18;Anschreiben und Bewerbungsunterlagen;J076;true;true;true;true;24;true;150;true
+W19;2026-07-18;Anschreiben und Bewerbungsunterlagen;J091;true;true;true;true;24;true;150;true
+W19;2026-07-18;Anschreiben und Bewerbungsunterlagen;J097;true;true;true;true;24;true;150;true
+W19;2026-07-18;Anschreiben und Bewerbungsunterlagen;J099;true;true;true;true;24;true;150;true
+W19;2026-07-18;Anschreiben und Bewerbungsunterlagen;J102;true;true;true;true;24;true;150;true
+W19;2026-07-18;Anschreiben und Bewerbungsunterlagen;J115;true;true;true;false;24;true;150;true
+W19;2026-07-18;Anschreiben und Bewerbungsunterlagen;J116;true;true;true;true;24;true;150;true
+W19;2026-07-18;Anschreiben und Bewerbungsunterlagen;J123;true;true;true;true;24;true;150;true
+W19;2026-07-18;Anschreiben und Bewerbungsunterlagen;J139;true;true;true;true;24;true;150;true
+W19;2026-07-18;Anschreiben und Bewerbungsunterlagen;J140;true;true;true;true;24;true;150;true
+W20;2026-07-25;Online-Bewerbungen und Portale;J010;true;true;true;true;24;true;150;true
+W20;2026-07-25;Online-Bewerbungen und Portale;J020;true;true;true;true;24;true;150;true
+W20;2026-07-25;Online-Bewerbungen und Portale;J036;true;true;true;true;24;true;150;true
+W20;2026-07-25;Online-Bewerbungen und Portale;J044;true;true;true;true;24;true;150;true
+W20;2026-07-25;Online-Bewerbungen und Portale;J046;true;true;true;true;24;true;150;true
+W20;2026-07-25;Online-Bewerbungen und Portale;J052;true;true;true;true;24;true;150;true
+W20;2026-07-25;Online-Bewerbungen und Portale;J058;true;true;true;false;24;true;150;true
+W20;2026-07-25;Online-Bewerbungen und Portale;J068;true;true;true;true;24;true;150;true
+W20;2026-07-25;Online-Bewerbungen und Portale;J082;true;true;true;true;24;true;150;true
+W20;2026-07-25;Online-Bewerbungen und Portale;J092;true;true;true;true;24;true;150;true
+W20;2026-07-25;Online-Bewerbungen und Portale;J107;true;true;true;false;24;true;150;true
+W20;2026-07-25;Online-Bewerbungen und Portale;J112;true;true;true;true;24;true;150;true
+W20;2026-07-25;Online-Bewerbungen und Portale;J113;true;true;true;false;24;true;150;true
+W20;2026-07-25;Online-Bewerbungen und Portale;J116;true;true;true;true;24;true;150;true
+W20;2026-07-25;Online-Bewerbungen und Portale;J118;true;true;true;true;24;true;150;true
+W20;2026-07-25;Online-Bewerbungen und Portale;J121;true;true;true;true;24;true;150;true
+W20;2026-07-25;Online-Bewerbungen und Portale;J127;true;true;true;false;24;true;150;true
+W20;2026-07-25;Online-Bewerbungen und Portale;J140;true;true;true;true;24;true;150;true
+W21;2026-08-01;Kommunikation und Auftreten;J021;true;true;true;true;24;true;150;true
+W21;2026-08-01;Kommunikation und Auftreten;J045;true;true;true;true;24;true;150;true
+W21;2026-08-01;Kommunikation und Auftreten;J069;true;true;true;true;24;true;150;true
+W21;2026-08-01;Kommunikation und Auftreten;J077;true;true;true;true;24;true;150;true
+W21;2026-08-01;Kommunikation und Auftreten;J088;true;true;true;true;24;true;150;true
+W21;2026-08-01;Kommunikation und Auftreten;J093;true;true;true;true;24;true;150;true
+W21;2026-08-01;Kommunikation und Auftreten;J094;true;true;true;true;24;true;150;true
+W21;2026-08-01;Kommunikation und Auftreten;J096;true;true;true;true;24;true;150;true
+W21;2026-08-01;Kommunikation und Auftreten;J102;true;true;true;true;24;true;150;true
+W21;2026-08-01;Kommunikation und Auftreten;J117;true;true;true;true;24;true;150;true
+W21;2026-08-01;Kommunikation und Auftreten;J140;true;true;true;true;24;true;150;true
+W21;2026-08-01;Kommunikation und Auftreten;J141;true;true;true;true;24;true;150;true
+W22;2026-08-08;Vorstellungsgespräch üben;J022;true;true;true;true;24;true;150;true
+W22;2026-08-08;Vorstellungsgespräch üben;J046;true;true;true;true;24;true;150;true
+W22;2026-08-08;Vorstellungsgespräch üben;J061;true;true;true;true;24;true;150;true
+W22;2026-08-08;Vorstellungsgespräch üben;J069;true;true;true;true;24;true;150;true
+W22;2026-08-08;Vorstellungsgespräch üben;J070;true;true;true;true;24;true;150;true
+W22;2026-08-08;Vorstellungsgespräch üben;J092;true;true;true;true;24;true;150;true
+W22;2026-08-08;Vorstellungsgespräch üben;J094;true;true;true;true;24;true;150;true
+W22;2026-08-08;Vorstellungsgespräch üben;J098;true;true;true;true;24;true;150;true
+W22;2026-08-08;Vorstellungsgespräch üben;J106;true;true;true;true;24;true;150;true
+W22;2026-08-08;Vorstellungsgespräch üben;J110;true;true;true;true;24;true;150;true
+W22;2026-08-08;Vorstellungsgespräch üben;J118;true;true;true;true;24;true;150;true
+W22;2026-08-08;Vorstellungsgespräch üben;J142;true;true;true;true;24;true;150;true
+W22;2026-08-08;Vorstellungsgespräch üben;J143;true;true;true;true;24;true;150;true
+W23;2026-08-15;Stärken erkennen;J022;true;true;true;true;24;true;150;true
+W23;2026-08-15;Stärken erkennen;J023;true;true;true;true;24;true;150;true
+W23;2026-08-15;Stärken erkennen;J032;true;true;true;true;24;true;150;true
+W23;2026-08-15;Stärken erkennen;J037;true;true;true;true;24;true;150;true
+W23;2026-08-15;Stärken erkennen;J044;true;true;true;true;24;true;150;true
+W23;2026-08-15;Stärken erkennen;J047;true;true;true;true;24;true;150;true
+W23;2026-08-15;Stärken erkennen;J060;true;true;true;true;24;true;150;true
+W23;2026-08-15;Stärken erkennen;J067;true;true;true;true;24;true;150;true
+W23;2026-08-15;Stärken erkennen;J069;true;true;true;true;24;true;150;true
+W23;2026-08-15;Stärken erkennen;J071;true;true;true;true;24;true;150;true
+W23;2026-08-15;Stärken erkennen;J090;true;true;true;true;24;true;150;true
+W23;2026-08-15;Stärken erkennen;J095;true;true;true;true;24;true;150;true
+W23;2026-08-15;Stärken erkennen;J119;true;true;true;true;24;true;150;true
+W23;2026-08-15;Stärken erkennen;J143;true;true;true;true;24;true;150;true
+W24;2026-08-22;Bewerbungsunterlagen vertiefen;J024;true;true;true;true;24;true;150;true
+W24;2026-08-22;Bewerbungsunterlagen vertiefen;J028;true;true;true;true;24;true;150;true
+W24;2026-08-22;Bewerbungsunterlagen vertiefen;J037;true;true;true;true;24;true;150;true
+W24;2026-08-22;Bewerbungsunterlagen vertiefen;J042;true;true;true;true;24;true;150;true
+W24;2026-08-22;Bewerbungsunterlagen vertiefen;J048;true;true;true;true;24;true;150;true
+W24;2026-08-22;Bewerbungsunterlagen vertiefen;J051;true;true;true;true;24;true;150;true
+W24;2026-08-22;Bewerbungsunterlagen vertiefen;J067;true;true;true;true;24;true;150;true
+W24;2026-08-22;Bewerbungsunterlagen vertiefen;J072;true;true;true;true;24;true;150;true
+W24;2026-08-22;Bewerbungsunterlagen vertiefen;J077;true;true;true;true;24;true;150;true
+W24;2026-08-22;Bewerbungsunterlagen vertiefen;J096;true;true;true;true;24;true;150;true
+W24;2026-08-22;Bewerbungsunterlagen vertiefen;J120;true;true;true;false;24;true;150;true
+W24;2026-08-22;Bewerbungsunterlagen vertiefen;J125;true;true;true;true;24;true;150;true
+W24;2026-08-22;Bewerbungsunterlagen vertiefen;J132;true;true;true;true;24;true;150;true
+W24;2026-08-22;Bewerbungsunterlagen vertiefen;J133;true;true;true;true;24;true;150;true
+W24;2026-08-22;Bewerbungsunterlagen vertiefen;J144;true;true;true;true;24;true;150;true

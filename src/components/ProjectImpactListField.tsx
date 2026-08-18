@@ -2,6 +2,8 @@ import { Plus, X } from "lucide-react";
 import { FieldLabel } from "@/components/EntityDialog";
 import { Input } from "@/components/ui/input";
 
+export const PROJECT_INTENDED_CHANGES_MAX_ITEMS = 6;
+
 export function ProjectImpactListField({
   label,
   values,
@@ -12,7 +14,7 @@ export function ProjectImpactListField({
   onRemoveRow,
   addRowAriaLabel,
   removeRowAriaLabel,
-  maxItems = 3,
+  maxItems = PROJECT_INTENDED_CHANGES_MAX_ITEMS,
 }: {
   label: string;
   values: string[];

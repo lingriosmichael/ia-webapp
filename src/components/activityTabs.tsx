@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { BarChart3, FolderKanban, LayoutGrid, Settings2 } from "lucide-react";
+import { FolderKanban, LayoutGrid, Settings2 } from "lucide-react";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 interface Tab {
   to:
     | "/projects/$projectId/activities"
-    | "/projects/$projectId/activities/$activityId/analysis"
     | "/projects/$projectId/activities/$activityId/data-review"
     | "/projects/$projectId/activities/$activityId/settings";
   label: string;
@@ -37,12 +36,6 @@ export function ActivityTabs({
       to: "/projects/$projectId/activities/$activityId/data-review",
       label: t("activityTabs.schema"),
       icon: <LayoutGrid className="h-3.5 w-3.5" />,
-      params: { projectId, activityId },
-    },
-    {
-      to: "/projects/$projectId/activities/$activityId/analysis",
-      label: t("activityTabs.analytics"),
-      icon: <BarChart3 className="h-3.5 w-3.5" />,
       params: { projectId, activityId },
     },
     {

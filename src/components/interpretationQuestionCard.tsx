@@ -67,6 +67,13 @@ function parseCompositePrompt(prompt: string): {
   };
 }
 
+// Option text is AI-generated and can run to a full sentence, unlike the
+// short fixed labels the shared Button component is styled for (which stay
+// on one line by design). Override that here so long options wrap inside
+// the card instead of overflowing it.
+const OPTION_BUTTON_CLASSNAME =
+  "h-auto max-w-full min-h-8 justify-start gap-2 whitespace-normal break-words py-1.5 text-left";
+
 function buildCompositeAnswer(prompts: string[], values: string[]): string {
   return prompts
     .map((prompt, index) => {
@@ -253,17 +260,16 @@ export function InterpretationQuestionCard(
                 key={option}
                 variant={isSelected ? "default" : "outline"}
                 size="sm"
-                className="gap-2"
+                className={
+                  isRecommended && !isSelected
+                    ? `${OPTION_BUTTON_CLASSNAME} border-primary/35 bg-primary-soft text-primary hover:bg-primary-soft/80`
+                    : OPTION_BUTTON_CLASSNAME
+                }
                 onClick={() => commitAnswer(option)}
                 disabled={isSubmitting}
                 aria-pressed={props.mode === "select" ? isSelected : undefined}
               >
                 <span>{option}</span>
-                {isRecommended ? (
-                  <span className="text-[10px] uppercase tracking-[0.08em] opacity-70">
-                    {t("projectWorkspace.interpretation.questionRecommended")}
-                  </span>
-                ) : null}
               </Button>
             );
           })}

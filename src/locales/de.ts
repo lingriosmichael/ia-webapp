@@ -623,12 +623,12 @@ const de: TranslationDictionary = {
       qualitativeReviewDecisionReject: "Vorerst ablehnen",
       noEvidenceYet: "Noch keine Evidenz hochgeladen.",
       simplified: {
-        pageTitle: "Aktivitätsanalyse",
-        heroTitle: "Eine zielbasierte Analyse pro Aktivität",
+        pageTitle: "Zielprüfung",
+        heroTitle: "Eine Zielprüfung pro Aktivität",
         heroDescription:
-          "Die KI unterstützt Sie dabei, Zusammenhänge, Entwicklungen und mögliche Lücken zu erkennen. Die fachliche Einordnung erfolgt jetzt über eine zielbasierte Aktivitätsanalyse als kanonische Ansicht.",
+          "brindl prüft, ob die definierten Aktivitätsziele durch die aktuelle Evidenz belegt sind. Vorher wird die Evidenz datenschutzsicher vorbereitet und interpretiert.",
         statActivities: "Aktivitäten",
-        statReady: "Analyse bereit",
+        statReady: "Zielprüfung bereit",
         statAttention: "Braucht Aufmerksamkeit",
         activitiesTitle: "Aktivitäten",
         activitySummary: {
@@ -640,8 +640,7 @@ const de: TranslationDictionary = {
             "Für diese Aktivität braucht noch {{count}} Datei die Freigabe der qualitativen Codierungsprüfung.",
           qualitativeReview_other:
             "Für diese Aktivität brauchen noch {{count}} Dateien die Freigabe der qualitativen Codierungsprüfung.",
-          processing:
-            "Die KI-Analyse läuft gerade über die Evidenz dieser Aktivität.",
+          processing: "Die Evidenz dieser Aktivität wird gerade interpretiert.",
           questions:
             "{{count}} Klärungsfrage ist noch offen, bevor die Aktivitätsanalyse geöffnet werden kann.",
           questions_other:
@@ -653,19 +652,19 @@ const de: TranslationDictionary = {
           goalReview:
             "Für diese Aktivität liegt ein vorgeschlagener dateiübergreifender Abgleich vor. Prüfen Sie, ob die Dateien verknüpft oder getrennt behandelt werden sollen, bevor die Aktivitätsanalyse geöffnet werden kann.",
           ready:
-            "Die Voraussetzungen sind erfüllt. Die Aktivitätsanalyse kann jetzt für diese Aktivität erzeugt werden.",
+            "Die Voraussetzungen sind erfüllt. Die Zielprüfung kann jetzt für diese Aktivität erzeugt werden.",
           reviewed:
-            "Die Voraussetzungen sind erfüllt. Die Aktivitätsanalyse kann für diese Aktivität erneut ausgeführt werden.",
+            "Die Voraussetzungen sind erfüllt. Die Zielprüfung kann für diese Aktivität erneut ausgeführt werden.",
           v2Completed:
-            "Die Aktivitätsanalyse kann jetzt für diese Aktivität geöffnet werden.",
+            "Die Zielprüfung kann jetzt für diese Aktivität geöffnet werden.",
           v2NeedsClarification:
-            "Die neueste Aktivitätsanalyse braucht noch {{count}} Klärungsfrage, bevor sie geöffnet werden kann.",
+            "Die neueste Zielprüfung braucht noch {{count}} Klärungsfrage, bevor sie geöffnet werden kann.",
           v2NeedsClarification_other:
-            "Die neueste Aktivitätsanalyse braucht noch {{count}} Klärungsfragen, bevor sie geöffnet werden kann.",
+            "Die neueste Zielprüfung braucht noch {{count}} Klärungsfragen, bevor sie geöffnet werden kann.",
           v2Failed:
-            "Die letzte Aktivitätsanalyse ist fehlgeschlagen. Starten Sie sie erneut.",
+            "Die letzte Zielprüfung ist fehlgeschlagen. Starten Sie sie erneut.",
           notStarted:
-            "Die KI-Analyse wurde für diese Aktivität noch nicht gestartet.",
+            "Die Evidenz wurde für diese Aktivität noch nicht interpretiert.",
         },
         activityMeta: "{{uploads}} Dateien · {{interpreted}} interpretiert",
         activityNoFiles:
@@ -694,9 +693,9 @@ const de: TranslationDictionary = {
           "Die Entscheidung zur Datei-Verknüpfung konnte nicht gespeichert werden.",
         linkageReviewResolved:
           "Für diese Aktivität sind aktuell keine offenen Verknüpfungsvorschläge mehr vorhanden.",
-        actionRunning: "Wird analysiert…",
-        actionRestart: "Analyse neu starten",
-        actionRunKnowledge: "KI analysieren",
+        actionRunning: "Evidenz wird interpretiert…",
+        actionRestart: "Interpretation neu starten",
+        actionRunKnowledge: "Evidenz interpretieren",
         actionInterpretMissingEvidence: "Fehlende Evidenz interpretieren",
         interpretationStarted: "KI-Interpretation wurde gestartet.",
         interpretationRestarted: "KI-Interpretation wurde neu gestartet.",
@@ -707,8 +706,8 @@ const de: TranslationDictionary = {
         interpretationRestartFailed:
           "KI-Interpretation konnte nicht neu gestartet werden.",
         activityNotReadyToast:
-          "Diese Aktivität ist noch nicht bereit für die KI-Analyse. Schließen Sie zuerst die Datenschutzprüfung ab oder warten Sie, bis die Verarbeitung fertig ist.",
-        actionOpenAnalysis: "Aktivitätsanalyse öffnen",
+          "Diese Aktivität ist noch nicht bereit für die Zielprüfung. Schließen Sie zuerst die Datenschutzprüfung ab oder warten Sie, bis die Verarbeitung fertig ist.",
+        actionOpenAnalysis: "Zielprüfung ansehen",
         status: {
           no_evidence: "Keine Evidenz",
           privacy_review: "Datenschutzprüfung",
@@ -742,167 +741,33 @@ const de: TranslationDictionary = {
       nextSteps: "Empfohlene nächste Schritte",
     },
   },
-  analytics: {
-    aiCurated: "KI-kuratiert",
-    notDeduplicatedNote:
-      "Summe über mehrere Quellen — keine deduplizierte Zählung.",
-    narrativeTitle: "Was die Daten nahelegen",
-    fullCatalogTitle: "Weitere Kennzahlen erkunden",
-    barChartSectionTitle: "Zusätzliche Kennzahlen als Balkendiagramme",
-    qualitativeSignalsTitle: "Weitere qualitative Signale",
-    featured: "In diesem Dashboard hervorgehoben",
-    notFeatured: "Diesmal nicht hervorgehoben",
-    omittedTitle: "Noch nicht berechenbar",
-    quoteCount: "{{count}} unterstützendes Zitat",
-    quoteCount_other: "{{count}} unterstützende Zitate",
-    dataQualityTitle: "Datenqualität",
-    groundingFallbackNotice:
-      "Die Analysen wurden erstellt, aber die automatische Einordnung konnte nicht bestätigt werden; es werden nur Kennzahlen ohne Erläuterung angezeigt.",
-    generatedAt: "Erstellt am {{date}}",
-    actions: {
-      generate: "Analysen aktualisieren",
-      generating: "Wird erstellt…",
-    },
-    status: {
-      NOT_STARTED: "Für dieses Projekt wurden noch keine Analysen erstellt.",
-      QUEUED: "Analysen sind in der Warteschlange.",
-      RUNNING: "Analysen werden erstellt…",
-      COMPLETED: "Die Analysen sind aktuell.",
-      COMPLETED_WITH_WARNINGS:
-        "Die Analysen wurden erstellt. Einige Werte basieren auf unvollständigen Daten.",
-      FAILED: "Die Analysen konnten nicht erstellt werden.",
-      STALE:
-        "Seit der letzten Berechnung wurden neue oder geänderte Evidenzdaten bestätigt.",
-    },
-    dashboard: {
-      eyebrow: "Konfigurierbares Dashboard",
-      title: "Evidenz-Dashboard",
-      exportLabel: "Export",
-      exportJson: "JSON exportieren",
-      exportText: "Text exportieren",
-      exportDocumentTitle: "brindl Dashboard-Export",
-      exportDocumentScopeLabel: "Bereich",
-      exportDocumentProjectLabel: "Projekt",
-      exportDocumentActivityLabel: "Aktivität",
-      exportDocumentSchemaLabel: "Schema",
-      exportDocumentCompatibilitySourceLabel: "Kompatibilitätsquelle",
-      exportDocumentWarningsTitle: "Hinweise zur Datenqualität",
-      exportSuccess: "Dashboard-Export erstellt.",
-      exportFailed: "Dashboard-Export konnte nicht erstellt werden.",
-      compatibilityFallback: "Alte Analyse-Aufzeichnung",
-      showCustomizer: "Widgets anpassen",
-      hideCustomizer: "Anpassung schließen",
-      restoreRecommended: "Empfohlenes Layout wiederherstellen",
-      customizerTitle: "Sichtbare Widgets",
-      customizerDescription:
-        "Blenden Sie Widgets ein oder aus und ordnen Sie sie passend zur Review-Ansicht dieses Projekts neu an.",
-      savingLayout: "Layout wird gespeichert…",
-      hideWidget: "Widget ausblenden",
-      hiddenBadge: "Ausgeblendet",
-      visibleBadge: "Sichtbar",
-      hiddenWidgetsTitle: "{{count}} ausgeblendetes Widget",
-      hiddenWidgetsTitle_other: "{{count}} ausgeblendete Widgets",
-      fallbackSummaryTitle: "In Klartext",
-      fallbackSummaryDescription:
-        "Eine fundierte Zusammenfassung auf Basis des deterministischen Evidenzkatalogs.",
-      fallbackThemesDescription:
-        "Wiederkehrende Themen aus dem aktuellen Katalog.",
-      hiddenWidgetsDescription:
-        "Halten Sie diesen Bereich kompakt und prüfen Sie ausgeblendete Widgets in einer klareren Übersicht mit Labels, Kontext und Einblenden-Aktion.",
-      hiddenWidgetsPreview: "Zuletzt ausgeblendet",
-      hiddenWidgetsManage: "Ausgeblendete Widgets durchsuchen",
-      hiddenWidgetsManagerTitle: "{{count}} ausgeblendete Widgets",
-      hiddenWidgetsManagerDescription:
-        "Suchen und prüfen Sie ausgeblendete Widgets nach Widget-Typ, bevor Sie sie wieder ins Dashboard holen.",
-      hiddenWidgetsSearchPlaceholder:
-        "Nach Titel, Untertitel oder Beschreibung suchen…",
-      hiddenWidgetsNoResults:
-        "Für diese Suche wurden keine ausgeblendeten Widgets gefunden.",
-      hiddenWidgetsNoResultsHint:
-        "Versuchen Sie weniger Begriffe oder ein allgemeineres Thema.",
-      hiddenWidgetShow: "Einblenden",
-      hiddenWidgetTypeHorizontalBar: "Verteilungsdiagramm",
-      hiddenWidgetTypeLineSeries: "Zeitverlaufsdiagramm",
-      hiddenWidgetTypeCategoryRank: "Ranking-Diagramm",
-      hiddenWidgetTypeKpi: "KPI-Karte",
-      hiddenWidgetTypeThemeList: "Themenliste",
-      hiddenWidgetTypeSummary: "Textzusammenfassung",
-      hiddenWidgetSectionHorizontalBarTitle: "Verteilungsdiagramme",
-      hiddenWidgetSectionHorizontalBarDescription:
-        "Vergleiche zwischen Kategorien, die sich als horizontale Balken leichter erfassen lassen.",
-      hiddenWidgetSectionLineSeriesTitle: "Zeitverlaufsdiagramme",
-      hiddenWidgetSectionLineSeriesDescription:
-        "Veränderungen über die Zeit, Meilensteine und andere zeitbezogene Muster.",
-      hiddenWidgetSectionCategoryRankTitle: "Ranking-Diagramme",
-      hiddenWidgetSectionCategoryRankDescription:
-        "Stärkste Segmente, wichtigste Kategorien und sortierte Vergleiche.",
-      hiddenWidgetSectionKpiTitle: "KPI-Karten",
-      hiddenWidgetSectionKpiDescription:
-        "Einzelne Kennzahlen für schnelle Orientierung und Berichterstattung.",
-      hiddenWidgetSectionThemeListTitle: "Themenlisten",
-      hiddenWidgetSectionThemeListDescription:
-        "Wiederkehrende qualitative Muster und zugehörige Evidenzthemen.",
-      hiddenWidgetSectionSummaryTitle: "Textzusammenfassungen",
-      hiddenWidgetSectionSummaryDescription:
-        "In Klartext formulierte Interpretationen für dieses Dashboard.",
-      summaryEyebrow: "In Klartext",
-      comparisonTitle: "Vergleichbare Kennzahlen",
-      timelineTitle: "Zeitverlauf",
-      rankTitle: "Stärkste Segmente",
-      themesTitle: "Qualitative Signale",
-      goalLinked: "Mit Ziel verknüpft: {{value}}",
-      usageTitle: "Dashboard-Nutzung",
-      usageDescription:
-        "Interne Telemetrie aus dieser Dashboard-Ansicht auf Basis gespeicherter Widget-Interaktionen.",
-      usageViews: "Aufrufe",
-      usageHidden: "Ausgeblendet",
-      usageShown: "Eingeblendet",
-      usageReordered: "Neu sortiert",
-      usageRestored: "Zurückgesetzt",
-      usageLastViewed: "Zuletzt geöffnet: {{value}}",
-      usageLastUpdated: "Letzte Interaktion: {{value}}",
-      usageNoDate: "Noch keine Daten",
-      usageEmpty:
-        "Für dieses Dashboard wurden noch keine Interaktionen erfasst.",
-    },
-  },
-  projectAnalytics: {
-    loading: "Analysen werden geladen…",
-    loadFailed: "Analysen konnten nicht geladen werden.",
-    eyebrow: "Programm-Analysen",
-    title: "Analysen",
-    subtitle:
-      "Die Analysen basieren ausschließlich auf datenschutzsicher verarbeiteten und strukturierten Evidenzdaten.",
-    noVerifiedEvidenceTitle: "Noch keine geeignete Evidenz",
-    noVerifiedEvidenceDescription:
-      "Für dieses Projekt liegen noch keine strukturierten Evidenzdaten vor, aus denen bereits Analysen erzeugt werden können.",
-    awaitingPreparationTitle: "Zuerst offene Interpretationsfragen klären",
-    awaitingPreparationDescription:
-      "{{count}} Datensatz ist noch durch Vorbereitungsfragen blockiert. Beantworten Sie die offenen Fragen auf der Interpretationsseite, bevor das Dashboard erzeugt wird.",
-    awaitingPreparationDescription_other:
-      "{{count}} Datensätze sind noch durch Vorbereitungsfragen blockiert. Beantworten Sie die offenen Fragen auf der Interpretationsseite, bevor das Dashboard erzeugt wird.",
-    awaitingAnalysisTitle: "Die deterministische Analyse läuft noch",
-    awaitingAnalysisDescription:
-      "{{count}} vorbereiteter Datensatz benötigt noch eine deterministische Analyse, bevor das Dashboard aufgebaut werden kann.",
-    awaitingAnalysisDescription_other:
-      "{{count}} vorbereitete Datensätze benötigen noch eine deterministische Analyse, bevor das Dashboard aufgebaut werden kann.",
-    readyToGenerateTitle: "Dashboard kann jetzt erzeugt werden",
-    readyToGenerateDescription:
-      "Vorbereitung und deterministische Analyse liegen vor. Erzeugen Sie jetzt die Analysen für die Dashboard-Ansicht.",
-    noVerifiedEvidenceCta: "Zur Interpretation",
-    dashboard: {
-      summaryEyebrow: "In Klartext",
-      summaryTitle: "Was in diesem Projekt auffällt",
-      comparisonTitle: "Vergleichbare Kennzahlen",
-      comparisonDescription:
-        "Eine feste Gegenüberstellung deterministischer Kennzahlen mit derselben Einheit.",
-      timelineTitle: "Zeitverlauf",
-      rankTitle: "Stärkste Segmente",
-      themesTitle: "Qualitative Signale",
-      themesDescription:
-        "Die am häufigsten wiederkehrenden Themen aus dem Project Knowledge Model.",
-      latestValue: "Neuester Wert: {{value}}",
-    },
+  impactStory: {
+    loading: "Wird geladen…",
+    loadFailed: "Die Fortschrittsgeschichte konnte nicht geladen werden.",
+    narrativeTitle: "Fortschritt & Wirkung",
+    generatedAt: "Erstellt am {{timestamp}}",
+    runAction: "Fortschrittsgeschichte erzeugen",
+    refreshAction: "Aktualisieren",
+    runPending: "Wird erzeugt…",
+    runSuccess: "Die Fortschrittsgeschichte wurde aktualisiert.",
+    runFailed: "Die Fortschrittsgeschichte konnte nicht erzeugt werden.",
+    narrativeFailed:
+      "Die Erzählung konnte nicht erzeugt werden. Die Kennzahlen unten sind trotzdem verlässlich.",
+    staleNotice:
+      "Seit der letzten Erzeugung gibt es neue Evidenz. Aktualisieren Sie, um die neuesten Zahlen zu sehen.",
+    notYetAnalyzedFootnote:
+      "Noch keine ausgewerteten Kennzahlen für: {{names}}.",
+    emptyTitle: "Noch keine Fortschrittsgeschichte erzeugt",
+    emptyDescription:
+      "Erzeugen Sie eine Zusammenfassung des Fortschritts und der Wirkung dieses Projekts auf Basis der bereits ausgewerteten Evidenz.",
+    rankedBarsAriaLabel: "{{label}}: {{summary}}",
+    trendChartAriaLabel: "{{label}} im Zeitverlauf: {{summary}}",
+    byActivityTitle: "Nach Aktivität",
+    barChartAriaLabel: "{{label}}: {{summary}}",
+    distributionChartAriaLabel: "{{label}}: {{summary}}",
+    pieChartAriaLabel: "{{label}}: {{summary}}",
+    timelineTitle: "Aktivitäten im Jahresverlauf",
+    timelineUndated: "Ohne Datum",
   },
   activityTabs: {
     brief: "Übersicht",
@@ -936,7 +801,7 @@ const de: TranslationDictionary = {
       },
       descriptions: {
         empty:
-          "Laden Sie CSV- oder Excel-Monitoringdaten hoch, um die KI-Analyse zu starten.",
+          "Laden Sie CSV- oder Excel-Monitoringdaten hoch, um die Evidenz vorzubereiten.",
         uploading:
           "Ihre Datei wird gerade in den Evidenz-Workflow aufgenommen.",
         processing:
@@ -1335,38 +1200,36 @@ const de: TranslationDictionary = {
     noVerifiedEvidenceCta: "Zur Übersicht",
     v2: {
       eyebrow: "ActivityAnalyst V2",
-      title: "Zielbasierte Analyse",
+      title: "Zielprüfung",
       description:
-        "Diese Aktivitätsanalyse nutzt jetzt ActivityAnalyst V2 als primäre Ansicht. Sie bewertet die aktuellen Aktivitätsziele anhand des neuesten datenschutzsicheren Evidenzstands.",
-      loading: "Die neueste Aktivitätsanalyse wird geladen…",
-      loadFailed: "Die neueste Aktivitätsanalyse konnte nicht geladen werden.",
+        "Diese Ansicht prüft die aktuellen Aktivitätsziele anhand des neuesten datenschutzsicheren Evidenzstands.",
+      loading: "Die neueste Zielprüfung wird geladen…",
+      loadFailed: "Die neueste Zielprüfung konnte nicht geladen werden.",
       staleDataWarning:
-        "Die unten angezeigte Analyse ist möglicherweise veraltet — die letzte Aktualisierung ist fehlgeschlagen.",
-      noRunTitle: "Noch keine Aktivitätsanalyse",
+        "Die unten angezeigte Zielprüfung ist möglicherweise veraltet — die letzte Aktualisierung ist fehlgeschlagen.",
+      noRunTitle: "Noch keine Zielprüfung",
       noRunDescription:
-        "Erzeugen Sie die Aktivitätsanalyse, um diese Aktivität anhand ihrer aktuellen datenschutzsicheren Evidenz zu bewerten.",
-      runAction: "Analyse erzeugen",
-      openAction: "Analyse öffnen",
-      refreshAction: "Analyse aktualisieren",
-      runPending: "Analyse wird erzeugt…",
-      runSuccess: "Die Aktivitätsanalyse wurde aktualisiert.",
+        "Prüfen Sie, ob diese Aktivität ihre definierten Ziele anhand der aktuellen datenschutzsicheren Evidenz erreicht.",
+      runAction: "Ziele prüfen",
+      openAction: "Ansehen",
+      refreshAction: "Aktualisieren",
+      runPending: "Ziele werden geprüft…",
+      runSuccess: "Die Zielprüfung wurde aktualisiert.",
       runFailed:
-        "Die Aktivitätsanalyse konnte nicht abgeschlossen werden. Bitte starten Sie sie erneut.",
-      latestRunTitle: "Neueste Analyse",
+        "Die Zielprüfung konnte nicht abgeschlossen werden. Bitte starten Sie sie erneut.",
+      latestRunTitle: "Neueste Zielprüfung",
       latestRunMeta: "Erstellt {{createdAt}}",
       errorTitle: "Lauffehler",
       issuesTitle: "Validierungsprobleme",
-      summaryTitle: "Zusammenfassung",
       summaryMissing:
-        "Für diesen Lauf wurde keine gerenderte Zusammenfassung erzeugt.",
+        "Für diesen Lauf wurden keine numerischen Zielkarten erzeugt.",
       dialogDescription:
-        "brindl hat die aktuelle Evidenz dieser Aktivität zu einer zusammenhängenden Aktivitätsanalyse verdichtet.",
+        "brindl hat geprüft, ob die aktuelle Evidenz die definierten Ziele dieser Aktivität belegt.",
       dialogMeta:
-        "{{goals}} Ziele aus {{evidence}} Evidenzdateien wurden in dieser Analyse berücksichtigt.",
+        "{{goals}} Ziele aus {{evidence}} Evidenzdateien wurden in dieser Zielprüfung berücksichtigt.",
       goalTarget: "{{target}} Ziel",
       goalMet: "Ziel erreicht",
       goalPercentOfTarget: "{{percent}} des Ziels",
-      recommendationSectionTitle: "Empfehlung",
       attentionTitle: "Braucht Ihre Aufmerksamkeit",
       attentionSectionTitle: "Braucht Aufmerksamkeit",
       onTrackSectionTitle: "Auf Kurs",
@@ -1377,10 +1240,7 @@ const de: TranslationDictionary = {
       noOnTrackItems:
         "Aktuell wurde in dieser Analyse noch kein Ziel als klar erreicht bewertet.",
       outputsTitle: "Ergebnisse",
-      outcomesTitle: "Wirkung",
       noOutputs: "Für diese Aktivität sind keine Output-Ziele definiert.",
-      noOutcomes:
-        "Für diese Aktivität sind keine Outcome-Ziele definiert, daher wird kein Wirkungsabschnitt angezeigt.",
       limitationsTitle: "Aktuelle Einschränkungen",
       runHistoryTitle: "Frühere Analysen",
       metrics: {
@@ -1435,19 +1295,6 @@ const de: TranslationDictionary = {
       submitAnswersAction: "{{count}} Antworten senden",
       submitAnswersPending: "Wird gesendet…",
     },
-  },
-  activityInsights: {
-    loading: "AI knowledge wird geladen…",
-    loadFailed: "AI knowledge konnte nicht geladen werden.",
-    crumb: "AI knowledge",
-    eyebrow: "Activity AI knowledge",
-    title: "Die Aktivität als gemeinsamen Wissensstand lesen",
-    description:
-      "brindl führt die interpretierte Evidenz dieser Aktivität zu einem narrativen KI-Wissensstand auf Aktivitätsebene zusammen.",
-    notReadyTitle: "AI knowledge ist noch nicht bereit",
-    notReadyDescription:
-      "Gehen Sie zur Interpretationsseite zurück, um Datenschutzprüfungen abzuschließen, Klärungsfragen zu beantworten oder die KI-Analyse für diese Aktivität zu starten.",
-    notReadyCta: "Zur Interpretation",
   },
   activitySettings: {
     loading: "Aktivitätseinstellungen werden geladen…",
@@ -1535,15 +1382,6 @@ const de: TranslationDictionary = {
     mobileNavigationTitle: "Workspace-Navigation",
     mobileNavigationDescription:
       "Zwischen Workspace-Bereichen und Projekten wechseln.",
-    overview: "Übersicht",
-    analytics: "Analysen",
-    insights: "Erkenntnisse",
-    brief: "Übersicht",
-    dataReview: "Datenprüfung",
-    activityAnalysis: "Analyse",
-    activityInsights: "Erkenntnisse",
-    activitySettings: "Einstellungen",
-    projectSettings: "Projekteinstellungen",
     organizationSettings: "Organisationseinstellungen",
     projectActions: "Projektaktionen",
     archiveProject: "Archivieren",
@@ -1801,7 +1639,7 @@ const de: TranslationDictionary = {
       initialSituation: "Ausgangslage",
       timeline: "Zeitraum",
       overarchingTargetGroup: "Übergeordnete Zielgruppe(n)",
-      intendedChanges: "Angestrebte Veränderungen",
+      intendedChanges: "Angestrebte langfristige Wirkung / Impact",
       fundingProgram: "Förderprogramm",
       fundingOrganization: "Fördernde Organisation",
       targetGroups: "Zielgruppen",
@@ -1869,7 +1707,7 @@ const de: TranslationDictionary = {
       intendedChangesPlaceholder:
         "Welche langfristigen Veränderungen bei den Zielgruppen soll das Projekt unterstützen?",
       intendedChangesValidation:
-        "Bitte nennen Sie eine bis drei angestrebte langfristige Wirkungen / Impacts.",
+        "Bitte nennen Sie eine bis sechs angestrebte langfristige Wirkungen / Impacts.",
       intendedChangesAddRow: "Weitere Wirkung hinzufügen",
       intendedChangesRemoveRow: "Wirkung entfernen",
       fundingProgram: "Förderprogramm",
@@ -1923,11 +1761,6 @@ const de: TranslationDictionary = {
       outputTooltip: "Was wird unmittelbar durchgeführt oder erstellt?",
       outputPlaceholder:
         "• 12 Workshops innerhalb eines Jahres durchführen\n• 150 Teilnehmende erreichen\n• Mindestens 80 % der Teilnehmenden schließen das Angebot ab\n• Mindestens 75 % der Teilnehmenden sind mit dem Angebot zufrieden",
-      outcome: "Veränderungsziele (Outcome)",
-      outcomeTooltipLabel: "Hinweis zum Outcome",
-      outcomeTooltip: "Was soll sich bei der Zielgruppe verändern?",
-      outcomePlaceholder:
-        "• 80 % der Teilnehmenden kennen nach dem Workshop ihre Unterstützungsangebote\n• 70 % können die erlernten Methoden anschließend selbstständig anwenden\n• 60 % setzen das Gelernte innerhalb von drei Monaten im Alltag um\n• 50 Teilnehmende verbessern innerhalb eines Jahres ihre berufliche Situation",
       status: "Status",
     },
     options: {

@@ -2,10 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { sessionQueryKey } from "@/hooks/useAuth";
 import {
-  type AnalyticsDashboardInteractionPayload,
-  type AnalyticsExecutionRecord,
-  type AnalyticsDashboardPreferenceRecord,
-  type AnalyticsQueryResponse,
   type AnswerActivityAnalysisV2QuestionsPayload,
   type AnswerInterpretationQuestionsPayload,
   type ApprovePrivacyReviewResponse,
@@ -33,13 +29,13 @@ import {
   type PrivacyReviewRecord,
   type QualitativeCodingReviewDecisionsInput,
   type QualitativeCodingReviewRecord,
+  type ProjectImpactStoryReadResult,
   type ProjectInterpretationOverview,
   type ProjectOverview,
   type ProjectSummary,
   type SessionResponse,
   type StartActivityInterpretationResponse,
   type StartInterpretationResponse,
-  type UpdateAnalyticsDashboardPreferencePayload,
   type UpdateProjectPayload,
   type UpdateActivityPayload,
   type UploadMetadataRecord,
@@ -82,10 +78,8 @@ export const organizationInvitationsQueryKey = (organizationId: string) =>
   ["organization-invitations", organizationId] as const;
 export const invitationQueryKey = (token: string) =>
   ["invitation", token] as const;
-export const projectAnalyticsQueryKey = (projectId: string) =>
-  ["project-analytics", projectId] as const;
-export const activityAnalyticsQueryKey = (activityId: string) =>
-  ["activity-analytics", activityId] as const;
+export const projectImpactStoryQueryKey = (projectId: string) =>
+  ["project-impact-story", projectId] as const;
 
 export function useOrganizationWorkspaceQuery(
   organizationId: string,
@@ -270,6 +264,25 @@ export function useAnswerActivityAnalysisV2QuestionsMutation(
   });
 }
 
+export function useProjectImpactStoryQuery(projectId: string, enabled = true) {
+  return useQuery<ProjectImpactStoryReadResult, ApiError>({
+    queryKey: projectImpactStoryQueryKey(projectId),
+    queryFn: () => apiClient.getProjectImpactStory(projectId),
+    enabled,
+  });
+}
+
+// Creates a project_impact_story processing job — it does not return the
+// finished story. The caller is expected to poll the job with useJobQuery
+// and invalidate useProjectImpactStoryQuery once the job reaches a terminal
+// status (see projectImpactStoryPage.tsx), same pattern as
+// useRunActivityAnalysisV2Mutation above.
+export function useRunProjectImpactStoryMutation(projectId: string) {
+  return useMutation<ProcessingJobRecord, ApiError>({
+    mutationFn: () => apiClient.runProjectImpactStory(projectId),
+  });
+}
+
 export function useReviewActivityLinkageProposalMutation(activityId: string) {
   const queryClient = useQueryClient();
 
@@ -400,7 +413,7 @@ export function useUpdateProjectMutation(
   return useMutation({
     mutationFn: (payload: UpdateProjectPayload) =>
       apiClient.updateProject(projectId, payload),
-    onSuccess: (project) => {
+    onSuccess: async (project) => {
       queryClient.setQueryData<ProjectSummary>(
         projectQueryKey(projectId),
         project,
@@ -421,15 +434,17 @@ export function useUpdateProjectMutation(
               }
             : current,
       );
-      void queryClient.invalidateQueries({
-        queryKey: projectQueryKey(projectId),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: projectOverviewQueryKey(projectId),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: workspaceQueryKey(organizationId),
-      });
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: projectQueryKey(projectId),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: projectOverviewQueryKey(projectId),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: workspaceQueryKey(organizationId),
+        }),
+      ]);
     },
   });
 }
@@ -684,6 +699,11 @@ export function useUploadActivityFileMutation(
   return useMutation({
     mutationFn: (file: File) => apiClient.uploadActivityFile(activityId, file),
     onSuccess: () => {
+      queryClient.setQueryData(
+        activityAnalysisV2LatestQueryKey(activityId),
+        null,
+      );
+      queryClient.setQueryData(activityAnalysisV2RunsQueryKey(activityId), []);
       void queryClient.invalidateQueries({
         queryKey: activityUploadsQueryKey(activityId),
       });
@@ -692,6 +712,9 @@ export function useUploadActivityFileMutation(
       });
       void queryClient.invalidateQueries({
         queryKey: activityAnalysisV2LatestQueryKey(activityId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: activityAnalysisV2RunsQueryKey(activityId),
       });
       if (projectId) {
         void queryClient.invalidateQueries({
@@ -727,6 +750,11 @@ export function useDeleteEvidenceMutation(
     mutationFn: (uploadMetadataId: string) =>
       apiClient.deleteEvidence(uploadMetadataId),
     onSuccess: () => {
+      queryClient.setQueryData(
+        activityAnalysisV2LatestQueryKey(activityId),
+        null,
+      );
+      queryClient.setQueryData(activityAnalysisV2RunsQueryKey(activityId), []);
       void queryClient.invalidateQueries({
         queryKey: activityUploadsQueryKey(activityId),
       });
@@ -735,6 +763,9 @@ export function useDeleteEvidenceMutation(
       });
       void queryClient.invalidateQueries({
         queryKey: activityAnalysisV2LatestQueryKey(activityId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: activityAnalysisV2RunsQueryKey(activityId),
       });
       if (projectId) {
         void queryClient.invalidateQueries({
@@ -1056,153 +1087,5 @@ export function useDeleteActivityMutation(
         });
       }
     },
-  });
-}
-
-export function useProjectAnalyticsQuery(projectId: string, enabled = true) {
-  return useQuery<AnalyticsQueryResponse, ApiError>({
-    queryKey: projectAnalyticsQueryKey(projectId),
-    queryFn: () => apiClient.getProjectAnalytics(projectId),
-    enabled,
-  });
-}
-
-export function useActivityAnalyticsQuery(
-  projectId: string,
-  activityId: string,
-  enabled = true,
-) {
-  return useQuery<AnalyticsQueryResponse, ApiError>({
-    queryKey: activityAnalyticsQueryKey(activityId),
-    queryFn: () => apiClient.getActivityAnalytics(projectId, activityId),
-    enabled,
-  });
-}
-
-export function useGenerateProjectAnalyticsMutation(projectId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation<AnalyticsExecutionRecord, ApiError, void>({
-    mutationFn: () => apiClient.generateProjectAnalytics(projectId),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: projectAnalyticsQueryKey(projectId),
-      });
-    },
-  });
-}
-
-export function useGenerateActivityAnalyticsMutation(
-  projectId: string,
-  activityId: string,
-) {
-  const queryClient = useQueryClient();
-
-  return useMutation<AnalyticsExecutionRecord, ApiError, void>({
-    mutationFn: () =>
-      apiClient.generateActivityAnalytics(projectId, activityId),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: activityAnalyticsQueryKey(activityId),
-      });
-    },
-  });
-}
-
-export function useUpdateProjectAnalyticsLayoutMutation(projectId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation<
-    AnalyticsDashboardPreferenceRecord,
-    ApiError,
-    UpdateAnalyticsDashboardPreferencePayload
-  >({
-    mutationFn: (payload) =>
-      apiClient.updateProjectAnalyticsLayout(projectId, payload),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: projectAnalyticsQueryKey(projectId),
-      });
-    },
-  });
-}
-
-export function useResetProjectAnalyticsLayoutMutation(projectId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation<{ success: true }, ApiError, void>({
-    mutationFn: () => apiClient.resetProjectAnalyticsLayout(projectId),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: projectAnalyticsQueryKey(projectId),
-      });
-    },
-  });
-}
-
-export function useTrackProjectAnalyticsInteractionMutation(projectId: string) {
-  return useMutation<
-    { success: true },
-    ApiError,
-    AnalyticsDashboardInteractionPayload
-  >({
-    mutationFn: (payload) =>
-      apiClient.trackProjectAnalyticsInteraction(projectId, payload),
-  });
-}
-
-export function useUpdateActivityAnalyticsLayoutMutation(
-  projectId: string,
-  activityId: string,
-) {
-  const queryClient = useQueryClient();
-
-  return useMutation<
-    AnalyticsDashboardPreferenceRecord,
-    ApiError,
-    UpdateAnalyticsDashboardPreferencePayload
-  >({
-    mutationFn: (payload) =>
-      apiClient.updateActivityAnalyticsLayout(projectId, activityId, payload),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: activityAnalyticsQueryKey(activityId),
-      });
-    },
-  });
-}
-
-export function useResetActivityAnalyticsLayoutMutation(
-  projectId: string,
-  activityId: string,
-) {
-  const queryClient = useQueryClient();
-
-  return useMutation<{ success: true }, ApiError, void>({
-    mutationFn: () =>
-      apiClient.resetActivityAnalyticsLayout(projectId, activityId),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: activityAnalyticsQueryKey(activityId),
-      });
-    },
-  });
-}
-
-export function useTrackActivityAnalyticsInteractionMutation(
-  projectId: string,
-  activityId: string,
-) {
-  return useMutation<
-    { success: true },
-    ApiError,
-    AnalyticsDashboardInteractionPayload
-  >({
-    mutationFn: (payload) =>
-      apiClient.trackActivityAnalyticsInteraction(
-        projectId,
-        activityId,
-        payload,
-      ),
   });
 }
