@@ -25,6 +25,7 @@ import { Route as OrganizationsOrganizationIdRouteRouteImport } from './routes/o
 import { Route as ProjectsProjectIdIndexRouteImport } from './routes/projects/$projectId/index'
 import { Route as OrganizationsOrganizationIdIndexRouteImport } from './routes/organizations/$organizationId/index'
 import { Route as ProjectsProjectIdSettingsRouteImport } from './routes/projects/$projectId/settings'
+import { Route as ProjectsProjectIdOutcomeStatementsRouteImport } from './routes/projects/$projectId/outcome-statements'
 import { Route as ProjectsProjectIdInterpretationRouteImport } from './routes/projects/$projectId/interpretation'
 import { Route as ProjectsProjectIdEvidenceRouteImport } from './routes/projects/$projectId/evidence'
 import { Route as ProjectsProjectIdAnalyticsRouteImport } from './routes/projects/$projectId/analytics'
@@ -127,6 +128,12 @@ const ProjectsProjectIdSettingsRoute =
   ProjectsProjectIdSettingsRouteImport.update({
     id: '/settings',
     path: '/settings',
+    getParentRoute: () => ProjectsProjectIdRouteRoute,
+  } as any)
+const ProjectsProjectIdOutcomeStatementsRoute =
+  ProjectsProjectIdOutcomeStatementsRouteImport.update({
+    id: '/outcome-statements',
+    path: '/outcome-statements',
     getParentRoute: () => ProjectsProjectIdRouteRoute,
   } as any)
 const ProjectsProjectIdInterpretationRoute =
@@ -274,6 +281,7 @@ export interface FileRoutesByFullPath {
   '/projects/$projectId/analytics': typeof ProjectsProjectIdAnalyticsRoute
   '/projects/$projectId/evidence': typeof ProjectsProjectIdEvidenceRoute
   '/projects/$projectId/interpretation': typeof ProjectsProjectIdInterpretationRoute
+  '/projects/$projectId/outcome-statements': typeof ProjectsProjectIdOutcomeStatementsRoute
   '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
   '/organizations/$organizationId/': typeof OrganizationsOrganizationIdIndexRoute
   '/projects/$projectId/': typeof ProjectsProjectIdIndexRoute
@@ -310,6 +318,7 @@ export interface FileRoutesByTo {
   '/projects/$projectId/analytics': typeof ProjectsProjectIdAnalyticsRoute
   '/projects/$projectId/evidence': typeof ProjectsProjectIdEvidenceRoute
   '/projects/$projectId/interpretation': typeof ProjectsProjectIdInterpretationRoute
+  '/projects/$projectId/outcome-statements': typeof ProjectsProjectIdOutcomeStatementsRoute
   '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
   '/organizations/$organizationId': typeof OrganizationsOrganizationIdIndexRoute
   '/projects/$projectId': typeof ProjectsProjectIdIndexRoute
@@ -349,6 +358,7 @@ export interface FileRoutesById {
   '/projects/$projectId/analytics': typeof ProjectsProjectIdAnalyticsRoute
   '/projects/$projectId/evidence': typeof ProjectsProjectIdEvidenceRoute
   '/projects/$projectId/interpretation': typeof ProjectsProjectIdInterpretationRoute
+  '/projects/$projectId/outcome-statements': typeof ProjectsProjectIdOutcomeStatementsRoute
   '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
   '/organizations/$organizationId/': typeof OrganizationsOrganizationIdIndexRoute
   '/projects/$projectId/': typeof ProjectsProjectIdIndexRoute
@@ -389,6 +399,7 @@ export interface FileRouteTypes {
     | '/projects/$projectId/analytics'
     | '/projects/$projectId/evidence'
     | '/projects/$projectId/interpretation'
+    | '/projects/$projectId/outcome-statements'
     | '/projects/$projectId/settings'
     | '/organizations/$organizationId/'
     | '/projects/$projectId/'
@@ -425,6 +436,7 @@ export interface FileRouteTypes {
     | '/projects/$projectId/analytics'
     | '/projects/$projectId/evidence'
     | '/projects/$projectId/interpretation'
+    | '/projects/$projectId/outcome-statements'
     | '/projects/$projectId/settings'
     | '/organizations/$organizationId'
     | '/projects/$projectId'
@@ -463,6 +475,7 @@ export interface FileRouteTypes {
     | '/projects/$projectId/analytics'
     | '/projects/$projectId/evidence'
     | '/projects/$projectId/interpretation'
+    | '/projects/$projectId/outcome-statements'
     | '/projects/$projectId/settings'
     | '/organizations/$organizationId/'
     | '/projects/$projectId/'
@@ -606,6 +619,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/projects/$projectId/settings'
       preLoaderRoute: typeof ProjectsProjectIdSettingsRouteImport
+      parentRoute: typeof ProjectsProjectIdRouteRoute
+    }
+    '/projects/$projectId/outcome-statements': {
+      id: '/projects/$projectId/outcome-statements'
+      path: '/outcome-statements'
+      fullPath: '/projects/$projectId/outcome-statements'
+      preLoaderRoute: typeof ProjectsProjectIdOutcomeStatementsRouteImport
       parentRoute: typeof ProjectsProjectIdRouteRoute
     }
     '/projects/$projectId/interpretation': {
@@ -828,6 +848,7 @@ interface ProjectsProjectIdRouteRouteChildren {
   ProjectsProjectIdAnalyticsRoute: typeof ProjectsProjectIdAnalyticsRoute
   ProjectsProjectIdEvidenceRoute: typeof ProjectsProjectIdEvidenceRoute
   ProjectsProjectIdInterpretationRoute: typeof ProjectsProjectIdInterpretationRoute
+  ProjectsProjectIdOutcomeStatementsRoute: typeof ProjectsProjectIdOutcomeStatementsRoute
   ProjectsProjectIdSettingsRoute: typeof ProjectsProjectIdSettingsRoute
   ProjectsProjectIdIndexRoute: typeof ProjectsProjectIdIndexRoute
 }
@@ -839,6 +860,8 @@ const ProjectsProjectIdRouteRouteChildren: ProjectsProjectIdRouteRouteChildren =
     ProjectsProjectIdAnalyticsRoute: ProjectsProjectIdAnalyticsRoute,
     ProjectsProjectIdEvidenceRoute: ProjectsProjectIdEvidenceRoute,
     ProjectsProjectIdInterpretationRoute: ProjectsProjectIdInterpretationRoute,
+    ProjectsProjectIdOutcomeStatementsRoute:
+      ProjectsProjectIdOutcomeStatementsRoute,
     ProjectsProjectIdSettingsRoute: ProjectsProjectIdSettingsRoute,
     ProjectsProjectIdIndexRoute: ProjectsProjectIdIndexRoute,
   }

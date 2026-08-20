@@ -8,10 +8,10 @@ import { Button } from "@/components/ui/button";
 import { useCurrentWorkspaceProject } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
 import {
-  projectImpactStoryQueryKey,
+  projectAnalyticsQueryKey,
   useJobQuery,
-  useProjectImpactStoryQuery,
-  useRunProjectImpactStoryMutation,
+  useProjectAnalyticsQuery,
+  useRunProjectAnalyticsMutation,
 } from "@/hooks/useWorkspaceQueries";
 import {
   ApiError,
@@ -25,6 +25,9 @@ import {
 import { ImpactStoryHeadlineKpiRow } from "./impactStoryHeadlineKpiRow";
 import { ImpactStoryNarrativeBanner } from "./impactStoryNarrativeBanner";
 import { ProjectImpactStoryChart } from "./projectImpactStoryChart";
+import { ProjectImpactStoryContextChart } from "./projectImpactStoryContextChart";
+import { ProjectImpactStoryDiagnosticsPanel } from "./projectImpactStoryDiagnosticsPanel";
+import { ProjectImpactStoryImpactChart } from "./projectImpactStoryImpactChart";
 
 const TERMINAL_JOB_STATUSES = ["completed", "failed", "cancelled"];
 
@@ -35,8 +38,8 @@ export function ProjectImpactStoryPage() {
   const queryClient = useQueryClient();
   const workspaceProject = useCurrentWorkspaceProject();
 
-  const storyQuery = useProjectImpactStoryQuery(projectId, Boolean(auth.token));
-  const runMutation = useRunProjectImpactStoryMutation(projectId);
+  const storyQuery = useProjectAnalyticsQuery(projectId, Boolean(auth.token));
+  const runMutation = useRunProjectAnalyticsMutation(projectId);
 
   const [activeJobId, setActiveJobId] = useState<string | undefined>(undefined);
   const handledTerminalJobIdsRef = useRef(new Set<string>());
@@ -58,7 +61,7 @@ export function ProjectImpactStoryPage() {
 
     void (async () => {
       await queryClient.invalidateQueries({
-        queryKey: projectImpactStoryQueryKey(projectId),
+        queryKey: projectAnalyticsQueryKey(projectId),
       });
 
       if (job.status !== "completed") {
@@ -71,7 +74,7 @@ export function ProjectImpactStoryPage() {
       // the narrative call failing), so the toast reads the
       // freshly-invalidated story's own status, not the job's.
       const read = queryClient.getQueryData<ProjectImpactStoryReadResult>(
-        projectImpactStoryQueryKey(projectId),
+        projectAnalyticsQueryKey(projectId),
       );
 
       if (read?.story?.status === "failed") {
@@ -140,6 +143,8 @@ export function ProjectImpactStoryPage() {
     );
   }
 
+  const hasOutcomeOverlay = story.impactCatalog.length > 0;
+
   return (
     <ProjectWorkspaceShell>
       <div className="space-y-5">
@@ -147,12 +152,14 @@ export function ProjectImpactStoryPage() {
           activities={workspaceProject?.activities ?? []}
         />
 
-        <ImpactStoryNarrativeBanner
-          story={story}
-          isStale={isStale}
-          onRegenerate={handleRegenerate}
-          isRegenerating={isRegenerating}
-        />
+        {hasOutcomeOverlay && (
+          <ImpactStoryNarrativeBanner
+            story={story}
+            isStale={isStale}
+            onRegenerate={handleRegenerate}
+            isRegenerating={isRegenerating}
+          />
+        )}
 
         <ImpactStoryHeadlineKpiRow kpis={story.headlineKpis} />
 
@@ -163,6 +170,42 @@ export function ProjectImpactStoryPage() {
             ))}
           </div>
         )}
+
+        {story.impactCatalog.length > 0 && (
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+            {story.impactCatalog.map((entry) => (
+              <ProjectImpactStoryImpactChart
+                key={entry.entryId}
+                entry={entry}
+              />
+            ))}
+          </div>
+        )}
+
+        {story.chartPlan.length === 0 && story.contextCharts.length > 0 && (
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+            {story.contextCharts.map((entry) => (
+              <ProjectImpactStoryContextChart
+                key={entry.entryId}
+                entry={entry}
+              />
+            ))}
+          </div>
+        )}
+
+        {!hasOutcomeOverlay && (
+          <ImpactStoryNarrativeBanner
+            story={story}
+            isStale={isStale}
+            onRegenerate={handleRegenerate}
+            isRegenerating={isRegenerating}
+          />
+        )}
+
+        <ProjectImpactStoryDiagnosticsPanel
+          chartOpportunityAudit={story.diagnostics.chartOpportunityAudit}
+          chartSelectionAudit={story.diagnostics.chartSelectionAudit}
+        />
       </div>
     </ProjectWorkspaceShell>
   );

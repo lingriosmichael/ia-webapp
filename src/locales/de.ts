@@ -395,6 +395,7 @@ const de: TranslationDictionary = {
       evidence: "Evidenz",
       interpretation: "Interpretation",
       analytics: "Analysen",
+      outcomeStatements: "Wirkungsaussagen",
       comingSoon: "Bald",
     },
     overview: {
@@ -743,23 +744,49 @@ const de: TranslationDictionary = {
   },
   impactStory: {
     loading: "Wird geladen…",
-    loadFailed: "Die Fortschrittsgeschichte konnte nicht geladen werden.",
+    loadFailed: "Die Analyse konnte nicht geladen werden.",
     narrativeTitle: "Fortschritt & Wirkung",
     generatedAt: "Erstellt am {{timestamp}}",
-    runAction: "Fortschrittsgeschichte erzeugen",
-    refreshAction: "Aktualisieren",
+    runAction: "Analyse erzeugen",
+    refreshAction: "Analyse aktualisieren",
     runPending: "Wird erzeugt…",
-    runSuccess: "Die Fortschrittsgeschichte wurde aktualisiert.",
-    runFailed: "Die Fortschrittsgeschichte konnte nicht erzeugt werden.",
+    runSuccess: "Die Analyse wurde aktualisiert.",
+    runFailed: "Die Analyse konnte nicht erzeugt werden.",
     narrativeFailed:
       "Die Erzählung konnte nicht erzeugt werden. Die Kennzahlen unten sind trotzdem verlässlich.",
     staleNotice:
       "Seit der letzten Erzeugung gibt es neue Evidenz. Aktualisieren Sie, um die neuesten Zahlen zu sehen.",
+    narrativeTemplatedNotice:
+      "Diese Zusammenfassung wurde automatisch aus Ihren Daten erstellt, nicht von einer KI verfasst.",
+    exploratoryChartNotice:
+      "Explorativ — vorher/nachher erkannt, aber nicht als Ergebnis bestätigt",
+    diagnosticsPanelTitle: "Diagnose",
+    diagnosticsSummary:
+      "{{readyCount}} bereit · {{extractionCount}} durch Pipeline blockiert · {{missingDataCount}} durch fehlende Daten blockiert",
+    diagnosticsUnselectedTitle: "Verfügbar, aber nicht angezeigt",
+    diagnosticsUnselectedDescription:
+      "Diese waren bereit für ein Diagramm, wurden diesmal aber nicht ausgewählt.",
+    diagnosticsUnselectedEmpty: "Alles Bereite wurde ausgewählt.",
+    diagnosticsExtractionBlockedTitle: "Durch eine Pipeline-Lücke blockiert",
+    diagnosticsExtractionBlockedDescription:
+      "Die Daten sind vorhanden, aber die Pipeline konnte daraus noch keinen Diagrammkandidaten erzeugen.",
+    diagnosticsExtractionBlockedEmpty: "Keine Pipeline-Lücken erkannt.",
+    diagnosticsMissingDataBlockedTitle: "Durch fehlende Daten blockiert",
+    diagnosticsMissingDataBlockedDescription:
+      "Für dieses Diagramm fehlt noch Evidenz oder ein Analyselauf.",
+    diagnosticsMissingDataBlockedEmpty:
+      "Keine Lücken durch fehlende Daten erkannt.",
+    diagnosticsUnavailable:
+      "Für diesen Analyselauf liegt noch keine Diagnose vor — erzeugen Sie die Analyse erneut, um sie zu sehen.",
+    beforeLabel: "Vorher",
+    afterLabel: "Nachher",
+    outcomeNotYetMeasurable:
+      "Noch nicht messbar — es liegt noch keine verknüpfte Evidenz vor.",
     notYetAnalyzedFootnote:
       "Noch keine ausgewerteten Kennzahlen für: {{names}}.",
-    emptyTitle: "Noch keine Fortschrittsgeschichte erzeugt",
+    emptyTitle: "Noch keine Analyse erzeugt",
     emptyDescription:
-      "Erzeugen Sie eine Zusammenfassung des Fortschritts und der Wirkung dieses Projekts auf Basis der bereits ausgewerteten Evidenz.",
+      "Erzeugen Sie die allgemeinen Kennzahlen und Diagramme dieses Projekts auf Basis der bereits ausgewerteten Evidenz. Falls verknüpfte Wirkungsevidenz vorliegt, wird sie zusätzlich hervorgehoben.",
     rankedBarsAriaLabel: "{{label}}: {{summary}}",
     trendChartAriaLabel: "{{label}} im Zeitverlauf: {{summary}}",
     byActivityTitle: "Nach Aktivität",
@@ -1598,6 +1625,146 @@ const de: TranslationDictionary = {
     removeSuccess: "Mitglied wurde entfernt.",
     removeFailure: "Mitglied konnte nicht entfernt werden.",
   },
+  outcomeStatements: {
+    eyebrow: "Wirkungsaussagen",
+    title: "Wirkungsaussagen",
+    description:
+      "Definieren Sie die kurzfristigen und langfristigen Wirkungen, die dieses Projekt anstrebt. Evidenz kann diesen Aussagen später zugeordnet werden, um zu zeigen, was tatsächlich gemessen wurde.",
+    loading: "Wirkungsaussagen werden geladen…",
+    emptyTitle: "Noch keine Wirkungsaussagen",
+    emptyDescription:
+      "Fügen Sie die kurz- und langfristigen Wirkungen hinzu, die dieses Projekt anstrebt.",
+    addAction: "Wirkungsaussage hinzufügen",
+    editAction: "Bearbeiten",
+    deleteAction: "Löschen",
+    termShort: "Kurzfristig",
+    termLong: "Langfristig",
+    createSuccess: "Wirkungsaussage hinzugefügt.",
+    createFailure: "Wirkungsaussage konnte nicht hinzugefügt werden.",
+    updateSuccess: "Wirkungsaussage aktualisiert.",
+    updateFailure: "Wirkungsaussage konnte nicht aktualisiert werden.",
+    deleteSuccess: "Wirkungsaussage gelöscht.",
+    deleteFailure: "Wirkungsaussage konnte nicht gelöscht werden.",
+    importFromIntendedChangesAction:
+      "Aus langfristigen Wirkungszielen importieren",
+    importTitle: "Wirkungsaussagen importieren",
+    importDescription:
+      "Dies sind die langfristigen Wirkungen, die Sie bereits für dieses Projekt definiert haben. Wählen Sie aus, welche als Wirkungsaussagen hinzugefügt werden sollen — Sie können sie danach bearbeiten oder entfernen.",
+    importAction: "{{count}} Wirkungsaussagen importieren",
+    importing: "Wird importiert…",
+    importSuccess: "Wirkungsaussagen importiert.",
+    importFailure: "Wirkungsaussagen konnten nicht importiert werden.",
+  },
+  outcomeStatementDelete: {
+    title: "Diese Wirkungsaussage löschen?",
+    description:
+      "Diese Aktion kann nicht rückgängig gemacht werden. Beim Löschen von „{{statement}}“ werden auch alle damit verknüpften Evidenzverbindungen entfernt.",
+    confirmAction: "Wirkungsaussage löschen",
+    deleting: "Wird gelöscht…",
+  },
+  outcomeEvidencePairing: {
+    title: "Zu prüfende Evidenz",
+    description:
+      "brindl zeigt Ihre Wirkungsaussagen zuerst und legt die am besten passenden Evidenz-Kandidaten daneben. Sie können die Empfehlungen übernehmen, andere Evidenz zuordnen oder Kandidaten verwerfen — die finale Entscheidung bleibt bei Ihnen.",
+    runAction: "Evidenz abgleichen und auswerten",
+    runningAction: "Evidenz wird abgeglichen…",
+    runSuccess: "Der Evidenzabgleich wurde aktualisiert.",
+    runStartedSuccess:
+      "Die Interpretation fuer den Evidenzabgleich wurde gestartet. Aktualisieren Sie nach Abschluss der Verarbeitung erneut.",
+    runFailure: "Der Evidenzabgleich konnte nicht aktualisiert werden.",
+    loading: "Kandidaten-Evidenz wird geprüft…",
+    pairedDeltaLabel: "Vorher-/Nachher-Vergleich",
+    singleDistributionLabel: "Verteilung",
+    beforeLabel: "Vorher",
+    afterLabel: "Nachher",
+    outcomeSelectPlaceholder: "Wirkungsaussage auswählen",
+    assignAction: "Wirkungsaussage zuordnen",
+    rejectAction: "Keiner Wirkungsaussage zuordnen",
+    assignSuccess: "Evidenz mit der Wirkungsaussage verknüpft.",
+    assignFailure: "Die Evidenz konnte nicht verknüpft werden.",
+    rejectSuccess: "Evidenz als nicht zugehörig markiert.",
+    rejectFailure: "Die Ablehnung konnte nicht gespeichert werden.",
+    emptyStateTitle: "Noch keine Kandidaten-Evidenz",
+    emptyStateDescription:
+      "Das bedeutet meist: Baseline- und Wirkungsmessung-Daten wurden noch nicht beide hochgeladen, die hochgeladenen Spalten haben keine identischen (oder erkennbar zusammengehörigen) Namen, oder die Tabellen haben keine gemeinsame Teilnehmer-ID zum Verknüpfen.",
+    errorTitle: "Kandidaten-Evidenz konnte nicht geprüft werden",
+    errorDescription:
+      "Beim Laden der Evidenz-Kandidaten ist ein Fehler aufgetreten. Versuchen Sie es in Kürze erneut.",
+    suggestedOutcomeLabel: "Vorschlag:",
+    suggestedOutcomeUncertain:
+      "brindl konnte dies keiner Ihrer Wirkungsaussagen sicher zuordnen.",
+    noOutcomeStatementsTitle: "Zuerst Wirkungsaussagen anlegen",
+    noOutcomeStatementsDescription:
+      "Sobald für dieses Projekt Wirkungsaussagen vorliegen, können Sie hier passende Evidenz dazu prüfen und verknüpfen.",
+    recommendedEvidenceTitle: "Empfohlene unterstützende Evidenz",
+    noRecommendedEvidence:
+      "Für diese Wirkungsaussage gibt es noch keine direkte Empfehlung. Sie können unten trotzdem andere Evidenz auswählen.",
+    confirmedEvidenceTitle: "Bereits bestätigte Evidenz",
+    noConfirmedEvidence:
+      "Für diese Wirkungsaussage wurde noch keine Evidenz bestätigt.",
+    baselineSystemLabel: "Baseline",
+    impactMeasurementSystemLabel: "Wirkungsmessung",
+    otherEvidenceTitle: "Andere geeignete vorbereitete Evidenz auswählen",
+    otherEvidencePlaceholder:
+      "Alle geeigneten vorbereiteten Evidenzoptionen durchsuchen",
+    removeLinkAction: "Bestätigte Verknüpfung entfernen",
+    removeLinkSuccess: "Bestätigte Evidenz-Verknüpfung entfernt.",
+    removeLinkFailure:
+      "Die bestätigte Evidenz-Verknüpfung konnte nicht entfernt werden.",
+    unassignedCandidatesTitle: "Weitere offene Evidenz-Kandidaten",
+    unassignedCandidatesDescription:
+      "Diese Kandidaten wurden keiner Wirkungsaussage sicher empfohlen. Sie können sie trotzdem manuell zuordnen oder verwerfen.",
+    diagnosticsTitle: "Diagnose zum Evidenzabgleich",
+    diagnosticsSummary: ({
+      activityCount,
+      candidateCount,
+      readyTableCount,
+    }: {
+      activityCount: number;
+      candidateCount: number;
+      readyTableCount: number;
+    }) =>
+      `${candidateCount} Kandidat(en) aus ${readyTableCount} auswertbaren Tabelle(n) ueber ${activityCount} Projektaktivitaet(en).`,
+    diagnosticReasonJobsStarted:
+      "Fehlende Interpretationsarbeit wurde fuer mindestens eine Aktivitaet gestartet. Nach Abschluss dieser Jobs werden weitere Evidenz-Kandidaten verfuegbar sein.",
+    diagnosticReasonNoReadyTables:
+      "Aktuell gibt es keine interpretierten und fuer die Analyse vorbereiteten Tabellen fuer den Wirkungsabgleich.",
+    diagnosticReasonNoSharedIdentifier:
+      "Zwischen den Baseline- und Wirkungsmessungstabellen gibt es derzeit keine gemeinsame Teilnehmer-ID.",
+    diagnosticReasonNoMatchingScaleColumns:
+      "Einige Spalten sind als Vorher-/Nachher-Paar markiert, aber keine davon ergab eine gueltige Zuordnung (bitte die angegebene Instrumentbezeichnung, Kohorte und ID-Spalte auf beiden Seiten pruefen).",
+    diagnosticReasonNoDeclaredPairingGroups:
+      "Es gibt validierte Skalen-Spalten, aber noch keine ist als Teil eines Vorher-/Nachher-Paares markiert. Bitte die Zuordnungsfrage fuer jede Spalte in der Interpretationspruefung beantworten, damit sie fuer den Abgleich infrage kommt.",
+    diagnosticReasonNoCategoricalColumns:
+      "Aktuell stehen keine kategorialen Spalten als eigenstaendige Verteilungsevidenz zur Verfuegung.",
+    diagnosticReasonDuplicateIdentifierValues:
+      "Die Teilnehmer-ID-Spalte einer Tabelle enthaelt doppelte Werte und kann daher nicht sicher verknuepft werden. Bitte die ID-Spalte bereinigen, bevor ein Abgleich moeglich ist.",
+    diagnosticReasonScaleBoundsMismatch:
+      "Zwei Spalten sind als Vorher-/Nachher-Paar markiert, aber ihre beobachteten Skalen stimmen nicht ueberein (z. B. 1-5 vs. 0-10) und wurden deshalb nicht verknuepft.",
+    activityStatusJobsStarted: "Interpretation gestartet",
+    activityStatusAlreadyReady: "Bereits interpretiert",
+    activityStatusNoUploads: "Keine Uploads",
+    activityStatusBlocked: "Blockiert",
+    activityDiagnosticSummary: ({
+      uploadCount,
+      interpretedUploadCount,
+      readyTableCount,
+    }: {
+      uploadCount: number;
+      interpretedUploadCount: number;
+      readyTableCount: number;
+    }) =>
+      `${uploadCount} Upload(s), ${interpretedUploadCount} interpretiert, ${readyTableCount} auswertbare Tabelle(n).`,
+    uploadStateActiveJob: "Es laeuft bereits ein Interpretationsjob.",
+    uploadStateAlreadyInterpreted:
+      "Fuer diese Datei liegt bereits ein Interpretationsergebnis vor.",
+    uploadStateReadyToInterpret:
+      "Diese Datei ist bereit fuer die Interpretation, aber die Interpretation muss zuerst im vorgelagerten Interpretationsschritt abgeschlossen werden.",
+    uploadStatePrivacyMissing:
+      "Die Privacy-Safe-Verarbeitung dieser Datei ist noch nicht abgeschlossen.",
+    uploadStateUnsupportedModality:
+      "Die extrahierte Struktur dieser Datei wird derzeit nicht fuer die Interpretation unterstuetzt.",
+  },
   organizationBilling: {
     eyebrow: "Abrechnung",
     title: "Abo und Abrechnung",
@@ -1684,6 +1851,9 @@ const de: TranslationDictionary = {
     editActivityTitle: "Aktivität bearbeiten",
     editActivityDescription:
       "Aktualisieren Sie die Umsetzungsdetails dieser Projektaktivität.",
+    createOutcomeStatementTitle: "Wirkungsaussage hinzufügen",
+    editOutcomeStatementTitle: "Wirkungsaussage bearbeiten",
+    editOutcomeStatementDescription: "Aktualisieren Sie diese Wirkungsaussage.",
     project: {
       submit: "Projekt erstellen",
       creating: "Projekt wird erstellt…",
@@ -1762,6 +1932,18 @@ const de: TranslationDictionary = {
       outputPlaceholder:
         "• 12 Workshops innerhalb eines Jahres durchführen\n• 150 Teilnehmende erreichen\n• Mindestens 80 % der Teilnehmenden schließen das Angebot ab\n• Mindestens 75 % der Teilnehmenden sind mit dem Angebot zufrieden",
       status: "Status",
+    },
+    outcomeStatement: {
+      submit: "Wirkungsaussage hinzufügen",
+      updateSubmit: "Änderungen speichern",
+      creating: "Wird hinzugefügt…",
+      updating: "Wird gespeichert…",
+      term: "Zeithorizont",
+      termShort: "Kurzfristig",
+      termLong: "Langfristig",
+      statement: "Wirkungsaussage",
+      statementPlaceholder:
+        "z. B. Mentees berichten von mehr Klarheit über ihre nächsten Karriereschritte.",
     },
     options: {
       targetGroups: [

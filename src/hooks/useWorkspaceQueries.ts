@@ -14,9 +14,12 @@ import {
   type ApproveQualitativeCodingReviewResponse,
   type CreateActivityPayload,
   type CreateOrganizationPayload,
+  type CreateOutcomeStatementPayload,
   type CreateProjectPayload,
+  type DecideOutcomeEvidencePairingProposalPayload,
   type DeleteActivityResponse,
   type DeleteEvidenceResponse,
+  type DeleteOutcomeStatementResponse,
   type DeleteProjectPayload,
   type DeleteProjectResponse,
   type InterpretationResultRecord,
@@ -24,9 +27,11 @@ import {
   type InvitationSummary,
   type OrganizationMemberSummary,
   type OrganizationWorkspace,
+  type OutcomeEvidencePairingResultRecord,
   type ProcessingJobRecord,
   type PrivacyReviewDecisionsInput,
   type PrivacyReviewRecord,
+  type ProjectOutcomeStatement,
   type QualitativeCodingReviewDecisionsInput,
   type QualitativeCodingReviewRecord,
   type ProjectImpactStoryReadResult,
@@ -38,6 +43,7 @@ import {
   type StartInterpretationResponse,
   type UpdateProjectPayload,
   type UpdateActivityPayload,
+  type UpdateOutcomeStatementPayload,
   type UploadMetadataRecord,
 } from "@/services/apiClient";
 
@@ -49,6 +55,10 @@ export const projectOverviewQueryKey = (projectId: string) =>
   ["project-overview", projectId] as const;
 export const projectActivitiesQueryKey = (projectId: string) =>
   ["project-activities", projectId] as const;
+export const projectOutcomeStatementsQueryKey = (projectId: string) =>
+  ["project-outcome-statements", projectId] as const;
+export const outcomeEvidencePairingQueryKey = (projectId: string) =>
+  ["outcome-evidence-pairing", projectId] as const;
 export const activityQueryKey = (activityId: string) =>
   ["activity", activityId] as const;
 export const activityUploadsQueryKey = (activityId: string) =>
@@ -80,6 +90,8 @@ export const invitationQueryKey = (token: string) =>
   ["invitation", token] as const;
 export const projectImpactStoryQueryKey = (projectId: string) =>
   ["project-impact-story", projectId] as const;
+export const projectAnalyticsQueryKey = (projectId: string) =>
+  ["project-analytics", projectId] as const;
 
 export function useOrganizationWorkspaceQuery(
   organizationId: string,
@@ -146,6 +158,17 @@ export function useProjectActivitiesQuery(projectId: string, enabled = true) {
   });
 }
 
+export function useProjectOutcomeStatementsQuery(
+  projectId: string,
+  enabled = true,
+) {
+  return useQuery<ProjectOutcomeStatement[], ApiError>({
+    queryKey: projectOutcomeStatementsQueryKey(projectId),
+    queryFn: () => apiClient.listOutcomeStatements(projectId),
+    enabled,
+  });
+}
+
 export function useActivityQuery(activityId: string, enabled = true) {
   return useQuery<ActivitySummary, ApiError>({
     queryKey: activityQueryKey(activityId),
@@ -196,6 +219,31 @@ export function useActivityLinkageReviewQuery(
     queryKey: activityLinkageReviewQueryKey(activityId),
     queryFn: () => apiClient.getActivityLinkageReview(activityId),
     enabled,
+  });
+}
+
+export function useOutcomeEvidencePairingQuery(
+  projectId: string,
+  enabled = true,
+) {
+  return useQuery<OutcomeEvidencePairingResultRecord, ApiError>({
+    queryKey: outcomeEvidencePairingQueryKey(projectId),
+    queryFn: () => apiClient.proposeOutcomeEvidencePairing(projectId),
+    enabled,
+  });
+}
+
+export function useRunOutcomeEvidencePairingMutation(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<OutcomeEvidencePairingResultRecord, ApiError>({
+    mutationFn: () => apiClient.refreshOutcomeEvidencePairing(projectId),
+    onSuccess: (result) => {
+      queryClient.setQueryData(
+        outcomeEvidencePairingQueryKey(projectId),
+        result,
+      );
+    },
   });
 }
 
@@ -272,6 +320,14 @@ export function useProjectImpactStoryQuery(projectId: string, enabled = true) {
   });
 }
 
+export function useProjectAnalyticsQuery(projectId: string, enabled = true) {
+  return useQuery<ProjectImpactStoryReadResult, ApiError>({
+    queryKey: projectAnalyticsQueryKey(projectId),
+    queryFn: () => apiClient.getProjectAnalytics(projectId),
+    enabled,
+  });
+}
+
 // Creates a project_impact_story processing job — it does not return the
 // finished story. The caller is expected to poll the job with useJobQuery
 // and invalidate useProjectImpactStoryQuery once the job reaches a terminal
@@ -280,6 +336,12 @@ export function useProjectImpactStoryQuery(projectId: string, enabled = true) {
 export function useRunProjectImpactStoryMutation(projectId: string) {
   return useMutation<ProcessingJobRecord, ApiError>({
     mutationFn: () => apiClient.runProjectImpactStory(projectId),
+  });
+}
+
+export function useRunProjectAnalyticsMutation(projectId: string) {
+  return useMutation<ProcessingJobRecord, ApiError>({
+    mutationFn: () => apiClient.runProjectAnalytics(projectId),
   });
 }
 
@@ -306,6 +368,42 @@ export function useReviewActivityLinkageProposalMutation(activityId: string) {
       void queryClient.invalidateQueries({
         queryKey: projectInterpretationsQueryKey(result.projectId),
       });
+    },
+  });
+}
+
+export function useDecideOutcomeEvidencePairingProposalMutation(
+  projectId: string,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    OutcomeEvidencePairingResultRecord,
+    ApiError,
+    DecideOutcomeEvidencePairingProposalPayload
+  >({
+    mutationFn: (payload) =>
+      apiClient.decideOutcomeEvidencePairingProposal(projectId, payload),
+    onSuccess: (result) => {
+      queryClient.setQueryData(
+        outcomeEvidencePairingQueryKey(projectId),
+        result,
+      );
+    },
+  });
+}
+
+export function useRemoveOutcomeEvidenceLinkMutation(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<OutcomeEvidencePairingResultRecord, ApiError, string>({
+    mutationFn: (linkId) =>
+      apiClient.removeOutcomeEvidenceLink(projectId, linkId),
+    onSuccess: (result) => {
+      queryClient.setQueryData(
+        outcomeEvidencePairingQueryKey(projectId),
+        result,
+      );
     },
   });
 }
@@ -1086,6 +1184,56 @@ export function useDeleteActivityMutation(
           queryKey: workspaceQueryKey(organizationId),
         });
       }
+    },
+  });
+}
+
+export function useCreateOutcomeStatementMutation(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    ProjectOutcomeStatement,
+    ApiError,
+    CreateOutcomeStatementPayload
+  >({
+    mutationFn: (payload) =>
+      apiClient.createOutcomeStatement(projectId, payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: projectOutcomeStatementsQueryKey(projectId),
+      });
+    },
+  });
+}
+
+export function useUpdateOutcomeStatementMutation(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    ProjectOutcomeStatement,
+    ApiError,
+    { outcomeStatementId: string; payload: UpdateOutcomeStatementPayload }
+  >({
+    mutationFn: ({ outcomeStatementId, payload }) =>
+      apiClient.updateOutcomeStatement(projectId, outcomeStatementId, payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: projectOutcomeStatementsQueryKey(projectId),
+      });
+    },
+  });
+}
+
+export function useDeleteOutcomeStatementMutation(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<DeleteOutcomeStatementResponse, ApiError, string>({
+    mutationFn: (outcomeStatementId) =>
+      apiClient.deleteOutcomeStatement(projectId, outcomeStatementId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: projectOutcomeStatementsQueryKey(projectId),
+      });
     },
   });
 }

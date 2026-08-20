@@ -17,11 +17,34 @@ the recommended way to handle server state against ia_backend.
 
 For the activity-analysis feature (upload → privacy review → interpretation
 → `ActivityAnalystV2`), see `CURRENT_ANALYSIS_PIPELINE.md` at the workspace
-root — it lists the canonical frontend files for that flow
-(`activityAnalyticsPage.tsx`, `activityAnalysisV2Panel.tsx`,
-`interpretationQuestionCard.tsx`) plus the cross-service data flow. The
-older `activity.aiKnowledgeSnapshot`-based summary is legacy; new work on
-that page should read/write only the `analysis-v2` routes and hooks.
+root — it lists the canonical frontend files for that flow plus the
+cross-service data flow. The older `activity.aiKnowledgeSnapshot`-based
+summary is legacy; new work should read/write only the `analysis-v2` routes
+and hooks.
+
+As of 2026-08-18, the dedicated activity analysis page
+(`activityAnalyticsPage.tsx`) and its panel (`activityAnalysisV2Panel.tsx`)
+were deleted — `routes/projects/$projectId/activities/$activityId/analysis.tsx`,
+`.../analytics.tsx`, and `.../insights.tsx` are now all thin
+`LegacyRedirect` routes that forward to the project-level
+`/projects/$projectId/analytics` page. The V2 run UI (triggering a run,
+rendering goal cards, answering clarification questions) now lives entirely
+inside `routes/projects/$projectId/interpretation.tsx`, via its local
+`AnalysisOpenDialog` component — that route, not a standalone page, is the
+canonical place to look for `ActivityAnalystV2` frontend behavior.
+
+`/projects/$projectId/analytics` itself no longer renders the old
+configurable analytics dashboard (`configurableAnalyticsDashboard.tsx` and
+`projectAnalyticsPage.tsx` were deleted in the same 2026-08-18 change). It
+now renders `components/impactStory/projectImpactStoryPage.tsx`, the
+**Project Impact Story** feature: a project-level narrative and chart plan
+built from human-confirmed `OutcomeEvidenceLink` records. This is a
+separate feature from the `ActivityAnalystV2` pipeline, not part of it —
+treat it as its own area when making changes, and see
+`ia_backend/CLAUDE.md`'s note on `projectImpactStory` for the backend side.
+Two small files under `src/components/analytics/`
+(`analyticsEmptyState.tsx`, `analyticsFormat.ts`) were left behind by that
+deletion and are currently unreferenced — check before building on them.
 
 ## Naming standard
 

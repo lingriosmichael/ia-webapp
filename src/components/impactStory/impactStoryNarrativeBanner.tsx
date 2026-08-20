@@ -42,30 +42,30 @@ export function ImpactStoryNarrativeBanner({
     : [];
 
   return (
-    <Card className="overflow-hidden rounded-[2rem] border-border bg-card px-5 py-5 shadow-soft sm:px-6 sm:py-6">
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+    <Card className="overflow-hidden rounded-[2rem] border-border bg-card px-3 py-3 shadow-soft sm:px-4 sm:py-4">
+      <div className="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0 flex-1">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <h2 className="font-[family-name:var(--font-editorial)] text-[1.3rem] leading-[0.95] tracking-[-0.04em] text-foreground sm:text-[1.6rem] lg:text-[1.8rem]">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+            <h2 className="font-[family-name:var(--font-editorial)] text-[0.85rem] leading-[0.95] tracking-[-0.04em] text-foreground sm:text-[0.95rem] lg:text-[1.05rem]">
               {t("impactStory.narrativeTitle")}
             </h2>
-            <p className="pt-0.5 text-[0.72rem] text-muted-foreground sm:pt-0 sm:text-[0.78rem]">
+            <p className="pt-0.5 text-[0.56rem] text-muted-foreground sm:pt-0 sm:text-[0.6rem]">
               {t("impactStory.generatedAt", {
                 timestamp: formatTimestamp(story.updatedAt, i18n.language),
               })}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2 lg:pt-1">
+        <div className="flex items-center gap-1.5 lg:pt-0.5">
           <Button
             type="button"
             variant="outline"
             size="sm"
             onClick={onRegenerate}
             disabled={isRegenerating}
-            className="rounded-full px-3 py-1.5 text-[0.72rem]"
+            className="rounded-full px-2.5 py-1 text-[0.58rem]"
           >
-            <RefreshCcw className="mr-1.5 h-3 w-3" />
+            <RefreshCcw className="mr-1 h-2.5 w-2.5" />
             {isRegenerating
               ? t("impactStory.runPending")
               : t("impactStory.refreshAction")}
@@ -73,24 +73,29 @@ export function ImpactStoryNarrativeBanner({
         </div>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className="mt-2.5 flex flex-wrap gap-1.5">
         {isStale && (
-          <p className="rounded-2xl bg-[color:color-mix(in_srgb,#C2593F_12%,white)] px-3 py-1.5 text-[0.7rem] font-semibold text-[#C2593F]">
+          <p className="rounded-2xl bg-[color:color-mix(in_srgb,#C2593F_12%,white)] px-2.5 py-1 text-[0.56rem] font-semibold text-[#C2593F]">
             {t("impactStory.staleNotice")}
+          </p>
+        )}
+        {story.narrativeStatus && story.narrativeStatus !== "generated" && (
+          <p className="rounded-2xl bg-secondary px-2.5 py-1 text-[0.56rem] font-semibold text-secondary-foreground">
+            {t("impactStory.narrativeTemplatedNotice")}
           </p>
         )}
       </div>
 
       {story.status === "failed" ? (
-        <p className="mt-4 text-[0.82rem] leading-6 text-muted-foreground">
+        <p className="mt-2.5 text-[0.64rem] leading-[1.45] text-muted-foreground">
           {t("impactStory.narrativeFailed")}
         </p>
       ) : paragraphs.length > 0 ? (
-        <div className="mt-4 space-y-3">
+        <div className="mt-2.5 space-y-2">
           {paragraphs.map((paragraph, index) => (
             <p
               key={`${story.id}-paragraph-${index}`}
-              className="max-w-[72rem] text-[0.72rem] leading-[1.55] text-foreground sm:text-[0.78rem]"
+              className="max-w-[72rem] text-[0.6rem] leading-[1.45] text-foreground sm:text-[0.66rem]"
             >
               {paragraph}
             </p>
@@ -99,7 +104,7 @@ export function ImpactStoryNarrativeBanner({
       ) : null}
 
       {hasUnanalyzedActivities && (
-        <p className="mt-4 text-[0.68rem] leading-5 text-muted-foreground">
+        <p className="mt-2.5 text-[0.56rem] leading-[1.4] text-muted-foreground">
           {t("impactStory.notYetAnalyzedFootnote", {
             names:
               story.diagnostics.activitiesWithNoGroundedIndicators.join(", "),

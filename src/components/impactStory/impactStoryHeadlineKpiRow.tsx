@@ -11,6 +11,16 @@ const detailToneClasses = [
   "text-[color:color-mix(in_srgb,var(--warning)_85%,var(--foreground))]",
 ] as const;
 
+// Recomputed status (good/warn/risk) takes priority over the positional
+// rotation above whenever a KPI carries one — a goal-verdict KPI's color
+// means something (see ContextCatalogEntry/ProjectImpactStoryGoalStatus in
+// IMPACT_STORY_OUTCOME_EXTENSION_PLAN.md §3.3), a plain fact KPI's doesn't.
+const statusToneClasses = {
+  good: "text-success",
+  warn: "text-warning",
+  risk: "text-destructive",
+} as const;
+
 export function ImpactStoryHeadlineKpiRow({
   kpis,
 }: {
@@ -42,9 +52,15 @@ export function ImpactStoryHeadlineKpiRow({
           <div className="mt-3 font-[family-name:var(--font-editorial)] text-[2rem] leading-none tracking-[-0.05em] text-foreground sm:text-[2.25rem]">
             {formatImpactStoryValue(kpi.value, kpi.formatAs, i18n.language)}
           </div>
-          {kpi.narrativeReason ? (
+          {kpi.status && kpi.statusCallout ? (
             <div
-              className={`mt-2 text-[0.72rem] leading-[1.5] font-medium ${detailToneClasses[index] ?? "text-success"}`}
+              className={`mt-2 text-[0.72rem] leading-[1.5] font-medium ${statusToneClasses[kpi.status]}`}
+            >
+              {kpi.statusCallout}
+            </div>
+          ) : kpi.narrativeReason ? (
+            <div
+              className={`mt-2 text-[0.72rem] leading-[1.5] font-medium ${kpi.status ? statusToneClasses[kpi.status] : (detailToneClasses[index] ?? "text-success")}`}
             >
               {kpi.narrativeReason}
             </div>

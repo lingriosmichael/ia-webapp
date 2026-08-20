@@ -17,6 +17,7 @@ import {
   truncateChartLabel,
 } from "./impactStoryFormat";
 import { ImpactStoryBoardCard } from "./impactStoryBoardCard";
+import { ImpactStoryExploratoryBadge } from "./impactStoryExploratoryBadge";
 import {
   IMPACT_STORY_COLORS,
   verticalBarColor,
@@ -64,6 +65,7 @@ export function ProjectImpactStoryBarChart({
       title={chart.title}
       subtitle={chart.subtitle}
       note={chart.narrativeReason}
+      badge={chart.isExploratory ? <ImpactStoryExploratoryBadge /> : undefined}
     >
       <div
         className="h-[220px]"

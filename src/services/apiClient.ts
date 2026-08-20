@@ -18,6 +18,7 @@ export type OrganizationRole = "ORGANIZATION_ADMIN" | "PROJECT_MANAGER";
 export type ProjectStatus = "planning" | "active" | "completed";
 export type ActivityStatus = "active" | "completed";
 export type ActivitySystemType = "baseline" | "impact_measurement";
+export type OutcomeTerm = "short" | "long";
 
 export interface OrganizationPermissions {
   canManageMembers: boolean;
@@ -241,6 +242,31 @@ export interface UpdateActivityPayload {
 export interface WorkspaceActivity extends ActivitySummary {
   uploadMetadataCount: number;
   processingJobCount: number;
+}
+
+export interface ProjectOutcomeStatement {
+  id: string;
+  projectId: string;
+  organizationId: string;
+  term: OutcomeTerm;
+  statement: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateOutcomeStatementPayload {
+  term: OutcomeTerm;
+  statement: string;
+}
+
+export interface UpdateOutcomeStatementPayload {
+  term?: OutcomeTerm;
+  statement?: string;
+}
+
+export interface DeleteOutcomeStatementResponse {
+  id: string;
+  projectId: string;
 }
 
 export interface WorkspaceProject extends ProjectSummary {
@@ -605,7 +631,6 @@ export type InterpretationQualitativeOutcomeAnchorType =
   | "project_impact"
   | "activity_objective"
   | "activity_output"
-  | "activity_outcome"
   | "unanchored";
 
 export interface InterpretationIndicator {
@@ -668,7 +693,10 @@ export type InterpretationQuestionCode =
   | "positive_status_values"
   | "primary_date_field"
   | "epistemic_role_clarification"
-  | "validated_scale_confirmation";
+  | "validated_scale_confirmation"
+  | "cohort_tag"
+  | "pairing_group_key"
+  | "pairing_group_role";
 export type InterpretationQuestionStatus = "pending" | "answered";
 
 export interface InterpretationQuestion {
@@ -1301,14 +1329,57 @@ export interface ProjectImpactStorySourceSnapshotItem {
   activityAnalysisRunId: string;
 }
 
+export type ProjectChartOpportunityKind =
+  | "context_distribution"
+  | "calculation"
+  | "goal_assessment"
+  | "paired_story_delta";
+
+export type ProjectChartOpportunityStatus =
+  "ready_now" | "blocked_by_extraction" | "blocked_by_missing_data";
+
+// One row of the deterministic chart-opportunity audit: every chart-worthy
+// fact the project's current analysis runs could support, classified into
+// whether it's already materialized, blocked by a pipeline gap, or blocked
+// by missing/insufficient evidence. Read-only diagnostics, computed once
+// per generation run — never editable from this page.
+export interface ProjectChartOpportunityAuditEntry {
+  entryId: string;
+  kind: ProjectChartOpportunityKind;
+  activityId: string;
+  activityName: string;
+  title: string;
+  sourceTables: string[];
+  status: ProjectChartOpportunityStatus;
+  reasonCode: string;
+  reasonDetail: string;
+}
+
+// Diff between the opportunity audit's ready_now set and what the chart
+// planner actually selected — answers "X was available, why didn't it show
+// up?", which the opportunity audit alone cannot.
+export interface ProjectChartSelectionAudit {
+  selectedEntryIds: string[];
+  unselectedReadyEntryIds: string[];
+  highSignalUnselectedEntryIds: string[];
+  selectionWarnings: string[];
+}
+
 export interface ProjectImpactStoryDiagnostics {
   activityCount: number;
   indicatorCount: number;
   excludedIndicatorCount: number;
   activitiesWithNoGroundedIndicators: string[];
+  chartOpportunityAudit?: ProjectChartOpportunityAuditEntry[];
+  chartSelectionAudit?: ProjectChartSelectionAudit;
 }
 
 export type ProjectImpactStoryStatus = "completed" | "failed";
+
+// A goal-verdict traffic light, recomputed from measuredValue/targetValue
+// against fixed thresholds every time — never read from an evidence-embedded
+// "target met" flag. See IMPACT_STORY_OUTCOME_EXTENSION_PLAN.md §3.3.
+export type ProjectImpactStoryGoalStatus = "good" | "warn" | "risk";
 
 // Project-level headline KPIs and chart plan — the LLM-planned,
 // backend-executed story layer on top of activityCards. Every `value`/`data`
@@ -1320,6 +1391,28 @@ export interface ProjectImpactStoryHeadlineKpi {
   value: number;
   formatAs: ImpactIndicatorTileFormat;
   narrativeReason: string;
+  // Present only for a KPI built from a single goal_assessment with a
+  // resolved measuredValue/targetValue — a plain fact-count KPI (e.g.
+  // "Jugendliche im Programm") carries neither field.
+  status?: ProjectImpactStoryGoalStatus;
+  statusCallout?: string;
+}
+
+// A pure descriptive distribution over a categorical evidence column with no
+// goal or outcome link (e.g. a district breakdown) — computed
+// deterministically and kept structurally separate from outcome-linked
+// claims. The chart planner may still choose it as story-supporting
+// evidence; this shape remains for fallback-only descriptive charts.
+export interface ContextCatalogEntry {
+  entryId: string;
+  activityId: string;
+  activityName: string;
+  labelDe: string;
+  dimensionLabelDe: string;
+  shares: Array<{ labelDe: string; count: number }>;
+  n: number;
+  eligibleChartTypes: Array<"hbar_target" | "donut_share">;
+  sourceDe: string;
 }
 
 export type ProjectImpactStoryChartType =
@@ -1348,7 +1441,53 @@ export interface ProjectImpactStoryChartSpec {
   subtitle: string | null;
   narrativeReason: string;
   data: ProjectImpactStoryChartDatum[];
+  // True only for a before/after pair detected from declared pairing
+  // metadata but never human-confirmed as outcome evidence — must render
+  // visually distinct from a confirmed impactCatalog chart (same shape,
+  // different evidentiary weight). Omitted (not false) on every other
+  // chart.
+  isExploratory?: boolean;
 }
+
+export interface ImpactCatalogEntry {
+  entryId: string;
+  shape: "paired_delta";
+  outcomeId: string;
+  outcomeTerm: OutcomeTerm;
+  outcomeStatement: string;
+  pairLabelDe: string;
+  beforeValue: number;
+  afterValue: number;
+  nMatched: number;
+  nBaseline: number;
+  sourceDe: string;
+}
+
+export interface OutcomeDistributionEntry {
+  entryId: string;
+  shape: "single_distribution";
+  outcomeId: string;
+  outcomeTerm: OutcomeTerm;
+  outcomeStatement: string;
+  questionLabelDe: string;
+  shares: Array<{ labelDe: string; count: number }>;
+  n: number;
+  sourceDe: string;
+}
+
+export interface UnmeasuredOutcomeEntry {
+  entryId: string;
+  shape: "unmeasured";
+  outcomeId: string;
+  outcomeTerm: OutcomeTerm;
+  outcomeStatement: string;
+}
+
+export type ImpactCatalogItem =
+  ImpactCatalogEntry | OutcomeDistributionEntry | UnmeasuredOutcomeEntry;
+
+export type ProjectImpactStoryNarrativeStatus =
+  "generated" | "deterministic_fallback" | "call_failed";
 
 export interface ProjectImpactStoryRecord {
   id: string;
@@ -1359,7 +1498,12 @@ export interface ProjectImpactStoryRecord {
   activityCards: ActivityImpactStoryCard[];
   headlineKpis: ProjectImpactStoryHeadlineKpi[];
   chartPlan: ProjectImpactStoryChartSpec[];
+  // Fallback-only descriptive charts when the planner produced no selected
+  // story charts.
+  contextCharts: ContextCatalogEntry[];
+  impactCatalog: ImpactCatalogItem[];
   narrativeSummary: string | null;
+  narrativeStatus: ProjectImpactStoryNarrativeStatus | null;
   diagnostics: ProjectImpactStoryDiagnostics;
   llmUsage: Record<string, unknown> | null;
   errorMessage: string | null;
@@ -1407,6 +1551,199 @@ export interface ActivityEvidenceLinkageResultRecord {
   proposalDecisions: ActivityEvidenceLinkageProposalDecisionRecord[];
   createdAt: string;
   updatedAt: string;
+}
+
+export type OutcomeEvidencePairingShape =
+  "paired_delta" | "single_distribution";
+
+// An LLM-proposed pre-fill for the human's outcome pick, computed once per
+// proposalId and cached on the persisted record. `outcomeId: null` means
+// the LLM was asked and wasn't confident (a real, final answer) — distinct
+// from the proposal's own `suggestedOutcome` field being `null`, which
+// means "not yet attempted."
+export interface OutcomeEvidencePairingSuggestedOutcome {
+  outcomeId: string | null;
+  rationale: string;
+}
+
+export interface OutcomeEvidencePairingProposalPairedDelta {
+  proposalId: string;
+  shape: "paired_delta";
+  activityIdBefore: string;
+  activityIdAfter: string;
+  beforeUploadMetadataId: string;
+  beforeTableName: string;
+  beforeColumnName: string;
+  afterUploadMetadataId: string;
+  afterTableName: string;
+  afterColumnName: string;
+  matchKey: string;
+  pairingGroupKey: string;
+  suggestedOutcome: OutcomeEvidencePairingSuggestedOutcome | null;
+}
+
+export interface OutcomeEvidencePairingProposalSingleDistribution {
+  proposalId: string;
+  shape: "single_distribution";
+  activityId: string;
+  uploadMetadataId: string;
+  tableName: string;
+  categoryColumnName: string;
+  suggestedOutcome: OutcomeEvidencePairingSuggestedOutcome | null;
+}
+
+export type OutcomeEvidencePairingProposal =
+  | OutcomeEvidencePairingProposalPairedDelta
+  | OutcomeEvidencePairingProposalSingleDistribution;
+
+export type OutcomeEvidencePairingProposalDecision = "assign" | "reject";
+
+export interface OutcomeEvidencePairingProposalDecisionRecord {
+  proposalId: string;
+  decision: OutcomeEvidencePairingProposalDecision;
+  outcomeId: string | null;
+  decidedById: string;
+  decidedAt: string;
+}
+
+export type OutcomeEvidencePairingReviewStatus = "needs_review" | "resolved";
+
+export type OutcomeEvidencePairingDiagnosticsTrigger = "propose" | "refresh";
+
+export type OutcomeEvidencePairingActivityDiagnosticStatus =
+  "no_uploads" | "already_ready" | "jobs_started" | "blocked";
+
+export type OutcomeEvidencePairingDiagnosticReasonCode =
+  | "no_ready_tables"
+  | "jobs_started"
+  | "no_shared_identifier"
+  | "no_matching_scale_columns"
+  | "no_categorical_columns"
+  | "duplicate_identifier_values"
+  | "scale_bounds_mismatch"
+  | "no_declared_pairing_groups";
+
+export interface OutcomeEvidencePairingDiagnosticReason {
+  code: OutcomeEvidencePairingDiagnosticReasonCode;
+}
+
+export interface OutcomeEvidencePairingActivityUploadState {
+  uploadMetadataId: string;
+  originalFileName: string;
+  reason:
+    | "active_job"
+    | "already_interpreted"
+    | "ready_to_interpret"
+    | "privacy_safe_representation_missing"
+    | "unsupported_modality";
+  latestJobStatus:
+    | "queued"
+    | "processing"
+    | "awaiting_privacy_review"
+    | "transforming"
+    | "completed"
+    | "failed"
+    | "cancelled"
+    | null;
+  latestJobType:
+    | "workbook_split"
+    | "evidence_processing"
+    | "dataset_interpretation"
+    | "dataset_review"
+    | "metrics_generation"
+    | "dashboard_generation"
+    | "insight_generation"
+    | "report_generation"
+    | "chat"
+    | "other"
+    | "activity_analysis_v2"
+    | "qualitative_coding_review"
+    | "project_impact_story"
+    | null;
+  evidenceModality: string | null;
+}
+
+export interface OutcomeEvidencePairingActivityDiagnostic {
+  activityId: string;
+  activityName: string;
+  systemType: ActivitySystemType | null;
+  uploadCount: number;
+  interpretedUploadCount: number;
+  readyTableCount: number;
+  status: OutcomeEvidencePairingActivityDiagnosticStatus;
+  startedCount: number;
+  skippedCount: number;
+  startedJobIds: string[];
+  uploadStates: OutcomeEvidencePairingActivityUploadState[];
+}
+
+export interface OutcomeEvidencePairingDiagnostics {
+  trigger: OutcomeEvidencePairingDiagnosticsTrigger;
+  activityCount: number;
+  candidateCount: number;
+  readyTableCount: number;
+  activityDiagnostics: OutcomeEvidencePairingActivityDiagnostic[];
+  reasons: OutcomeEvidencePairingDiagnosticReason[];
+}
+
+export interface OutcomeEvidencePairingResultRecord {
+  id: string;
+  organizationId: string;
+  projectId: string;
+  status: OutcomeEvidencePairingReviewStatus;
+  proposals: OutcomeEvidencePairingProposal[];
+  eligibleEvidenceOptions: OutcomeEvidencePairingProposal[];
+  proposalDecisions: OutcomeEvidencePairingProposalDecisionRecord[];
+  outcomeSections: OutcomeEvidencePairingOutcomeSection[];
+  unassignedProposals: OutcomeEvidencePairingProposal[];
+  diagnostics: OutcomeEvidencePairingDiagnostics;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface OutcomeEvidencePairingOutcomeSection {
+  outcomeStatement: ProjectOutcomeStatement;
+  confirmedLinks: OutcomeEvidenceLink[];
+  recommendedProposals: OutcomeEvidencePairingProposal[];
+}
+
+export interface OutcomeEvidenceLinkPairedDelta {
+  linkId: string;
+  outcomeId: string;
+  shape: "paired_delta";
+  activityIdBefore: string;
+  activityIdAfter: string;
+  beforeUploadMetadataId: string;
+  beforeTableName: string;
+  beforeColumnName: string;
+  afterUploadMetadataId: string;
+  afterTableName: string;
+  afterColumnName: string;
+  matchKey: string;
+  pairingGroupKey: string;
+  confirmedById: string;
+  confirmedAt: string;
+}
+
+export interface OutcomeEvidenceLinkSingleDistribution {
+  linkId: string;
+  outcomeId: string;
+  shape: "single_distribution";
+  activityId: string;
+  uploadMetadataId: string;
+  tableName: string;
+  categoryColumnName: string;
+  confirmedById: string;
+  confirmedAt: string;
+}
+
+export type OutcomeEvidenceLink =
+  OutcomeEvidenceLinkPairedDelta | OutcomeEvidenceLinkSingleDistribution;
+
+export interface DecideOutcomeEvidencePairingProposalPayload {
+  proposalId: string;
+  decision: OutcomeEvidencePairingProposalDecision;
+  outcomeId?: string;
 }
 
 export type ActivityWorkflowStage =
@@ -1504,7 +1841,6 @@ export interface EvidenceCatalogThemeEntry {
     | "project_impact"
     | "activity_objective"
     | "activity_output"
-    | "activity_outcome"
     | "unanchored"
   >;
   sourceActivityIds: string[];
@@ -2120,6 +2456,44 @@ export const apiClient = {
       method: "DELETE",
     });
   },
+  listOutcomeStatements(projectId: string): Promise<ProjectOutcomeStatement[]> {
+    return request(`/projects/${projectId}/outcome-statements`);
+  },
+  createOutcomeStatement(
+    projectId: string,
+    payload: CreateOutcomeStatementPayload,
+  ): Promise<ProjectOutcomeStatement> {
+    return request(`/projects/${projectId}/outcome-statements`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  },
+  updateOutcomeStatement(
+    projectId: string,
+    outcomeStatementId: string,
+    payload: UpdateOutcomeStatementPayload,
+  ): Promise<ProjectOutcomeStatement> {
+    return request(
+      `/projects/${projectId}/outcome-statements/${outcomeStatementId}`,
+      {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      },
+    );
+  },
+  deleteOutcomeStatement(
+    projectId: string,
+    outcomeStatementId: string,
+  ): Promise<DeleteOutcomeStatementResponse> {
+    return request(
+      `/projects/${projectId}/outcome-statements/${outcomeStatementId}`,
+      {
+        method: "DELETE",
+      },
+    );
+  },
   listActivityUploads(activityId: string): Promise<UploadMetadataRecord[]> {
     return request(`/activities/${activityId}/evidence`);
   },
@@ -2248,6 +2622,44 @@ export const apiClient = {
       body: JSON.stringify({ proposalId, ...payload }),
     });
   },
+  // Recomputes candidates from current evidence and returns the refreshed
+  // result — this POST doubles as "read current state" on the backend, so
+  // it's safe to use as a query function too.
+  proposeOutcomeEvidencePairing(
+    projectId: string,
+  ): Promise<OutcomeEvidencePairingResultRecord> {
+    return request(`/projects/${projectId}/outcome-evidence-pairing/propose`, {
+      method: "POST",
+    });
+  },
+  refreshOutcomeEvidencePairing(
+    projectId: string,
+  ): Promise<OutcomeEvidencePairingResultRecord> {
+    return request(`/projects/${projectId}/outcome-evidence-pairing/refresh`, {
+      method: "POST",
+    });
+  },
+  decideOutcomeEvidencePairingProposal(
+    projectId: string,
+    payload: DecideOutcomeEvidencePairingProposalPayload,
+  ): Promise<OutcomeEvidencePairingResultRecord> {
+    return request(
+      `/projects/${projectId}/outcome-evidence-pairing/decisions`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      },
+    );
+  },
+  removeOutcomeEvidenceLink(
+    projectId: string,
+    linkId: string,
+  ): Promise<OutcomeEvidencePairingResultRecord> {
+    return request(`/projects/${projectId}/outcome-evidence-links/${linkId}`, {
+      method: "DELETE",
+    });
+  },
   getLatestActivityAnalysisV2(
     activityId: string,
   ): Promise<ActivityAnalysisRunV2Record> {
@@ -2291,12 +2703,22 @@ export const apiClient = {
   ): Promise<ProjectImpactStoryReadResult> {
     return request(`/projects/${projectId}/impact-story`);
   },
+  getProjectAnalytics(
+    projectId: string,
+  ): Promise<ProjectImpactStoryReadResult> {
+    return request(`/projects/${projectId}/analytics`);
+  },
   // Creates a project_impact_story processing job instead of returning the
   // finished story directly, same job-then-poll contract as
   // runActivityAnalysisV2 above. Poll the returned job with useJobQuery,
   // then re-fetch getProjectImpactStory once it's terminal.
   runProjectImpactStory(projectId: string): Promise<ProcessingJobRecord> {
     return request(`/projects/${projectId}/impact-story`, {
+      method: "POST",
+    });
+  },
+  runProjectAnalytics(projectId: string): Promise<ProcessingJobRecord> {
+    return request(`/projects/${projectId}/analytics`, {
       method: "POST",
     });
   },

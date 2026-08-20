@@ -390,6 +390,7 @@ const en = {
       evidence: "Evidence",
       interpretation: "Interpretation",
       analytics: "Analytics",
+      outcomeStatements: "Outcome statements",
       comingSoon: "Soon",
     },
     overview: {
@@ -728,22 +729,46 @@ const en = {
   },
   impactStory: {
     loading: "Loading…",
-    loadFailed: "The progress story could not be loaded.",
+    loadFailed: "The analysis could not be loaded.",
     narrativeTitle: "Progress & Impact",
     generatedAt: "Generated on {{timestamp}}",
-    runAction: "Generate progress story",
-    refreshAction: "Refresh",
+    runAction: "Generate analysis",
+    refreshAction: "Refresh analysis",
     runPending: "Generating…",
-    runSuccess: "The progress story has been updated.",
-    runFailed: "The progress story could not be generated.",
+    runSuccess: "The analysis has been updated.",
+    runFailed: "The analysis could not be generated.",
     narrativeFailed:
       "The narrative could not be generated. The figures below are still reliable.",
     staleNotice:
       "New evidence has arrived since this was last generated. Refresh to see the latest figures.",
+    narrativeTemplatedNotice:
+      "This summary was generated automatically from your data, not written by AI.",
+    exploratoryChartNotice:
+      "Exploratory — before/after detected, not confirmed as a result",
+    diagnosticsPanelTitle: "Diagnostics",
+    diagnosticsSummary:
+      "{{readyCount}} ready · {{extractionCount}} blocked by pipeline · {{missingDataCount}} blocked by missing data",
+    diagnosticsUnselectedTitle: "Available but not shown on this page",
+    diagnosticsUnselectedDescription:
+      "These were ready to chart, but the planner did not select them this time.",
+    diagnosticsUnselectedEmpty: "Everything that was ready was selected.",
+    diagnosticsExtractionBlockedTitle: "Blocked by a pipeline gap",
+    diagnosticsExtractionBlockedDescription:
+      "The data exists, but the pipeline could not turn it into a chart candidate yet.",
+    diagnosticsExtractionBlockedEmpty: "No pipeline gaps detected.",
+    diagnosticsMissingDataBlockedTitle: "Blocked by missing data",
+    diagnosticsMissingDataBlockedDescription:
+      "This chart needs evidence or an analysis run that isn't available yet.",
+    diagnosticsMissingDataBlockedEmpty: "No missing-data gaps detected.",
+    diagnosticsUnavailable:
+      "Diagnostics are not available for this analysis run yet — regenerate to see them.",
+    beforeLabel: "Before",
+    afterLabel: "After",
+    outcomeNotYetMeasurable: "Not yet measurable — no linked evidence yet.",
     notYetAnalyzedFootnote: "No analyzed metrics yet for: {{names}}.",
-    emptyTitle: "No progress story generated yet",
+    emptyTitle: "No analysis generated yet",
     emptyDescription:
-      "Generate a summary of this project's progress and impact based on the evidence already analyzed.",
+      "Generate this project's general metrics and charts from the evidence already analyzed. If linked outcome evidence exists, it will be highlighted as an additional layer.",
     rankedBarsAriaLabel: "{{label}}: {{summary}}",
     trendChartAriaLabel: "{{label}} over time: {{summary}}",
     byActivityTitle: "By activity",
@@ -1566,6 +1591,143 @@ const en = {
     removeSuccess: "Member removed.",
     removeFailure: "Member could not be removed.",
   },
+  outcomeStatements: {
+    eyebrow: "Outcome statements",
+    title: "Outcome statements",
+    description:
+      "Define the short-term and long-term outcomes this project is working toward. Evidence can be linked to these statements later to show what has actually been measured.",
+    loading: "Loading outcome statements…",
+    emptyTitle: "No outcome statements yet",
+    emptyDescription:
+      "Add the short-term and long-term outcomes this project is working toward.",
+    addAction: "Add outcome statement",
+    editAction: "Edit",
+    deleteAction: "Delete",
+    termShort: "Short-term",
+    termLong: "Long-term",
+    createSuccess: "Outcome statement added.",
+    createFailure: "Outcome statement could not be added.",
+    updateSuccess: "Outcome statement updated.",
+    updateFailure: "Outcome statement could not be updated.",
+    deleteSuccess: "Outcome statement deleted.",
+    deleteFailure: "Outcome statement could not be deleted.",
+    importFromIntendedChangesAction: "Import from long-term impact goals",
+    importTitle: "Import outcome statements",
+    importDescription:
+      "These are the long-term effects you already defined for this project. Select the ones to add as outcome statements — you can edit or remove them afterward.",
+    importAction: "Import {{count}} outcome statements",
+    importing: "Importing…",
+    importSuccess: "Outcome statements imported.",
+    importFailure: "Outcome statements could not be imported.",
+  },
+  outcomeStatementDelete: {
+    title: "Delete this outcome statement?",
+    description:
+      "This action cannot be undone. Deleting “{{statement}}” will also remove any evidence links attached to it.",
+    confirmAction: "Delete outcome statement",
+    deleting: "Deleting…",
+  },
+  outcomeEvidencePairing: {
+    title: "Evidence to review",
+    description:
+      "brindl starts with your outcome statements and places the most relevant evidence candidates next to them. You can keep the recommendation, assign different evidence, or reject candidates — the final decision stays with you.",
+    runAction: "Match and analyze evidence",
+    runningAction: "Matching evidence…",
+    runSuccess: "Evidence matching was updated.",
+    runStartedSuccess:
+      "Interpretation started for matching evidence. Refresh again after processing finishes.",
+    runFailure: "Evidence matching could not be updated.",
+    loading: "Checking for candidate evidence…",
+    pairedDeltaLabel: "Before / after comparison",
+    singleDistributionLabel: "Distribution",
+    beforeLabel: "Before",
+    afterLabel: "After",
+    outcomeSelectPlaceholder: "Select an outcome statement",
+    assignAction: "Assign to outcome",
+    rejectAction: "Not linked to any outcome",
+    assignSuccess: "Evidence linked to the outcome statement.",
+    assignFailure: "The evidence could not be linked.",
+    rejectSuccess: "Evidence marked as not linked.",
+    rejectFailure: "The evidence rejection could not be saved.",
+    emptyStateTitle: "No candidate evidence yet",
+    emptyStateDescription:
+      "This usually means baseline and Wirkungsmessung data haven't both been uploaded yet, the uploaded columns don't share identical (or recognizably before/after) names, or the tables have no shared participant identifier to join on.",
+    errorTitle: "Could not check for candidate evidence",
+    errorDescription:
+      "Something went wrong loading evidence-pairing candidates. Try again shortly.",
+    suggestedOutcomeLabel: "Suggested:",
+    suggestedOutcomeUncertain:
+      "brindl could not confidently match this to one of your outcome statements.",
+    noOutcomeStatementsTitle: "Add outcome statements first",
+    noOutcomeStatementsDescription:
+      "Once this project has outcome statements, you can review and link supporting evidence here.",
+    recommendedEvidenceTitle: "Recommended supporting evidence",
+    noRecommendedEvidence:
+      "There is no direct recommendation for this outcome statement yet. You can still choose other evidence below.",
+    confirmedEvidenceTitle: "Already confirmed evidence",
+    noConfirmedEvidence:
+      "No evidence has been confirmed for this outcome statement yet.",
+    baselineSystemLabel: "Baseline",
+    impactMeasurementSystemLabel: "Impact measurement",
+    otherEvidenceTitle: "Choose other eligible supporting evidence",
+    otherEvidencePlaceholder: "Browse all eligible prepared evidence",
+    removeLinkAction: "Remove confirmed link",
+    removeLinkSuccess: "Confirmed evidence link removed.",
+    removeLinkFailure: "The confirmed evidence link could not be removed.",
+    unassignedCandidatesTitle: "Other open evidence candidates",
+    unassignedCandidatesDescription:
+      "These candidates were not confidently recommended for a specific outcome. You can still assign them manually or reject them.",
+    diagnosticsTitle: "Matching diagnostics",
+    diagnosticsSummary: ({
+      activityCount,
+      candidateCount,
+      readyTableCount,
+    }: {
+      activityCount: number;
+      candidateCount: number;
+      readyTableCount: number;
+    }) =>
+      `${candidateCount} candidate(s) from ${readyTableCount} ready table(s) across ${activityCount} project activity(ies).`,
+    diagnosticReasonJobsStarted:
+      "Missing interpretation work was started for one or more activities. Candidate evidence will expand after those jobs finish.",
+    diagnosticReasonNoReadyTables:
+      "No interpreted and analysis-ready tables are currently available for outcome matching.",
+    diagnosticReasonNoSharedIdentifier:
+      "No baseline/Wirkungsmessung table pair currently shares a common participant identifier.",
+    diagnosticReasonNoMatchingScaleColumns:
+      "Some columns are tagged as a before/after pair, but none of them resolved into a valid match (check the declared instrument label, cohort, and identifier column on each side).",
+    diagnosticReasonNoDeclaredPairingGroups:
+      "Validated-scale columns exist, but none have been tagged yet as part of a before/after pair. Answer the pairing question for each column during interpretation review to make it eligible for matching.",
+    diagnosticReasonNoCategoricalColumns:
+      "No categorical columns are currently available as standalone distribution evidence.",
+    diagnosticReasonDuplicateIdentifierValues:
+      "A table's participant identifier column has duplicate values, so it can't be safely joined. Deduplicate the identifier column before it can be matched.",
+    diagnosticReasonScaleBoundsMismatch:
+      "Two columns are tagged as a before/after pair, but their observed numeric scales don't match (e.g. 1-5 vs. 0-10), so they were not paired.",
+    activityStatusJobsStarted: "Interpretation started",
+    activityStatusAlreadyReady: "Already interpreted",
+    activityStatusNoUploads: "No uploads",
+    activityStatusBlocked: "Blocked",
+    activityDiagnosticSummary: ({
+      uploadCount,
+      interpretedUploadCount,
+      readyTableCount,
+    }: {
+      uploadCount: number;
+      interpretedUploadCount: number;
+      readyTableCount: number;
+    }) =>
+      `${uploadCount} upload(s), ${interpretedUploadCount} interpreted, ${readyTableCount} ready table(s).`,
+    uploadStateActiveJob: "An interpretation job is already running.",
+    uploadStateAlreadyInterpreted:
+      "This file already has an interpretation result.",
+    uploadStateReadyToInterpret:
+      "This file is eligible for interpretation, but interpretation must be completed in the upstream interpretation flow first.",
+    uploadStatePrivacyMissing:
+      "Privacy-safe processing is not complete for this file yet.",
+    uploadStateUnsupportedModality:
+      "This file's extracted structure is not yet supported for interpretation.",
+  },
   organizationBilling: {
     eyebrow: "Billing",
     title: "Subscription and billing",
@@ -1651,6 +1813,9 @@ const en = {
     editActivityTitle: "Edit activity",
     editActivityDescription:
       "Update the delivery details for this project activity.",
+    createOutcomeStatementTitle: "Add outcome statement",
+    editOutcomeStatementTitle: "Edit outcome statement",
+    editOutcomeStatementDescription: "Update this outcome statement.",
     project: {
       submit: "Create project",
       creating: "Creating project…",
@@ -1727,6 +1892,18 @@ const en = {
       outputPlaceholder:
         "• Conduct 12 workshops within one year\n• Reach 150 participants\n• At least 80% of participants complete the programme\n• At least 75% of participants are satisfied with the programme",
       status: "Status",
+    },
+    outcomeStatement: {
+      submit: "Add outcome statement",
+      updateSubmit: "Save changes",
+      creating: "Adding…",
+      updating: "Saving…",
+      term: "Term",
+      termShort: "Short-term",
+      termLong: "Long-term",
+      statement: "Outcome statement",
+      statementPlaceholder:
+        "e.g. Mentees report increased clarity about their next career steps.",
     },
     options: {
       targetGroups: [

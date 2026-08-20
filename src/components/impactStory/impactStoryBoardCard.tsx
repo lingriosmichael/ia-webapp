@@ -7,6 +7,7 @@ export function ImpactStoryBoardCard({
   title,
   subtitle,
   note,
+  badge,
   children,
   className,
   contentClassName,
@@ -14,6 +15,7 @@ export function ImpactStoryBoardCard({
   title: string;
   subtitle?: string | null;
   note?: string | null;
+  badge?: ReactNode;
   children: ReactNode;
   className?: string;
   contentClassName?: string;
@@ -35,6 +37,7 @@ export function ImpactStoryBoardCard({
               {subtitle}
             </p>
           ) : null}
+          {badge ? <div className="mt-1.5">{badge}</div> : null}
         </div>
         <Grip
           className="mt-0.5 h-3.5 w-3.5 shrink-0 text-border"
