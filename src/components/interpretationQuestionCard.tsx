@@ -67,6 +67,22 @@ function parseCompositePrompt(prompt: string): {
   };
 }
 
+function sanitizeClarificationPrompt(prompt: string): string {
+  return prompt
+    .replace(
+      /,?\s*(?:uploadMetadataId|metadataId|goalId)\s*[:=]\s*["']?[0-9a-f-]{8,}["']?/gi,
+      "",
+    )
+    .replace(
+      /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/gi,
+      "",
+    )
+    .replace(/\(\s*,?\s*\)/g, "")
+    .replace(/\s{2,}/g, " ")
+    .replace(/\s+([,.;:!?])/g, "$1")
+    .trim();
+}
+
 // Option text is AI-generated and can run to a full sentence, unlike the
 // short fixed labels the shared Button component is styled for (which stay
 // on one line by design). Override that here so long options wrap inside
@@ -81,6 +97,35 @@ function buildCompositeAnswer(prompts: string[], values: string[]): string {
       return `${index + 1}. ${prompt}\nAntwort: ${answer}`;
     })
     .join("\n\n");
+}
+
+function normalizeOptionToken(value: string): string {
+  return value.trim().toLocaleLowerCase();
+}
+
+function parseSelectedOptionsFromAnswer(
+  answer: string | null,
+  options: string[],
+): string[] {
+  if (!answer) {
+    return [];
+  }
+
+  const normalizedAnswer = normalizeOptionToken(answer);
+  if (normalizedAnswer === "alle" || normalizedAnswer === "all") {
+    return options;
+  }
+
+  const exactTokens = new Set(
+    answer
+      .split(/[,;\n]/)
+      .map((token) => normalizeOptionToken(token))
+      .filter(Boolean),
+  );
+
+  return options.filter((option) =>
+    exactTokens.has(normalizeOptionToken(option)),
+  );
 }
 
 type InterpretationQuestionCardProps =
@@ -117,9 +162,19 @@ export function InterpretationQuestionCard(
 ) {
   const { activityName, question, isSubmitting } = props;
   const { t } = useTranslation();
+  const displayPrompt = sanitizeClarificationPrompt(question.prompt);
+  const recommendedValue =
+    question.recommendedOption && (question.recommendedConfidence ?? 0) >= 0.8
+      ? sanitizeClarificationPrompt(question.recommendedOption)
+      : null;
+  const selectableStatusOptions =
+    question.questionCode === "positive_status_values" &&
+    question.options?.length
+      ? question.options
+      : null;
   const compositePrompt =
     question.kind === "free_text" || !question.options?.length
-      ? parseCompositePrompt(question.prompt)
+      ? parseCompositePrompt(displayPrompt)
       : null;
   const [freeTextValue, setFreeTextValue] = useState(
     question.answeredValue ??
@@ -127,6 +182,14 @@ export function InterpretationQuestionCard(
   );
   const [compositeValues, setCompositeValues] = useState<string[]>(
     () => compositePrompt?.parts.map(() => "") ?? [],
+  );
+  const [selectedStatusValues, setSelectedStatusValues] = useState<string[]>(
+    () =>
+      parseSelectedOptionsFromAnswer(
+        question.answeredValue ??
+          (props.mode === "select" ? (props.selectedValue ?? "") : ""),
+        selectableStatusOptions ?? [],
+      ),
   );
 
   function commitAnswer(answeredValue: string) {
@@ -165,6 +228,20 @@ export function InterpretationQuestionCard(
     }
   }
 
+  function buildSelectedStatusAnswer(values: string[]): string {
+    return values.join(", ");
+  }
+
+  function toggleStatusValue(option: string) {
+    const nextValues = selectedStatusValues.includes(option)
+      ? selectedStatusValues.filter((value) => value !== option)
+      : [...selectedStatusValues, option];
+    setSelectedStatusValues(nextValues);
+    if (props.mode === "select") {
+      commitAnswer(buildSelectedStatusAnswer(nextValues));
+    }
+  }
+
   return (
     <Card className="p-5">
       <div className="flex flex-wrap items-center gap-2">
@@ -181,9 +258,76 @@ export function InterpretationQuestionCard(
         {t(getQuestionDomainLabelKey(question.questionDomain))}
       </p>
       <p className="mt-2 whitespace-pre-line text-sm leading-6 text-muted-foreground">
-        {compositePrompt?.intro || question.prompt}
+        {compositePrompt?.intro || displayPrompt}
       </p>
-      {question.kind === "free_text" || !question.options?.length ? (
+      {recommendedValue &&
+      !(question.kind === "free_text" || !question.options?.length) ? (
+        <div className="mt-3 flex flex-wrap items-center gap-2 rounded-[12px] border border-primary/20 bg-primary-soft/60 px-3 py-2 text-sm text-foreground">
+          <Badge
+            variant="outline"
+            className="border-primary/30 bg-white/70 text-primary"
+          >
+            {t("projectWorkspace.interpretation.questionRecommended")}
+          </Badge>
+          <span className="font-medium">{recommendedValue}</span>
+        </div>
+      ) : null}
+      {selectableStatusOptions ? (
+        <div className="mt-4 space-y-4">
+          <div className="flex flex-wrap gap-2">
+            {selectableStatusOptions.map((option) => {
+              const isSelected = selectedStatusValues.includes(option);
+              return (
+                <Button
+                  key={option}
+                  type="button"
+                  variant={isSelected ? "default" : "outline"}
+                  size="sm"
+                  className={OPTION_BUTTON_CLASSNAME}
+                  onClick={() => toggleStatusValue(option)}
+                  disabled={isSubmitting}
+                  aria-pressed={isSelected}
+                >
+                  {option}
+                </Button>
+              );
+            })}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {props.mode === "select" ? null : (
+              <Button
+                size="sm"
+                onClick={() =>
+                  commitAnswer(buildSelectedStatusAnswer(selectedStatusValues))
+                }
+                disabled={!selectedStatusValues.length || isSubmitting}
+              >
+                {isSubmitting
+                  ? t("projectWorkspace.interpretation.questionSubmitting")
+                  : t("projectWorkspace.interpretation.questionSubmit")}
+              </Button>
+            )}
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                const nextValues = [...selectableStatusOptions];
+                setSelectedStatusValues(nextValues);
+                if (props.mode === "select") {
+                  commitAnswer(buildSelectedStatusAnswer(nextValues));
+                }
+              }}
+              disabled={
+                isSubmitting ||
+                selectedStatusValues.length === selectableStatusOptions.length
+              }
+            >
+              {t("projectWorkspace.interpretation.questionSelectAllOptions")}
+            </Button>
+          </div>
+        </div>
+      ) : question.kind === "free_text" || !question.options?.length ? (
         compositePrompt ? (
           <div className="mt-4 space-y-4">
             {compositePrompt.parts.map((part, index) => (
@@ -225,34 +369,54 @@ export function InterpretationQuestionCard(
             )}
           </div>
         ) : (
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Input
-              value={freeTextValue}
-              onChange={(event) => updateFreeTextValue(event.target.value)}
-              placeholder={t(
-                "projectWorkspace.interpretation.questionFreeTextPlaceholder",
+          <div className="mt-3 space-y-3">
+            {recommendedValue ? (
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge
+                  variant="outline"
+                  className="border-primary/30 bg-white/70 text-primary"
+                >
+                  {t("projectWorkspace.interpretation.questionRecommended")}
+                </Badge>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  className={OPTION_BUTTON_CLASSNAME}
+                  onClick={() => updateFreeTextValue(recommendedValue)}
+                  disabled={isSubmitting}
+                >
+                  {recommendedValue}
+                </Button>
+              </div>
+            ) : null}
+            <div className="flex flex-wrap gap-2">
+              <Input
+                value={freeTextValue}
+                onChange={(event) => updateFreeTextValue(event.target.value)}
+                placeholder={t(
+                  "projectWorkspace.interpretation.questionFreeTextPlaceholder",
+                )}
+                className="max-w-sm"
+              />
+              {props.mode === "select" ? null : (
+                <Button
+                  size="sm"
+                  onClick={() => commitAnswer(freeTextValue)}
+                  disabled={!freeTextValue.trim() || isSubmitting}
+                >
+                  {isSubmitting
+                    ? t("projectWorkspace.interpretation.questionSubmitting")
+                    : t("projectWorkspace.interpretation.questionSubmit")}
+                </Button>
               )}
-              className="max-w-sm"
-            />
-            {props.mode === "select" ? null : (
-              <Button
-                size="sm"
-                onClick={() => commitAnswer(freeTextValue)}
-                disabled={!freeTextValue.trim() || isSubmitting}
-              >
-                {isSubmitting
-                  ? t("projectWorkspace.interpretation.questionSubmitting")
-                  : t("projectWorkspace.interpretation.questionSubmit")}
-              </Button>
-            )}
+            </div>
           </div>
         )
       ) : (
         <div className="mt-3 flex flex-wrap gap-2">
           {question.options.map((option) => {
-            const isRecommended =
-              question.recommendedOption === option &&
-              (question.recommendedConfidence ?? 0) >= 0.8;
+            const isRecommended = recommendedValue === option;
             const isSelected =
               props.mode === "select" && props.selectedValue === option;
             return (
@@ -270,6 +434,14 @@ export function InterpretationQuestionCard(
                 aria-pressed={props.mode === "select" ? isSelected : undefined}
               >
                 <span>{option}</span>
+                {isRecommended ? (
+                  <Badge
+                    variant="outline"
+                    className="border-primary/30 bg-white/70 text-primary"
+                  >
+                    {t("projectWorkspace.interpretation.questionRecommended")}
+                  </Badge>
+                ) : null}
               </Button>
             );
           })}

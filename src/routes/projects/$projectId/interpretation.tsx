@@ -79,6 +79,9 @@ const FIRST_LAYER_CLARIFICATION_QUESTION_CODES = new Set<
   "duplicate_identifier_resolution",
   "epistemic_role_clarification",
   "validated_scale_confirmation",
+  "cohort_tag",
+  "pairing_group_key",
+  "pairing_group_role",
 ]);
 // Based on elapsed time since the job actually started (job.createdAt),
 // not a poll counter — a counter would drift out of sync with reality on

@@ -161,6 +161,11 @@ export function ProjectImpactStoryPage() {
           />
         )}
 
+        <ProjectImpactStoryDiagnosticsPanel
+          chartOpportunityAudit={story.diagnostics.chartOpportunityAudit}
+          chartSelectionAudit={story.diagnostics.chartSelectionAudit}
+        />
+
         <ImpactStoryHeadlineKpiRow kpis={story.headlineKpis} />
 
         {story.chartPlan.length > 0 && (
@@ -201,11 +206,6 @@ export function ProjectImpactStoryPage() {
             isRegenerating={isRegenerating}
           />
         )}
-
-        <ProjectImpactStoryDiagnosticsPanel
-          chartOpportunityAudit={story.diagnostics.chartOpportunityAudit}
-          chartSelectionAudit={story.diagnostics.chartSelectionAudit}
-        />
       </div>
     </ProjectWorkspaceShell>
   );
