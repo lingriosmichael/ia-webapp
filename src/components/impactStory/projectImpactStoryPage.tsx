@@ -1,12 +1,28 @@
+import {
+  closestCenter,
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  rectSortingStrategy,
+  SortableContext,
+  sortableKeyboardCoordinates,
+} from "@dnd-kit/sortable";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
 import { Button } from "@/components/ui/button";
 import { useCurrentWorkspaceProject } from "@/contexts/projectWorkspaceContext";
 import { useRequireAuth } from "@/hooks/useAuth";
+import { useImpactStoryDashboardLayout } from "@/hooks/useImpactStoryDashboardLayout";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import {
   projectAnalyticsQueryKey,
   useJobQuery,
@@ -15,9 +31,13 @@ import {
 } from "@/hooks/useWorkspaceQueries";
 import {
   ApiError,
+  type ImpactCatalogEntry,
+  type OutcomeDistributionEntry,
   type ProjectImpactStoryReadResult,
+  type UnmeasuredOutcomeEntry,
 } from "@/services/apiClient";
 import { ImpactStoryActivityTimeline } from "./impactStoryActivityTimeline";
+import { ImpactStoryBacklogPanel } from "./impactStoryBacklogPanel";
 import {
   ImpactStoryEmptyState,
   ImpactStoryErrorState,
@@ -26,8 +46,10 @@ import { ImpactStoryHeadlineKpiRow } from "./impactStoryHeadlineKpiRow";
 import { ImpactStoryNarrativeBanner } from "./impactStoryNarrativeBanner";
 import { ProjectImpactStoryChart } from "./projectImpactStoryChart";
 import { ProjectImpactStoryContextChart } from "./projectImpactStoryContextChart";
-import { ProjectImpactStoryDiagnosticsPanel } from "./projectImpactStoryDiagnosticsPanel";
+import { ProjectImpactStoryGoalProgressChart } from "./projectImpactStoryGoalProgressChart";
 import { ProjectImpactStoryImpactChart } from "./projectImpactStoryImpactChart";
+import { ProjectImpactStoryPairedDeltaGroupChart } from "./projectImpactStoryPairedDeltaGroupChart";
+import { SortableChartCard } from "./sortableChartCard";
 
 const TERMINAL_JOB_STATUSES = ["completed", "failed", "cancelled"];
 
@@ -99,6 +121,150 @@ export function ProjectImpactStoryPage() {
 
   const isRegenerating = runMutation.isPending || Boolean(activeJobId);
 
+  const story = storyQuery.data?.story ?? null;
+  const isStale = storyQuery.data?.isStale ?? false;
+
+  const pairedDeltaEntries: ImpactCatalogEntry[] =
+    story?.impactCatalog.filter(
+      (entry): entry is ImpactCatalogEntry => entry.shape === "paired_delta",
+    ) ?? [];
+  const otherCatalogEntries: Array<
+    OutcomeDistributionEntry | UnmeasuredOutcomeEntry
+  > =
+    story?.impactCatalog.filter(
+      (entry): entry is OutcomeDistributionEntry | UnmeasuredOutcomeEntry =>
+        entry.shape !== "paired_delta",
+    ) ?? [];
+
+  // Every chart card on the page shares one grid so CSS auto-placement
+  // fills rows contiguously — each source used to render into its own
+  // separate 2-column grid, which left a visible empty cell any time a
+  // section (e.g. the always-on goal-progress or paired-delta charts)
+  // contributed an odd number of cards on its own.
+  //
+  // Default order is deliberate, not just "however each source happened to
+  // load": the two evidence tiers that answer "did it work" —
+  // target-vs-achieved (goalProgressEntries) and confirmed before/after
+  // outcome measurement (impactCatalog, both pairedDeltaEntries and
+  // otherCatalogEntries) — lead the page. The LLM-selected chartPlan
+  // (reach/process/context — weaker evidentiary weight, see
+  // CURRENT_ANALYSIS_PIPELINE.md's "Python plans" split) follows after,
+  // telling the "how we got there" half of the story once the reader
+  // already has the results. A viewer can drag any card to override this
+  // default — see useImpactStoryDashboardLayout.
+  const dashboardCards: Array<{ id: string; title: string; node: ReactNode }> =
+    story
+      ? [
+          ...(story.goalProgressEntries.length > 0
+            ? [
+                {
+                  id: "goal-progress",
+                  title: t("impactStory.goalProgressChartTitle"),
+                  node: (
+                    <ProjectImpactStoryGoalProgressChart
+                      entries={story.goalProgressEntries}
+                    />
+                  ),
+                },
+              ]
+            : []),
+          ...(pairedDeltaEntries.length > 0
+            ? [
+                {
+                  id: "paired-delta-group",
+                  title: t("impactStory.pairedDeltaGroupTitle"),
+                  node: (
+                    <ProjectImpactStoryPairedDeltaGroupChart
+                      entries={pairedDeltaEntries}
+                    />
+                  ),
+                },
+              ]
+            : []),
+          ...otherCatalogEntries.map((entry) => ({
+            id: entry.entryId,
+            title:
+              entry.shape === "unmeasured"
+                ? entry.outcomeStatement
+                : entry.questionLabelDe,
+            node: <ProjectImpactStoryImpactChart entry={entry} />,
+          })),
+          ...story.chartPlan.map((chart) => ({
+            id: chart.chartId,
+            title: chart.title,
+            node: <ProjectImpactStoryChart chart={chart} />,
+          })),
+          ...(story.chartPlan.length === 0
+            ? story.contextCharts.map((entry) => ({
+                id: entry.entryId,
+                title: entry.labelDe,
+                node: <ProjectImpactStoryContextChart entry={entry} />,
+              }))
+            : []),
+        ]
+      : [];
+  // Deterministic, no-LLM charts for every ready catalog entry the chart
+  // plan didn't select this run (see projectImpactStoryChartBacklog.ts) —
+  // rendered with the same ProjectImpactStoryChart dispatcher as any other
+  // chart-plan card, since they're already fully-built chart specs. These
+  // start out of view by default (see useImpactStoryDashboardLayout's
+  // defaultHiddenIds handling) and only appear on the dashboard once a
+  // viewer clicks them in the backlog panel.
+  const backlogCards: Array<{ id: string; title: string; node: ReactNode }> =
+    story
+      ? story.backlogChartPlan.map((chart) => ({
+          id: chart.chartId,
+          title: chart.title,
+          node: <ProjectImpactStoryChart chart={chart} />,
+        }))
+      : [];
+  const chartCardsById = new Map(
+    [...dashboardCards, ...backlogCards].map(
+      (card) => [card.id, card] as const,
+    ),
+  );
+
+  const dashboardLayout = useImpactStoryDashboardLayout(
+    projectId,
+    dashboardCards.map((card) => card.id),
+    backlogCards.map((card) => card.id),
+  );
+
+  const dragSensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 6 },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  function handleDragEnd(event: DragEndEvent) {
+    const overId = event.over?.id;
+    if (!overId || typeof event.active.id !== "string") {
+      return;
+    }
+    dashboardLayout.moveCard(event.active.id, String(overId));
+  }
+
+  // A plain 2-column CSS grid sizes each *row* to its tallest card, so a
+  // short card next to a tall one leaves visible empty space below it —
+  // real content, not a bug in a single card. Splitting into two
+  // independently-stacking columns (by alternating index) lets each
+  // column pack tight around its own cards' actual heights instead, the
+  // standard dependency-free masonry technique. Only applied at the same
+  // breakpoint the grid itself switches to 2 columns — below that there's
+  // only one column, so there's no row-height mismatch to fix, and
+  // splitting would just scramble the natural top-to-bottom reading order
+  // for no benefit.
+  const isTwoColumnLayout = useMediaQuery("(min-width: 1024px)");
+  const leftColumnIds = isTwoColumnLayout
+    ? dashboardLayout.visibleIds.filter((_, index) => index % 2 === 0)
+    : dashboardLayout.visibleIds;
+  const rightColumnIds = isTwoColumnLayout
+    ? dashboardLayout.visibleIds.filter((_, index) => index % 2 === 1)
+    : [];
+
   if (!auth.token || storyQuery.isLoading) {
     return (
       <ProjectWorkspaceShell>
@@ -116,9 +282,6 @@ export function ProjectImpactStoryPage() {
       </ProjectWorkspaceShell>
     );
   }
-
-  const story = storyQuery.data?.story ?? null;
-  const isStale = storyQuery.data?.isStale ?? false;
 
   if (!story) {
     return (
@@ -145,6 +308,24 @@ export function ProjectImpactStoryPage() {
 
   const hasOutcomeOverlay = story.impactCatalog.length > 0;
 
+  function renderChartColumn(ids: string[]) {
+    return ids.map((id) => {
+      const card = chartCardsById.get(id);
+      if (!card) {
+        return null;
+      }
+      return (
+        <SortableChartCard
+          key={id}
+          id={id}
+          onHide={() => dashboardLayout.hideCard(id)}
+        >
+          {card.node}
+        </SortableChartCard>
+      );
+    });
+  }
+
   return (
     <ProjectWorkspaceShell>
       <div className="space-y-5">
@@ -161,41 +342,38 @@ export function ProjectImpactStoryPage() {
           />
         )}
 
-        <ProjectImpactStoryDiagnosticsPanel
-          chartOpportunityAudit={story.diagnostics.chartOpportunityAudit}
-          chartSelectionAudit={story.diagnostics.chartSelectionAudit}
+        <ImpactStoryBacklogPanel
+          cards={dashboardLayout.backlogIds.map((id) => ({
+            id,
+            title: chartCardsById.get(id)?.title ?? id,
+          }))}
+          onAdd={dashboardLayout.showCard}
         />
 
         <ImpactStoryHeadlineKpiRow kpis={story.headlineKpis} />
 
-        {story.chartPlan.length > 0 && (
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            {story.chartPlan.map((chart) => (
-              <ProjectImpactStoryChart key={chart.chartId} chart={chart} />
-            ))}
-          </div>
-        )}
-
-        {story.impactCatalog.length > 0 && (
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            {story.impactCatalog.map((entry) => (
-              <ProjectImpactStoryImpactChart
-                key={entry.entryId}
-                entry={entry}
-              />
-            ))}
-          </div>
-        )}
-
-        {story.chartPlan.length === 0 && story.contextCharts.length > 0 && (
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            {story.contextCharts.map((entry) => (
-              <ProjectImpactStoryContextChart
-                key={entry.entryId}
-                entry={entry}
-              />
-            ))}
-          </div>
+        {dashboardLayout.visibleIds.length > 0 && (
+          <DndContext
+            sensors={dragSensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={dashboardLayout.visibleIds}
+              strategy={rectSortingStrategy}
+            >
+              <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
+                <div className="flex flex-1 flex-col gap-5">
+                  {renderChartColumn(leftColumnIds)}
+                </div>
+                {rightColumnIds.length > 0 && (
+                  <div className="flex flex-1 flex-col gap-5">
+                    {renderChartColumn(rightColumnIds)}
+                  </div>
+                )}
+              </div>
+            </SortableContext>
+          </DndContext>
         )}
 
         {!hasOutcomeOverlay && (

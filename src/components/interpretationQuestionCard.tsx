@@ -5,7 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import type {
+  ClarificationQuestionOption,
   InterpretationQuestion,
   InterpretationQuestionDomain,
 } from "@/services/apiClient";
@@ -67,28 +69,57 @@ function parseCompositePrompt(prompt: string): {
   };
 }
 
-function sanitizeClarificationPrompt(prompt: string): string {
-  return prompt
-    .replace(
-      /,?\s*(?:uploadMetadataId|metadataId|goalId)\s*[:=]\s*["']?[0-9a-f-]{8,}["']?/gi,
-      "",
-    )
-    .replace(
-      /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/gi,
-      "",
-    )
-    .replace(/\(\s*,?\s*\)/g, "")
-    .replace(/\s{2,}/g, " ")
-    .replace(/\s+([,.;:!?])/g, "$1")
-    .trim();
-}
-
 // Option text is AI-generated and can run to a full sentence, unlike the
 // short fixed labels the shared Button component is styled for (which stay
 // on one line by design). Override that here so long options wrap inside
 // the card instead of overflowing it.
-const OPTION_BUTTON_CLASSNAME =
-  "h-auto max-w-full min-h-8 justify-start gap-2 whitespace-normal break-words py-1.5 text-left";
+const ANSWER_CHOICE_CLASSNAME =
+  "h-auto max-w-full min-h-8 justify-start gap-1.5 rounded-[10px] px-2.5 py-1.5 text-left text-[0.8rem] leading-4 whitespace-normal break-words";
+const RECOMMENDATION_BADGE_CLASSNAME =
+  "rounded-full border-primary/30 bg-white/85 px-2 py-0.5 text-[0.56rem] font-semibold uppercase tracking-[0.06em] text-primary";
+const TEXT_INPUT_CLASSNAME =
+  "h-8 w-full max-w-[24rem] rounded-[10px] border-border/80 bg-white/85 px-2.5 text-[0.8rem] shadow-[var(--shadow-soft)]";
+const TEXTAREA_CLASSNAME =
+  "min-h-14 rounded-[10px] border-border/80 bg-white/85 px-2.5 py-2 text-[0.8rem] shadow-[var(--shadow-soft)]";
+const RECOMMENDATION_PANEL_CLASSNAME =
+  "flex w-full max-w-[24rem] items-center gap-1.5 rounded-[10px] border border-primary/20 bg-primary-soft/65 px-2.5 py-1.5 shadow-[var(--shadow-soft)]";
+
+const SCALE_BOUNDS_PRESETS: Array<{ label: string; min: number; max: number }> =
+  [
+    { label: "1–5", min: 1, max: 5 },
+    { label: "1–7", min: 1, max: 7 },
+    { label: "0–10", min: 0, max: 10 },
+  ];
+
+function formatScaleBoundsAnswer(min: number, max: number): string {
+  return `${min} to ${max}`;
+}
+
+// Mirrors the backend's parseDeclaredScaleBoundsAnswer (extract the first
+// two number-like tokens) so a previously-saved answer round-trips into the
+// structured min/max controls below, regardless of the exact wording it was
+// saved with.
+function parseScaleBoundsAnswer(
+  answer: string | null,
+): { min: number; max: number } | null {
+  if (!answer) {
+    return null;
+  }
+  const matches = answer.match(/-?\d+(?:[.,]\d+)?/g);
+  if (!matches) {
+    return null;
+  }
+  const [firstMatch, secondMatch] = matches;
+  if (!firstMatch || !secondMatch) {
+    return null;
+  }
+  const min = Number.parseFloat(firstMatch.replace(",", "."));
+  const max = Number.parseFloat(secondMatch.replace(",", "."));
+  if (Number.isNaN(min) || Number.isNaN(max)) {
+    return null;
+  }
+  return { min, max };
+}
 
 function buildCompositeAnswer(prompts: string[], values: string[]): string {
   return prompts
@@ -128,6 +159,116 @@ function parseSelectedOptionsFromAnswer(
   );
 }
 
+function QuestionCardHeader({
+  activityName,
+  statusLabel,
+  domainLabel,
+}: {
+  activityName: string;
+  statusLabel: string;
+  domainLabel: string;
+}) {
+  return (
+    <>
+      <div className="flex flex-wrap items-center gap-1.5">
+        <div className="text-[1rem] font-semibold tracking-tight text-foreground">
+          {activityName}
+        </div>
+        <Badge
+          variant="secondary"
+          className="rounded-full px-2 py-0.5 text-[0.58rem] font-semibold"
+        >
+          {statusLabel}
+        </Badge>
+      </div>
+      <p className="mt-2 text-[0.62rem] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+        {domainLabel}
+      </p>
+    </>
+  );
+}
+
+function AnswerChoiceButton({
+  label,
+  isSelected,
+  isRecommended,
+  onClick,
+  disabled,
+}: {
+  label: string;
+  isSelected: boolean;
+  isRecommended?: boolean;
+  onClick: () => void;
+  disabled: boolean;
+}) {
+  return (
+    <Button
+      type="button"
+      variant={isSelected ? "default" : "outline"}
+      className={cn(
+        ANSWER_CHOICE_CLASSNAME,
+        isRecommended && !isSelected
+          ? "border-primary/35 bg-primary-soft text-primary hover:bg-primary-soft/80"
+          : undefined,
+      )}
+      onClick={onClick}
+      disabled={disabled}
+      aria-pressed={isSelected}
+    >
+      <span>{label}</span>
+    </Button>
+  );
+}
+
+function RecommendationPanel({
+  label,
+  value,
+  isActive = false,
+  onClick,
+  disabled,
+}: {
+  label: string;
+  value: string;
+  isActive?: boolean;
+  onClick?: (() => void) | null;
+  disabled: boolean;
+}) {
+  if (!onClick) {
+    return (
+      <div className={RECOMMENDATION_PANEL_CLASSNAME}>
+        <Badge variant="outline" className={RECOMMENDATION_BADGE_CLASSNAME}>
+          {label}
+        </Badge>
+        <span className="text-[0.8rem] font-medium leading-4 text-foreground">
+          {value}
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      className={cn(
+        RECOMMENDATION_PANEL_CLASSNAME,
+        "text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50",
+        isActive
+          ? "border-signal/30 bg-primary-soft/80"
+          : "hover:bg-primary-soft/78",
+      )}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      <Badge variant="outline" className={RECOMMENDATION_BADGE_CLASSNAME}>
+        {label}
+      </Badge>
+      <span className="text-[0.8rem] font-medium leading-4 text-foreground">
+        {value}
+      </span>
+    </button>
+  );
+}
+
 type InterpretationQuestionCardProps =
   // Default mode: each answer submits (and triggers a replan) immediately.
   | {
@@ -162,18 +303,34 @@ export function InterpretationQuestionCard(
 ) {
   const { activityName, question, isSubmitting } = props;
   const { t } = useTranslation();
-  const displayPrompt = sanitizeClarificationPrompt(question.prompt);
+  const displayPrompt = question.userFacingPrompt;
   const recommendedValue =
     question.recommendedOption && (question.recommendedConfidence ?? 0) >= 0.8
-      ? sanitizeClarificationPrompt(question.recommendedOption)
+      ? question.recommendedOption
       : null;
-  const selectableStatusOptions =
+  const selectableStatusOptions: ClarificationQuestionOption[] | null =
     question.questionCode === "positive_status_values" &&
-    question.options?.length
-      ? question.options
+    question.userFacingOptions?.length
+      ? question.userFacingOptions
       : null;
+  const selectableStatusValues =
+    selectableStatusOptions?.map((option) => option.value) ?? [];
+  const isDeclaredScaleBoundsQuestion =
+    question.questionCode === "declared_scale_bounds";
+  const initialScaleBounds = isDeclaredScaleBoundsQuestion
+    ? parseScaleBoundsAnswer(
+        question.answeredValue ??
+          (props.mode === "select" ? (props.selectedValue ?? null) : null),
+      )
+    : null;
+  const [scaleBoundsMin, setScaleBoundsMin] = useState(
+    initialScaleBounds ? String(initialScaleBounds.min) : "",
+  );
+  const [scaleBoundsMax, setScaleBoundsMax] = useState(
+    initialScaleBounds ? String(initialScaleBounds.max) : "",
+  );
   const compositePrompt =
-    question.kind === "free_text" || !question.options?.length
+    question.kind === "free_text" || !question.userFacingOptions?.length
       ? parseCompositePrompt(displayPrompt)
       : null;
   const [freeTextValue, setFreeTextValue] = useState(
@@ -188,7 +345,7 @@ export function InterpretationQuestionCard(
       parseSelectedOptionsFromAnswer(
         question.answeredValue ??
           (props.mode === "select" ? (props.selectedValue ?? "") : ""),
-        selectableStatusOptions ?? [],
+        selectableStatusValues,
       ),
   );
 
@@ -201,6 +358,22 @@ export function InterpretationQuestionCard(
       return;
     }
     props.onSubmit({ questionId: question.id, answeredValue });
+  }
+
+  function commitScaleBounds(min: string, max: string) {
+    const parsedMin = Number.parseFloat(min);
+    const parsedMax = Number.parseFloat(max);
+    if (
+      Number.isNaN(parsedMin) ||
+      Number.isNaN(parsedMax) ||
+      parsedMin >= parsedMax
+    ) {
+      if (props.mode === "select") {
+        commitAnswer("");
+      }
+      return;
+    }
+    commitAnswer(formatScaleBoundsAnswer(parsedMin, parsedMax));
   }
 
   function updateFreeTextValue(value: string) {
@@ -242,77 +415,174 @@ export function InterpretationQuestionCard(
     }
   }
 
-  return (
-    <Card className="p-5">
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="text-sm font-semibold tracking-tight text-foreground">
-          {activityName}
-        </div>
-        <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
-          {question.isBlocking
-            ? t("projectWorkspace.interpretation.questionRequiredLabel")
-            : t("projectWorkspace.interpretation.questionOptionalLabel")}
-        </Badge>
+  const choiceRecommendedValue =
+    question.kind !== "free_text" && question.userFacingOptions?.length
+      ? (question.userFacingOptions.find(
+          (option) => option.value === recommendedValue,
+        )?.value ?? null)
+      : null;
+  const selectedChoiceValue =
+    props.mode === "select"
+      ? (props.selectedValue ?? null)
+      : question.answeredValue;
+  const recommendedLabel = t(
+    "projectWorkspace.interpretation.questionRecommended",
+  );
+  const statusLabel = question.isBlocking
+    ? t("projectWorkspace.interpretation.questionRequiredLabel")
+    : t("projectWorkspace.interpretation.questionOptionalLabel");
+  const promptText = compositePrompt?.intro || displayPrompt;
+
+  function renderRecommendationPanel(
+    value: string,
+    options?: {
+      onClick?: (() => void) | null;
+      isActive?: boolean;
+    },
+  ) {
+    return (
+      <RecommendationPanel
+        label={recommendedLabel}
+        value={value}
+        isActive={options?.isActive ?? false}
+        onClick={options?.onClick}
+        disabled={isSubmitting}
+      />
+    );
+  }
+
+  function renderSubmitButton(onClick: () => void, disabled: boolean) {
+    if (props.mode === "select") {
+      return null;
+    }
+
+    return (
+      <Button size="sm" onClick={onClick} disabled={disabled}>
+        {isSubmitting
+          ? t("projectWorkspace.interpretation.questionSubmitting")
+          : t("projectWorkspace.interpretation.questionSubmit")}
+      </Button>
+    );
+  }
+
+  function renderChoiceGroup({
+    options,
+    selectedValues,
+    onSelect,
+    recommended,
+  }: {
+    options: ClarificationQuestionOption[];
+    selectedValues: string[];
+    onSelect: (value: string) => void;
+    recommended?: string | null;
+  }) {
+    return (
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {options.map((option) => (
+          <AnswerChoiceButton
+            key={option.value}
+            label={option.label}
+            isSelected={selectedValues.includes(option.value)}
+            isRecommended={option.value === recommended}
+            onClick={() => onSelect(option.value)}
+            disabled={isSubmitting}
+          />
+        ))}
       </div>
-      <p className="mt-2 text-xs font-medium uppercase tracking-[0.08em] text-muted-foreground">
-        {t(getQuestionDomainLabelKey(question.questionDomain))}
+    );
+  }
+
+  return (
+    <Card className="p-2.5 sm:p-3">
+      <QuestionCardHeader
+        activityName={activityName}
+        statusLabel={statusLabel}
+        domainLabel={t(getQuestionDomainLabelKey(question.questionDomain))}
+      />
+      <p className="mt-2 whitespace-pre-line text-[0.8rem] leading-5 text-foreground/75">
+        {promptText}
       </p>
-      <p className="mt-2 whitespace-pre-line text-sm leading-6 text-muted-foreground">
-        {compositePrompt?.intro || displayPrompt}
-      </p>
-      {recommendedValue &&
-      !(question.kind === "free_text" || !question.options?.length) ? (
-        <div className="mt-3 flex flex-wrap items-center gap-2 rounded-[12px] border border-primary/20 bg-primary-soft/60 px-3 py-2 text-sm text-foreground">
-          <Badge
-            variant="outline"
-            className="border-primary/30 bg-white/70 text-primary"
-          >
-            {t("projectWorkspace.interpretation.questionRecommended")}
-          </Badge>
-          <span className="font-medium">{recommendedValue}</span>
-        </div>
-      ) : null}
-      {selectableStatusOptions ? (
-        <div className="mt-4 space-y-4">
-          <div className="flex flex-wrap gap-2">
-            {selectableStatusOptions.map((option) => {
-              const isSelected = selectedStatusValues.includes(option);
-              return (
-                <Button
-                  key={option}
-                  type="button"
-                  variant={isSelected ? "default" : "outline"}
-                  size="sm"
-                  className={OPTION_BUTTON_CLASSNAME}
-                  onClick={() => toggleStatusValue(option)}
-                  disabled={isSubmitting}
-                  aria-pressed={isSelected}
-                >
-                  {option}
-                </Button>
-              );
-            })}
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {props.mode === "select" ? null : (
-              <Button
-                size="sm"
-                onClick={() =>
-                  commitAnswer(buildSelectedStatusAnswer(selectedStatusValues))
+      {isDeclaredScaleBoundsQuestion ? (
+        <div className="mt-2 space-y-2">
+          <p className="text-[0.72rem] leading-4 text-muted-foreground">
+            {t("projectWorkspace.interpretation.questionScaleBoundsHint")}
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {SCALE_BOUNDS_PRESETS.map((preset) => (
+              <AnswerChoiceButton
+                key={preset.label}
+                label={preset.label}
+                isSelected={
+                  scaleBoundsMin === String(preset.min) &&
+                  scaleBoundsMax === String(preset.max)
                 }
-                disabled={!selectedStatusValues.length || isSubmitting}
-              >
-                {isSubmitting
-                  ? t("projectWorkspace.interpretation.questionSubmitting")
-                  : t("projectWorkspace.interpretation.questionSubmit")}
-              </Button>
+                onClick={() => {
+                  setScaleBoundsMin(String(preset.min));
+                  setScaleBoundsMax(String(preset.max));
+                  commitScaleBounds(String(preset.min), String(preset.max));
+                }}
+                disabled={isSubmitting}
+              />
+            ))}
+          </div>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Input
+              type="number"
+              value={scaleBoundsMin}
+              onChange={(event) => {
+                setScaleBoundsMin(event.target.value);
+                commitScaleBounds(event.target.value, scaleBoundsMax);
+              }}
+              placeholder={t(
+                "projectWorkspace.interpretation.questionScaleBoundsMinPlaceholder",
+              )}
+              className={cn(TEXT_INPUT_CLASSNAME, "max-w-[6rem]")}
+            />
+            <span className="text-[0.8rem] text-muted-foreground">
+              {t("projectWorkspace.interpretation.questionScaleBoundsTo")}
+            </span>
+            <Input
+              type="number"
+              value={scaleBoundsMax}
+              onChange={(event) => {
+                setScaleBoundsMax(event.target.value);
+                commitScaleBounds(scaleBoundsMin, event.target.value);
+              }}
+              placeholder={t(
+                "projectWorkspace.interpretation.questionScaleBoundsMaxPlaceholder",
+              )}
+              className={cn(TEXT_INPUT_CLASSNAME, "max-w-[6rem]")}
+            />
+            {renderSubmitButton(
+              () => commitScaleBounds(scaleBoundsMin, scaleBoundsMax),
+              !scaleBoundsMin.trim() || !scaleBoundsMax.trim() || isSubmitting,
+            )}
+          </div>
+        </div>
+      ) : selectableStatusOptions ? (
+        <>
+          {renderChoiceGroup({
+            options: selectableStatusOptions,
+            selectedValues: selectedStatusValues,
+            onSelect: toggleStatusValue,
+            recommended:
+              recommendedValue &&
+              selectableStatusValues.includes(recommendedValue)
+                ? recommendedValue
+                : null,
+          })}
+          <div className="mt-1 flex flex-wrap gap-1.5">
+            {renderSubmitButton(
+              () =>
+                commitAnswer(buildSelectedStatusAnswer(selectedStatusValues)),
+              !selectedStatusValues.length || isSubmitting,
             )}
             <Button
               type="button"
               size="sm"
               variant="outline"
               onClick={() => {
-                const nextValues = [...selectableStatusOptions];
+                const nextValues = [...selectableStatusValues];
                 setSelectedStatusValues(nextValues);
                 if (props.mode === "select") {
                   commitAnswer(buildSelectedStatusAnswer(nextValues));
@@ -320,19 +590,20 @@ export function InterpretationQuestionCard(
               }}
               disabled={
                 isSubmitting ||
-                selectedStatusValues.length === selectableStatusOptions.length
+                selectedStatusValues.length === selectableStatusValues.length
               }
             >
               {t("projectWorkspace.interpretation.questionSelectAllOptions")}
             </Button>
           </div>
-        </div>
-      ) : question.kind === "free_text" || !question.options?.length ? (
+        </>
+      ) : question.kind === "free_text" ||
+        !question.userFacingOptions?.length ? (
         compositePrompt ? (
-          <div className="mt-4 space-y-4">
+          <div className="mt-2 space-y-2">
             {compositePrompt.parts.map((part, index) => (
-              <div key={`${question.id}-part-${index}`} className="space-y-2">
-                <p className="text-sm font-medium leading-6 text-foreground">
+              <div key={`${question.id}-part-${index}`} className="space-y-1.5">
+                <p className="text-[0.8rem] font-medium leading-5 text-foreground">
                   {index + 1}. {part}
                 </p>
                 <Textarea
@@ -343,109 +614,49 @@ export function InterpretationQuestionCard(
                   placeholder={t(
                     "projectWorkspace.interpretation.questionFreeTextPlaceholder",
                   )}
-                  className="min-h-24"
+                  className={TEXTAREA_CLASSNAME}
                 />
               </div>
             ))}
-            {props.mode === "select" ? null : (
-              <Button
-                size="sm"
-                onClick={() =>
-                  commitAnswer(
-                    buildCompositeAnswer(
-                      compositePrompt.parts,
-                      compositeValues,
-                    ),
-                  )
-                }
-                disabled={
-                  compositeValues.some((value) => !value.trim()) || isSubmitting
-                }
-              >
-                {isSubmitting
-                  ? t("projectWorkspace.interpretation.questionSubmitting")
-                  : t("projectWorkspace.interpretation.questionSubmit")}
-              </Button>
+            {renderSubmitButton(
+              () =>
+                commitAnswer(
+                  buildCompositeAnswer(compositePrompt.parts, compositeValues),
+                ),
+              compositeValues.some((value) => !value.trim()) || isSubmitting,
             )}
           </div>
         ) : (
-          <div className="mt-3 space-y-3">
-            {recommendedValue ? (
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge
-                  variant="outline"
-                  className="border-primary/30 bg-white/70 text-primary"
-                >
-                  {t("projectWorkspace.interpretation.questionRecommended")}
-                </Badge>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  className={OPTION_BUTTON_CLASSNAME}
-                  onClick={() => updateFreeTextValue(recommendedValue)}
-                  disabled={isSubmitting}
-                >
-                  {recommendedValue}
-                </Button>
-              </div>
-            ) : null}
-            <div className="flex flex-wrap gap-2">
+          <div className="mt-2 space-y-2">
+            {recommendedValue
+              ? renderRecommendationPanel(recommendedValue, {
+                  onClick: () => updateFreeTextValue(recommendedValue),
+                  isActive: freeTextValue.trim() === recommendedValue,
+                })
+              : null}
+            <div className="flex flex-wrap gap-1.5">
               <Input
                 value={freeTextValue}
                 onChange={(event) => updateFreeTextValue(event.target.value)}
                 placeholder={t(
                   "projectWorkspace.interpretation.questionFreeTextPlaceholder",
                 )}
-                className="max-w-sm"
+                className={TEXT_INPUT_CLASSNAME}
               />
-              {props.mode === "select" ? null : (
-                <Button
-                  size="sm"
-                  onClick={() => commitAnswer(freeTextValue)}
-                  disabled={!freeTextValue.trim() || isSubmitting}
-                >
-                  {isSubmitting
-                    ? t("projectWorkspace.interpretation.questionSubmitting")
-                    : t("projectWorkspace.interpretation.questionSubmit")}
-                </Button>
+              {renderSubmitButton(
+                () => commitAnswer(freeTextValue),
+                !freeTextValue.trim() || isSubmitting,
               )}
             </div>
           </div>
         )
       ) : (
-        <div className="mt-3 flex flex-wrap gap-2">
-          {question.options.map((option) => {
-            const isRecommended = recommendedValue === option;
-            const isSelected =
-              props.mode === "select" && props.selectedValue === option;
-            return (
-              <Button
-                key={option}
-                variant={isSelected ? "default" : "outline"}
-                size="sm"
-                className={
-                  isRecommended && !isSelected
-                    ? `${OPTION_BUTTON_CLASSNAME} border-primary/35 bg-primary-soft text-primary hover:bg-primary-soft/80`
-                    : OPTION_BUTTON_CLASSNAME
-                }
-                onClick={() => commitAnswer(option)}
-                disabled={isSubmitting}
-                aria-pressed={props.mode === "select" ? isSelected : undefined}
-              >
-                <span>{option}</span>
-                {isRecommended ? (
-                  <Badge
-                    variant="outline"
-                    className="border-primary/30 bg-white/70 text-primary"
-                  >
-                    {t("projectWorkspace.interpretation.questionRecommended")}
-                  </Badge>
-                ) : null}
-              </Button>
-            );
-          })}
-        </div>
+        renderChoiceGroup({
+          options: question.userFacingOptions ?? [],
+          selectedValues: selectedChoiceValue ? [selectedChoiceValue] : [],
+          onSelect: commitAnswer,
+          recommended: choiceRecommendedValue,
+        })
       )}
     </Card>
   );

@@ -696,16 +696,32 @@ export type InterpretationQuestionCode =
   | "validated_scale_confirmation"
   | "cohort_tag"
   | "pairing_group_key"
-  | "pairing_group_role";
+  | "pairing_group_role"
+  | "declared_scale_bounds";
 export type InterpretationQuestionStatus = "pending" | "answered";
+
+// Identifies one column targeted by a grouped instrument (e.g. the baseline
+// and endline columns behind one validated survey scale) — see
+// InterpretationQuestion.preparationGroupColumns.
+export interface InterpretationQuestionTargetColumnRef {
+  tableName: string;
+  columnName: string;
+}
+
+export interface ClarificationQuestionOption {
+  value: string;
+  label: string;
+}
 
 export interface InterpretationQuestion {
   id: string;
   goalId?: string | null;
-  prompt: string;
   kind: InterpretationQuestionKind;
   questionDomain: InterpretationQuestionDomain;
-  options: string[] | null;
+  // The single backend-rendered source of truth for question wording (see
+  // CLARIFICATION_QUESTION_WORDING_PLAN.md).
+  userFacingPrompt: string;
+  userFacingOptions: ClarificationQuestionOption[] | null;
   recommendedOption: string | null;
   recommendedConfidence: number | null;
   isBlocking: boolean;
@@ -716,6 +732,12 @@ export interface InterpretationQuestion {
   answeredValue: string | null;
   answeredById: string | null;
   answeredAt: string | null;
+  // Set only for validated_scale_confirmation/declared_scale_bounds
+  // questions where the deterministic pipeline detected this column is one
+  // half of a baseline/endline pair of the same instrument. Null for every
+  // other question — grouping is additive, never assumed.
+  preparationGroupId: string | null;
+  preparationGroupColumns: InterpretationQuestionTargetColumnRef[] | null;
 }
 
 export interface InterpretationWarning {
@@ -858,6 +880,12 @@ export type PreparedDatasetIdentifierHandling =
   | "deduplicate_by_identifier"
   | "manual_review_required";
 
+export type PreparedDatasetMetricKind =
+  "count" | "ratio" | "amount" | "duration" | "score" | "flag";
+
+export type PreparedDatasetValueScope =
+  "row" | "entity" | "table_aggregate" | "goal_support";
+
 export interface PreparedDatasetColumn {
   name: string;
   inferredType: DatasetProfileColumnType | null;
@@ -866,6 +894,8 @@ export interface PreparedDatasetColumn {
   positiveStatusDefinitionText: string | null;
   normalizationAccepted: boolean | null;
   epistemicRole: EpistemicRole | null;
+  metricKind?: PreparedDatasetMetricKind | null;
+  valueScope?: PreparedDatasetValueScope | null;
 }
 
 export interface PreparedDatasetTable {
@@ -1206,6 +1236,7 @@ export interface ActivityAnalysisV2GoalAssessmentRecord {
   evidenceTensionFlag: boolean;
   measuredValue: number | null;
   targetValue: number | null;
+  valueFormat?: "number" | "percent" | null;
   comparison: "at_least" | "at_most" | "equal" | null;
   achieved: boolean | null;
 }
@@ -1415,6 +1446,18 @@ export interface ContextCatalogEntry {
   sourceDe: string;
 }
 
+// Every goal_assessment with a resolved measuredValue/targetValue,
+// expressed as one ranked-progress entry — computed deterministically by
+// ia_backend and always present when non-empty, never subject to
+// chart-plan selection. See projectImpactStoryGoalProgressChart.tsx.
+export interface ProjectImpactStoryGoalProgressEntry {
+  entryId: string;
+  label: string;
+  activityName: string;
+  progressPercent: number;
+  status: ProjectImpactStoryGoalStatus;
+}
+
 export type ProjectImpactStoryChartType =
   "bar" | "pie" | "line" | "comparison" | "distribution";
 
@@ -1498,10 +1541,15 @@ export interface ProjectImpactStoryRecord {
   activityCards: ActivityImpactStoryCard[];
   headlineKpis: ProjectImpactStoryHeadlineKpi[];
   chartPlan: ProjectImpactStoryChartSpec[];
+  // Deterministic, no-LLM charts for every ready catalog entry the chart
+  // plan didn't select this run — the backlog panel lets a viewer add any
+  // of these to the dashboard instantly.
+  backlogChartPlan: ProjectImpactStoryChartSpec[];
   // Fallback-only descriptive charts when the planner produced no selected
   // story charts.
   contextCharts: ContextCatalogEntry[];
   impactCatalog: ImpactCatalogItem[];
+  goalProgressEntries: ProjectImpactStoryGoalProgressEntry[];
   narrativeSummary: string | null;
   narrativeStatus: ProjectImpactStoryNarrativeStatus | null;
   diagnostics: ProjectImpactStoryDiagnostics;
@@ -1621,6 +1669,7 @@ export type OutcomeEvidencePairingDiagnosticReasonCode =
   | "no_categorical_columns"
   | "duplicate_identifier_values"
   | "scale_bounds_mismatch"
+  | "scale_bounds_not_declared"
   | "no_declared_pairing_groups";
 
 export interface OutcomeEvidencePairingDiagnosticReason {

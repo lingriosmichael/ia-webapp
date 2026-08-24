@@ -1,6 +1,7 @@
 import type {
-  ImpactCatalogItem,
+  OutcomeDistributionEntry,
   ProjectImpactStoryChartSpec,
+  UnmeasuredOutcomeEntry,
 } from "@/services/apiClient";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { ProjectImpactStoryChart } from "./projectImpactStoryChart";
@@ -11,56 +12,37 @@ import { ProjectImpactStoryChart } from "./projectImpactStoryChart";
 // ContextCatalogEntry: a deterministic, fixed conversion into a
 // ProjectImpactStoryChartSpec reusing the existing chart-rendering
 // components, never a new chart-rendering mechanism and never an LLM
-// selection. See IMPACT_STORY_OUTCOME_EXTENSION_PLAN.md §4.5.
+// selection. paired_delta entries don't reach this component — the page
+// groups every confirmed paired_delta entry into one clustered chart via
+// ProjectImpactStoryPairedDeltaGroupChart instead, so this only ever
+// handles the remaining two catalog shapes.
 const DONUT_SHARE_MAX_CATEGORIES = 6;
 
 function toImpactChartSpec(
-  entry: ImpactCatalogItem,
-  beforeLabel: string,
-  afterLabel: string,
-): ProjectImpactStoryChartSpec | null {
-  if (entry.shape === "paired_delta") {
-    return {
-      chartId: entry.entryId,
-      chartType: "comparison",
-      dataKind: "category",
-      valueFormat: "number",
-      title: entry.pairLabelDe,
-      subtitle: entry.outcomeStatement,
-      narrativeReason: entry.sourceDe,
-      data: [
-        { label: beforeLabel, value: entry.beforeValue },
-        { label: afterLabel, value: entry.afterValue },
-      ],
-    };
-  }
-
-  if (entry.shape === "single_distribution") {
-    return {
-      chartId: entry.entryId,
-      chartType:
-        entry.shares.length <= DONUT_SHARE_MAX_CATEGORIES
-          ? "pie"
-          : "distribution",
-      dataKind: "category",
-      valueFormat: "number",
-      title: entry.questionLabelDe,
-      subtitle: entry.outcomeStatement,
-      narrativeReason: entry.sourceDe,
-      data: entry.shares.map((share) => ({
-        label: share.labelDe,
-        value: share.count,
-      })),
-    };
-  }
-
-  return null;
+  entry: OutcomeDistributionEntry,
+): ProjectImpactStoryChartSpec {
+  return {
+    chartId: entry.entryId,
+    chartType:
+      entry.shares.length <= DONUT_SHARE_MAX_CATEGORIES
+        ? "pie"
+        : "distribution",
+    dataKind: "category",
+    valueFormat: "number",
+    title: entry.questionLabelDe,
+    subtitle: entry.outcomeStatement,
+    narrativeReason: entry.sourceDe,
+    data: entry.shares.map((share) => ({
+      label: share.labelDe,
+      value: share.count,
+    })),
+  };
 }
 
 export function ProjectImpactStoryImpactChart({
   entry,
 }: {
-  entry: ImpactCatalogItem;
+  entry: OutcomeDistributionEntry | UnmeasuredOutcomeEntry;
 }) {
   const locale = useWorkspaceLocale();
 
@@ -75,14 +57,5 @@ export function ProjectImpactStoryImpactChart({
     );
   }
 
-  const chart = toImpactChartSpec(
-    entry,
-    locale.impactStory.beforeLabel,
-    locale.impactStory.afterLabel,
-  );
-  if (!chart) {
-    return null;
-  }
-
-  return <ProjectImpactStoryChart chart={chart} />;
+  return <ProjectImpactStoryChart chart={toImpactChartSpec(entry)} />;
 }

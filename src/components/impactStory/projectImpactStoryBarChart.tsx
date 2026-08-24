@@ -4,6 +4,7 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
+  LabelList,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -83,7 +84,12 @@ export function ProjectImpactStoryBarChart({
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}
-            margin={{ left: 4, right: 8, bottom: rotateLabels ? 24 : 0 }}
+            margin={{
+              left: 4,
+              right: 8,
+              top: 20,
+              bottom: rotateLabels ? 24 : 0,
+            }}
           >
             <CartesianGrid
               stroke={IMPACT_STORY_COLORS.lineSoft}
@@ -132,13 +138,29 @@ export function ProjectImpactStoryBarChart({
                   key={entry.rawLabel}
                   fill={verticalBarColor({
                     index,
-                    total: data.length,
                     dataKind: chart.dataKind,
                     chartType:
                       chart.chartType === "comparison" ? "comparison" : "bar",
+                    chartId: chart.chartId,
                   })}
                 />
               ))}
+              <LabelList
+                dataKey="value"
+                position="top"
+                fill={IMPACT_STORY_COLORS.inkSoft}
+                fontSize={11}
+                fontWeight={600}
+                formatter={(value: unknown) =>
+                  typeof value === "number"
+                    ? formatImpactStoryValue(
+                        value,
+                        chart.valueFormat,
+                        i18n.language,
+                      )
+                    : ""
+                }
+              />
             </Bar>
           </BarChart>
         </ResponsiveContainer>

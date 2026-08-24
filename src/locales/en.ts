@@ -582,6 +582,18 @@ const en = {
       questionSelectAllOptions: "Select all options",
       questionSubmit: "Submit",
       questionSubmitting: "Submitting…",
+      questionScaleBoundsCustom: "Custom",
+      questionScaleBoundsTo: "to",
+      questionScaleBoundsMinPlaceholder: "Min",
+      questionScaleBoundsMaxPlaceholder: "Max",
+      questionScaleBoundsHint:
+        "The observed responses don't prove the full questionnaire scale — we need the official range to compare baseline and endline safely.",
+      questionGroupBadge: "Same instrument, two timepoints",
+      questionGroupSubtitle: "Confirm once for both columns",
+      questionGroupExplanation:
+        "These columns look like the same survey instrument measured at two different times. Confirm the details once and they'll apply to both.",
+      questionGroupRejectAction:
+        "These aren't the same instrument — answer separately",
       reviewPrivacyAction: "Review privacy",
       reviewQualitativeCodingAction: "Review coding",
       reviewFile: "File",
@@ -747,25 +759,23 @@ const en = {
       "This summary was generated automatically from your data, not written by AI.",
     exploratoryChartNotice:
       "Exploratory — before/after detected, not confirmed as a result",
-    diagnosticsPanelTitle: "Diagnostics",
-    diagnosticsSummary:
-      "{{readyCount}} ready · {{extractionCount}} blocked by pipeline · {{missingDataCount}} blocked by missing data",
-    diagnosticsUnselectedTitle: "Available but not shown on this page",
-    diagnosticsUnselectedDescription:
-      "These were ready to chart, but the planner did not select them this time.",
-    diagnosticsUnselectedEmpty: "Everything that was ready was selected.",
-    diagnosticsExtractionBlockedTitle: "Blocked by a pipeline gap",
-    diagnosticsExtractionBlockedDescription:
-      "The data exists, but the pipeline could not turn it into a chart candidate yet.",
-    diagnosticsExtractionBlockedEmpty: "No pipeline gaps detected.",
-    diagnosticsMissingDataBlockedTitle: "Blocked by missing data",
-    diagnosticsMissingDataBlockedDescription:
-      "This chart needs evidence or an analysis run that isn't available yet.",
-    diagnosticsMissingDataBlockedEmpty: "No missing-data gaps detected.",
-    diagnosticsUnavailable:
-      "Diagnostics are not available for this analysis run yet — regenerate to see them.",
+    backlogPanelTitle: "Backlog",
+    backlogPanelSummary: "{{count}} charts available",
+    backlogPanelEmpty: "Nothing in the backlog — hidden charts land here.",
     beforeLabel: "Before",
     afterLabel: "After",
+    pairedDeltaGroupTitle: "Before/after comparison",
+    pairedDeltaGroupSubtitle:
+      "Confirmed results compared before and after the program.",
+    pairedDeltaGroupAriaLabel: "{{summary}}",
+    goalProgressChartTitle: "Target vs. reached — by indicator",
+    goalProgressChartSubtitle: "Share of the target reached so far",
+    goalProgressAriaLabel: "{{summary}}",
+    goalProgressStatusGood: "Target reached",
+    goalProgressStatusWarn: "Close to target",
+    goalProgressStatusRisk: "Needs attention",
+    dragHandleLabel: 'Drag "{{title}}" to reorder',
+    hideChartLabel: 'Hide "{{title}}"',
     outcomeNotYetMeasurable: "Not yet measurable — no linked evidence yet.",
     notYetAnalyzedFootnote: "No analyzed metrics yet for: {{names}}.",
     emptyTitle: "No analysis generated yet",
@@ -1651,9 +1661,6 @@ const en = {
     assignFailure: "The evidence could not be linked.",
     rejectSuccess: "Evidence marked as not linked.",
     rejectFailure: "The evidence rejection could not be saved.",
-    emptyStateTitle: "No candidate evidence yet",
-    emptyStateDescription:
-      "This usually means baseline and Wirkungsmessung data haven't both been uploaded yet, the uploaded columns don't share identical (or recognizably before/after) names, or the tables have no shared participant identifier to join on.",
     errorTitle: "Could not check for candidate evidence",
     errorDescription:
       "Something went wrong loading evidence-pairing candidates. Try again shortly.",
@@ -1705,7 +1712,9 @@ const en = {
     diagnosticReasonDuplicateIdentifierValues:
       "A table's participant identifier column has duplicate values, so it can't be safely joined. Deduplicate the identifier column before it can be matched.",
     diagnosticReasonScaleBoundsMismatch:
-      "Two columns are tagged as a before/after pair, but their observed numeric scales don't match (e.g. 1-5 vs. 0-10), so they were not paired.",
+      "Two columns are tagged as a before/after pair, but their declared scale ranges don't match (e.g. 1-5 vs. 0-10), so they were not paired.",
+    diagnosticReasonScaleBoundsNotDeclared:
+      "Two columns are tagged as a before/after pair, but the scale's full range hasn't been declared yet for one or both — answer the scale-range question during interpretation review to make them eligible for matching.",
     activityStatusJobsStarted: "Interpretation started",
     activityStatusAlreadyReady: "Already interpreted",
     activityStatusNoUploads: "No uploads",

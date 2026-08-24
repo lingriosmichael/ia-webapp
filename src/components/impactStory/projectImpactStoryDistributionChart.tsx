@@ -4,6 +4,7 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
+  LabelList,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -84,7 +85,7 @@ export function ProjectImpactStoryDistributionChart({
           <BarChart
             data={data}
             layout="vertical"
-            margin={{ left: 4, right: 8 }}
+            margin={{ left: 4, right: 36 }}
           >
             <CartesianGrid
               stroke={IMPACT_STORY_COLORS.lineSoft}
@@ -141,10 +142,26 @@ export function ProjectImpactStoryDistributionChart({
                   fill={
                     chart.dataKind === "status"
                       ? statusColor(entry.rawLabel)
-                      : rankedBarColor(index, chart.dataKind)
+                      : rankedBarColor(index, chart.dataKind, chart.chartId)
                   }
                 />
               ))}
+              <LabelList
+                dataKey="value"
+                position="right"
+                fill={IMPACT_STORY_COLORS.inkSoft}
+                fontSize={11}
+                fontWeight={600}
+                formatter={(value: unknown) =>
+                  typeof value === "number"
+                    ? formatImpactStoryValue(
+                        value,
+                        chart.valueFormat,
+                        i18n.language,
+                      )
+                    : ""
+                }
+              />
             </Bar>
           </BarChart>
         </ResponsiveContainer>

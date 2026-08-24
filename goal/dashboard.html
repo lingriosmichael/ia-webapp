@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>
+      Mentoring-Programm „Brücken in die Zukunft" 2026 — Fortschritt &amp;
+      Wirkung
+    </title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700;800&display=swap");
+
+      :root {
+        --paper: #f6f4ef;
+        --card: #ffffff;
+        --ink: #212536;
+        --ink-soft: #5b5f71;
+        --line: #e6e2d6;
+        --blue: #2f6690;
+        --blue-soft: #eaf1f5;
+        --green: #4c8f6b;
+        --green-soft: #e9f3ec;
+        --amber: #c6912f;
+        --amber-soft: #fbf1df;
+        --coral: #c2593f;
+        --coral-soft: #fbece6;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        padding: 32px 20px 60px;
+      }
+      .wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+      }
+
+      /* header */
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .brand svg {
+        display: block;
+      }
+      .brand-name {
+        font-weight: 800;
+        font-size: 15px;
+        letter-spacing: 0.02em;
+        color: var(--ink);
+      }
+      .crumbs {
+        font-size: 12.5px;
+        color: var(--ink-soft);
+        margin-top: 6px;
+      }
+      .crumbs b {
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .meta {
+        text-align: right;
+        font-size: 12.5px;
+        color: var(--ink-soft);
+      }
+      .status-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--green-soft);
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 100px;
+        margin-top: 6px;
+      }
+      .status-chip::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--green);
+      }
+
+      h1 {
+        font-family: "Source Serif 4", Georgia, serif;
+        font-weight: 700;
+        font-size: 32px;
+        line-height: 1.15;
+        letter-spacing: -0.01em;
+        margin: 0 0 6px;
+      }
+
+      /* timeline spine — signature element */
+      .spine-card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 20px 24px 16px;
+        margin-bottom: 22px;
+      }
+      .spine-label {
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+        margin-bottom: 14px;
+      }
+      .spine {
+        position: relative;
+        height: 54px;
+      }
+      .spine-line {
+        position: absolute;
+        top: 22px;
+        left: 2%;
+        right: 2%;
+        height: 2px;
+        background: var(--line);
+      }
+      .spine-progress {
+        position: absolute;
+        top: 22px;
+        left: 2%;
+        height: 2px;
+        background: var(--blue);
+        width: 63%;
+      }
+      .spine-node {
+        position: absolute;
+        top: 0;
+        transform: translateX(-50%);
+        text-align: center;
+        width: 150px;
+      }
+      .spine-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        margin: 0 auto 8px;
+        border: 3px solid var(--card);
+        box-shadow: 0 0 0 1.5px currentColor;
+      }
+      .spine-dot.done {
+        background: var(--green);
+        color: var(--green);
+      }
+      .spine-dot.watch {
+        background: var(--amber);
+        color: var(--amber);
+      }
+      .spine-dot.risk {
+        background: var(--coral);
+        color: var(--coral);
+      }
+      .spine-title {
+        font-size: 11.5px;
+        font-weight: 600;
+        line-height: 1.25;
+        color: var(--ink);
+      }
+      .spine-sub {
+        font-size: 10.5px;
+        color: var(--ink-soft);
+        margin-top: 2px;
+      }
+
+      /* narrative */
+      .narrative {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 28px 30px;
+        margin-bottom: 22px;
+      }
+      .narrative-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .narrative h2 {
+        font-family: "Source Serif 4", Georgia, serif;
+        font-weight: 600;
+        font-size: 21px;
+        margin: 0;
+      }
+      .narrative .updated {
+        font-size: 12px;
+        color: var(--ink-soft);
+      }
+      .narrative p {
+        font-size: 15px;
+        line-height: 1.65;
+        color: #33384a;
+        margin: 0 0 14px;
+      }
+      .narrative p:last-child {
+        margin-bottom: 0;
+      }
+      .narrative b {
+        font-weight: 700;
+        color: var(--ink);
+      }
+      .flag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--coral-soft);
+        color: var(--coral);
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        padding: 3px 9px;
+        border-radius: 6px;
+        margin-right: 6px;
+      }
+
+      /* KPI tiles */
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 22px;
+      }
+      .kpi {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 18px 20px;
+        position: relative;
+      }
+      .kpi .drag {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        color: #c9c5b7;
+        font-size: 14px;
+        letter-spacing: 2px;
+        cursor: grab;
+      }
+      .kpi-label {
+        font-size: 12.5px;
+        color: var(--ink-soft);
+        font-weight: 600;
+        margin-bottom: 8px;
+        line-height: 1.3;
+        padding-right: 16px;
+      }
+      .kpi-value {
+        font-family: "Source Serif 4", Georgia, serif;
+        font-size: 34px;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 8px;
+      }
+      .kpi-sub {
+        font-size: 12px;
+        color: var(--ink-soft);
+      }
+      .kpi-sub.good {
+        color: var(--green);
+        font-weight: 600;
+      }
+      .kpi-sub.warn {
+        color: var(--amber);
+        font-weight: 600;
+      }
+
+      /* charts grid */
+      .charts {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+      }
+      .chart-card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 20px 22px;
+        position: relative;
+      }
+      .chart-card .drag {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        color: #c9c5b7;
+        font-size: 14px;
+        letter-spacing: 2px;
+        cursor: grab;
+      }
+      .chart-title {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 2px;
+        padding-right: 20px;
+      }
+      .chart-note {
+        font-size: 12px;
+        color: var(--ink-soft);
+        margin-bottom: 14px;
+      }
+      .chart-holder {
+        height: 230px;
+        position: relative;
+      }
+      .chart-source {
+        font-size: 10.5px;
+        color: #9a9686;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px dashed var(--line);
+      }
+      .callout {
+        margin-top: 10px;
+        font-size: 12px;
+        background: var(--amber-soft);
+        color: #8a611e;
+        padding: 8px 10px;
+        border-radius: 8px;
+        line-height: 1.4;
+      }
+      .callout.risk {
+        background: var(--coral-soft);
+        color: var(--coral);
+      }
+
+      footer {
+        margin-top: 28px;
+        font-size: 11.5px;
+        color: #9a9686;
+        text-align: center;
+      }
+
+      @media (max-width: 920px) {
+        .kpis {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .charts {
+          grid-template-columns: 1fr;
+        }
+        .spine {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div>
+          <div class="brand">
+            <svg width="22" height="22" viewBox="0 0 24 24">
+              <circle cx="7" cy="7" r="5.5" fill="#2F6690" />
+              <circle cx="17" cy="7" r="5.5" fill="#C6912F" />
+              <circle cx="12" cy="16.5" r="5.5" fill="#4C8F6B" />
+            </svg>
+            <span class="brand-name">brindl</span>
+          </div>
+          <div class="crumbs">
+            Phineo &nbsp;›&nbsp; Projekte &nbsp;›&nbsp;
+            <b>Mentoring-Programm „Brücken in die Zukunft" 2026</b>
+          </div>
+        </div>
+        <div class="meta">
+          Datenstand: 30.09.2026 · ESF Plus · Berlin
+          <div class="status-chip">Aktiv — läuft bis Dez. 2026</div>
+        </div>
+      </header>
+
+      <!-- signature timeline spine -->
+      <div class="spine-card">
+        <div class="spine-label">Aktivitäten im Jahresverlauf</div>
+        <div class="spine">
+          <div class="spine-line"></div>
+          <div class="spine-progress"></div>
+          <div class="spine-node" style="left: 4%">
+            <div class="spine-dot done"></div>
+            <div class="spine-title">Mentor:innen&shy;gewinnung</div>
+            <div class="spine-sub">Jan–Feb</div>
+          </div>
+          <div class="spine-node" style="left: 21%">
+            <div class="spine-dot watch"></div>
+            <div class="spine-title">Schulung</div>
+            <div class="spine-sub">März</div>
+          </div>
+          <div class="spine-node" style="left: 38%">
+            <div class="spine-dot risk"></div>
+            <div class="spine-title">Infoveranstaltungen</div>
+            <div class="spine-sub">März–Apr</div>
+          </div>
+          <div class="spine-node" style="left: 55%">
+            <div class="spine-dot done"></div>
+            <div class="spine-title">Tandems bilden</div>
+            <div class="spine-sub">Apr</div>
+          </div>
+          <div class="spine-node" style="left: 71%">
+            <div class="spine-dot watch"></div>
+            <div class="spine-title">Tandemtreffen</div>
+            <div class="spine-sub">Apr–Dez</div>
+          </div>
+          <div class="spine-node" style="left: 88%">
+            <div class="spine-dot done"></div>
+            <div class="spine-title">Bewerbungs&shy;trainings</div>
+            <div class="spine-sub">Mär–Jul</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- narrative -->
+      <div class="narrative">
+        <div class="narrative-head">
+          <h2>Fortschritt &amp; Wirkung</h2>
+          <div class="updated">Erstellt am 18.08.2026</div>
+        </div>
+        <p>
+          Das Programm ist gut angelaufen: Aus <b>75 Bewerbungen</b> wurden
+          <b>65 Mentor:innen</b> ausgewählt und geschult,
+          <b>130 Jugendliche</b> wurden mit einer Baseline-Befragung ins
+          Programm aufgenommen und zu <b>130 Tandems</b> zusammengeführt — beide
+          Rekrutierungsziele wurden erreicht oder übertroffen. Auch die 24
+          geplanten Bewerbungstrainings wurden vollständig durchgeführt und
+          erreichten mit 150 Jugendlichen mehr als die anvisierten 140.
+        </p>
+        <p>
+          Bei den Jugendlichen, die bereits an der Abschlussbefragung
+          teilgenommen haben, zeigt sich eine deutliche Verbesserung: Berufliche
+          Klarheit stieg im Schnitt von 2,0 auf 4,2 (Skala 1–5),
+          Selbstwirksamkeit von 3,0 auf 4,25.
+          <b
+            >84 % geben an, bereits einen konkreten nächsten Schritt umgesetzt
+            zu haben</b
+          >
+          — ein Praktikum, eine Bewerbung, den Start einer Ausbildung oder ein
+          Beratungsgespräch.
+        </p>
+        <p>
+          <span class="flag">Zwei Punkte brauchen Aufmerksamkeit</span>Die
+          Informationsveranstaltungen an Schulen haben bislang
+          <b>211 von angestrebten 350 Jugendlichen</b> erreicht (60 %) — zwei
+          der 15 Termine fielen aus bzw. wurden verschoben. Und beim Ziel
+          „mindestens 10 Tandemtreffen pro Paar" steht das Programm mit
+          durchschnittlich <b>1,9 dokumentierten Treffen</b> (Stand 30.09.) noch
+          am Anfang; da die Tandems bis Jahresende und teils bis März 2027
+          weiterlaufen, ist hier noch Zeit — aber der aktuelle Tempo reicht
+          rechnerisch noch nicht aus, um die 90-%-Marke zu erreichen.
+        </p>
+      </div>
+
+      <!-- KPI tiles -->
+      <div class="kpis">
+        <div class="kpi">
+          <div class="drag">⋮⋮</div>
+          <div class="kpi-label">Jugendliche im Programm</div>
+          <div class="kpi-value">130</div>
+          <div class="kpi-sub good">Baseline vollständig erfasst</div>
+        </div>
+        <div class="kpi">
+          <div class="drag">⋮⋮</div>
+          <div class="kpi-label">Aktive Mentor:innen</div>
+          <div class="kpi-value">65</div>
+          <div class="kpi-sub good">Ziel von 65 erreicht</div>
+        </div>
+        <div class="kpi">
+          <div class="drag">⋮⋮</div>
+          <div class="kpi-label">Haben einen Karriereschritt umgesetzt</div>
+          <div class="kpi-value">84 %</div>
+          <div class="kpi-sub good">88 von 105 Befragten</div>
+        </div>
+        <div class="kpi">
+          <div class="drag">⋮⋮</div>
+          <div class="kpi-label">Leistungsziele erreicht</div>
+          <div class="kpi-value">8 / 13</div>
+          <div class="kpi-sub warn">2 knapp, 1 offen, 2 verfehlt</div>
+        </div>
+      </div>
+
+      <!-- charts -->
+      <div class="charts">
+        <div class="chart-card">
+          <div class="drag">⋮⋮</div>
+          <div class="chart-title">Ziel vs. erreicht — nach Kennzahl</div>
+          <div class="chart-note">
+            Anteil des Zielwerts, der bislang erreicht wurde
+          </div>
+          <div class="chart-holder">
+            <svg id="chartGoals" width="100%" height="100%"></svg>
+          </div>
+          <div class="chart-source">
+            Quelle: Bewerbungs-, Schulungs-, Tandem- und Workshop-Unterlagen
+            (alle Aktivitäten)
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="drag">⋮⋮</div>
+          <div class="chart-title">Veränderung bei den Jugendlichen</div>
+          <div class="chart-note">
+            Baseline vs. Abschlussbefragung, Skala 1–5 (n = 105)
+          </div>
+          <div class="chart-holder">
+            <svg id="chartBaseline" width="100%" height="100%"></svg>
+          </div>
+          <div class="chart-source">
+            Quelle: Baseline- und Abschlussbefragung Jugendliche
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="drag">⋮⋮</div>
+          <div class="chart-title">Wirkung der Bewerbungstrainings</div>
+          <div class="chart-note">
+            Selbsteinschätzung vor / nach den Workshops, Skala 1–5 (n = 150)
+          </div>
+          <div class="chart-holder">
+            <svg id="chartWorkshop" width="100%" height="100%"></svg>
+          </div>
+          <div class="chart-source">
+            Quelle: Feedbackbögen der Karriere- und Bewerbungstrainings
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="drag">⋮⋮</div>
+          <div class="chart-title">
+            Tandemtreffen — wo die Paare aktuell stehen
+          </div>
+          <div class="chart-note">
+            Anzahl dokumentierter Treffen je Tandem, Stand 30.09. (n = 105
+            Tandems)
+          </div>
+          <div class="chart-holder">
+            <svg id="chartMeetings" width="100%" height="100%"></svg>
+          </div>
+          <div class="callout risk">
+            Zielwert: mind. 10 Treffen bis Jahresende. Bisher hat kein Tandem
+            diese Marke erreicht — Ø 1,9 Treffen.
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="drag">⋮⋮</div>
+          <div class="chart-title">
+            Herkunft der interessierten Jugendlichen
+          </div>
+          <div class="chart-note">
+            Anmeldungen nach Berliner Bezirk (n = 180)
+          </div>
+          <div class="chart-holder">
+            <svg id="chartBezirk" width="100%" height="100%"></svg>
+          </div>
+          <div class="chart-source">
+            Quelle: Anmeldungen zu den Informationsveranstaltungen
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="drag">⋮⋮</div>
+          <div class="chart-title">Was aus dem Mentoring folgt</div>
+          <div class="chart-note">
+            Nächster Schritt laut Abschlussbefragung (n = 105)
+          </div>
+          <div class="chart-holder">
+            <svg id="chartNext" width="100%" height="100%"></svg>
+          </div>
+          <div class="chart-source">Quelle: Abschlussbefragung Jugendliche</div>
+        </div>
+      </div>
+
+      <footer>
+        brindl · Fortschritts- und Wirkungsansicht für „Brücken in die Zukunft"
+        2026 · Zahlen automatisch aus hochgeladener Evidenz berechnet
+      </footer>
+    </div>
+
+    <script>
+      // Self-contained SVG chart engine — no external dependencies, no network calls.
+      const NS = "http://www.w3.org/2000/svg";
+      const green = "#4C8F6B",
+        amber = "#C6912F",
+        coral = "#C2593F",
+        blue = "#2F6690",
+        blueSoft = "#9FC1D6",
+        grey = "#D8D3C4";
+
+      function el(tag, attrs) {
+        const e = document.createElementNS(NS, tag);
+        for (const k in attrs) e.setAttribute(k, attrs[k]);
+        return e;
+      }
+      function setupSvg(id, vbw, vbh) {
+        const svg = document.getElementById(id);
+        svg.setAttribute("viewBox", `0 0 ${vbw} ${vbh}`);
+        svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+        svg.style.fontFamily = "'Inter', ui-sans-serif, system-ui, sans-serif";
+        return svg;
+      }
+
+      // Horizontal bar chart: [{label, value, color}], scale 0..max shown as %
+      function hBarChart(id, data, max, opts = {}) {
+        const W = 460,
+          rowH = 24,
+          gap = 4,
+          left = opts.labelWidth || 158,
+          right = 40,
+          top = 6;
+        const H = top + data.length * (rowH + gap);
+        const svg = setupSvg(id, W, H);
+        const barAreaW = W - left - right;
+        data.forEach((d, i) => {
+          const y = top + i * (rowH + gap);
+          svg.appendChild(
+            el("text", {
+              x: left - 8,
+              y: y + rowH / 2 + 4,
+              "text-anchor": "end",
+              "font-size": 11,
+              fill: "#3A3E4E",
+            }),
+          ).textContent = d.label;
+          svg.appendChild(
+            el("rect", {
+              x: left,
+              y,
+              width: barAreaW,
+              height: rowH,
+              rx: 4,
+              fill: "#F0EEE5",
+            }),
+          );
+          const w = Math.max(2, (d.value / max) * barAreaW);
+          svg.appendChild(
+            el("rect", {
+              x: left,
+              y,
+              width: w,
+              height: rowH,
+              rx: 4,
+              fill: d.color,
+            }),
+          );
+          const labelInside = w > 30;
+          const t = el("text", {
+            x: labelInside ? left + w - 8 : left + w + 8,
+            y: y + rowH / 2 + 4,
+            "text-anchor": labelInside ? "end" : "start",
+            "font-size": 11,
+            "font-weight": 700,
+            fill: labelInside ? "#fff" : "#3A3E4E",
+          });
+          t.textContent =
+            d.value + (opts.suffix !== undefined ? opts.suffix : "%");
+          svg.appendChild(t);
+        });
+      }
+
+      // Grouped vertical bar chart: categories[], series=[{name,color,values[]}]
+      function groupedBarChart(id, categories, series, max, opts = {}) {
+        const W = 460,
+          H = 210,
+          top = 10,
+          bottom = 46,
+          left = 28,
+          right = 10;
+        const svg = setupSvg(id, W, H);
+        const plotH = H - top - bottom,
+          plotW = W - left - right;
+        // gridlines
+        [0, 0.25, 0.5, 0.75, 1].forEach((f) => {
+          const y = top + plotH * (1 - f);
+          svg.appendChild(
+            el("line", {
+              x1: left,
+              x2: W - right,
+              y1: y,
+              y2: y,
+              stroke: "#EEEBE0",
+              "stroke-width": 1,
+            }),
+          );
+          svg.appendChild(
+            el("text", {
+              x: left - 6,
+              y: y + 3,
+              "text-anchor": "end",
+              "font-size": 9,
+              fill: "#9A9686",
+            }),
+          ).textContent = (max * f).toFixed(0);
+        });
+        const groupW = plotW / categories.length;
+        const barW = Math.min(26, groupW / (series.length + 1.4));
+        categories.forEach((cat, ci) => {
+          const groupX = left + ci * groupW + groupW / 2;
+          series.forEach((s, si) => {
+            const val = s.values[ci];
+            const barH = (val / max) * plotH;
+            const x = groupX - (series.length * barW) / 2 + si * barW;
+            const y = top + plotH - barH;
+            svg.appendChild(
+              el("rect", {
+                x,
+                y,
+                width: barW - 3,
+                height: barH,
+                rx: 3,
+                fill: s.color,
+              }),
+            );
+            svg.appendChild(
+              el("text", {
+                x: x + (barW - 3) / 2,
+                y: y - 4,
+                "text-anchor": "middle",
+                "font-size": 9.5,
+                "font-weight": 700,
+                fill: "#3A3E4E",
+              }),
+            ).textContent = val.toFixed(2).replace(/\.?0+$/, "") || val;
+          });
+          const label = el("text", {
+            x: groupX,
+            y: H - bottom + 16,
+            "text-anchor": "middle",
+            "font-size": 10,
+            fill: "#5B5F71",
+          });
+          cat.split("\n").forEach((line, li) => {
+            const tspan = el("tspan", { x: groupX, dy: li === 0 ? 0 : 11 });
+            tspan.textContent = line;
+            label.appendChild(tspan);
+          });
+          svg.appendChild(label);
+        });
+        // legend
+        const legY = 4;
+        let lx = left;
+        series.forEach((s) => {
+          svg.appendChild(
+            el("rect", {
+              x: lx,
+              y: legY - 8,
+              width: 9,
+              height: 9,
+              rx: 2,
+              fill: s.color,
+            }),
+          );
+          const t = el("text", {
+            x: lx + 13,
+            y: legY,
+            "font-size": 10,
+            fill: "#5B5F71",
+          });
+          t.textContent = s.name;
+          svg.appendChild(t);
+          lx += 13 + s.name.length * 5.6 + 14;
+        });
+      }
+
+      // Simple vertical bar chart (single series)
+      function vBarChart(id, categories, values, max, color, opts = {}) {
+        const W = 460,
+          H = 210,
+          top = 14,
+          bottom = 30,
+          left = 30,
+          right = 10;
+        const svg = setupSvg(id, W, H);
+        const plotH = H - top - bottom,
+          plotW = W - left - right;
+        [0, 0.25, 0.5, 0.75, 1].forEach((f) => {
+          const y = top + plotH * (1 - f);
+          svg.appendChild(
+            el("line", {
+              x1: left,
+              x2: W - right,
+              y1: y,
+              y2: y,
+              stroke: "#EEEBE0",
+              "stroke-width": 1,
+            }),
+          );
+          svg.appendChild(
+            el("text", {
+              x: left - 6,
+              y: y + 3,
+              "text-anchor": "end",
+              "font-size": 9,
+              fill: "#9A9686",
+            }),
+          ).textContent = Math.round(max * f);
+        });
+        const bw = plotW / categories.length;
+        categories.forEach((cat, i) => {
+          const val = values[i];
+          const barH = (val / max) * plotH;
+          const x = left + i * bw + bw * 0.18;
+          const w = bw * 0.64;
+          const y = top + plotH - barH;
+          svg.appendChild(
+            el("rect", { x, y, width: w, height: barH, rx: 4, fill: color }),
+          );
+          svg.appendChild(
+            el("text", {
+              x: x + w / 2,
+              y: y - 6,
+              "text-anchor": "middle",
+              "font-size": 11,
+              "font-weight": 700,
+              fill: "#3A3E4E",
+            }),
+          ).textContent = val;
+          svg.appendChild(
+            el("text", {
+              x: x + w / 2,
+              y: top + plotH + 16,
+              "text-anchor": "middle",
+              "font-size": 9.5,
+              fill: "#5B5F71",
+            }),
+          ).textContent = cat;
+        });
+      }
+
+      // Donut chart: [{label, value, color}]
+      function donutChart(id, data) {
+        const W = 460,
+          H = 210;
+        const svg = setupSvg(id, W, H);
+        const cx = 95,
+          cy = H / 2,
+          r = 68,
+          rInner = 40;
+        const total = data.reduce((a, d) => a + d.value, 0);
+        let angle = -Math.PI / 2;
+        function point(cx, cy, r, a) {
+          return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+        }
+        data.forEach((d) => {
+          const frac = d.value / total;
+          const a0 = angle,
+            a1 = angle + frac * Math.PI * 2;
+          const [x0, y0] = point(cx, cy, r, a0);
+          const [x1, y1] = point(cx, cy, r, a1);
+          const [xi1, yi1] = point(cx, cy, rInner, a1);
+          const [xi0, yi0] = point(cx, cy, rInner, a0);
+          const large = a1 - a0 > Math.PI ? 1 : 0;
+          const d_attr = `M ${x0} ${y0} A ${r} ${r} 0 ${large} 1 ${x1} ${y1} L ${xi1} ${yi1} A ${rInner} ${rInner} 0 ${large} 0 ${xi0} ${yi0} Z`;
+          svg.appendChild(
+            el("path", {
+              d: d_attr,
+              fill: d.color,
+              stroke: "#fff",
+              "stroke-width": 2,
+            }),
+          );
+          angle = a1;
+        });
+        // legend
+        let ly = 40;
+        data.forEach((d) => {
+          svg.appendChild(
+            el("rect", {
+              x: 200,
+              y: ly - 9,
+              width: 10,
+              height: 10,
+              rx: 2,
+              fill: d.color,
+            }),
+          );
+          const pct = Math.round((d.value / total) * 100);
+          const t = el("text", {
+            x: 216,
+            y: ly,
+            "font-size": 11,
+            fill: "#3A3E4E",
+          });
+          t.textContent = `${d.label} — ${pct}%`;
+          svg.appendChild(t);
+          ly += 24;
+        });
+      }
+
+      // 1. Ziel vs erreicht
+      hBarChart(
+        "chartGoals",
+        [
+          { label: "Schüler:innen erreicht (Info)", value: 60, color: coral },
+          { label: "Tandems: ≥10 Treffen", value: 0, color: coral },
+          { label: "Teilnahmequote Schulung", value: 98, color: amber },
+          { label: "Info-Termine durchgeführt", value: 87, color: amber },
+          { label: "Bewerbungen Mentor:innen", value: 107, color: green },
+          { label: "Mentor:innen geschult", value: 100, color: green },
+          { label: "Tandems gebildet", value: 100, color: green },
+          { label: "Jugendliche in Workshops", value: 107, color: green },
+        ],
+        115,
+      );
+
+      // 2. Baseline vs endline
+      groupedBarChart(
+        "chartBaseline",
+        [
+          "Berufliche\nKlarheit",
+          "Selbst-\nwirksamkeit",
+          "Soziale\nEinbindung",
+          "Kennt\nBerufsoptionen",
+        ],
+        [
+          { name: "Baseline", color: grey, values: [2.0, 3.0, 3.0, 2.0] },
+          { name: "Abschluss", color: blue, values: [4.2, 4.25, 4.16, 4.14] },
+        ],
+        5,
+      );
+
+      // 3. Workshop vorher/nachher
+      groupedBarChart(
+        "chartWorkshop",
+        [
+          "Verständnis beruflicher\nMöglichkeiten",
+          "Kommunikations- &\nBewerbungskompetenz",
+        ],
+        [
+          { name: "Vorher", color: grey, values: [2.5, 2.5] },
+          { name: "Nachher", color: amber, values: [4.15, 4.05] },
+        ],
+        5,
+      );
+
+      // 4. Meetings distribution
+      vBarChart(
+        "chartMeetings",
+        ["0", "1", "2", "3", "4"],
+        [13, 28, 31, 19, 14],
+        35,
+        coral,
+      );
+
+      // 5. Bezirk
+      hBarChart(
+        "chartBezirk",
+        [
+          { label: "Steglitz-Zehlendorf", value: 23, color: blueSoft },
+          { label: "Pankow", value: 19, color: blueSoft },
+          { label: "Mitte", value: 18, color: blueSoft },
+          { label: "Treptow-Köpenick", value: 17, color: blueSoft },
+          { label: "Neukölln", value: 17, color: blueSoft },
+          { label: "Reinickendorf", value: 15, color: blueSoft },
+          { label: "Lichtenberg", value: 14, color: blueSoft },
+          { label: "Charlottenburg-Wilm.", value: 12, color: blueSoft },
+          { label: "Tempelhof-Schöneberg", value: 12, color: blueSoft },
+          { label: "Friedrichshain-Kreuzberg", value: 11, color: blueSoft },
+          { label: "Marzahn-Hellersdorf", value: 11, color: blueSoft },
+          { label: "Spandau", value: 11, color: blueSoft },
+        ],
+        23,
+        { labelWidth: 172, suffix: "" },
+      );
+
+      // 6. Next steps
+      donutChart("chartNext", [
+        { label: "Praktikum", value: 21, color: blue },
+        { label: "Berufsberatung", value: 21, color: green },
+        { label: "Bewerbung geschrieben", value: 21, color: amber },
+        { label: "Schule fortgesetzt", value: 21, color: blueSoft },
+        { label: "Ausbildung begonnen", value: 21, color: "#8FBBA0" },
+      ]);
+    </script>
+  </body>
+</html>

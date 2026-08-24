@@ -1,106 +1,106 @@
-befragung_typ;zielgruppe;teilnehmer_id;befragung_status;antwort_datum;berufliche_klarheit_abschluss_1_5;selbstwirksamkeit_abschluss_1_5;soziale_einbindung_abschluss_1_5;kennt_berufsoptionen_abschluss_1_5;konkreter_karriereschritt_umgesetzt;naechster_schritt_art
-abschluss;jugendliche;J001;abgeschlossen;2026-11-03;4;4;4;4;ja;Praktikum
-abschluss;jugendliche;J002;abgeschlossen;2026-11-04;4;4;4;4;ja;Berufsberatung
-abschluss;jugendliche;J003;abgeschlossen;2026-11-05;4;4;4;4;ja;Bewerbung geschrieben
-abschluss;jugendliche;J004;abgeschlossen;2026-11-06;4;5;4;4;ja;Schule fortsetzen
-abschluss;jugendliche;J005;abgeschlossen;2026-11-07;5;4;4;4;ja;Ausbildung
-abschluss;jugendliche;J006;abgeschlossen;2026-11-08;4;4;5;4;ja;Praktikum
-abschluss;jugendliche;J007;abgeschlossen;2026-11-09;4;4;4;5;ja;Berufsberatung
-abschluss;jugendliche;J008;abgeschlossen;2026-11-10;4;5;4;4;ja;Bewerbung geschrieben
-abschluss;jugendliche;J009;abgeschlossen;2026-11-11;4;4;4;4;ja;Schule fortsetzen
-abschluss;jugendliche;J010;abgeschlossen;2026-11-12;5;4;4;4;ja;Ausbildung
-abschluss;jugendliche;J011;abgeschlossen;2026-11-13;4;4;4;4;ja;Praktikum
-abschluss;jugendliche;J012;abgeschlossen;2026-11-14;4;5;5;4;ja;Berufsberatung
-abschluss;jugendliche;J013;abgeschlossen;2026-11-15;4;4;4;4;ja;Bewerbung geschrieben
-abschluss;jugendliche;J014;abgeschlossen;2026-11-16;4;4;4;5;ja;Schule fortsetzen
-abschluss;jugendliche;J015;abgeschlossen;2026-11-17;5;4;4;4;ja;Ausbildung
-abschluss;jugendliche;J016;abgeschlossen;2026-11-18;4;5;4;4;ja;Praktikum
-abschluss;jugendliche;J017;abgeschlossen;2026-11-19;4;4;4;4;ja;Berufsberatung
-abschluss;jugendliche;J018;abgeschlossen;2026-11-20;4;4;5;4;ja;Bewerbung geschrieben
-abschluss;jugendliche;J019;abgeschlossen;2026-11-21;4;4;4;4;ja;Schule fortsetzen
-abschluss;jugendliche;J020;abgeschlossen;2026-11-22;5;5;4;4;ja;Ausbildung
-abschluss;jugendliche;J021;abgeschlossen;2026-11-23;4;4;4;5;ja;Praktikum
-abschluss;jugendliche;J022;abgeschlossen;2026-11-24;4;4;4;4;ja;Berufsberatung
-abschluss;jugendliche;J023;abgeschlossen;2026-11-25;4;4;4;4;ja;Bewerbung geschrieben
-abschluss;jugendliche;J024;abgeschlossen;2026-11-26;4;5;5;4;ja;Schule fortsetzen
-abschluss;jugendliche;J025;abgeschlossen;2026-11-02;5;4;4;4;ja;Ausbildung
-abschluss;jugendliche;J026;abgeschlossen;2026-11-03;4;4;4;4;ja;Praktikum
-abschluss;jugendliche;J027;abgeschlossen;2026-11-04;4;4;4;4;ja;Berufsberatung
-abschluss;jugendliche;J028;abgeschlossen;2026-11-05;4;5;4;5;ja;Bewerbung geschrieben
-abschluss;jugendliche;J029;abgeschlossen;2026-11-06;4;4;4;4;ja;Schule fortsetzen
-abschluss;jugendliche;J030;abgeschlossen;2026-11-07;5;4;5;4;ja;Ausbildung
-abschluss;jugendliche;J031;abgeschlossen;2026-11-08;4;4;4;4;ja;Praktikum
-abschluss;jugendliche;J032;abgeschlossen;2026-11-09;4;5;4;4;ja;Berufsberatung
-abschluss;jugendliche;J033;abgeschlossen;2026-11-10;4;4;4;4;ja;Bewerbung geschrieben
-abschluss;jugendliche;J034;abgeschlossen;2026-11-11;4;4;4;4;ja;Schule fortsetzen
-abschluss;jugendliche;J035;abgeschlossen;2026-11-12;5;4;4;5;ja;Ausbildung
-abschluss;jugendliche;J036;abgeschlossen;2026-11-13;4;5;5;4;ja;Praktikum
-abschluss;jugendliche;J037;abgeschlossen;2026-11-14;4;4;4;4;ja;Berufsberatung
-abschluss;jugendliche;J038;abgeschlossen;2026-11-15;4;4;4;4;ja;Bewerbung geschrieben
-abschluss;jugendliche;J039;abgeschlossen;2026-11-16;4;4;4;4;ja;Schule fortsetzen
-abschluss;jugendliche;J040;abgeschlossen;2026-11-17;5;5;4;4;ja;Ausbildung
-abschluss;jugendliche;J041;abgeschlossen;2026-11-18;4;4;4;4;ja;Praktikum
-abschluss;jugendliche;J042;abgeschlossen;2026-11-19;4;4;5;5;ja;Berufsberatung
-abschluss;jugendliche;J043;abgeschlossen;2026-11-20;4;4;4;4;ja;Bewerbung geschrieben
-abschluss;jugendliche;J044;abgeschlossen;2026-11-21;4;5;4;4;ja;Schule fortsetzen
-abschluss;jugendliche;J045;abgeschlossen;2026-11-22;5;4;4;4;ja;Ausbildung
-abschluss;jugendliche;J046;abgeschlossen;2026-11-23;4;4;4;4;ja;Praktikum
-abschluss;jugendliche;J047;abgeschlossen;2026-11-24;4;4;4;4;ja;Berufsberatung
-abschluss;jugendliche;J048;abgeschlossen;2026-11-25;4;5;5;4;ja;Bewerbung geschrieben
-abschluss;jugendliche;J049;abgeschlossen;2026-11-26;4;4;4;5;ja;Schule fortsetzen
-abschluss;jugendliche;J050;abgeschlossen;2026-11-02;5;4;4;4;ja;Ausbildung
-abschluss;jugendliche;J051;abgeschlossen;2026-11-03;4;4;4;4;ja;Praktikum
-abschluss;jugendliche;J052;abgeschlossen;2026-11-04;4;5;4;4;ja;Berufsberatung
-abschluss;jugendliche;J053;abgeschlossen;2026-11-05;4;4;4;4;ja;Bewerbung geschrieben
-abschluss;jugendliche;J054;abgeschlossen;2026-11-06;4;4;5;4;ja;Schule fortsetzen
-abschluss;jugendliche;J055;abgeschlossen;2026-11-07;5;4;4;4;ja;Ausbildung
-abschluss;jugendliche;J056;abgeschlossen;2026-11-08;4;5;4;5;ja;Praktikum
-abschluss;jugendliche;J057;abgeschlossen;2026-11-09;4;4;4;4;ja;Berufsberatung
-abschluss;jugendliche;J058;abgeschlossen;2026-11-10;4;4;4;4;ja;Bewerbung geschrieben
-abschluss;jugendliche;J059;abgeschlossen;2026-11-11;4;4;4;4;ja;Schule fortsetzen
-abschluss;jugendliche;J060;abgeschlossen;2026-11-12;5;5;5;4;ja;Ausbildung
-abschluss;jugendliche;J061;abgeschlossen;2026-11-13;4;4;4;4;ja;Praktikum
-abschluss;jugendliche;J062;abgeschlossen;2026-11-14;4;4;4;4;ja;Berufsberatung
-abschluss;jugendliche;J063;abgeschlossen;2026-11-15;4;4;4;5;ja;Bewerbung geschrieben
-abschluss;jugendliche;J064;abgeschlossen;2026-11-16;4;5;4;4;ja;Schule fortsetzen
-abschluss;jugendliche;J065;abgeschlossen;2026-11-17;5;4;4;4;ja;Ausbildung
-abschluss;jugendliche;J066;abgeschlossen;2026-11-18;4;4;5;4;ja;Praktikum
-abschluss;jugendliche;J067;abgeschlossen;2026-11-19;4;4;4;4;ja;Berufsberatung
-abschluss;jugendliche;J068;abgeschlossen;2026-11-20;4;5;4;4;ja;Bewerbung geschrieben
-abschluss;jugendliche;J069;abgeschlossen;2026-11-21;4;4;4;4;ja;Schule fortsetzen
-abschluss;jugendliche;J070;abgeschlossen;2026-11-22;5;4;4;5;ja;Ausbildung
-abschluss;jugendliche;J071;abgeschlossen;2026-11-23;4;4;4;4;ja;Praktikum
-abschluss;jugendliche;J072;abgeschlossen;2026-11-24;4;5;5;4;ja;Berufsberatung
-abschluss;jugendliche;J073;abgeschlossen;2026-11-25;4;4;4;4;ja;Bewerbung geschrieben
-abschluss;jugendliche;J074;abgeschlossen;2026-11-26;4;4;4;4;ja;Schule fortsetzen
-abschluss;jugendliche;J075;abgeschlossen;2026-11-02;5;4;4;4;ja;Ausbildung
-abschluss;jugendliche;J076;abgeschlossen;2026-11-03;4;5;4;4;ja;Praktikum
-abschluss;jugendliche;J077;abgeschlossen;2026-11-04;4;4;4;5;ja;Berufsberatung
-abschluss;jugendliche;J078;abgeschlossen;2026-11-05;4;4;5;4;ja;Bewerbung geschrieben
-abschluss;jugendliche;J079;abgeschlossen;2026-11-06;4;4;4;4;ja;Schule fortsetzen
-abschluss;jugendliche;J080;abgeschlossen;2026-11-07;5;5;4;4;ja;Ausbildung
-abschluss;jugendliche;J081;abgeschlossen;2026-11-08;4;4;4;4;ja;Praktikum
-abschluss;jugendliche;J082;abgeschlossen;2026-11-09;4;4;4;4;ja;Berufsberatung
-abschluss;jugendliche;J083;abgeschlossen;2026-11-10;4;4;4;4;ja;Bewerbung geschrieben
-abschluss;jugendliche;J084;abgeschlossen;2026-11-11;4;5;5;5;ja;Schule fortsetzen
-abschluss;jugendliche;J085;abgeschlossen;2026-11-12;5;4;4;4;ja;Ausbildung
-abschluss;jugendliche;J086;abgeschlossen;2026-11-13;4;4;4;4;ja;Praktikum
-abschluss;jugendliche;J087;abgeschlossen;2026-11-14;4;4;4;4;ja;Berufsberatung
-abschluss;jugendliche;J088;abgeschlossen;2026-11-15;4;5;4;4;ja;Bewerbung geschrieben
-abschluss;jugendliche;J089;abgeschlossen;2026-11-16;4;4;4;4;in_vorbereitung;Schule fortsetzen
-abschluss;jugendliche;J090;abgeschlossen;2026-11-17;5;4;5;4;in_vorbereitung;Ausbildung
-abschluss;jugendliche;J091;abgeschlossen;2026-11-18;4;4;4;5;in_vorbereitung;Praktikum
-abschluss;jugendliche;J092;abgeschlossen;2026-11-19;4;5;4;4;in_vorbereitung;Berufsberatung
-abschluss;jugendliche;J093;abgeschlossen;2026-11-20;4;4;4;4;in_vorbereitung;Bewerbung geschrieben
-abschluss;jugendliche;J094;abgeschlossen;2026-11-21;4;4;4;4;in_vorbereitung;Schule fortsetzen
-abschluss;jugendliche;J095;abgeschlossen;2026-11-22;5;4;4;4;in_vorbereitung;Ausbildung
-abschluss;jugendliche;J096;abgeschlossen;2026-11-23;4;5;5;4;in_vorbereitung;Praktikum
-abschluss;jugendliche;J097;abgeschlossen;2026-11-24;4;4;4;4;in_vorbereitung;Berufsberatung
-abschluss;jugendliche;J098;abgeschlossen;2026-11-25;4;4;4;5;in_vorbereitung;Bewerbung geschrieben
-abschluss;jugendliche;J099;abgeschlossen;2026-11-26;4;4;4;4;in_vorbereitung;Schule fortsetzen
-abschluss;jugendliche;J100;abgeschlossen;2026-11-02;5;5;4;4;in_vorbereitung;Ausbildung
-abschluss;jugendliche;J101;abgeschlossen;2026-11-03;4;4;4;4;in_vorbereitung;Praktikum
-abschluss;jugendliche;J102;abgeschlossen;2026-11-04;4;4;5;4;in_vorbereitung;Berufsberatung
-abschluss;jugendliche;J103;abgeschlossen;2026-11-05;4;4;4;4;in_vorbereitung;Bewerbung geschrieben
-abschluss;jugendliche;J104;abgeschlossen;2026-11-06;4;5;4;4;in_vorbereitung;Schule fortsetzen
-abschluss;jugendliche;J105;abgeschlossen;2026-11-07;5;4;4;5;in_vorbereitung;Ausbildung
+befragung_typ;zielgruppe;teilnehmer_id;befragung_status;antwort_datum;berufliche_klarheit_abschluss_1_5;selbstsicherheit_uebergang_schule_beruf_abschluss_1_5
+abschluss;jugendliche;J001;abgeschlossen;2026-11-03;4;4
+abschluss;jugendliche;J002;abgeschlossen;2026-11-04;4;4
+abschluss;jugendliche;J003;abgeschlossen;2026-11-05;4;4
+abschluss;jugendliche;J004;abgeschlossen;2026-11-06;4;5
+abschluss;jugendliche;J005;abgeschlossen;2026-11-07;5;4
+abschluss;jugendliche;J006;abgeschlossen;2026-11-08;4;4
+abschluss;jugendliche;J007;abgeschlossen;2026-11-09;4;4
+abschluss;jugendliche;J008;abgeschlossen;2026-11-10;4;5
+abschluss;jugendliche;J009;abgeschlossen;2026-11-11;4;4
+abschluss;jugendliche;J010;abgeschlossen;2026-11-12;5;4
+abschluss;jugendliche;J011;abgeschlossen;2026-11-13;4;4
+abschluss;jugendliche;J012;abgeschlossen;2026-11-14;4;5
+abschluss;jugendliche;J013;abgeschlossen;2026-11-15;4;4
+abschluss;jugendliche;J014;abgeschlossen;2026-11-16;4;4
+abschluss;jugendliche;J015;abgeschlossen;2026-11-17;5;4
+abschluss;jugendliche;J016;abgeschlossen;2026-11-18;4;5
+abschluss;jugendliche;J017;abgeschlossen;2026-11-19;4;4
+abschluss;jugendliche;J018;abgeschlossen;2026-11-20;4;4
+abschluss;jugendliche;J019;abgeschlossen;2026-11-21;4;4
+abschluss;jugendliche;J020;abgeschlossen;2026-11-22;5;5
+abschluss;jugendliche;J021;abgeschlossen;2026-11-23;4;4
+abschluss;jugendliche;J022;abgeschlossen;2026-11-24;4;4
+abschluss;jugendliche;J023;abgeschlossen;2026-11-25;4;4
+abschluss;jugendliche;J024;abgeschlossen;2026-11-26;4;5
+abschluss;jugendliche;J025;abgeschlossen;2026-11-02;5;4
+abschluss;jugendliche;J026;abgeschlossen;2026-11-03;4;4
+abschluss;jugendliche;J027;abgeschlossen;2026-11-04;4;4
+abschluss;jugendliche;J028;abgeschlossen;2026-11-05;4;5
+abschluss;jugendliche;J029;abgeschlossen;2026-11-06;4;4
+abschluss;jugendliche;J030;abgeschlossen;2026-11-07;5;4
+abschluss;jugendliche;J031;abgeschlossen;2026-11-08;4;4
+abschluss;jugendliche;J032;abgeschlossen;2026-11-09;4;5
+abschluss;jugendliche;J033;abgeschlossen;2026-11-10;4;4
+abschluss;jugendliche;J034;abgeschlossen;2026-11-11;4;4
+abschluss;jugendliche;J035;abgeschlossen;2026-11-12;5;4
+abschluss;jugendliche;J036;abgeschlossen;2026-11-13;4;5
+abschluss;jugendliche;J037;abgeschlossen;2026-11-14;4;4
+abschluss;jugendliche;J038;abgeschlossen;2026-11-15;4;4
+abschluss;jugendliche;J039;abgeschlossen;2026-11-16;4;4
+abschluss;jugendliche;J040;abgeschlossen;2026-11-17;5;5
+abschluss;jugendliche;J041;abgeschlossen;2026-11-18;4;4
+abschluss;jugendliche;J042;abgeschlossen;2026-11-19;4;4
+abschluss;jugendliche;J043;abgeschlossen;2026-11-20;4;4
+abschluss;jugendliche;J044;abgeschlossen;2026-11-21;4;5
+abschluss;jugendliche;J045;abgeschlossen;2026-11-22;5;4
+abschluss;jugendliche;J046;abgeschlossen;2026-11-23;4;4
+abschluss;jugendliche;J047;abgeschlossen;2026-11-24;4;4
+abschluss;jugendliche;J048;abgeschlossen;2026-11-25;4;5
+abschluss;jugendliche;J049;abgeschlossen;2026-11-26;4;4
+abschluss;jugendliche;J050;abgeschlossen;2026-11-02;5;4
+abschluss;jugendliche;J051;abgeschlossen;2026-11-03;4;4
+abschluss;jugendliche;J052;abgeschlossen;2026-11-04;4;5
+abschluss;jugendliche;J053;abgeschlossen;2026-11-05;4;4
+abschluss;jugendliche;J054;abgeschlossen;2026-11-06;4;4
+abschluss;jugendliche;J055;abgeschlossen;2026-11-07;5;4
+abschluss;jugendliche;J056;abgeschlossen;2026-11-08;4;5
+abschluss;jugendliche;J057;abgeschlossen;2026-11-09;4;4
+abschluss;jugendliche;J058;abgeschlossen;2026-11-10;4;4
+abschluss;jugendliche;J059;abgeschlossen;2026-11-11;4;4
+abschluss;jugendliche;J060;abgeschlossen;2026-11-12;5;5
+abschluss;jugendliche;J061;abgeschlossen;2026-11-13;4;4
+abschluss;jugendliche;J062;abgeschlossen;2026-11-14;4;4
+abschluss;jugendliche;J063;abgeschlossen;2026-11-15;4;4
+abschluss;jugendliche;J064;abgeschlossen;2026-11-16;4;5
+abschluss;jugendliche;J065;abgeschlossen;2026-11-17;5;4
+abschluss;jugendliche;J066;abgeschlossen;2026-11-18;4;4
+abschluss;jugendliche;J067;abgeschlossen;2026-11-19;4;4
+abschluss;jugendliche;J068;abgeschlossen;2026-11-20;4;5
+abschluss;jugendliche;J069;abgeschlossen;2026-11-21;4;4
+abschluss;jugendliche;J070;abgeschlossen;2026-11-22;5;4
+abschluss;jugendliche;J071;abgeschlossen;2026-11-23;4;4
+abschluss;jugendliche;J072;abgeschlossen;2026-11-24;4;5
+abschluss;jugendliche;J073;abgeschlossen;2026-11-25;4;4
+abschluss;jugendliche;J074;abgeschlossen;2026-11-26;4;4
+abschluss;jugendliche;J075;abgeschlossen;2026-11-02;5;4
+abschluss;jugendliche;J076;abgeschlossen;2026-11-03;4;5
+abschluss;jugendliche;J077;abgeschlossen;2026-11-04;4;4
+abschluss;jugendliche;J078;abgeschlossen;2026-11-05;4;4
+abschluss;jugendliche;J079;abgeschlossen;2026-11-06;4;4
+abschluss;jugendliche;J080;abgeschlossen;2026-11-07;5;5
+abschluss;jugendliche;J081;abgeschlossen;2026-11-08;4;4
+abschluss;jugendliche;J082;abgeschlossen;2026-11-09;4;4
+abschluss;jugendliche;J083;abgeschlossen;2026-11-10;4;4
+abschluss;jugendliche;J084;abgeschlossen;2026-11-11;4;5
+abschluss;jugendliche;J085;abgeschlossen;2026-11-12;5;4
+abschluss;jugendliche;J086;abgeschlossen;2026-11-13;4;4
+abschluss;jugendliche;J087;abgeschlossen;2026-11-14;4;4
+abschluss;jugendliche;J088;abgeschlossen;2026-11-15;4;5
+abschluss;jugendliche;J089;abgeschlossen;2026-11-16;4;4
+abschluss;jugendliche;J090;abgeschlossen;2026-11-17;5;4
+abschluss;jugendliche;J091;abgeschlossen;2026-11-18;4;4
+abschluss;jugendliche;J092;abgeschlossen;2026-11-19;4;5
+abschluss;jugendliche;J093;abgeschlossen;2026-11-20;4;4
+abschluss;jugendliche;J094;abgeschlossen;2026-11-21;4;4
+abschluss;jugendliche;J095;abgeschlossen;2026-11-22;5;4
+abschluss;jugendliche;J096;abgeschlossen;2026-11-23;4;5
+abschluss;jugendliche;J097;abgeschlossen;2026-11-24;4;4
+abschluss;jugendliche;J098;abgeschlossen;2026-11-25;4;4
+abschluss;jugendliche;J099;abgeschlossen;2026-11-26;4;4
+abschluss;jugendliche;J100;abgeschlossen;2026-11-02;5;5
+abschluss;jugendliche;J101;abgeschlossen;2026-11-03;4;4
+abschluss;jugendliche;J102;abgeschlossen;2026-11-04;4;4
+abschluss;jugendliche;J103;abgeschlossen;2026-11-05;4;4
+abschluss;jugendliche;J104;abgeschlossen;2026-11-06;4;5
+abschluss;jugendliche;J105;abgeschlossen;2026-11-07;5;4

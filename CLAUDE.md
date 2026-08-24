@@ -84,9 +84,85 @@ it rather than in a parallel directory tree.
 
 ## Styling
 
-Pick one approach and use it everywhere (Tailwind is a common fit with this
-stack if you haven't committed to something else yet). Mixing CSS
-approaches across a solo codebase costs you more than it saves.
+Tailwind v4 (`@tailwindcss/vite`) is already committed, with a full
+CSS-custom-property token system in `src/styles.css` (`--primary`, `--card`,
+`--shadow-elevated`, etc., wired into Tailwind via `@theme inline`). Use
+those semantic tokens (`bg-primary`, `text-muted-foreground`,
+`shadow-elevated`, ...) rather than raw Tailwind palette classes
+(`bg-blue-600`) — that's what keeps a color/shadow/radius change a one-file
+edit instead of a codebase-wide find-and-replace. `tw-animate-css` and Radix
+UI primitives (`@radix-ui/react-*`) are already dependencies too — build on
+them before reaching for a new one.
+
+## Brand & Visual Design
+
+Source of truth: `brand_assets/brand_guidelines.png`. Check it before designing
+anything customer-facing — use its exact values, never invent or approximate.
+
+- **Colors** — `#2563EB` (primary blue), `#A5B4FC` (periwinkle), `#FB923C`
+  (orange), `#0F172A` (ink), `#C7E0C0` (sage green), `#F7F6F3`
+  (background/off-white).
+- **Typography** — GT Haptik for both headings (Bold/Semibold) and body
+  (Regular/Medium). One typeface, no serif/display pairing.
+- **Iconography** — simple line icons via `lucide-react` (already a project
+  dependency — don't add a second icon set).
+- **Graphic elements** — organic blob shapes and subtle dot-grid patterns for
+  decorative depth, not gradients or grain textures.
+
+**Known gap:** `src/styles.css`'s current tokens (`--signal: #2f6690`,
+`--apricot: #c6912f`, `--ink: #212536`, `--pistachio: #e9f3ec`,
+`--warm-stone: #f6f4ef`) diverge from the values above — a muted variant
+that predates or drifted from the brand guidelines. `--font-sans: "Inter"`
+is also the live body font, not GT Haptik. (There's also a
+`--font-editorial` serif stack, actively used in the Project Impact Story
+feature's headline components — `impactStoryNarrativeBanner.tsx` and
+`impactStoryHeadlineKpiRow.tsx` — not dead code; it's unclear whether that's
+a deliberate editorial accent for that narrative feature specifically or
+its own drift from brand, so don't assume either way.) Treat
+`brand_guidelines.png` as canonical going forward, but do **not** repaint
+`styles.css` or existing components as a side effect of unrelated work —
+that's a deliberate, repo-wide, user-visible change. Surface the mismatch
+and get explicit sign-off before touching shared tokens.
+
+## Reference-Image Design Workflow
+
+When given a reference image (Figma export, screenshot, mock) for a new
+screen or component:
+
+- Match layout, spacing, typography, and color exactly. Don't add sections,
+  features, or "improvements" beyond what's shown in the reference.
+- Build it as real React component(s) under `src/components/` (or the
+  relevant route), following this repo's naming and typing conventions — not
+  a disposable static HTML file.
+- Run the app locally (`npm run dev` → `http://localhost:8080`; see
+  "Environment" below for the required env var) and visually compare your
+  build against the reference. Do at least two comparison passes, fixing
+  mismatches between each. Be specific about deltas: "heading is 32px,
+  reference shows ~24px."
+- No screenshot/browser-automation tooling (Puppeteer, Playwright) is
+  currently installed in this repo. If you want repeatable automated visual
+  QA, propose adding Playwright as a devDependency and ask before installing
+  — don't assume scripts that don't exist.
+- If no reference image is given, design from scratch using the guardrails
+  below, at high craft.
+
+## Anti-Generic Guardrails
+
+- **Shadows** — never flat `shadow-md`; use layered, color-tinted shadows at
+  low opacity (see `--shadow-soft` / `--shadow-elevated` / `--shadow-glow` in
+  `styles.css` for the existing pattern to extend).
+- **Typography** — tight tracking (`-0.03em`) on large headings, generous
+  line-height (`1.7`) on body copy.
+- **Animations** — only animate `transform` and `opacity`; never
+  `transition-all`; prefer spring-style easing.
+- **Interactive states** — every clickable element needs hover,
+  focus-visible, and active states. No exceptions.
+- **Images** — gradient overlay (`bg-gradient-to-t from-black/60`) plus a
+  `mix-blend-multiply` color treatment layer where photography is used.
+- **Spacing** — use consistent, intentional spacing tokens, not arbitrary
+  Tailwind steps.
+- **Depth** — layer surfaces (base → elevated → floating) rather than a flat
+  z-plane.
 
 ## Auth
 

@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { PrivacyReviewDialog } from "@/components/privacyReviewDialog";
 import { QualitativeCodingReviewDialog } from "@/components/qualitativeCodingReviewDialog";
 import { InterpretationQuestionCard } from "@/components/interpretationQuestionCard";
+import { InterpretationGroupQuestionCard } from "@/components/interpretationGroupQuestionCard";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -82,6 +83,7 @@ const FIRST_LAYER_CLARIFICATION_QUESTION_CODES = new Set<
   "cohort_tag",
   "pairing_group_key",
   "pairing_group_role",
+  "declared_scale_bounds",
 ]);
 // Based on elapsed time since the job actually started (job.createdAt),
 // not a poll counter — a counter would drift out of sync with reality on
@@ -277,6 +279,20 @@ function formatAnalysisNumber(value: number, language: string): string {
   }).format(value);
 }
 
+function formatGoalAssessmentValue(
+  value: number,
+  valueFormat: "number" | "percent" | null | undefined,
+  language: string,
+): string {
+  if (valueFormat === "percent") {
+    return new Intl.NumberFormat(language === "de" ? "de-DE" : "en-US", {
+      style: "percent",
+      maximumFractionDigits: 0,
+    }).format(value);
+  }
+  return formatAnalysisNumber(value, language);
+}
+
 function readArray<T>(value: T[] | null | undefined): T[] {
   return Array.isArray(value) ? value : [];
 }
@@ -397,15 +413,17 @@ function AnalysisOpenDialog({
                           : "mt-3 text-2xl font-semibold tracking-tight text-rose-700"
                       }
                     >
-                      {formatAnalysisNumber(
+                      {formatGoalAssessmentValue(
                         goalAssessment.measuredValue ?? 0,
+                        goalAssessment.valueFormat,
                         i18n.language,
                       )}{" "}
                       <span className="text-lg font-medium">
                         /{" "}
                         {t("activityAnalytics.v2.goalTarget", {
-                          target: formatAnalysisNumber(
+                          target: formatGoalAssessmentValue(
                             goalAssessment.targetValue ?? 0,
+                            goalAssessment.valueFormat,
                             i18n.language,
                           ),
                         })}
@@ -1105,6 +1123,14 @@ function ActivityKnowledgeCard({
     useAnswerInterpretationQuestionsMutation(projectId, organizationId);
   const [datasetQuestionDraftAnswers, setDatasetQuestionDraftAnswers] =
     useState<Record<string, string>>({});
+  // Groups the user has explicitly said are NOT the same instrument — their
+  // member questions fall back to rendering as ordinary independent cards.
+  // A pure client-side render toggle, no backend call: rejecting a bad
+  // grouping never needs to be persisted, only re-derived on each render
+  // from the still-unanswered underlying questions.
+  const [rejectedGroupIds, setRejectedGroupIds] = useState<Set<string>>(
+    new Set(),
+  );
   const [
     isSubmittingDatasetQuestionAnswers,
     setIsSubmittingDatasetQuestionAnswers,
@@ -1233,6 +1259,41 @@ function ActivityKnowledgeCard({
     pendingQuestions.every(({ question }) =>
       datasetQuestionDraftAnswers[question.id]?.trim(),
     );
+  // Instrument-group cards only ever merge validated_scale_confirmation and
+  // declared_scale_bounds — the two questions with no name-based prefill,
+  // asked once per column today even though baseline/endline columns of the
+  // same instrument share one answer. pairing_group_key/pairing_group_role
+  // stay per-column: pairing_group_role in particular is the thing that
+  // distinguishes the two columns, so it must never be answered once and
+  // fanned out. A group only renders as merged while its detected pairing
+  // hasn't been explicitly rejected by the user (rejectedGroupIds).
+  const GROUPABLE_QUESTION_CODES = new Set([
+    "validated_scale_confirmation",
+    "declared_scale_bounds",
+  ]);
+  const groupedPendingQuestionsByGroupId = new Map<
+    string,
+    Array<{
+      result: InterpretationResultRecord;
+      question: InterpretationQuestion;
+    }>
+  >();
+  const ungroupedPendingQuestions: typeof pendingQuestions = [];
+  for (const entry of pendingQuestions) {
+    const { question } = entry;
+    const groupId = question.preparationGroupId;
+    if (
+      groupId &&
+      GROUPABLE_QUESTION_CODES.has(question.questionCode ?? "") &&
+      !rejectedGroupIds.has(groupId)
+    ) {
+      const existing = groupedPendingQuestionsByGroupId.get(groupId) ?? [];
+      existing.push(entry);
+      groupedPendingQuestionsByGroupId.set(groupId, existing);
+    } else {
+      ungroupedPendingQuestions.push(entry);
+    }
+  }
   const resultByUploadId = new Map(
     results.map((result) => [result.uploadMetadataId, result] as const),
   );
@@ -1653,7 +1714,29 @@ function ActivityKnowledgeCard({
                 )}
               </p>
             ) : null}
-            {pendingQuestions.map(({ question }) => (
+            {Array.from(groupedPendingQuestionsByGroupId.entries()).map(
+              ([groupId, entries]) => (
+                <InterpretationGroupQuestionCard
+                  key={groupId}
+                  activityName={activity.name}
+                  questions={entries.map(({ question }) => question)}
+                  isSubmitting={isSubmittingDatasetQuestionAnswers}
+                  draftAnswers={datasetQuestionDraftAnswers}
+                  onAnswerChange={({ questionId, answeredValue }) =>
+                    setDatasetQuestionDraftAnswers((current) => ({
+                      ...current,
+                      [questionId]: answeredValue,
+                    }))
+                  }
+                  onReject={() =>
+                    setRejectedGroupIds(
+                      (current) => new Set([...current, groupId]),
+                    )
+                  }
+                />
+              ),
+            )}
+            {ungroupedPendingQuestions.map(({ question }) => (
               <InterpretationQuestionCard
                 key={question.id}
                 mode="select"

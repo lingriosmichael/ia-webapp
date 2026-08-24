@@ -1,4 +1,4 @@
-befragung_typ;zielgruppe;teilnehmer_id;befragung_status;antwort_datum;soziale_einbindung_baseline_1_5;selbstwirksamkeit_baseline_1_5;mentoring_hat_struktur_gegeben_baseline_1_5
+befragung_typ;zielgruppe;teilnehmer_id;befragung_status;antwort_datum;soziale_einbindung_mentoring_kontext_baseline_1_5;selbstwirksamkeit_mentorinnenrolle_baseline_1_5;weiter_mentorieren_wollen_baseline_1_5
 baseline;mentorinnen;M001;abgeschlossen;2026-02-10;2;2;2
 baseline;mentorinnen;M002;abgeschlossen;2026-02-11;3;3;3
 baseline;mentorinnen;M003;abgeschlossen;2026-02-12;3;3;3

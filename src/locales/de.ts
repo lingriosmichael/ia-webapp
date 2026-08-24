@@ -594,6 +594,18 @@ const de: TranslationDictionary = {
       questionSelectAllOptions: "Alle Optionen auswählen",
       questionSubmit: "Absenden",
       questionSubmitting: "Wird gesendet…",
+      questionScaleBoundsCustom: "Benutzerdefiniert",
+      questionScaleBoundsTo: "bis",
+      questionScaleBoundsMinPlaceholder: "Min",
+      questionScaleBoundsMaxPlaceholder: "Max",
+      questionScaleBoundsHint:
+        "Die beobachteten Antworten belegen nicht den vollständigen Wertebereich der Skala — wir benötigen den offiziellen Bereich, um Baseline und Wirkungsmessung sicher zu vergleichen.",
+      questionGroupBadge: "Gleiches Instrument, zwei Zeitpunkte",
+      questionGroupSubtitle: "Einmal für beide Spalten bestätigen",
+      questionGroupExplanation:
+        "Diese Spalten sehen wie dasselbe Befragungsinstrument zu zwei unterschiedlichen Zeitpunkten aus. Bestätigen Sie die Angaben einmal, sie gelten dann für beide.",
+      questionGroupRejectAction:
+        "Das ist nicht dasselbe Instrument — getrennt beantworten",
       reviewPrivacyAction: "Datenschutz prüfen",
       reviewQualitativeCodingAction: "Codierung prüfen",
       reviewFile: "Datei",
@@ -762,26 +774,25 @@ const de: TranslationDictionary = {
       "Diese Zusammenfassung wurde automatisch aus Ihren Daten erstellt, nicht von einer KI verfasst.",
     exploratoryChartNotice:
       "Explorativ — vorher/nachher erkannt, aber nicht als Ergebnis bestätigt",
-    diagnosticsPanelTitle: "Diagnose",
-    diagnosticsSummary:
-      "{{readyCount}} bereit · {{extractionCount}} durch Pipeline blockiert · {{missingDataCount}} durch fehlende Daten blockiert",
-    diagnosticsUnselectedTitle: "Verfügbar, aber nicht angezeigt",
-    diagnosticsUnselectedDescription:
-      "Diese waren bereit für ein Diagramm, wurden diesmal aber nicht ausgewählt.",
-    diagnosticsUnselectedEmpty: "Alles Bereite wurde ausgewählt.",
-    diagnosticsExtractionBlockedTitle: "Durch eine Pipeline-Lücke blockiert",
-    diagnosticsExtractionBlockedDescription:
-      "Die Daten sind vorhanden, aber die Pipeline konnte daraus noch keinen Diagrammkandidaten erzeugen.",
-    diagnosticsExtractionBlockedEmpty: "Keine Pipeline-Lücken erkannt.",
-    diagnosticsMissingDataBlockedTitle: "Durch fehlende Daten blockiert",
-    diagnosticsMissingDataBlockedDescription:
-      "Für dieses Diagramm fehlt noch Evidenz oder ein Analyselauf.",
-    diagnosticsMissingDataBlockedEmpty:
-      "Keine Lücken durch fehlende Daten erkannt.",
-    diagnosticsUnavailable:
-      "Für diesen Analyselauf liegt noch keine Diagnose vor — erzeugen Sie die Analyse erneut, um sie zu sehen.",
+    backlogPanelTitle: "Backlog",
+    backlogPanelSummary: "{{count}} Diagramme verfügbar",
+    backlogPanelEmpty:
+      "Nichts im Backlog — ausgeblendete Diagramme landen hier.",
     beforeLabel: "Vorher",
     afterLabel: "Nachher",
+    pairedDeltaGroupTitle: "Vorher/Nachher-Vergleich",
+    pairedDeltaGroupSubtitle:
+      "Bestätigte Ergebnisse im Vergleich vor und nach dem Programm.",
+    pairedDeltaGroupAriaLabel: "{{summary}}",
+    goalProgressChartTitle: "Ziel vs. erreicht — nach Kennzahl",
+    goalProgressChartSubtitle:
+      "Anteil des Zielwerts, der bislang erreicht wurde",
+    goalProgressAriaLabel: "{{summary}}",
+    goalProgressStatusGood: "Ziel erreicht",
+    goalProgressStatusWarn: "Nahe am Ziel",
+    goalProgressStatusRisk: "Braucht Aufmerksamkeit",
+    dragHandleLabel: "„{{title}}“ ziehen, um die Reihenfolge zu ändern",
+    hideChartLabel: "„{{title}}“ ausblenden",
     outcomeNotYetMeasurable:
       "Noch nicht messbar — es liegt noch keine verknüpfte Evidenz vor.",
     notYetAnalyzedFootnote:
@@ -1686,9 +1697,6 @@ const de: TranslationDictionary = {
     assignFailure: "Die Evidenz konnte nicht verknüpft werden.",
     rejectSuccess: "Evidenz als nicht zugehörig markiert.",
     rejectFailure: "Die Ablehnung konnte nicht gespeichert werden.",
-    emptyStateTitle: "Noch keine Kandidaten-Evidenz",
-    emptyStateDescription:
-      "Das bedeutet meist: Baseline- und Wirkungsmessung-Daten wurden noch nicht beide hochgeladen, die hochgeladenen Spalten haben keine identischen (oder erkennbar zusammengehörigen) Namen, oder die Tabellen haben keine gemeinsame Teilnehmer-ID zum Verknüpfen.",
     errorTitle: "Kandidaten-Evidenz konnte nicht geprüft werden",
     errorDescription:
       "Beim Laden der Evidenz-Kandidaten ist ein Fehler aufgetreten. Versuchen Sie es in Kürze erneut.",
@@ -1742,7 +1750,9 @@ const de: TranslationDictionary = {
     diagnosticReasonDuplicateIdentifierValues:
       "Die Teilnehmer-ID-Spalte einer Tabelle enthaelt doppelte Werte und kann daher nicht sicher verknuepft werden. Bitte die ID-Spalte bereinigen, bevor ein Abgleich moeglich ist.",
     diagnosticReasonScaleBoundsMismatch:
-      "Zwei Spalten sind als Vorher-/Nachher-Paar markiert, aber ihre beobachteten Skalen stimmen nicht ueberein (z. B. 1-5 vs. 0-10) und wurden deshalb nicht verknuepft.",
+      "Zwei Spalten sind als Vorher-/Nachher-Paar markiert, aber ihre angegebenen Skalenbereiche stimmen nicht ueberein (z. B. 1-5 vs. 0-10) und wurden deshalb nicht verknuepft.",
+    diagnosticReasonScaleBoundsNotDeclared:
+      "Zwei Spalten sind als Vorher-/Nachher-Paar markiert, aber der volle Wertebereich der Skala wurde fuer eine oder beide noch nicht angegeben. Bitte die Frage zum Skalenbereich in der Interpretationspruefung beantworten, damit sie fuer den Abgleich infrage kommen.",
     activityStatusJobsStarted: "Interpretation gestartet",
     activityStatusAlreadyReady: "Bereits interpretiert",
     activityStatusNoUploads: "Keine Uploads",

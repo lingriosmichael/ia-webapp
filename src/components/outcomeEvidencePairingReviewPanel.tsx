@@ -209,6 +209,9 @@ function describeDiagnosticReason(
         .diagnosticReasonDuplicateIdentifierValues;
     case "scale_bounds_mismatch":
       return locale.outcomeEvidencePairing.diagnosticReasonScaleBoundsMismatch;
+    case "scale_bounds_not_declared":
+      return locale.outcomeEvidencePairing
+        .diagnosticReasonScaleBoundsNotDeclared;
     case "no_declared_pairing_groups":
       return locale.outcomeEvidencePairing
         .diagnosticReasonNoDeclaredPairingGroups;
@@ -864,17 +867,8 @@ export function OutcomeEvidencePairingReviewPanel({
 
   const review = pairingQuery.data;
   const outcomeSections = review?.outcomeSections ?? [];
-  const openProposals = review?.proposals ?? [];
   const eligibleEvidenceOptions = review?.eligibleEvidenceOptions ?? [];
   const unassignedProposals = review?.unassignedProposals ?? [];
-  const hasConfirmedLinks = outcomeSections.some(
-    (outcomeSection) => outcomeSection.confirmedLinks.length > 0,
-  );
-  const hasAnyCandidateContent =
-    openProposals.length > 0 ||
-    eligibleEvidenceOptions.length > 0 ||
-    hasConfirmedLinks ||
-    unassignedProposals.length > 0;
 
   return (
     <section className="space-y-4">
@@ -930,17 +924,6 @@ export function OutcomeEvidencePairingReviewPanel({
               />
             ))}
           </div>
-        </Card>
-      ) : null}
-
-      {!hasAnyCandidateContent ? (
-        <Card className="p-6">
-          <h3 className="text-base font-semibold tracking-tight text-foreground">
-            {locale.outcomeEvidencePairing.emptyStateTitle}
-          </h3>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-            {locale.outcomeEvidencePairing.emptyStateDescription}
-          </p>
         </Card>
       ) : null}
     </section>

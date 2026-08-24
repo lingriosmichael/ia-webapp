@@ -1,4 +1,7 @@
-import type { ProjectImpactStoryChartDataKind } from "@/services/apiClient";
+import type {
+  ProjectImpactStoryChartDataKind,
+  ProjectImpactStoryGoalStatus,
+} from "@/services/apiClient";
 
 export const IMPACT_STORY_COLORS = {
   line: "#E6E2D6",
@@ -38,6 +41,24 @@ export function statusColor(label: string): string {
   return STATUS_COLOR_BY_LABEL[label] ?? "var(--color-muted-foreground)";
 }
 
+// Goal-progress status is a genuine good/bad signal (% of target reached),
+// so per the collision rule ("when a series means good/bad it wears status
+// tokens, never categorical") this stays a small fixed scale, not a
+// sequential ramp — reusing the same three status hues goal-assessment KPI
+// tiles already use elsewhere on this page.
+const GOAL_PROGRESS_STATUS_COLOR: Record<ProjectImpactStoryGoalStatus, string> =
+  {
+    good: IMPACT_STORY_COLORS.green,
+    warn: IMPACT_STORY_COLORS.amber,
+    risk: IMPACT_STORY_COLORS.coral,
+  };
+
+export function goalProgressStatusColor(
+  status: ProjectImpactStoryGoalStatus,
+): string {
+  return GOAL_PROGRESS_STATUS_COLOR[status];
+}
+
 export function sortByStatusOrder<T extends { label: string }>(
   items: T[],
 ): T[] {
@@ -64,57 +85,75 @@ export function categoricalPieColor(index: number): string {
   return PIE_CATEGORY_PALETTE[index % PIE_CATEGORY_PALETTE.length];
 }
 
+// A single-series ranked/vertical bar chart encodes magnitude (how many
+// applications per district, how many per profession) — a *sequential*
+// job, not a categorical one: per the dataviz skill, that means one hue,
+// light-to-dark by rank, never a rainbow of unrelated hues within one
+// chart ("color follows the entity, never its rank"). The variety this
+// project's dashboard was missing has to come from a *different* chart
+// picking a *different* hue, not from mixing hues inside one chart.
+//
+// Each ramp is five steps blending its IMPACT_STORY_COLORS base hue
+// toward white at 58%/51%/45%/38%/32% — the exact recipe the original,
+// hand-authored blue ramp already followed (verified by reproducing it:
+// blending #2F6690 toward white at those fractions reproduces
+// blueSoft..#6D9BB8 to within a few RGB units), extended here to
+// green/amber/coral/mint so a new hue can be added the same computed way
+// instead of eyeballed.
+const SEQUENTIAL_RAMPS = [
+  [IMPACT_STORY_COLORS.blueSoft, "#93B8D0", "#86AEC8", "#7AA5C0", "#6D9BB8"],
+  ["#B4D0C1", "#A7C8B6", "#9DC1AE", "#90BAA3", "#85B39A"], // green
+  ["#E7D1A8", "#E3C999", "#E0C28D", "#DCBB7E", "#D8B472"], // amber
+  ["#E5B9AE", "#E1AEA1", "#DDA495", "#D99888", "#D68E7C"], // coral
+  ["#D0E4D8", "#C8DFD2", "#C1DBCC", "#BAD7C6", "#B3D3C0"], // mint
+] as const;
+
+// Deterministic (djb2-style) string hash — same chartId always picks the
+// same ramp within one render, but different charts spread across the
+// available hues instead of all defaulting to the first one.
+function hashStringToIndex(value: string, modulus: number): number {
+  let hash = 5381;
+  for (let i = 0; i < value.length; i += 1) {
+    hash = (hash * 33) ^ value.charCodeAt(i);
+  }
+  return Math.abs(hash) % modulus;
+}
+
+function sequentialRampForChart(chartId: string): readonly string[] {
+  return SEQUENTIAL_RAMPS[hashStringToIndex(chartId, SEQUENTIAL_RAMPS.length)]!;
+}
+
 export function rankedBarColor(
   index: number,
   dataKind: ProjectImpactStoryChartDataKind,
+  chartId: string,
 ): string {
   if (dataKind === "status") {
     return IMPACT_STORY_COLORS.blue;
   }
-  const ramp = [
-    IMPACT_STORY_COLORS.blueSoft,
-    "#93B8D0",
-    "#86AEC8",
-    "#7AA5C0",
-    "#6D9BB8",
-  ] as const;
-  return ramp[Math.min(index, ramp.length - 1)] ?? ramp[ramp.length - 1];
+  const ramp = sequentialRampForChart(chartId);
+  return ramp[Math.min(index, ramp.length - 1)] ?? ramp[ramp.length - 1]!;
 }
 
 export function verticalBarColor({
   index,
-  total,
   dataKind,
   chartType,
+  chartId,
 }: {
   index: number;
-  total: number;
   dataKind: ProjectImpactStoryChartDataKind;
   chartType: "bar" | "comparison";
+  chartId: string;
 }): string {
   if (dataKind === "status") {
     return statusColor(["achieved", "not_achieved"][index] ?? "");
-  }
-
-  if (chartType === "comparison" && total === 2) {
-    return index === 0 ? IMPACT_STORY_COLORS.grey : IMPACT_STORY_COLORS.blue;
   }
 
   if (chartType === "comparison") {
     return index === 0 ? IMPACT_STORY_COLORS.grey : IMPACT_STORY_COLORS.blue;
   }
 
-  return IMPACT_STORY_COLORS.coral;
-}
-
-export function resolveDatumColor(
-  label: string,
-  index: number,
-  total: number,
-  dataKind: ProjectImpactStoryChartDataKind,
-): string {
-  if (dataKind === "status") {
-    return statusColor(label);
-  }
-  return total > 1 ? rankedBarColor(index, dataKind) : IMPACT_STORY_COLORS.blue;
+  const ramp = sequentialRampForChart(chartId);
+  return ramp[Math.min(index, ramp.length - 1)] ?? ramp[ramp.length - 1]!;
 }
