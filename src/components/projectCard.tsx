@@ -9,11 +9,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { StatusBadge } from "@/components/statusBadge";
 import { resolveProjectSummaryText } from "@/lib/projectSummary";
-import {
-  formatDateTime,
-  formatMonthRange,
-  translateStatus,
-} from "@/lib/translationUtils";
+import { formatDateTime, formatMonthRange } from "@/lib/translationUtils";
 import { cn } from "@/lib/utils";
 import type { ProjectSummary } from "@/services/apiClient";
 
@@ -51,9 +47,8 @@ export function ProjectCard({
   const iconToneClassName =
     project.status === "completed"
       ? "border-slate-200 bg-slate-100 text-slate-700"
-      : project.status === "active"
-        ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-        : "border-sky-200 bg-sky-50 text-sky-700";
+      : "border-sky-200 bg-sky-50 text-sky-700";
+  const showStatusBadge = project.status === "completed";
 
   return (
     <div
@@ -77,11 +72,13 @@ export function ProjectCard({
               <h3 className="text-[1rem] leading-[1.25] font-semibold tracking-tight text-foreground">
                 {project.name}
               </h3>
-              <StatusBadge
-                status={project.status}
-                label={translateStatus(t, project.status)}
-                className="h-6 rounded-full px-2.5 text-[10px]"
-              />
+              {showStatusBadge ? (
+                <StatusBadge
+                  status={project.status}
+                  label={t("enums.status.completed")}
+                  className="h-6 rounded-full px-2.5 text-[10px]"
+                />
+              ) : null}
             </div>
             <p className="mt-2 max-w-[52rem] text-[11px] leading-5 text-muted-foreground">
               {summary}

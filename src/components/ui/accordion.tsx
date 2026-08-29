@@ -26,7 +26,7 @@ const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "flex flex-1 cursor-pointer items-center justify-between gap-4 py-4 text-left text-sm font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
+        "flex flex-1 cursor-pointer items-center justify-between gap-4 py-4 text-left text-sm font-medium transition-colors hover:underline [&[data-state=open]>svg]:rotate-180",
         className,
       )}
       {...props}
@@ -42,14 +42,18 @@ const AccordionContent = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content>
 >(({ className, children, ...props }, ref) => (
+  // `className` targets this outer animation/overflow wrapper, not the
+  // inner padded content div below — a consumer passing padding/color
+  // classes should expect them here, not on the text itself.
   <AccordionPrimitive.Content
     ref={ref}
-    className="overflow-hidden text-sm data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
+    className={cn(
+      "overflow-hidden text-sm data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down",
+      className,
+    )}
     {...props}
   >
-    <div className={cn("pb-4 pt-0 text-muted-foreground", className)}>
-      {children}
-    </div>
+    <div className="pb-4 pt-0 text-muted-foreground">{children}</div>
   </AccordionPrimitive.Content>
 ));
 AccordionContent.displayName = AccordionPrimitive.Content.displayName;

@@ -16,9 +16,10 @@ the recommended way to handle server state against ia_backend.
 ## Key feature documentation
 
 For the activity-analysis feature (upload → privacy review → interpretation
-→ `ActivityAnalystV2`), see `CURRENT_ANALYSIS_PIPELINE.md` at the workspace
-root — it lists the canonical frontend files for that flow plus the
-cross-service data flow. The older `activity.aiKnowledgeSnapshot`-based
+→ `ActivityAnalystV2`), see `CURRENT_ANALYSIS_PIPELINE.md` in
+`ia_backend/documentation/` — it lists the canonical frontend files for
+that flow plus the cross-service data flow. The older
+`activity.aiKnowledgeSnapshot`-based
 summary is legacy; new work should read/write only the `analysis-v2` routes
 and hooks.
 
@@ -37,14 +38,25 @@ canonical place to look for `ActivityAnalystV2` frontend behavior.
 configurable analytics dashboard (`configurableAnalyticsDashboard.tsx` and
 `projectAnalyticsPage.tsx` were deleted in the same 2026-08-18 change). It
 now renders `components/impactStory/projectImpactStoryPage.tsx`, the
-**Project Impact Story** feature: a project-level narrative and chart plan
-built from human-confirmed `OutcomeEvidenceLink` records. This is a
-separate feature from the `ActivityAnalystV2` pipeline, not part of it —
-treat it as its own area when making changes, and see
-`ia_backend/CLAUDE.md`'s note on `projectImpactStory` for the backend side.
-Two small files under `src/components/analytics/`
-(`analyticsEmptyState.tsx`, `analyticsFormat.ts`) were left behind by that
-deletion and are currently unreferenced — check before building on them.
+**Project Impact Story** feature: a project-level narrative and chart plan.
+This is a separate feature from the `ActivityAnalystV2` pipeline, not part
+of it, but it isn't purely a downstream consumer of human-confirmed
+`OutcomeEvidenceLink` records either — activity cards and the chart-plan
+catalog read `ActivityAnalystV2` run output directly, gated only by V2's
+own grounding; only the narrative text is restricted to confirmed links.
+Canonical doc: `CURRENT_ANALYTICS_PIPELINE.md` in `ia_backend/documentation/`
+— read it, not just this paragraph, before non-trivial changes here. The
+separate "Wirkungsaussagen" tab
+(`routes/projects/$projectId/outcome-statements.tsx`) that used to produce
+those `OutcomeEvidenceLink` records was removed 2026-08-27 — that review
+surface now lives inside `routes/projects/$projectId/interpretation.tsx`
+(`outcomeEvidenceRecommendationPanel.tsx`), scoped to the merged
+`"outcome_evidence"` system activity. Canonical doc:
+`OUTCOME_EVIDENCE_MERGE_PLAN.md` in `ia_backend/documentation/`.
+The two small orphan files this section used to flag under
+`src/components/analytics/` (`analyticsEmptyState.tsx`, `analyticsFormat.ts`)
+have since been deleted outright in the same working tree as the
+outcome-evidence merge above — confirmed gone, not just unreferenced.
 
 ## Naming standard
 

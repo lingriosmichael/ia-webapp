@@ -52,8 +52,12 @@ const WorkspaceShellContext = createContext<WorkspaceShellContextValue | null>(
   null,
 );
 
+export function useOptionalWorkspaceShell() {
+  return useContext(WorkspaceShellContext);
+}
+
 export function useWorkspaceShell() {
-  const context = useContext(WorkspaceShellContext);
+  const context = useOptionalWorkspaceShell();
 
   if (!context) {
     throw new Error("useWorkspaceShell must be used within WorkspaceShell.");
@@ -327,7 +331,11 @@ export function WorkspaceShell({
 }
 
 export function WorkspaceMobileNavigationButton() {
-  const { openMobileSidebar } = useWorkspaceShell();
+  const workspaceShell = useOptionalWorkspaceShell();
+
+  if (!workspaceShell) {
+    return null;
+  }
 
   return (
     <Button
@@ -335,7 +343,7 @@ export function WorkspaceMobileNavigationButton() {
       variant="outline"
       size="icon"
       className="lg:hidden"
-      onClick={openMobileSidebar}
+      onClick={workspaceShell.openMobileSidebar}
       aria-label="Open workspace navigation"
     >
       <PanelLeft className="h-4 w-4" />

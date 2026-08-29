@@ -20,7 +20,7 @@ export function LandingHowItWorksSection() {
           const Icon = ICONS[index % ICONS.length];
           return (
             <div
-              key={step.title}
+              key={index}
               className="flex flex-col items-center rounded-2xl border border-border/70 bg-card p-6 text-center"
             >
               <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-primary-soft">

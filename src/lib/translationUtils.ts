@@ -41,9 +41,14 @@ export function translateStatus(
     ? statusKeyMap[status as keyof typeof statusKeyMap]
     : undefined;
 
-  return t(
-    translationKey ? `enums.status.${translationKey}` : "enums.status.planning",
-  );
+  // Unlike a missing status (genuinely "not set yet", safely shown as
+  // planning), an unrecognized non-empty status is a new backend value this
+  // map hasn't been updated for — mislabeling it as "Planning" would
+  // misrepresent real project/job data, so it's shown as-is instead.
+  if (!status) {
+    return t("enums.status.planning");
+  }
+  return translationKey ? t(`enums.status.${translationKey}`) : status;
 }
 
 export function translatePrivacyCategory(
@@ -84,7 +89,7 @@ export function translateTransformation(
 // a project-impact-story chart datum's `label` when dataKind === "status"
 // (see projectImpactStoryCatalog.ts on the backend). Reuses
 // activityAnalytics.goalStatus.* rather than a second translated copy of the
-// same enum — the activity-level analysis page (activityAnalysisV2Panel.tsx)
+// same enum — the V2 run UI (routes/projects/$projectId/interpretation.tsx)
 // already renders these exact status values.
 const GOAL_ASSESSMENT_STATUS_VALUES = [
   "achieved",

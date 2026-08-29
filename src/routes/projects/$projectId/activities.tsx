@@ -21,7 +21,7 @@ function ProjectActivitiesPage() {
   const { projectId } = Route.useParams();
   const auth = useRequireAuth();
   const locale = useWorkspaceLocale();
-  const { openActivityDialog } = useWorkspaceShell();
+  const workspaceShell = useWorkspaceShell();
   const { project, workspace } = useProjectWorkspacePage();
   const workspaceProject = useCurrentWorkspaceProject();
   const activitiesQuery = useProjectActivitiesQuery(
@@ -72,7 +72,10 @@ function ProjectActivitiesPage() {
     <ProjectWorkspaceShell
       actions={
         project.permissions.canCreateActivity ? (
-          <Button type="button" onClick={() => openActivityDialog(projectId)}>
+          <Button
+            type="button"
+            onClick={() => workspaceShell.openActivityDialog(projectId)}
+          >
             {locale.project.addActivity}
           </Button>
         ) : undefined
@@ -90,7 +93,7 @@ function ProjectActivitiesPage() {
             {project.permissions.canCreateActivity ? (
               <Button
                 type="button"
-                onClick={() => openActivityDialog(projectId)}
+                onClick={() => workspaceShell.openActivityDialog(projectId)}
                 className="mt-5"
               >
                 {locale.projectWorkspace.activities.emptyAction}
@@ -128,15 +131,7 @@ function sortActivitiesForDisplay(activities: WorkspaceActivity[]) {
 }
 
 function getActivityDisplayRank(systemType: WorkspaceActivity["systemType"]) {
-  if (systemType === "baseline") {
-    return 0;
-  }
-
-  if (systemType === "impact_measurement") {
-    return 2;
-  }
-
-  return 1;
+  return systemType === "outcome_evidence" ? 0 : 1;
 }
 
 function CenteredState({ label }: { label: string }) {

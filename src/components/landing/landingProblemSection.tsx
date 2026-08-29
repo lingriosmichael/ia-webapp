@@ -20,7 +20,7 @@ export function LandingProblemSection() {
           const Icon = ICONS[index % ICONS.length];
           return (
             <div
-              key={item.title}
+              key={index}
               className="rounded-2xl border border-border/70 bg-card p-6 shadow-[var(--shadow-soft)]"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-soft">

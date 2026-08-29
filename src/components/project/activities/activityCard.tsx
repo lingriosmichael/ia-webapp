@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdownMenu";
-import { useWorkspaceShell } from "@/components/WorkspaceShell";
+import { useOptionalWorkspaceShell } from "@/components/WorkspaceShell";
 import { useDeleteActivityMutation } from "@/hooks/useWorkspaceQueries";
 import { Card } from "@/components/WorkspaceUI";
 import { formatDateTime, translateStatus } from "@/lib/translationUtils";
@@ -28,7 +28,7 @@ export function ActivityCard({
   organizationId: string;
 }) {
   const { t, i18n } = useTranslation();
-  const { openActivityDialog } = useWorkspaceShell();
+  const workspaceShell = useOptionalWorkspaceShell();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const deleteActivityMutation = useDeleteActivityMutation(
     activity.id,
@@ -86,7 +86,9 @@ export function ActivityCard({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
               <DropdownMenuItem
-                onSelect={() => openActivityDialog(projectId, activity)}
+                onSelect={() =>
+                  workspaceShell?.openActivityDialog(projectId, activity)
+                }
               >
                 {t("projectWorkspace.activities.editActivity")}
               </DropdownMenuItem>

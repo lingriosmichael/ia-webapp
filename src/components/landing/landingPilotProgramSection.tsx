@@ -38,9 +38,9 @@ export function LandingPilotProgramSection() {
                 </div>
               </div>
               <ul className="mt-4 space-y-2.5">
-                {items.map((item) => (
+                {items.map((item, itemIndex) => (
                   <li
-                    key={item}
+                    key={itemIndex}
                     className="flex items-start gap-2 text-sm leading-6 text-muted-foreground"
                   >
                     <Check className="mt-1 h-3.5 w-3.5 shrink-0 text-primary" />

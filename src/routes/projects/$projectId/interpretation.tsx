@@ -13,7 +13,8 @@ import { toast } from "sonner";
 import { PrivacyReviewDialog } from "@/components/privacyReviewDialog";
 import { QualitativeCodingReviewDialog } from "@/components/qualitativeCodingReviewDialog";
 import { InterpretationQuestionCard } from "@/components/interpretationQuestionCard";
-import { InterpretationGroupQuestionCard } from "@/components/interpretationGroupQuestionCard";
+import { InterpretationCohortGroupingBoard } from "@/components/interpretationCohortGroupingBoard";
+import { OutcomeEvidenceRecommendationPanel } from "@/components/outcomeEvidenceRecommendationPanel";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -41,6 +42,8 @@ import {
   useActivityLinkageReviewQuery,
   useJobQuery,
   useLatestActivityAnalysisV2Query,
+  useOutcomeEvidenceConfirmedLinksQuery,
+  useOutcomeEvidenceRecommendationsQuery,
   useReviewActivityLinkageProposalMutation,
   useRunActivityAnalysisV2Mutation,
   useStartActivityInterpretationMutation,
@@ -48,6 +51,7 @@ import {
 } from "@/hooks/useWorkspaceQueries";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { getQuestionsByDomain } from "@/lib/interpretationWorkflow";
+import { recommendationKey } from "@/lib/outcomeEvidenceRecommendation";
 import {
   ApiError,
   apiClient,
@@ -58,6 +62,7 @@ import {
   type EvidenceModality,
   type InterpretationQuestion,
   type InterpretationResultRecord,
+  type OutcomeEvidenceRecommendation,
   type ParsedRepresentationPreviewRecord,
   type ProcessingJobRecord,
   type UploadMetadataRecord,
@@ -79,11 +84,7 @@ const FIRST_LAYER_CLARIFICATION_QUESTION_CODES = new Set<
   "row_grain",
   "duplicate_identifier_resolution",
   "epistemic_role_clarification",
-  "validated_scale_confirmation",
   "cohort_tag",
-  "pairing_group_key",
-  "pairing_group_role",
-  "declared_scale_bounds",
 ]);
 // Based on elapsed time since the job actually started (job.createdAt),
 // not a poll counter — a counter would drift out of sync with reality on
@@ -1004,6 +1005,43 @@ function ActivityKnowledgeCard({
   const queryClient = useQueryClient();
   const [isAnalysisDialogOpen, setIsAnalysisDialogOpen] = useState(false);
   const [isLinkageDialogOpen, setIsLinkageDialogOpen] = useState(false);
+  // Outcome-evidence recommend flow: the trigger button lives in this
+  // card's header (below, alongside the other primary per-activity
+  // actions) rather than inside OutcomeEvidenceRecommendationPanel, so the
+  // fetch state has to live here too and gets passed down as props — see
+  // outcomeEvidenceRecommendationPanel.tsx's own header comment for why.
+  const [dismissedRecommendationKeys, setDismissedRecommendationKeys] =
+    useState<Set<string>>(new Set());
+  const recommendationsQuery = useOutcomeEvidenceRecommendationsQuery(
+    projectId,
+    activity.id,
+  );
+  const confirmedLinksQuery = useOutcomeEvidenceConfirmedLinksQuery(
+    projectId,
+    activity.id,
+    activity.systemType === "outcome_evidence",
+  );
+
+  async function handleGetOutcomeEvidenceRecommendations() {
+    const result = await recommendationsQuery.refetch();
+    if (result.error) {
+      toast.error(
+        result.error instanceof ApiError
+          ? result.error.message
+          : t("outcomeEvidenceRecommendation.getRecommendationsFailure"),
+      );
+      return;
+    }
+    setDismissedRecommendationKeys(new Set());
+  }
+
+  function handleDismissOutcomeEvidenceRecommendation(
+    recommendation: OutcomeEvidenceRecommendation,
+  ) {
+    setDismissedRecommendationKeys(
+      (current) => new Set([...current, recommendationKey(recommendation)]),
+    );
+  }
   const startMutation = useStartActivityInterpretationMutation(
     activity.id,
     projectId,
@@ -1087,7 +1125,15 @@ function ActivityKnowledgeCard({
       );
 
       if (run?.status === "failed") {
-        toast.error(t("activityAnalytics.v2.runFailed"));
+        // run.errorMessage is intentionally a fixed, generic category
+        // string (see activityAnalysisV2Service.ts) — the actual reason a
+        // plan was rejected lives in run.validation.issues instead.
+        const failureDetail = run.validation.issues.join("; ");
+        toast.error(
+          failureDetail
+            ? `${t("activityAnalytics.v2.runFailed")}: ${failureDetail}`
+            : (run.errorMessage ?? t("activityAnalytics.v2.runFailed")),
+        );
         return;
       }
 
@@ -1123,14 +1169,6 @@ function ActivityKnowledgeCard({
     useAnswerInterpretationQuestionsMutation(projectId, organizationId);
   const [datasetQuestionDraftAnswers, setDatasetQuestionDraftAnswers] =
     useState<Record<string, string>>({});
-  // Groups the user has explicitly said are NOT the same instrument — their
-  // member questions fall back to rendering as ordinary independent cards.
-  // A pure client-side render toggle, no backend call: rejecting a bad
-  // grouping never needs to be persisted, only re-derived on each render
-  // from the still-unanswered underlying questions.
-  const [rejectedGroupIds, setRejectedGroupIds] = useState<Set<string>>(
-    new Set(),
-  );
   const [
     isSubmittingDatasetQuestionAnswers,
     setIsSubmittingDatasetQuestionAnswers,
@@ -1259,41 +1297,21 @@ function ActivityKnowledgeCard({
     pendingQuestions.every(({ question }) =>
       datasetQuestionDraftAnswers[question.id]?.trim(),
     );
-  // Instrument-group cards only ever merge validated_scale_confirmation and
-  // declared_scale_bounds — the two questions with no name-based prefill,
-  // asked once per column today even though baseline/endline columns of the
-  // same instrument share one answer. pairing_group_key/pairing_group_role
-  // stay per-column: pairing_group_role in particular is the thing that
-  // distinguishes the two columns, so it must never be answered once and
-  // fanned out. A group only renders as merged while its detected pairing
-  // hasn't been explicitly rejected by the user (rejectedGroupIds).
-  const GROUPABLE_QUESTION_CODES = new Set([
-    "validated_scale_confirmation",
-    "declared_scale_bounds",
-  ]);
-  const groupedPendingQuestionsByGroupId = new Map<
-    string,
-    Array<{
-      result: InterpretationResultRecord;
-      question: InterpretationQuestion;
-    }>
-  >();
-  const ungroupedPendingQuestions: typeof pendingQuestions = [];
-  for (const entry of pendingQuestions) {
-    const { question } = entry;
-    const groupId = question.preparationGroupId;
-    if (
-      groupId &&
-      GROUPABLE_QUESTION_CODES.has(question.questionCode ?? "") &&
-      !rejectedGroupIds.has(groupId)
-    ) {
-      const existing = groupedPendingQuestionsByGroupId.get(groupId) ?? [];
-      existing.push(entry);
-      groupedPendingQuestionsByGroupId.set(groupId, existing);
-    } else {
-      ungroupedPendingQuestions.push(entry);
-    }
-  }
+  // cohort_tag questions are answered by dragging files into named groups
+  // (InterpretationCohortGroupingBoard) rather than as individual free-text
+  // cards — the board needs every cohort_tag question for the activity
+  // (including already-answered ones, to reconstruct existing groups), not
+  // just the pending ones this page otherwise renders one card per.
+  const otherPendingQuestions = pendingQuestions.filter(
+    ({ question }) => question.questionCode !== "cohort_tag",
+  );
+  const pendingCohortTagQuestionCount =
+    pendingQuestions.length - otherPendingQuestions.length;
+  const allCohortTagQuestions = results.flatMap((result) =>
+    result.questions.filter(
+      (question) => question.questionCode === "cohort_tag",
+    ),
+  );
   const resultByUploadId = new Map(
     results.map((result) => [result.uploadMetadataId, result] as const),
   );
@@ -1544,6 +1562,20 @@ function ActivityKnowledgeCard({
     }
   }
 
+  // Hidden outright (not just disabled) once this activity already has a
+  // confirmed link — a visible button here would still read as an open
+  // task even collapsed, and risks a non-technical user starting an AI
+  // flow they didn't mean to on an activity that's already covered. This
+  // does mean there's no way to check for newly-relevant evidence once one
+  // link is confirmed — an explicit, deliberate tradeoff, not an
+  // oversight; the "Alle entfernen" action in the confirmed-links summary
+  // is what brings this button back.
+  const showOutcomeEvidenceRecommendButton =
+    activity.systemType === "outcome_evidence" &&
+    (status === "ready" || status === "reviewed") &&
+    !confirmedLinksQuery.isLoading &&
+    (confirmedLinksQuery.data?.links.length ?? 0) === 0;
+
   return (
     <>
       <Card className="p-5">
@@ -1698,6 +1730,25 @@ function ActivityKnowledgeCard({
                 )}
               </Button>
             ) : null}
+
+            {showOutcomeEvidenceRecommendButton ? (
+              <Button
+                size="sm"
+                variant="outline"
+                className="border-foreground/25 bg-card text-foreground hover:border-foreground/40 hover:bg-accent/35 hover:text-foreground"
+                disabled={recommendationsQuery.isFetching}
+                onClick={() => void handleGetOutcomeEvidenceRecommendations()}
+              >
+                {recommendationsQuery.isFetching ? (
+                  <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+                ) : null}
+                {recommendationsQuery.isFetching
+                  ? t(
+                      "outcomeEvidenceRecommendation.gettingRecommendationsAction",
+                    )
+                  : t("outcomeEvidenceRecommendation.getRecommendationsAction")}
+              </Button>
+            ) : null}
           </div>
         </div>
 
@@ -1714,29 +1765,7 @@ function ActivityKnowledgeCard({
                 )}
               </p>
             ) : null}
-            {Array.from(groupedPendingQuestionsByGroupId.entries()).map(
-              ([groupId, entries]) => (
-                <InterpretationGroupQuestionCard
-                  key={groupId}
-                  activityName={activity.name}
-                  questions={entries.map(({ question }) => question)}
-                  isSubmitting={isSubmittingDatasetQuestionAnswers}
-                  draftAnswers={datasetQuestionDraftAnswers}
-                  onAnswerChange={({ questionId, answeredValue }) =>
-                    setDatasetQuestionDraftAnswers((current) => ({
-                      ...current,
-                      [questionId]: answeredValue,
-                    }))
-                  }
-                  onReject={() =>
-                    setRejectedGroupIds(
-                      (current) => new Set([...current, groupId]),
-                    )
-                  }
-                />
-              ),
-            )}
-            {ungroupedPendingQuestions.map(({ question }) => (
+            {otherPendingQuestions.map(({ question }) => (
               <InterpretationQuestionCard
                 key={question.id}
                 mode="select"
@@ -1752,6 +1781,19 @@ function ActivityKnowledgeCard({
                 }
               />
             ))}
+            {pendingCohortTagQuestionCount > 0 ? (
+              <InterpretationCohortGroupingBoard
+                questions={allCohortTagQuestions}
+                draftAnswers={datasetQuestionDraftAnswers}
+                isSubmitting={isSubmittingDatasetQuestionAnswers}
+                onAnswerChange={({ questionId, answeredValue }) =>
+                  setDatasetQuestionDraftAnswers((current) => ({
+                    ...current,
+                    [questionId]: answeredValue,
+                  }))
+                }
+              />
+            ) : null}
             <div className="flex justify-end">
               <Button
                 type="button"
@@ -1857,6 +1899,17 @@ function ActivityKnowledgeCard({
               </Button>
             </div>
           </div>
+        ) : null}
+
+        {activity.systemType === "outcome_evidence" &&
+        (status === "ready" || status === "reviewed") ? (
+          <OutcomeEvidenceRecommendationPanel
+            projectId={projectId}
+            activityId={activity.id}
+            recommendations={recommendationsQuery.data?.recommendations ?? null}
+            dismissedKeys={dismissedRecommendationKeys}
+            onDismiss={handleDismissOutcomeEvidenceRecommendation}
+          />
         ) : null}
       </Card>
 

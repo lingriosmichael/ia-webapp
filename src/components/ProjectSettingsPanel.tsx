@@ -25,7 +25,7 @@ import { normalizeMonthValue } from "@/lib/monthValue";
 import { resolveProjectSummaryText } from "@/lib/projectSummary";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import { cn } from "@/lib/utils";
-import { formatMonthRange, translateStatus } from "@/lib/translationUtils";
+import { formatMonthRange } from "@/lib/translationUtils";
 import { ApiError, type ProjectSummary } from "@/services/apiClient";
 
 function deduplicateValues(values: string[]) {
@@ -98,13 +98,10 @@ export function ProjectSettingsPanel({
   const [targetGroupsError, setTargetGroupsError] = useState(false);
 
   useEffect(() => {
-    setFormState(initialFormState);
-    setFormErrors({});
-    setTargetGroupsError(false);
-    setIsCustomTargetGroupInputOpen(false);
-  }, [initialFormState]);
-
-  useEffect(() => {
+    // Only resync the draft from server data while the form isn't being
+    // edited — otherwise a background refetch (e.g. window refocus) hands
+    // back a new `project` object and silently overwrites in-progress,
+    // unsaved edits.
     if (!isEditing) {
       setFormState(initialFormState);
       setFormErrors({});
@@ -128,6 +125,7 @@ export function ProjectSettingsPanel({
     project.targetGroups.length > 0
       ? project.targetGroups.join(" · ")
       : locale.projectSettings.notSet;
+  const showStatusBadge = project.status === "completed";
   const sdgsDisplay =
     project.sdgs.length > 0
       ? project.sdgs.join(" · ")
@@ -331,11 +329,13 @@ export function ProjectSettingsPanel({
                 {overviewDescription}
               </p>
             </div>
-            <StatusBadge
-              status={project.status}
-              label={translateStatus(t, project.status)}
-              className="self-start"
-            />
+            {showStatusBadge ? (
+              <StatusBadge
+                status={project.status}
+                label={t("enums.status.completed")}
+                className="self-start"
+              />
+            ) : null}
           </div>
 
           {!canEdit ? (
@@ -624,10 +624,10 @@ function createFormState(project: ProjectSummary): ProjectSettingsFormState {
     startMonth: project.startMonth ?? "",
     endMonth: project.endMonth ?? "",
     intendedChanges:
-      project.intendedChanges.length > 0 ? project.intendedChanges : [""],
+      project.intendedChanges.length > 0 ? [...project.intendedChanges] : [""],
     fundingProgram: project.fundingProgram ?? "",
     fundingOrganization: project.fundingOrganization ?? "",
-    targetGroups: project.targetGroups,
+    targetGroups: [...project.targetGroups],
     customTargetGroup: "",
     areaOfOperation: project.areaOfOperation ?? "",
     partnerships: project.partnerships ?? "",

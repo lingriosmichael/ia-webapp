@@ -138,6 +138,7 @@ export function ProjectImpactStoryBarChart({
                   key={entry.rawLabel}
                   fill={verticalBarColor({
                     index,
+                    rawLabel: entry.rawLabel,
                     dataKind: chart.dataKind,
                     chartType:
                       chart.chartType === "comparison" ? "comparison" : "bar",

@@ -21,7 +21,7 @@ export function LandingFaqSection() {
       <div className="mt-10 rounded-2xl border border-border/70 bg-card px-6">
         <Accordion type="single" collapsible>
           {items.map((item, index) => (
-            <AccordionItem key={item.question} value={`item-${index}`}>
+            <AccordionItem key={index} value={`item-${index}`}>
               <AccordionTrigger>
                 <span className="flex items-baseline gap-3 text-left">
                   <span className="text-sm text-muted-foreground">

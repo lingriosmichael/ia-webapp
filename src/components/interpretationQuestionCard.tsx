@@ -84,43 +84,6 @@ const TEXTAREA_CLASSNAME =
 const RECOMMENDATION_PANEL_CLASSNAME =
   "flex w-full max-w-[24rem] items-center gap-1.5 rounded-[10px] border border-primary/20 bg-primary-soft/65 px-2.5 py-1.5 shadow-[var(--shadow-soft)]";
 
-const SCALE_BOUNDS_PRESETS: Array<{ label: string; min: number; max: number }> =
-  [
-    { label: "1–5", min: 1, max: 5 },
-    { label: "1–7", min: 1, max: 7 },
-    { label: "0–10", min: 0, max: 10 },
-  ];
-
-function formatScaleBoundsAnswer(min: number, max: number): string {
-  return `${min} to ${max}`;
-}
-
-// Mirrors the backend's parseDeclaredScaleBoundsAnswer (extract the first
-// two number-like tokens) so a previously-saved answer round-trips into the
-// structured min/max controls below, regardless of the exact wording it was
-// saved with.
-function parseScaleBoundsAnswer(
-  answer: string | null,
-): { min: number; max: number } | null {
-  if (!answer) {
-    return null;
-  }
-  const matches = answer.match(/-?\d+(?:[.,]\d+)?/g);
-  if (!matches) {
-    return null;
-  }
-  const [firstMatch, secondMatch] = matches;
-  if (!firstMatch || !secondMatch) {
-    return null;
-  }
-  const min = Number.parseFloat(firstMatch.replace(",", "."));
-  const max = Number.parseFloat(secondMatch.replace(",", "."));
-  if (Number.isNaN(min) || Number.isNaN(max)) {
-    return null;
-  }
-  return { min, max };
-}
-
 function buildCompositeAnswer(prompts: string[], values: string[]): string {
   return prompts
     .map((prompt, index) => {
@@ -134,6 +97,15 @@ function normalizeOptionToken(value: string): string {
   return value.trim().toLocaleLowerCase();
 }
 
+// Some previously-stored answers use a bare "alle"/"all" shorthand instead
+// of a full comma-separated option list — e.g. an older answer format, or an
+// LLM-prefilled draft. Recognized independent of the current UI language,
+// since a stored answer may have been written under either locale; this
+// component's own "select all" button never produces this shorthand itself
+// (it writes out every option value instead — see buildSelectedStatusAnswer),
+// so this exists purely to stay compatible with that upstream format.
+const ALL_OPTIONS_SHORTHAND_TOKENS = new Set(["alle", "all"]);
+
 function parseSelectedOptionsFromAnswer(
   answer: string | null,
   options: string[],
@@ -143,7 +115,7 @@ function parseSelectedOptionsFromAnswer(
   }
 
   const normalizedAnswer = normalizeOptionToken(answer);
-  if (normalizedAnswer === "alle" || normalizedAnswer === "all") {
+  if (ALL_OPTIONS_SHORTHAND_TOKENS.has(normalizedAnswer)) {
     return options;
   }
 
@@ -294,8 +266,8 @@ type InterpretationQuestionCardProps =
       }) => void;
     };
 
-// Both current callers (activityAnalysisV2Panel.tsx, interpretation.tsx)
-// pre-filter to status === "pending" before rendering this card, so it only
+// The current caller (routes/projects/$projectId/interpretation.tsx)
+// pre-filters to status === "pending" before rendering this card, so it only
 // ever needs to render the answer-collection form — there is no "already
 // answered, click to edit" state to support here.
 export function InterpretationQuestionCard(
@@ -315,20 +287,6 @@ export function InterpretationQuestionCard(
       : null;
   const selectableStatusValues =
     selectableStatusOptions?.map((option) => option.value) ?? [];
-  const isDeclaredScaleBoundsQuestion =
-    question.questionCode === "declared_scale_bounds";
-  const initialScaleBounds = isDeclaredScaleBoundsQuestion
-    ? parseScaleBoundsAnswer(
-        question.answeredValue ??
-          (props.mode === "select" ? (props.selectedValue ?? null) : null),
-      )
-    : null;
-  const [scaleBoundsMin, setScaleBoundsMin] = useState(
-    initialScaleBounds ? String(initialScaleBounds.min) : "",
-  );
-  const [scaleBoundsMax, setScaleBoundsMax] = useState(
-    initialScaleBounds ? String(initialScaleBounds.max) : "",
-  );
   const compositePrompt =
     question.kind === "free_text" || !question.userFacingOptions?.length
       ? parseCompositePrompt(displayPrompt)
@@ -358,22 +316,6 @@ export function InterpretationQuestionCard(
       return;
     }
     props.onSubmit({ questionId: question.id, answeredValue });
-  }
-
-  function commitScaleBounds(min: string, max: string) {
-    const parsedMin = Number.parseFloat(min);
-    const parsedMax = Number.parseFloat(max);
-    if (
-      Number.isNaN(parsedMin) ||
-      Number.isNaN(parsedMax) ||
-      parsedMin >= parsedMax
-    ) {
-      if (props.mode === "select") {
-        commitAnswer("");
-      }
-      return;
-    }
-    commitAnswer(formatScaleBoundsAnswer(parsedMin, parsedMax));
   }
 
   function updateFreeTextValue(value: string) {
@@ -502,64 +444,7 @@ export function InterpretationQuestionCard(
       <p className="mt-2 whitespace-pre-line text-[0.8rem] leading-5 text-foreground/75">
         {promptText}
       </p>
-      {isDeclaredScaleBoundsQuestion ? (
-        <div className="mt-2 space-y-2">
-          <p className="text-[0.72rem] leading-4 text-muted-foreground">
-            {t("projectWorkspace.interpretation.questionScaleBoundsHint")}
-          </p>
-          <div className="flex flex-wrap gap-1.5">
-            {SCALE_BOUNDS_PRESETS.map((preset) => (
-              <AnswerChoiceButton
-                key={preset.label}
-                label={preset.label}
-                isSelected={
-                  scaleBoundsMin === String(preset.min) &&
-                  scaleBoundsMax === String(preset.max)
-                }
-                onClick={() => {
-                  setScaleBoundsMin(String(preset.min));
-                  setScaleBoundsMax(String(preset.max));
-                  commitScaleBounds(String(preset.min), String(preset.max));
-                }}
-                disabled={isSubmitting}
-              />
-            ))}
-          </div>
-          <div className="flex flex-wrap items-center gap-1.5">
-            <Input
-              type="number"
-              value={scaleBoundsMin}
-              onChange={(event) => {
-                setScaleBoundsMin(event.target.value);
-                commitScaleBounds(event.target.value, scaleBoundsMax);
-              }}
-              placeholder={t(
-                "projectWorkspace.interpretation.questionScaleBoundsMinPlaceholder",
-              )}
-              className={cn(TEXT_INPUT_CLASSNAME, "max-w-[6rem]")}
-            />
-            <span className="text-[0.8rem] text-muted-foreground">
-              {t("projectWorkspace.interpretation.questionScaleBoundsTo")}
-            </span>
-            <Input
-              type="number"
-              value={scaleBoundsMax}
-              onChange={(event) => {
-                setScaleBoundsMax(event.target.value);
-                commitScaleBounds(scaleBoundsMin, event.target.value);
-              }}
-              placeholder={t(
-                "projectWorkspace.interpretation.questionScaleBoundsMaxPlaceholder",
-              )}
-              className={cn(TEXT_INPUT_CLASSNAME, "max-w-[6rem]")}
-            />
-            {renderSubmitButton(
-              () => commitScaleBounds(scaleBoundsMin, scaleBoundsMax),
-              !scaleBoundsMin.trim() || !scaleBoundsMax.trim() || isSubmitting,
-            )}
-          </div>
-        </div>
-      ) : selectableStatusOptions ? (
+      {selectableStatusOptions ? (
         <>
           {renderChoiceGroup({
             options: selectableStatusOptions,

@@ -39,7 +39,7 @@ const ACTIVE_PROJECT_STATUSES = new Set(["planning", "active"]);
 
 function OrganizationProjectsPage() {
   const { workspace, organizationId } = useOrganizationWorkspacePage();
-  const { openProjectDialog } = useWorkspaceShell();
+  const workspaceShell = useWorkspaceShell();
   const locale = useWorkspaceLocale();
   const canCreateProject =
     workspace.organization.permissions?.canCreateProject ?? false;
@@ -100,7 +100,7 @@ function OrganizationProjectsPage() {
             canCreateProject ? (
               <Button
                 type="button"
-                onClick={openProjectDialog}
+                onClick={() => workspaceShell.openProjectDialog()}
                 className="h-12 rounded-[16px] px-6 text-[15px]"
               >
                 {locale.organizationProjects.primaryAction}
@@ -121,7 +121,7 @@ function OrganizationProjectsPage() {
               {canCreateProject ? (
                 <Button
                   type="button"
-                  onClick={openProjectDialog}
+                  onClick={() => workspaceShell.openProjectDialog()}
                   className="mt-6"
                 >
                   {locale.organizationProjects.primaryAction}

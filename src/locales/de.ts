@@ -8,7 +8,7 @@ const de: TranslationDictionary = {
   },
   common: {
     brand: "brindl",
-    evidenceWorkspace: "Evidenz-Arbeitsbereich",
+    evidenceWorkspace: "Arbeitsbereich Datengrundlage",
     logIn: "Anmelden",
     register: "Registrieren",
     logOut: "Abmelden",
@@ -320,9 +320,9 @@ const de: TranslationDictionary = {
     },
     dashboard: {
       health: "Projektstatus",
-      evidenceCompleteness: "Evidenz-Vollständigkeit",
+      evidenceCompleteness: "Vollständigkeit der Datengrundlage",
       insightsGenerated: "AI knowledge bereit",
-      lastEvidenceUpload: "Letzter Evidenz-Upload",
+      lastEvidenceUpload: "Letzter Upload der Datengrundlage",
       whatNeedsAttention: "Was Aufmerksamkeit braucht",
       recentActivity: "Letzte Aktivität",
       noRecentActivity: "Noch keine Projektänderungen.",
@@ -333,27 +333,28 @@ const de: TranslationDictionary = {
       },
       healthDescriptions: {
         strong:
-          "Evidenz wurde hochgeladen und AI knowledge ist bereits verfügbar.",
+          "Eine Datengrundlage wurde hochgeladen und AI knowledge ist bereits verfügbar.",
         progress:
           "Die ersten Nachweise sind da und die KI-Verarbeitung läuft noch.",
         attention:
           "Dieses Projekt braucht noch Uploads oder Prüfung, bevor AI knowledge bereitsteht.",
       },
       completenessValue: "{{withEvidence}}/{{total}} Aktivitäten",
-      completenessDelta: "{{percent}} % haben bereits Evidenz",
+      completenessDelta: "{{percent}} % haben bereits eine Datengrundlage",
       insightsDelta: "{{count}} ausstehend",
       insightsReadyDelta: "Bereit zum Öffnen",
       noInsightsDelta: "Noch kein AI knowledge bereit",
       noUploadValue: "Noch keiner",
-      noUploadDelta: "Laden Sie Evidenz hoch, um die Pipeline zu starten",
+      noUploadDelta:
+        "Laden Sie eine Datengrundlage hoch, um die Pipeline zu starten",
       attentionItems: {
-        noEvidence: "Es wurde noch keine Evidenz hochgeladen.",
+        noEvidence: "Es wurde noch keine Datengrundlage hochgeladen.",
         partialEvidence:
-          "{{count}} Aktivitäten benötigen noch Evidenz-Uploads.",
+          "{{count}} Aktivitäten benötigen noch Uploads zur Datengrundlage.",
         pendingInsights: "{{count}} AI knowledge Läufe sind noch in Arbeit.",
         failedJobs: "{{count}} Verarbeitungsjobs benötigen Aufmerksamkeit.",
         healthy:
-          "Jede Aktivität hat Evidenz, und derzeit gibt es keine offenen Probleme.",
+          "Jede Aktivität hat eine Datengrundlage, und derzeit gibt es keine offenen Probleme.",
       },
       recentActivityTypes: {
         activity_created: "Aktivität erstellt",
@@ -366,7 +367,7 @@ const de: TranslationDictionary = {
     },
     emptyStateTitle: "Noch keine Aktivitäten",
     emptyStateDescription:
-      "Aktivitäten sind Workshops, Trainings, Mentoring-Sessions oder andere Maßnahmen, zu denen Sie Evidenz hochladen.",
+      "Aktivitäten sind Workshops, Trainings, Mentoring-Sessions oder andere Maßnahmen, zu denen Sie eine Datengrundlage hochladen.",
     emptyStateSupporting:
       "Legen Sie die erste Aktivität an, um Uploads, Analysen und AI knowledge pro Maßnahme getrennt zu verwalten.",
     emptyStateAction: "Erste Aktivität erstellen",
@@ -392,10 +393,9 @@ const de: TranslationDictionary = {
     tabs: {
       overview: "Übersicht",
       activities: "Aktivitäten",
-      evidence: "Evidenz",
+      evidence: "Datengrundlage",
       interpretation: "Interpretation",
       analytics: "Analysen",
-      outcomeStatements: "Wirkungsaussagen",
       comingSoon: "Bald",
     },
     overview: {
@@ -406,14 +406,14 @@ const de: TranslationDictionary = {
     activities: {
       title: "Aktivitäten",
       description:
-        "Planen und verwalten Sie die Maßnahmen, an die Evidenz, Auswertung und Berichterstattung in diesem Projekt gebunden sind.",
+        "Planen und verwalten Sie die Maßnahmen, an die Datengrundlage, Auswertung und Berichterstattung in diesem Projekt gebunden sind.",
       emptyTitle: "Noch keine Aktivitäten",
       emptyDescription:
-        "Aktivitäten sind Workshops, Mentoring-Sessions, Trainings oder andere Maßnahmen, zu denen Evidenz gesammelt wird.",
+        "Aktivitäten sind Workshops, Mentoring-Sessions, Trainings oder andere Maßnahmen, zu denen eine Datengrundlage gesammelt wird.",
       emptyAction: "Erste Aktivität erstellen",
       noDescription: "Noch keine Aktivitätsbeschreibung vorhanden.",
       noDate: "Noch kein Datum festgelegt",
-      evidenceCount: "{{count}} Evidenzdateien",
+      evidenceCount: "{{count}} Dateien der Datengrundlage",
       uploadCount: "{{count}} Uploads",
       insightCount: "{{count}} Erkenntnisse",
       openActivity: "Aktivität öffnen",
@@ -423,17 +423,18 @@ const de: TranslationDictionary = {
       deleteFailure: "Aktivität konnte nicht gelöscht werden.",
     },
     evidence: {
-      title: "Evidenz",
+      title: "Datengrundlage",
       description:
-        "Verwalten Sie hochgeladene Dateien nach Aktivität. Evidenz bleibt immer der Maßnahme zugeordnet, zu der sie gehört.",
-      emptyTitle: "Noch keine Aktivitäten für Evidenz vorhanden",
+        "Verwalten Sie hochgeladene Dateien nach Aktivität. Die Datengrundlage bleibt immer der Maßnahme zugeordnet, zu der sie gehört.",
+      emptyTitle: "Noch keine Aktivitäten für die Datengrundlage vorhanden",
       emptyDescription:
-        "Legen Sie zuerst eine Aktivität an. Jeder Evidenz-Upload in brindl gehört zu einer konkreten Aktivität.",
+        "Legen Sie zuerst eine Aktivität an. Jeder Upload zur Datengrundlage in brindl gehört zu einer konkreten Aktivität.",
       openActivity: "Aktivität öffnen",
-      uploadAction: "Evidenz hochladen",
+      uploadAction: "Datengrundlage hochladen",
       uploading: "{{name}} wird hochgeladen…",
-      loading: "Evidenz wird geladen…",
-      noFiles: "Für diese Aktivität wurde noch keine Evidenz hochgeladen.",
+      loading: "Datengrundlage wird geladen…",
+      noFiles:
+        "Für diese Aktivität wurde noch keine Datengrundlage hochgeladen.",
       openFile: "Datei öffnen",
       analyzeFile: "Datenschutz prüfen",
       prepareWorkbookFile: "Excel-Datei vorbereiten",
@@ -446,11 +447,12 @@ const de: TranslationDictionary = {
       analysisInProgress: "Verarbeitung läuft…",
       analysisCompleted: "Verarbeitung abgeschlossen",
       reviewedStatus: "Geprüft",
-      analysisStarted: "Evidenzanalyse wurde gestartet.",
-      analysisRestarted: "Evidenzanalyse wurde neu gestartet.",
-      analysisStartFailed: "Evidenzanalyse konnte nicht gestartet werden.",
+      analysisStarted: "Die Analyse der Datengrundlage wurde gestartet.",
+      analysisRestarted: "Die Analyse der Datengrundlage wurde neu gestartet.",
+      analysisStartFailed:
+        "Die Analyse der Datengrundlage konnte nicht gestartet werden.",
       analysisRestartFailed:
-        "Evidenzanalyse konnte nicht neu gestartet werden.",
+        "Die Analyse der Datengrundlage konnte nicht neu gestartet werden.",
       privacyApprovalSuccess: "Datenschutzprüfung wurde freigegeben.",
       privacyApprovalFailed:
         "Datenschutzprüfung konnte nicht freigegeben werden.",
@@ -569,8 +571,8 @@ const de: TranslationDictionary = {
         cancelled: "Abgebrochen",
       },
       removeFile: "Entfernen",
-      removeSuccess: "Evidenz entfernt.",
-      removeFailed: "Evidenz konnte nicht entfernt werden.",
+      removeSuccess: "Datengrundlage entfernt.",
+      removeFailed: "Die Datengrundlage konnte nicht entfernt werden.",
       openFailed: "{{name}} konnte nicht geöffnet werden.",
       metadataType: "Typ",
       metadataSize: "Größe",
@@ -583,7 +585,7 @@ const de: TranslationDictionary = {
     },
     interpretation: {
       understoodEmpty:
-        "Noch keine Interpretationsergebnisse. Starten Sie „Mit KI interpretieren“ für die Evidenz einer Aktivität, sobald deren Datenschutzprüfung genehmigt ist.",
+        "Noch keine Interpretationsergebnisse. Starten Sie „Mit KI interpretieren“ für die Datengrundlage einer Aktivität, sobald deren Datenschutzprüfung genehmigt ist.",
       questionDomainPreparationLabel: "Vorbereitung",
       questionDomainInterpretationLabel: "Interpretation",
       questionRequiredLabel: "Für die Prüfung erforderlich",
@@ -594,18 +596,20 @@ const de: TranslationDictionary = {
       questionSelectAllOptions: "Alle Optionen auswählen",
       questionSubmit: "Absenden",
       questionSubmitting: "Wird gesendet…",
-      questionScaleBoundsCustom: "Benutzerdefiniert",
-      questionScaleBoundsTo: "bis",
-      questionScaleBoundsMinPlaceholder: "Min",
-      questionScaleBoundsMaxPlaceholder: "Max",
-      questionScaleBoundsHint:
-        "Die beobachteten Antworten belegen nicht den vollständigen Wertebereich der Skala — wir benötigen den offiziellen Bereich, um Baseline und Wirkungsmessung sicher zu vergleichen.",
-      questionGroupBadge: "Gleiches Instrument, zwei Zeitpunkte",
-      questionGroupSubtitle: "Einmal für beide Spalten bestätigen",
-      questionGroupExplanation:
-        "Diese Spalten sehen wie dasselbe Befragungsinstrument zu zwei unterschiedlichen Zeitpunkten aus. Bestätigen Sie die Angaben einmal, sie gelten dann für beide.",
-      questionGroupRejectAction:
-        "Das ist nicht dasselbe Instrument — getrennt beantworten",
+      cohortGrouping: {
+        instruction:
+          "Gruppieren Sie Ihre Dateien danach, um welche Zielgruppe es in ihnen geht. Betreffen alle Dateien dieselbe Gruppe, erstellen Sie nur eine.",
+        instructionSingle:
+          "Um wen geht es in dieser Tabelle? Geben Sie dieser Gruppe einen kurzen Namen — zum Beispiel „Ältere Menschen“ oder „Mentor:innen“.",
+        newGroupPlaceholder: "Gruppenname, z. B. „Ältere Menschen“",
+        addGroupAction: "Neue Gruppe",
+        addGroupConfirm: "Erstellen",
+        addGroupCancel: "Abbrechen",
+        unassignedTitle: "Noch nicht zugeordnet",
+        unassignedDescription: "Ziehen Sie jede Datei in die passende Gruppe.",
+        groupEmptyHint: "Dateien hierher ziehen",
+        removeEmptyGroupAction: "Gruppe entfernen",
+      },
       reviewPrivacyAction: "Datenschutz prüfen",
       reviewQualitativeCodingAction: "Codierung prüfen",
       reviewFile: "Datei",
@@ -613,7 +617,7 @@ const de: TranslationDictionary = {
       loadingQualitativeReview: "Qualitative Codierungsprüfung wird geladen…",
       qualitativeReviewTitle: "Qualitative Codierungsprüfung",
       qualitativeReviewDescription:
-        "Prüfen Sie die vorgeschlagenen Codierungs-Overlays für Freitext-Evidenz, bevor die Aktivitätsanalyse fortgesetzt werden kann.",
+        "Prüfen Sie die vorgeschlagenen Codierungs-Overlays für Freitext-Datengrundlagen, bevor die Aktivitätsanalyse fortgesetzt werden kann.",
       qualitativeReviewApprove: "Codierungsprüfung freigeben",
       qualitativeReviewApproving: "Wird freigegeben…",
       qualitativeReviewApproveSuccess:
@@ -636,12 +640,12 @@ const de: TranslationDictionary = {
       qualitativeReviewExcerpts: "Beispielauszüge",
       qualitativeReviewDecisionApprove: "Wie vorgeschlagen freigeben",
       qualitativeReviewDecisionReject: "Vorerst ablehnen",
-      noEvidenceYet: "Noch keine Evidenz hochgeladen.",
+      noEvidenceYet: "Noch keine Datengrundlage hochgeladen.",
       simplified: {
         pageTitle: "Zielprüfung",
         heroTitle: "Eine Zielprüfung pro Aktivität",
         heroDescription:
-          "brindl prüft, ob die definierten Aktivitätsziele durch die aktuelle Evidenz belegt sind. Vorher wird die Evidenz datenschutzsicher vorbereitet und interpretiert.",
+          "brindl prüft, ob die definierten Aktivitätsziele durch die aktuelle Datengrundlage belegt sind. Vorher wird die Datengrundlage datenschutzsicher vorbereitet und interpretiert.",
         statActivities: "Aktivitäten",
         statReady: "Zielprüfung bereit",
         statAttention: "Braucht Aufmerksamkeit",
@@ -655,7 +659,8 @@ const de: TranslationDictionary = {
             "Für diese Aktivität braucht noch {{count}} Datei die Freigabe der qualitativen Codierungsprüfung.",
           qualitativeReview_other:
             "Für diese Aktivität brauchen noch {{count}} Dateien die Freigabe der qualitativen Codierungsprüfung.",
-          processing: "Die Evidenz dieser Aktivität wird gerade interpretiert.",
+          processing:
+            "Die Datengrundlage dieser Aktivität wird gerade interpretiert.",
           questions:
             "{{count}} Klärungsfrage ist noch offen, bevor die Aktivitätsanalyse geöffnet werden kann.",
           questions_other:
@@ -679,14 +684,14 @@ const de: TranslationDictionary = {
           v2Failed:
             "Die letzte Zielprüfung ist fehlgeschlagen. Starten Sie sie erneut.",
           notStarted:
-            "Die Evidenz wurde für diese Aktivität noch nicht interpretiert.",
+            "Die Datengrundlage wurde für diese Aktivität noch nicht interpretiert.",
         },
         activityMeta: "{{uploads}} Dateien · {{interpreted}} interpretiert",
         activityNoFiles:
-          "Für diese Aktivität wurde noch keine Evidenz hochgeladen.",
+          "Für diese Aktivität wurde noch keine Datengrundlage hochgeladen.",
         questionsTitle: "Klärungsfragen",
         questionsDescriptionBatch:
-          "Mehrere Fragen müssen beantwortet werden, bevor diese Evidenz interpretiert werden kann. Wähle unten für jede Frage eine Antwort aus und sende dann alle zusammen — die Analyse nach jeder einzelnen Antwort neu zu starten wäre langsam.",
+          "Mehrere Fragen müssen beantwortet werden, bevor diese Datengrundlage interpretiert werden kann. Wähle unten für jede Frage eine Antwort aus und sende dann alle zusammen — die Analyse nach jeder einzelnen Antwort neu zu starten wäre langsam.",
         questionsAnswered: "Antwort gespeichert.",
         questionsAnsweredBatch: "{{count}} Antworten gespeichert.",
         questionsAnswerFailed: "Diese Antwort konnte nicht gespeichert werden.",
@@ -695,7 +700,7 @@ const de: TranslationDictionary = {
         reviewLinkageAction: "Verknüpfung prüfen",
         linkageReviewTitle: "Dateiübergreifende Verknüpfung prüfen",
         linkageReviewDescription:
-          "brindl hat eine mögliche Verknüpfung zwischen mehreren Evidenzdateien erkannt, die nicht auf einem eindeutigen Identifikator beruht. Bestätigen Sie eine vorgeschlagene Spaltenverknüpfung nur dann, wenn beide Dateien tatsächlich dieselben Einheiten beschreiben. Lehnen Sie den Vorschlag andernfalls ab; dann bleiben die Dateien getrennt.",
+          "brindl hat eine mögliche Verknüpfung zwischen mehreren Dateien der Datengrundlage erkannt, die nicht auf einem eindeutigen Identifikator beruht. Bestätigen Sie eine vorgeschlagene Spaltenverknüpfung nur dann, wenn beide Dateien tatsächlich dieselben Einheiten beschreiben. Lehnen Sie den Vorschlag andernfalls ab; dann bleiben die Dateien getrennt.",
         linkageReviewLoading: "Die Verknüpfungsvorschläge werden geladen…",
         linkageProposalPrompt:
           "Vorgeschlagene Spaltenverknüpfung: „{{tableA}}.{{columnA}}“ mit „{{tableB}}.{{columnB}}“. Soll diese Verknüpfung verwendet werden? Die überlappenden Werte decken aktuell etwa {{overlap}} der kombinierten Ausprägungen ab.",
@@ -708,23 +713,24 @@ const de: TranslationDictionary = {
           "Die Entscheidung zur Datei-Verknüpfung konnte nicht gespeichert werden.",
         linkageReviewResolved:
           "Für diese Aktivität sind aktuell keine offenen Verknüpfungsvorschläge mehr vorhanden.",
-        actionRunning: "Evidenz wird interpretiert…",
+        actionRunning: "Datengrundlage wird interpretiert…",
         actionRestart: "Interpretation neu starten",
-        actionRunKnowledge: "Evidenz interpretieren",
-        actionInterpretMissingEvidence: "Fehlende Evidenz interpretieren",
+        actionRunKnowledge: "Datengrundlage interpretieren",
+        actionInterpretMissingEvidence:
+          "Fehlende Datengrundlage interpretieren",
         interpretationStarted: "KI-Interpretation wurde gestartet.",
         interpretationRestarted: "KI-Interpretation wurde neu gestartet.",
         interpretationRestartNoop:
           "Es wurde keine neue KI-Interpretation gestartet, weil nichts mehr aussteht.",
         interpretationResumed:
-          "KI-Interpretation wurde nur für die noch fehlende Evidenz gestartet.",
+          "KI-Interpretation wurde nur für die noch fehlende Datengrundlage gestartet.",
         interpretationRestartFailed:
           "KI-Interpretation konnte nicht neu gestartet werden.",
         activityNotReadyToast:
           "Diese Aktivität ist noch nicht bereit für die Zielprüfung. Schließen Sie zuerst die Datenschutzprüfung ab oder warten Sie, bis die Verarbeitung fertig ist.",
         actionOpenAnalysis: "Zielprüfung ansehen",
         status: {
-          no_evidence: "Keine Evidenz",
+          no_evidence: "Keine Datengrundlage",
           privacy_review: "Datenschutzprüfung",
           qualitative_review: "Codierungsprüfung",
           processing: "In Bearbeitung",
@@ -740,10 +746,10 @@ const de: TranslationDictionary = {
     analytics: {
       title: "Analysen",
       description:
-        "Prüfen Sie deterministische Kennzahlen und Diagramme, die aus interpretierter Evidenz berechnet wurden.",
+        "Prüfen Sie deterministische Kennzahlen und Diagramme, die aus interpretierter Datengrundlage berechnet wurden.",
       notReadyTitle: "Analysen sind noch nicht bereit",
       notReadyDescription:
-        "Analysen werden verfügbar, sobald genügend Evidenz erfolgreich hochgeladen und interpretiert wurde.",
+        "Analysen werden verfügbar, sobald genügend Datengrundlage erfolgreich hochgeladen und interpretiert wurde.",
     },
     insights: {
       title: "Erkenntnisse",
@@ -751,7 +757,7 @@ const de: TranslationDictionary = {
         "Übersetzen Sie Analysen in narrative Erkenntnisse, Risiken und Empfehlungen für Berichte und Entscheidungen.",
       notReadyTitle: "Erkenntnisse sind noch nicht bereit",
       notReadyDescription:
-        "Erkenntnisse erscheinen, sobald Evidenz interpretiert wurde und mindestens eine Erkenntnis für dieses Projekt vorliegt.",
+        "Erkenntnisse erscheinen, sobald eine Datengrundlage interpretiert wurde und mindestens eine Erkenntnis für dieses Projekt vorliegt.",
       executiveSummary: "Kurzfassung",
       nextSteps: "Empfohlene nächste Schritte",
     },
@@ -766,12 +772,17 @@ const de: TranslationDictionary = {
     runPending: "Wird erzeugt…",
     runSuccess: "Die Analyse wurde aktualisiert.",
     runFailed: "Die Analyse konnte nicht erzeugt werden.",
+    regeneratingTitle: "Analyse wird aktualisiert…",
+    regeneratingDescription:
+      "Dies kann einige Minuten dauern. Sie können diese Seite in der Zwischenzeit verlassen — die Aktualisierung läuft im Hintergrund weiter und ist beim nächsten Besuch fertig.",
     narrativeFailed:
       "Die Erzählung konnte nicht erzeugt werden. Die Kennzahlen unten sind trotzdem verlässlich.",
     staleNotice:
-      "Seit der letzten Erzeugung gibt es neue Evidenz. Aktualisieren Sie, um die neuesten Zahlen zu sehen.",
+      "Seit der letzten Erzeugung gibt es neue Datengrundlage. Aktualisieren Sie, um die neuesten Zahlen zu sehen.",
     narrativeTemplatedNotice:
       "Diese Zusammenfassung wurde automatisch aus Ihren Daten erstellt, nicht von einer KI verfasst.",
+    narrativeUnverifiedNotice:
+      "Diese Zusammenfassung wurde von einer KI verfasst, aber ein Detail darin konnte nicht automatisch mit Ihren Daten abgeglichen werden.",
     exploratoryChartNotice:
       "Explorativ — vorher/nachher erkannt, aber nicht als Ergebnis bestätigt",
     backlogPanelTitle: "Backlog",
@@ -794,12 +805,12 @@ const de: TranslationDictionary = {
     dragHandleLabel: "„{{title}}“ ziehen, um die Reihenfolge zu ändern",
     hideChartLabel: "„{{title}}“ ausblenden",
     outcomeNotYetMeasurable:
-      "Noch nicht messbar — es liegt noch keine verknüpfte Evidenz vor.",
+      "Noch nicht messbar — es liegt noch keine verknüpfte Datengrundlage vor.",
     notYetAnalyzedFootnote:
       "Noch keine ausgewerteten Kennzahlen für: {{names}}.",
     emptyTitle: "Noch keine Analyse erzeugt",
     emptyDescription:
-      "Erzeugen Sie die allgemeinen Kennzahlen und Diagramme dieses Projekts auf Basis der bereits ausgewerteten Evidenz. Falls verknüpfte Wirkungsevidenz vorliegt, wird sie zusätzlich hervorgehoben.",
+      "Erzeugen Sie die allgemeinen Kennzahlen und Diagramme dieses Projekts auf Basis der bereits ausgewerteten Datengrundlage. Falls verknüpfte Wirkungsdaten vorliegen, werden sie zusätzlich hervorgehoben.",
     rankedBarsAriaLabel: "{{label}}: {{summary}}",
     trendChartAriaLabel: "{{label}} im Zeitverlauf: {{summary}}",
     byActivityTitle: "Nach Aktivität",
@@ -826,7 +837,7 @@ const de: TranslationDictionary = {
       "Für diese Aktivität wurde noch keine Beschreibung hinzugefügt.",
     hero: {
       badges: {
-        empty: "Evidenz-Start",
+        empty: "Start der Datengrundlage",
         uploading: "Wird hochgeladen",
         processing: "KI arbeitet",
         ready: "Bereit zur Prüfung",
@@ -835,21 +846,21 @@ const de: TranslationDictionary = {
       titles: {
         empty: "Laden Sie Ihren ersten Datensatz hoch",
         uploading: "Ihr Datensatz wird hochgeladen",
-        processing: "brindl bereitet Ihre Evidenz vor",
-        ready: "Ihre Evidenz ist bereit für den nächsten Schritt",
+        processing: "brindl bereitet Ihre Datengrundlage vor",
+        ready: "Ihre Datengrundlage ist bereit für den nächsten Schritt",
         attention: "Dieser Datensatz braucht einen zweiten Blick",
       },
       descriptions: {
         empty:
-          "Laden Sie CSV- oder Excel-Monitoringdaten hoch, um die Evidenz vorzubereiten.",
+          "Laden Sie CSV- oder Excel-Monitoringdaten hoch, um die Datengrundlage vorzubereiten.",
         uploading:
-          "Ihre Datei wird gerade in den Evidenz-Workflow aufgenommen.",
+          "Ihre Datei wird gerade in den Workflow der Datengrundlage aufgenommen.",
         processing:
           "Der neueste Datensatz wird auf Struktur, Datenschutzrisiken und Analysebereitschaft geprüft.",
         ready:
           "{{fileName}} wurde von der KI verstanden. {{count}} Prüfpunkte sind noch sichtbar, bevor die Analyse weitergeht.",
         attention:
-          "Der letzte Evidenzlauf wurde nicht sauber abgeschlossen. Laden Sie die Datei erneut hoch, um den Workflow fortzusetzen.",
+          "Der letzte Lauf der Datengrundlage wurde nicht sauber abgeschlossen. Laden Sie die Datei erneut hoch, um den Workflow fortzusetzen.",
       },
       supporting:
         "Unterstützt werden CSV, XLSX, Drag & Drop oder Dateiauswahl.",
@@ -871,12 +882,13 @@ const de: TranslationDictionary = {
       lastUpload: "Letzter Upload",
       aiStatus: "KI-Status",
       noUpload: "Noch keiner",
-      noUploadDescription: "Laden Sie Evidenz hoch, um den Workflow zu starten",
+      noUploadDescription:
+        "Laden Sie eine Datengrundlage hoch, um den Workflow zu starten",
       stateDescriptions: {
-        empty: "Es wurde noch keine Evidenz hochgeladen",
+        empty: "Es wurde noch keine Datengrundlage hochgeladen",
         uploading: "Ein Datensatz wird gerade hochgeladen",
-        processing: "Die KI prüft die hochgeladene Evidenz",
-        ready: "Die Evidenz ist bereit für Prüfung oder Analyse",
+        processing: "Die KI prüft die hochgeladene Datengrundlage",
+        ready: "Die Datengrundlage ist bereit für Prüfung oder Analyse",
         attention: "Ein Datensatz braucht einen neuen Upload oder eine Prüfung",
       },
       aiStatusValues: {
@@ -890,11 +902,11 @@ const de: TranslationDictionary = {
         "{{reviewCount}} Prüfpunkte sichtbar · {{insights}} AI knowledge Einträge derzeit verfügbar",
     },
     uploader: {
-      eyebrow: "Evidenz hinzufügen",
+      eyebrow: "Datengrundlage hinzufügen",
       title: "Monitoring-Daten in diese Aktivität bringen",
       description:
         "Laden Sie eine CSV-, Excel-, PDF- oder DOCX-Datei hoch. brindl führt Sie von hier aus durch Prüfung, Analyse und AI knowledge.",
-      cta: "Evidenz hochladen",
+      cta: "Datengrundlage hochladen",
       remove: "Entfernen",
     },
     detail: {
@@ -903,7 +915,7 @@ const de: TranslationDictionary = {
         "Es wurden noch keine Projektwirkung oder Outcomes erfasst.",
     },
     pipeline: {
-      title: "KI-Evidenz-Workflow",
+      title: "KI-Workflow der Datengrundlage",
       description:
         "Sie müssen nicht zwischen technischen Schritten wechseln. Wir führen Sie zur Datenprüfung, sobald alles bereit ist.",
       stages: [
@@ -927,9 +939,9 @@ const de: TranslationDictionary = {
         processing:
           "Warten Sie, bis die KI die Datei verstanden hat. Danach werden Sie automatisch zur Datenprüfung oder Analyse geführt.",
         ready:
-          "Die Evidenz ist bereit. Prüfen Sie zuerst das Datenverständnis und gehen Sie dann in die Analyse.",
+          "Die Datengrundlage ist bereit. Prüfen Sie zuerst das Datenverständnis und gehen Sie dann in die Analyse.",
         attention:
-          "Der aktuelle Evidenzlauf braucht Aufmerksamkeit. Laden Sie eine neue Datei hoch, um den Workflow fortzusetzen.",
+          "Der aktuelle Lauf der Datengrundlage braucht Aufmerksamkeit. Laden Sie eine neue Datei hoch, um den Workflow fortzusetzen.",
       },
       items: {
         empty: [
@@ -955,7 +967,7 @@ const de: TranslationDictionary = {
       },
     },
     evidence: {
-      title: "Evidenzstatus",
+      title: "Status der Datengrundlage",
       datasets: "Datensätze",
       dataReview: "Datenprüfung",
       analysis: "Analyse",
@@ -976,20 +988,20 @@ const de: TranslationDictionary = {
     eyebrow: "Nachweise hochladen",
     title: "Nachweise für {{name}} hochladen",
     description:
-      "Legen Sie Ihre CSV-, Excel-, PDF- oder DOCX-Datei ab, um Evidenz mit dieser Aktivität zu verknüpfen.",
-    dropzoneTitle: "Evidenzdatei hierher ziehen",
+      "Legen Sie Ihre CSV-, Excel-, PDF- oder DOCX-Datei ab, um eine Datengrundlage mit dieser Aktivität zu verknüpfen.",
+    dropzoneTitle: "Datei der Datengrundlage hierher ziehen",
     dropzoneBrowsePrefix: "oder",
     dropzoneBrowseAction: "Datei vom Computer auswählen",
     accepts: "Akzeptiert .csv, .xlsx, .xls, .pdf, .docx",
     storageNote:
-      "Hochgeladene Evidenz bleibt mit dieser Aktivität verknüpft und kann in einem späteren Schritt analysiert werden.",
+      "Hochgeladene Datengrundlage bleibt mit dieser Aktivität verknüpft und kann in einem späteren Schritt analysiert werden.",
     existingCounts: "Vorhandene Dateien: {{uploads}} · Jobs: {{jobs}}",
     readyToUpload: "Bereit zum Hochladen",
     ready: "Bereit",
     removeFileAria: "Datei entfernen",
     uploading: "Wird hochgeladen…",
-    createProcessingJob: "Evidenz analysieren",
-    successToast: "Evidenz hochgeladen.",
+    createProcessingJob: "Datengrundlage analysieren",
+    successToast: "Datengrundlage hochgeladen.",
     multiSuccessToast: "{{count}} Dateien hochgeladen.",
     failedToast: "Upload fehlgeschlagen.",
     multiFailedToast: "{{count}} Dateien konnten nicht hochgeladen werden.",
@@ -1219,11 +1231,11 @@ const de: TranslationDictionary = {
     loading: "Aktivitätsanalysen werden geladen…",
     loadFailed: "Aktivitätsanalysen konnten nicht geladen werden.",
     crumb: "Analyse",
-    eyebrow: "Evidenzanalyse",
+    eyebrow: "Analyse der Datengrundlage",
     title: "Analyse",
-    noVerifiedEvidenceTitle: "Noch keine geeignete Evidenz",
+    noVerifiedEvidenceTitle: "Noch keine geeignete Datengrundlage",
     noVerifiedEvidenceDescription:
-      "Für diese Aktivität liegen noch keine strukturierten Evidenzdaten vor, aus denen bereits Analysen erzeugt werden können.",
+      "Für diese Aktivität liegen noch keine strukturierten Daten der Datengrundlage vor, aus denen bereits Analysen erzeugt werden können.",
     awaitingPreparationTitle: "Zuerst offene Interpretationsfragen klären",
     awaitingPreparationDescription:
       "{{count}} Datensatz dieser Aktivität ist noch durch Vorbereitungsfragen blockiert. Beantworten Sie die offenen Fragen auf der Interpretationsseite.",
@@ -1242,14 +1254,14 @@ const de: TranslationDictionary = {
       eyebrow: "ActivityAnalyst V2",
       title: "Zielprüfung",
       description:
-        "Diese Ansicht prüft die aktuellen Aktivitätsziele anhand des neuesten datenschutzsicheren Evidenzstands.",
+        "Diese Ansicht prüft die aktuellen Aktivitätsziele anhand des neuesten datenschutzsicheren Stands der Datengrundlage.",
       loading: "Die neueste Zielprüfung wird geladen…",
       loadFailed: "Die neueste Zielprüfung konnte nicht geladen werden.",
       staleDataWarning:
         "Die unten angezeigte Zielprüfung ist möglicherweise veraltet — die letzte Aktualisierung ist fehlgeschlagen.",
       noRunTitle: "Noch keine Zielprüfung",
       noRunDescription:
-        "Prüfen Sie, ob diese Aktivität ihre definierten Ziele anhand der aktuellen datenschutzsicheren Evidenz erreicht.",
+        "Prüfen Sie, ob diese Aktivität ihre definierten Ziele anhand der aktuellen datenschutzsicheren Datengrundlage erreicht.",
       runAction: "Ziele prüfen",
       openAction: "Ansehen",
       refreshAction: "Aktualisieren",
@@ -1264,9 +1276,9 @@ const de: TranslationDictionary = {
       summaryMissing:
         "Für diesen Lauf wurden keine numerischen Zielkarten erzeugt.",
       dialogDescription:
-        "brindl hat geprüft, ob die aktuelle Evidenz die definierten Ziele dieser Aktivität belegt.",
+        "brindl hat geprüft, ob die aktuelle Datengrundlage die definierten Ziele dieser Aktivität belegt.",
       dialogMeta:
-        "{{goals}} Ziele aus {{evidence}} Evidenzdateien wurden in dieser Zielprüfung berücksichtigt.",
+        "{{goals}} Ziele aus {{evidence}} Dateien der Datengrundlage wurden in dieser Zielprüfung berücksichtigt.",
       goalTarget: "{{target}} Ziel",
       goalMet: "Ziel erreicht",
       goalPercentOfTarget: "{{percent}} des Ziels",
@@ -1285,7 +1297,7 @@ const de: TranslationDictionary = {
       runHistoryTitle: "Frühere Analysen",
       metrics: {
         goals: "Ziele",
-        evidence: "Evidenzen",
+        evidence: "Datengrundlagen",
         tools: "Tools",
         calculations: "Berechnungen",
       },
@@ -1304,19 +1316,19 @@ const de: TranslationDictionary = {
       goalStatus: {
         achieved: "Erreicht",
         not_achieved: "Nicht erreicht",
-        evidence_compiled: "Evidenz zusammengestellt",
-        qualitative_evidence_only: "Nur qualitative Evidenz",
-        mixed_evidence: "Gemischte Evidenz",
+        evidence_compiled: "Datengrundlage zusammengestellt",
+        qualitative_evidence_only: "Nur qualitative Datengrundlage",
+        mixed_evidence: "Gemischte Datengrundlage",
         requires_clarification: "Klärung nötig",
         requires_capability: "Berechnung fehlt",
       },
-      tensionTitle: "Spannung zwischen Evidenzsignalen",
+      tensionTitle: "Spannung zwischen Signalen der Datengrundlage",
       tensionDescription:
-        "Diese Analyse enthält quantitative und qualitative Evidenz, die bewusst nebeneinander gelesen werden sollte, statt sie zu einem einfachen Gesamturteil zu verdichten.",
-      tensionBadge: "Evidenzspannung",
+        "Diese Analyse enthält quantitative und qualitative Datengrundlage, die bewusst nebeneinander gelesen werden sollte, statt sie zu einem einfachen Gesamturteil zu verdichten.",
+      tensionBadge: "Spannung in der Datengrundlage",
       qualitativeSectionTitle: "Verankerte qualitative Auszüge",
       qualitativeSectionDescription:
-        "Diese Ziele werden durch ausgewählte wörtliche Auszüge aus den verknüpften Evidenztabellen gestützt. Lesen Sie sie als verankerte Beispiele, nicht als vollständige Sicht auf alle passenden Zeilen.",
+        "Diese Ziele werden durch ausgewählte wörtliche Auszüge aus den verknüpften Tabellen der Datengrundlage gestützt. Lesen Sie sie als verankerte Beispiele, nicht als vollständige Sicht auf alle passenden Zeilen.",
       excerptSampleMeta:
         "{{returned}} Auszug/Auszüge angezeigt aus {{total}} passender/passenden Zeile(n)",
       themeLabel: "Thema/Code: {{theme}}",
@@ -1343,7 +1355,7 @@ const de: TranslationDictionary = {
     eyebrow: "Aktivitätseinstellungen",
     title: "Diese Aktivität sauber ausrichten",
     description:
-      "Prüfen Sie die Kerndaten, die Evidenzsammlung, Analyse und Reporting für diese Aktivität steuern.",
+      "Prüfen Sie die Kerndaten, die Sammlung der Datengrundlage, Analyse und Reporting für diese Aktivität steuern.",
     activityDetailsTitle: "Aktivitätsdetails",
     workflowGuardrailsTitle: "Workflow-Leitplanken",
     workflowGuardrails: [
@@ -1354,7 +1366,7 @@ const de: TranslationDictionary = {
     contextTitle: "Warum dieser Kontext wichtig ist",
     supportTitle: "Unterstützung für spätere Iterationen",
     supportDescription:
-      "Diese Seite wird zum Ort für Aktivitätsmetadaten, Evidenzregeln und spätere Workflow-Einstellungen ausgebaut.",
+      "Diese Seite wird zum Ort für Aktivitätsmetadaten, Regeln zur Datengrundlage und spätere Workflow-Einstellungen ausgebaut.",
     noDescription: "Es wurde noch keine Aktivitätsbeschreibung ergänzt.",
     noActivityType: "Es wurde noch kein Aktivitätstyp ergänzt.",
     noProjectGoal: "Es wurden noch keine Projektwirkung oder Outcomes erfasst.",
@@ -1454,7 +1466,7 @@ const de: TranslationDictionary = {
     adminTitle: "Organisations-Workspace",
     managerTitle: "Mein Workspace",
     adminDescription:
-      "Öffnen Sie zuletzt bearbeitete Projekte, verfolgen Sie aktuelle Aktivität und sehen Sie, wo im Workspace noch Evidenz fehlt.",
+      "Öffnen Sie zuletzt bearbeitete Projekte, verfolgen Sie aktuelle Aktivität und sehen Sie, wo im Workspace noch Datengrundlage fehlt.",
     managerDescription:
       "Setzen Sie die Arbeit in Ihren Projekten fort, prüfen Sie letzte Änderungen und erkennen Sie früh, wo Nachweise noch fehlen.",
     primaryAction: "Projekt erstellen",
@@ -1463,12 +1475,12 @@ const de: TranslationDictionary = {
       "Projekte werden auf der Projektseite angelegt. Dort verwalten Sie die vollständige Projektliste Ihres Workspaces.",
     emptyManagerTitle: "Willkommen bei {{organization}}",
     emptyManagerDescription:
-      "Starten Sie mit Ihrem ersten Projekt. Projekte strukturieren Evidenz über Aktivitäten, Uploads, Analysen und AI knowledge hinweg.",
+      "Starten Sie mit Ihrem ersten Projekt. Projekte strukturieren Datengrundlage über Aktivitäten, Uploads, Analysen und AI knowledge hinweg.",
     emptyAction: "Erstes Projekt erstellen",
     myProjects: "Meine Projekte",
     continueWorking: "Weiterarbeiten",
     continueWorkingDescription:
-      "Setzen Sie dort an, wo zuletzt Evidenz, Aktivitäten oder Berichte gepflegt wurden.",
+      "Setzen Sie dort an, wo zuletzt Datengrundlage, Aktivitäten oder Berichte gepflegt wurden.",
     viewAllProjects: "Alle Projekte ansehen",
     recentActivity: "Letzte Aktivität",
     recentActivityDescription:
@@ -1477,31 +1489,31 @@ const de: TranslationDictionary = {
     recentActivityUploads: "{{count}} Uploads",
     projectsNeedingAttention: "Projekte mit Handlungsbedarf",
     projectsNeedingAttentionDescription:
-      "Hier sehen Sie Projekte, in denen Aktivitäten oder Evidenz noch fehlen.",
+      "Hier sehen Sie Projekte, in denen Aktivitäten oder Datengrundlage noch fehlen.",
     allProjectsOnTrack:
       "Derzeit benötigt kein Projekt im Workspace unmittelbare Aufmerksamkeit.",
     openProjectsPage: "Zur Projektseite",
     nextActionTitle: "Nächster Schritt",
     nextActionLabels: {
       openProject: "Projekt öffnen",
-      uploadEvidence: "Evidenz hochladen",
+      uploadEvidence: "Datengrundlage hochladen",
     },
     nextActionStates: {
       createActivity:
-        "Für dieses Projekt fehlt noch die erste Aktivität. Legen Sie zuerst die Maßnahme an, bevor Evidenz hochgeladen werden kann.",
+        "Für dieses Projekt fehlt noch die erste Aktivität. Legen Sie zuerst die Maßnahme an, bevor eine Datengrundlage hochgeladen werden kann.",
       uploadEvidence:
-        "Für {{count}} Aktivität fehlt noch Evidenz. Laden Sie Nachweise hoch, damit Datenschutzprüfung und Interpretation starten können.",
+        "Für {{count}} Aktivität fehlt noch Datengrundlage. Laden Sie Nachweise hoch, damit Datenschutzprüfung und Interpretation starten können.",
       uploadEvidence_other:
-        "Für {{count}} Aktivitäten fehlt noch Evidenz. Laden Sie Nachweise hoch, damit Datenschutzprüfung und Interpretation starten können.",
+        "Für {{count}} Aktivitäten fehlt noch Datengrundlage. Laden Sie Nachweise hoch, damit Datenschutzprüfung und Interpretation starten können.",
       continueProject:
-        "Alle Projekte haben Aktivitäten und erste Evidenz. Öffnen Sie das zuletzt bearbeitete Projekt, um die nächste Arbeitsphase fortzusetzen.",
+        "Alle Projekte haben Aktivitäten und eine erste Datengrundlage. Öffnen Sie das zuletzt bearbeitete Projekt, um die nächste Arbeitsphase fortzusetzen.",
     },
     attentionReasons: {
       noActivities: "Diesem Projekt fehlt noch die erste Aktivität.",
       noEvidence:
-        "Für dieses Projekt wurde in den vorhandenen Aktivitäten noch keine Evidenz hochgeladen.",
+        "Für dieses Projekt wurde in den vorhandenen Aktivitäten noch keine Datengrundlage hochgeladen.",
       partialEvidence:
-        "{{missing}} von {{total}} Aktivitäten haben noch keine Evidenz.",
+        "{{missing}} von {{total}} Aktivitäten haben noch keine Datengrundlage.",
     },
     activitiesLabel: "Aktivitäten",
     noProjectDescription: "Noch kein Projektprofil hinterlegt.",
@@ -1531,7 +1543,7 @@ const de: TranslationDictionary = {
       "Beschreiben Sie wofür Ihre Organisation steht, in welchen Feldern sie arbeitet und wen sie erreicht.",
     missionLabel: "Mission",
     missionPlaceholder:
-      "Beschreiben Sie kurz, wofür Ihre Organisation steht und wie Sie mit Evidenz arbeiten.",
+      "Beschreiben Sie kurz, wofür Ihre Organisation steht und wie Sie mit Datengrundlage arbeiten.",
     activityAreasLabel: "Tätigkeitsfelder",
     activityAreasPlaceholder: "Bildung\nDemokratie",
     targetGroupsLabel: "Zielgruppen",
@@ -1638,144 +1650,55 @@ const de: TranslationDictionary = {
     removeSuccess: "Mitglied wurde entfernt.",
     removeFailure: "Mitglied konnte nicht entfernt werden.",
   },
-  outcomeStatements: {
-    eyebrow: "Wirkungsaussagen",
-    title: "Wirkungsaussagen",
-    description:
-      "Definieren Sie die kurzfristigen und langfristigen Wirkungen, die dieses Projekt anstrebt. Evidenz kann diesen Aussagen später zugeordnet werden, um zu zeigen, was tatsächlich gemessen wurde.",
-    loading: "Wirkungsaussagen werden geladen…",
-    emptyTitle: "Noch keine Wirkungsaussagen",
-    emptyDescription:
-      "Fügen Sie die kurz- und langfristigen Wirkungen hinzu, die dieses Projekt anstrebt.",
-    addAction: "Wirkungsaussage hinzufügen",
-    editAction: "Bearbeiten",
-    deleteAction: "Löschen",
-    termShort: "Kurzfristig",
-    termLong: "Langfristig",
-    createSuccess: "Wirkungsaussage hinzugefügt.",
-    createFailure: "Wirkungsaussage konnte nicht hinzugefügt werden.",
-    updateSuccess: "Wirkungsaussage aktualisiert.",
-    updateFailure: "Wirkungsaussage konnte nicht aktualisiert werden.",
-    deleteSuccess: "Wirkungsaussage gelöscht.",
-    deleteFailure: "Wirkungsaussage konnte nicht gelöscht werden.",
-    importFromIntendedChangesAction:
-      "Aus langfristigen Wirkungszielen importieren",
-    importTitle: "Wirkungsaussagen importieren",
-    importDescription:
-      "Dies sind die langfristigen Wirkungen, die Sie bereits für dieses Projekt definiert haben. Wählen Sie aus, welche als Wirkungsaussagen hinzugefügt werden sollen — Sie können sie danach bearbeiten oder entfernen.",
-    importAction: "{{count}} Wirkungsaussagen importieren",
-    importing: "Wird importiert…",
-    importSuccess: "Wirkungsaussagen importiert.",
-    importFailure: "Wirkungsaussagen konnten nicht importiert werden.",
-  },
-  outcomeStatementDelete: {
-    title: "Diese Wirkungsaussage löschen?",
-    description:
-      "Diese Aktion kann nicht rückgängig gemacht werden. Beim Löschen von „{{statement}}“ werden auch alle damit verknüpften Evidenzverbindungen entfernt.",
-    confirmAction: "Wirkungsaussage löschen",
-    deleting: "Wird gelöscht…",
-  },
-  outcomeEvidencePairing: {
-    title: "Zu prüfende Evidenz",
-    description:
-      "brindl zeigt Ihre Wirkungsaussagen zuerst und legt die am besten passenden Evidenz-Kandidaten daneben. Sie können die Empfehlungen übernehmen, andere Evidenz zuordnen oder Kandidaten verwerfen — die finale Entscheidung bleibt bei Ihnen.",
-    runAction: "Evidenz abgleichen und auswerten",
-    runningAction: "Evidenz wird abgeglichen…",
-    runSuccess: "Der Evidenzabgleich wurde aktualisiert.",
-    runStartedSuccess:
-      "Die Interpretation fuer den Evidenzabgleich wurde gestartet. Aktualisieren Sie nach Abschluss der Verarbeitung erneut.",
-    runFailure: "Der Evidenzabgleich konnte nicht aktualisiert werden.",
-    loading: "Kandidaten-Evidenz wird geprüft…",
+  outcomeEvidenceRecommendation: {
+    getRecommendationsAction: "Empfehlungen abrufen",
+    gettingRecommendationsAction: "Empfehlungen werden abgerufen…",
+    getRecommendationsFailure:
+      "Die Empfehlungen konnten nicht abgerufen werden.",
+    noRecommendations:
+      "Für die aktuelle Datengrundlage gibt es keine Empfehlungen.",
     pairedDeltaLabel: "Vorher-/Nachher-Vergleich",
     singleDistributionLabel: "Verteilung",
-    beforeLabel: "Vorher",
-    afterLabel: "Nachher",
+    beforeLabel: "Ausgangslage",
+    afterLabel: "Wirkungsdaten",
+    cohortLabel: "Kohorte",
+    unassignedSectionTitle: "Ohne eindeutige Wirkungsaussage",
     outcomeSelectPlaceholder: "Wirkungsaussage auswählen",
-    assignAction: "Wirkungsaussage zuordnen",
-    rejectAction: "Keiner Wirkungsaussage zuordnen",
-    assignSuccess: "Evidenz mit der Wirkungsaussage verknüpft.",
-    assignFailure: "Die Evidenz konnte nicht verknüpft werden.",
-    rejectSuccess: "Evidenz als nicht zugehörig markiert.",
-    rejectFailure: "Die Ablehnung konnte nicht gespeichert werden.",
-    errorTitle: "Kandidaten-Evidenz konnte nicht geprüft werden",
-    errorDescription:
-      "Beim Laden der Evidenz-Kandidaten ist ein Fehler aufgetreten. Versuchen Sie es in Kürze erneut.",
-    suggestedOutcomeLabel: "Vorschlag:",
-    suggestedOutcomeUncertain:
-      "brindl konnte dies keiner Ihrer Wirkungsaussagen sicher zuordnen.",
-    noOutcomeStatementsTitle: "Zuerst Wirkungsaussagen anlegen",
-    noOutcomeStatementsDescription:
-      "Sobald für dieses Projekt Wirkungsaussagen vorliegen, können Sie hier passende Evidenz dazu prüfen und verknüpfen.",
-    recommendedEvidenceTitle: "Empfohlene unterstützende Evidenz",
-    noRecommendedEvidence:
-      "Für diese Wirkungsaussage gibt es noch keine direkte Empfehlung. Sie können unten trotzdem andere Evidenz auswählen.",
-    confirmedEvidenceTitle: "Bereits bestätigte Evidenz",
-    noConfirmedEvidence:
-      "Für diese Wirkungsaussage wurde noch keine Evidenz bestätigt.",
-    baselineSystemLabel: "Baseline",
-    impactMeasurementSystemLabel: "Wirkungsmessung",
-    otherEvidenceTitle: "Andere geeignete vorbereitete Evidenz auswählen",
-    otherEvidencePlaceholder:
-      "Alle geeigneten vorbereiteten Evidenzoptionen durchsuchen",
-    removeLinkAction: "Bestätigte Verknüpfung entfernen",
-    removeLinkSuccess: "Bestätigte Evidenz-Verknüpfung entfernt.",
-    removeLinkFailure:
-      "Die bestätigte Evidenz-Verknüpfung konnte nicht entfernt werden.",
-    unassignedCandidatesTitle: "Weitere offene Evidenz-Kandidaten",
-    unassignedCandidatesDescription:
-      "Diese Kandidaten wurden keiner Wirkungsaussage sicher empfohlen. Sie können sie trotzdem manuell zuordnen oder verwerfen.",
-    diagnosticsTitle: "Diagnose zum Evidenzabgleich",
-    diagnosticsSummary: ({
-      activityCount,
-      candidateCount,
-      readyTableCount,
-    }: {
-      activityCount: number;
-      candidateCount: number;
-      readyTableCount: number;
-    }) =>
-      `${candidateCount} Kandidat(en) aus ${readyTableCount} auswertbaren Tabelle(n) ueber ${activityCount} Projektaktivitaet(en).`,
-    diagnosticReasonJobsStarted:
-      "Fehlende Interpretationsarbeit wurde fuer mindestens eine Aktivitaet gestartet. Nach Abschluss dieser Jobs werden weitere Evidenz-Kandidaten verfuegbar sein.",
-    diagnosticReasonNoReadyTables:
-      "Aktuell gibt es keine interpretierten und fuer die Analyse vorbereiteten Tabellen fuer den Wirkungsabgleich.",
-    diagnosticReasonNoSharedIdentifier:
-      "Zwischen den Baseline- und Wirkungsmessungstabellen gibt es derzeit keine gemeinsame Teilnehmer-ID.",
-    diagnosticReasonNoMatchingScaleColumns:
-      "Einige Spalten sind als Vorher-/Nachher-Paar markiert, aber keine davon ergab eine gueltige Zuordnung (bitte die angegebene Instrumentbezeichnung, Kohorte und ID-Spalte auf beiden Seiten pruefen).",
-    diagnosticReasonNoDeclaredPairingGroups:
-      "Es gibt validierte Skalen-Spalten, aber noch keine ist als Teil eines Vorher-/Nachher-Paares markiert. Bitte die Zuordnungsfrage fuer jede Spalte in der Interpretationspruefung beantworten, damit sie fuer den Abgleich infrage kommt.",
-    diagnosticReasonNoCategoricalColumns:
-      "Aktuell stehen keine kategorialen Spalten als eigenstaendige Verteilungsevidenz zur Verfuegung.",
-    diagnosticReasonDuplicateIdentifierValues:
-      "Die Teilnehmer-ID-Spalte einer Tabelle enthaelt doppelte Werte und kann daher nicht sicher verknuepft werden. Bitte die ID-Spalte bereinigen, bevor ein Abgleich moeglich ist.",
-    diagnosticReasonScaleBoundsMismatch:
-      "Zwei Spalten sind als Vorher-/Nachher-Paar markiert, aber ihre angegebenen Skalenbereiche stimmen nicht ueberein (z. B. 1-5 vs. 0-10) und wurden deshalb nicht verknuepft.",
-    diagnosticReasonScaleBoundsNotDeclared:
-      "Zwei Spalten sind als Vorher-/Nachher-Paar markiert, aber der volle Wertebereich der Skala wurde fuer eine oder beide noch nicht angegeben. Bitte die Frage zum Skalenbereich in der Interpretationspruefung beantworten, damit sie fuer den Abgleich infrage kommen.",
-    activityStatusJobsStarted: "Interpretation gestartet",
-    activityStatusAlreadyReady: "Bereits interpretiert",
-    activityStatusNoUploads: "Keine Uploads",
-    activityStatusBlocked: "Blockiert",
-    activityDiagnosticSummary: ({
-      uploadCount,
-      interpretedUploadCount,
-      readyTableCount,
-    }: {
-      uploadCount: number;
-      interpretedUploadCount: number;
-      readyTableCount: number;
-    }) =>
-      `${uploadCount} Upload(s), ${interpretedUploadCount} interpretiert, ${readyTableCount} auswertbare Tabelle(n).`,
-    uploadStateActiveJob: "Es laeuft bereits ein Interpretationsjob.",
-    uploadStateAlreadyInterpreted:
-      "Fuer diese Datei liegt bereits ein Interpretationsergebnis vor.",
-    uploadStateReadyToInterpret:
-      "Diese Datei ist bereit fuer die Interpretation, aber die Interpretation muss zuerst im vorgelagerten Interpretationsschritt abgeschlossen werden.",
-    uploadStatePrivacyMissing:
-      "Die Privacy-Safe-Verarbeitung dieser Datei ist noch nicht abgeschlossen.",
-    uploadStateUnsupportedModality:
-      "Die extrahierte Struktur dieser Datei wird derzeit nicht fuer die Interpretation unterstuetzt.",
+    assignAction: "Bestätigen",
+    dismissAction: "Vorerst ausblenden",
+    dismissHint:
+      "Wird beim nächsten Abrufen der Empfehlungen wieder angezeigt.",
+    assignSuccess: "Datengrundlage mit der Wirkungsaussage verknüpft.",
+    assignFailure: "Die Datengrundlage konnte nicht verknüpft werden.",
+    noOutcomeStatementsHint:
+      "Für dieses Projekt sind noch keine Wirkungsaussagen hinterlegt. Empfehlungen können trotzdem abgerufen werden, aber eine Bestätigung ist erst möglich, sobald mindestens eine Wirkungsaussage vorliegt.",
+    confirmedLinksTitle: "Bestätigte Zuordnungen",
+    confirmedLinksEmpty:
+      "Für diese Aktivität sind noch keine Zuordnungen bestätigt.",
+    confirmedLinksBeforeColumnHeader: "Ausgangslage",
+    confirmedLinksAfterColumnHeader: "Wirkungsdaten",
+    confirmedLinksSingleColumnHeader: "Datengrundlage",
+    manualAddToggleAction: "Manuell hinzufügen",
+    manualAddTitle: "Zuordnung manuell hinzufügen",
+    manualAddDescription:
+      "Fügen Sie eine Zuordnung hinzu, die brindl nicht vorgeschlagen hat.",
+    manualAddBeforeColumnPlaceholder: "Ausgangslage-Spalte auswählen",
+    manualAddAfterColumnPlaceholder: "Wirkungsdaten-Spalte auswählen",
+    manualAddSameColumnError:
+      "Ausgangslage- und Wirkungsdaten-Spalte müssen unterschiedlich sein.",
+    manualAddSubmitAction: "Hinzufügen",
+    manualAddRationale: "Manuell hinzugefügt",
+    candidatesLoadFailure:
+      "Die verfügbaren Spalten konnten nicht geladen werden.",
+    removeAllToggleAction: "Alle entfernen",
+    removeAllTitle: "Alle bestätigten Zuordnungen entfernen?",
+    removeAllDescription:
+      "Diese Aktion kann nicht rückgängig gemacht werden. Alle bestätigten Zuordnungen für diese Aktivität werden dauerhaft entfernt. Sie können anschließend erneut Empfehlungen abrufen oder Zuordnungen manuell hinzufügen.",
+    removeAllConfirmAction: "Alle entfernen",
+    removeAllRemoving: "Wird entfernt…",
+    removeAllSuccess: "Alle bestätigten Zuordnungen wurden entfernt.",
+    removeAllFailure:
+      "Die bestätigten Zuordnungen konnten nicht entfernt werden.",
   },
   organizationBilling: {
     eyebrow: "Abrechnung",
@@ -1818,7 +1741,8 @@ const de: TranslationDictionary = {
       initialSituation: "Ausgangslage",
       timeline: "Zeitraum",
       overarchingTargetGroup: "Übergeordnete Zielgruppe(n)",
-      intendedChanges: "Angestrebte langfristige Wirkung / Impact",
+      intendedChanges:
+        "Welche konkreten kurz- bis mittelfristigen Veränderungen (Outcomes) bei den Zielgruppen streben Sie mit dem Projekt an?",
       fundingProgram: "Förderprogramm",
       fundingOrganization: "Fördernde Organisation",
       targetGroups: "Zielgruppen",
@@ -1849,7 +1773,7 @@ const de: TranslationDictionary = {
   activityDelete: {
     title: "Diese Aktivität löschen?",
     description:
-      "Diese Aktion kann nicht rückgängig gemacht werden. Beim Löschen der Aktivität „{{name}}“ wird verknüpfte Evidenz ebenfalls dauerhaft entfernt.",
+      "Diese Aktion kann nicht rückgängig gemacht werden. Beim Löschen der Aktivität „{{name}}“ wird verknüpfte Datengrundlage ebenfalls dauerhaft entfernt.",
     confirmAction: "Aktivität löschen",
     deleting: "Wird gelöscht…",
   },
@@ -1885,13 +1809,14 @@ const de: TranslationDictionary = {
       overarchingTargetGroup: "Übergeordnete Zielgruppe(n)",
       overarchingTargetGroupPlaceholder:
         "z. B. Jugendliche mit Migrationshintergrund",
-      intendedChanges: "Angestrebte langfristige Wirkung / Impact",
+      intendedChanges:
+        "Welche konkreten kurz- bis mittelfristigen Veränderungen (Outcomes) bei den Zielgruppen streben Sie mit dem Projekt an?",
       intendedChangesPlaceholder:
-        "Welche langfristigen Veränderungen bei den Zielgruppen soll das Projekt unterstützen?",
+        "Welche kurz- bis mittelfristigen Veränderungen bei den Zielgruppen soll das Projekt unterstützen?",
       intendedChangesValidation:
-        "Bitte nennen Sie eine bis sechs angestrebte langfristige Wirkungen / Impacts.",
-      intendedChangesAddRow: "Weitere Wirkung hinzufügen",
-      intendedChangesRemoveRow: "Wirkung entfernen",
+        "Bitte nennen Sie eine bis sechs angestrebte kurz- bis mittelfristige Veränderungen / Outcomes.",
+      intendedChangesAddRow: "Weitere Veränderung hinzufügen",
+      intendedChangesRemoveRow: "Veränderung entfernen",
       fundingProgram: "Förderprogramm",
       fundingProgramPlaceholder: "Erasmus+",
       fundingOrganization: "Fördernde Organisation",
@@ -1942,20 +1867,10 @@ const de: TranslationDictionary = {
       outputTooltipLabel: "Hinweis zum Output",
       outputTooltip: "Was wird unmittelbar durchgeführt oder erstellt?",
       outputPlaceholder:
-        "• 12 Workshops innerhalb eines Jahres durchführen\n• 150 Teilnehmende erreichen\n• Mindestens 80 % der Teilnehmenden schließen das Angebot ab\n• Mindestens 75 % der Teilnehmenden sind mit dem Angebot zufrieden",
+        "z. B. 12 Workshops innerhalb eines Jahres durchführen",
+      outputAddRow: "Weiteres Leistungsziel hinzufügen",
+      outputRemoveRow: "Leistungsziel entfernen",
       status: "Status",
-    },
-    outcomeStatement: {
-      submit: "Wirkungsaussage hinzufügen",
-      updateSubmit: "Änderungen speichern",
-      creating: "Wird hinzugefügt…",
-      updating: "Wird gespeichert…",
-      term: "Zeithorizont",
-      termShort: "Kurzfristig",
-      termLong: "Langfristig",
-      statement: "Wirkungsaussage",
-      statementPlaceholder:
-        "z. B. Mentees berichten von mehr Klarheit über ihre nächsten Karriereschritte.",
     },
     options: {
       targetGroups: [

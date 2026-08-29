@@ -1,36 +1,27 @@
 import { useTranslation } from "react-i18next";
 import type { WorkspaceActivity } from "@/services/apiClient";
 import { Card } from "@/components/WorkspaceUI";
+import { IMPACT_STORY_COLORS } from "./projectImpactStoryChartColors";
 
-const timelineColors = ["#4C8F6B", "#C6912F", "#C2593F", "#2F6690"] as const;
+const timelineColors = [
+  IMPACT_STORY_COLORS.green,
+  IMPACT_STORY_COLORS.amber,
+  IMPACT_STORY_COLORS.coral,
+  IMPACT_STORY_COLORS.blue,
+] as const;
 
-function getActivityDisplayRank(systemType: WorkspaceActivity["systemType"]) {
-  if (systemType === "baseline") {
-    return 0;
-  }
-
-  if (systemType === "impact_measurement") {
-    return 2;
-  }
-
-  return 1;
-}
-
-function resolveTimelineColor(
-  activity: WorkspaceActivity,
-  middleIndex: number,
-): string {
-  if (activity.systemType === "baseline") {
-    return "#C6912F";
-  }
-
-  if (activity.systemType === "impact_measurement") {
-    return "#C2593F";
-  }
-
+function resolveTimelineColor(middleIndex: number): string {
   return (
     timelineColors[middleIndex % timelineColors.length] ?? timelineColors[0]
   );
+}
+
+function resolveTimelinePosition(index: number, total: number): number {
+  if (total <= 1) {
+    return 0;
+  }
+
+  return (index / (total - 1)) * 100;
 }
 
 function formatActivityRange(
@@ -86,21 +77,22 @@ export function ImpactStoryActivityTimeline({
     defaultValue: i18n.language === "de" ? "Ohne Datum" : "Undated",
   });
 
-  if (activities.length === 0) {
+  // The merged "Ausgangslage & Wirkungsdaten" activity (OUTCOME_EVIDENCE_MERGE_PLAN.md)
+  // doesn't represent a single point or range in time — it has no dates of
+  // its own — so it has no honest place on a chronological timeline. Rather
+  // than pin it to an arbitrary position, this timeline only shows the
+  // program's dated activities.
+  const datedActivities = activities.filter(
+    (activity) => activity.systemType !== "outcome_evidence",
+  );
+
+  if (datedActivities.length === 0) {
     return null;
   }
 
-  const sortedActivities = [...activities]
+  const sortedActivities = [...datedActivities]
     .map((activity, index) => ({ activity, index }))
     .sort((left, right) => {
-      const rankDelta =
-        getActivityDisplayRank(left.activity.systemType) -
-        getActivityDisplayRank(right.activity.systemType);
-
-      if (rankDelta !== 0) {
-        return rankDelta;
-      }
-
       const leftDate =
         left.activity.startDate ??
         left.activity.endDate ??
@@ -114,6 +106,7 @@ export function ImpactStoryActivityTimeline({
       return dateDelta === 0 ? left.index - right.index : dateDelta;
     })
     .map(({ activity }) => activity);
+  const timelineWidthRem = Math.max(sortedActivities.length * 12, 42);
 
   return (
     <Card className="overflow-hidden rounded-[1.75rem] border-border bg-card px-5 py-5 shadow-soft sm:px-6 sm:py-6">
@@ -123,27 +116,37 @@ export function ImpactStoryActivityTimeline({
 
       <div className="mt-4 overflow-x-auto pb-1">
         <div
-          className="relative grid min-w-max items-start gap-5"
-          style={{
-            gridTemplateColumns: `repeat(${sortedActivities.length}, minmax(7rem, 1fr))`,
-          }}
+          className="relative min-h-[11rem]"
+          style={{ minWidth: `${timelineWidthRem}rem` }}
         >
           <div className="absolute top-3 left-0 right-0 h-[2px] rounded-full bg-muted" />
           {sortedActivities.map((activity, index) => {
-            const color = resolveTimelineColor(activity, index);
+            const color = resolveTimelineColor(index);
             const isFirst = index === 0;
             const isLast = index === sortedActivities.length - 1;
+            const position = resolveTimelinePosition(
+              index,
+              sortedActivities.length,
+            );
             return (
               <div
                 key={activity.id}
                 className={[
-                  "relative flex min-w-[7rem] max-w-[8rem] flex-1 flex-col",
+                  "absolute top-0 flex w-32 flex-col",
                   isFirst
                     ? "items-start text-left"
                     : isLast
                       ? "items-end text-right"
                       : "items-center text-center",
                 ].join(" ")}
+                style={{
+                  left: `${position}%`,
+                  transform: isFirst
+                    ? "translateX(0)"
+                    : isLast
+                      ? "translateX(-100%)"
+                      : "translateX(-50%)",
+                }}
               >
                 <div
                   className="relative z-10 flex h-6 w-6 items-center justify-center rounded-full border-[3px] bg-card"

@@ -49,7 +49,7 @@ export function ImpactStoryHeadlineKpiRow({
               aria-hidden="true"
             />
           </div>
-          <div className="mt-3 font-[family-name:var(--font-editorial)] text-[2rem] leading-none tracking-[-0.05em] text-foreground sm:text-[2.25rem]">
+          <div className="mt-3 text-[2rem] leading-none tracking-[-0.05em] text-foreground sm:text-[2.25rem]">
             {formatImpactStoryValue(kpi.value, kpi.formatAs, i18n.language)}
           </div>
           {kpi.status && kpi.statusCallout ? (

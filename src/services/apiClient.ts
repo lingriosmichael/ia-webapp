@@ -1,3 +1,5 @@
+import i18n from "@/lib/i18n";
+
 export interface ApiErrorPayload {
   code: string;
   message: string;
@@ -17,7 +19,7 @@ interface ApiFailureEnvelope {
 export type OrganizationRole = "ORGANIZATION_ADMIN" | "PROJECT_MANAGER";
 export type ProjectStatus = "planning" | "active" | "completed";
 export type ActivityStatus = "active" | "completed";
-export type ActivitySystemType = "baseline" | "impact_measurement";
+export type ActivitySystemType = "outcome_evidence";
 export type OutcomeTerm = "short" | "long";
 
 export interface OrganizationPermissions {
@@ -127,6 +129,8 @@ export interface ActivitySummary {
   endDate: string | null;
   targetAudience: string | null;
   objectives: string | null;
+  // Serialized as newline-delimited text in API responses; the activity
+  // dialog expands this into one editable row per output goal.
   output: string | null;
   status: ActivityStatus;
   permissions: ActivityPermissions;
@@ -223,7 +227,7 @@ export interface CreateActivityPayload {
   endDate?: string;
   targetAudience?: string;
   objectives?: string;
-  output?: string;
+  output?: string[];
   status?: ActivityStatus;
 }
 
@@ -235,7 +239,7 @@ export interface UpdateActivityPayload {
   endDate?: string | null;
   targetAudience?: string | null;
   objectives?: string | null;
-  output?: string | null;
+  output?: string[] | null;
   status?: ActivityStatus;
 }
 
@@ -693,11 +697,7 @@ export type InterpretationQuestionCode =
   | "positive_status_values"
   | "primary_date_field"
   | "epistemic_role_clarification"
-  | "validated_scale_confirmation"
-  | "cohort_tag"
-  | "pairing_group_key"
-  | "pairing_group_role"
-  | "declared_scale_bounds";
+  | "cohort_tag";
 export type InterpretationQuestionStatus = "pending" | "answered";
 
 // Identifies one column targeted by a grouped instrument (e.g. the baseline
@@ -732,10 +732,10 @@ export interface InterpretationQuestion {
   answeredValue: string | null;
   answeredById: string | null;
   answeredAt: string | null;
-  // Set only for validated_scale_confirmation/declared_scale_bounds
-  // questions where the deterministic pipeline detected this column is one
-  // half of a baseline/endline pair of the same instrument. Null for every
-  // other question — grouping is additive, never assumed.
+  // Always null now: this grouped questions belonging to the same
+  // instrument's baseline/endline pair, but the two question codes that used
+  // it (validated_scale_confirmation, declared_scale_bounds) were removed in
+  // the outcome-evidence merge (see OUTCOME_EVIDENCE_MERGE_PLAN.md Phase 6).
   preparationGroupId: string | null;
   preparationGroupColumns: InterpretationQuestionTargetColumnRef[] | null;
 }
@@ -1530,7 +1530,13 @@ export type ImpactCatalogItem =
   ImpactCatalogEntry | OutcomeDistributionEntry | UnmeasuredOutcomeEntry;
 
 export type ProjectImpactStoryNarrativeStatus =
-  "generated" | "deterministic_fallback" | "call_failed";
+  | "generated"
+  // Real AI-written narrative, but a detail in it couldn't be
+  // automatically confirmed against the project's data — distinct from
+  // "deterministic_fallback", which is templated text, not AI prose.
+  | "generated_unverified"
+  | "deterministic_fallback"
+  | "call_failed";
 
 export interface ProjectImpactStoryRecord {
   id: string;
@@ -1601,161 +1607,6 @@ export interface ActivityEvidenceLinkageResultRecord {
   updatedAt: string;
 }
 
-export type OutcomeEvidencePairingShape =
-  "paired_delta" | "single_distribution";
-
-// An LLM-proposed pre-fill for the human's outcome pick, computed once per
-// proposalId and cached on the persisted record. `outcomeId: null` means
-// the LLM was asked and wasn't confident (a real, final answer) — distinct
-// from the proposal's own `suggestedOutcome` field being `null`, which
-// means "not yet attempted."
-export interface OutcomeEvidencePairingSuggestedOutcome {
-  outcomeId: string | null;
-  rationale: string;
-}
-
-export interface OutcomeEvidencePairingProposalPairedDelta {
-  proposalId: string;
-  shape: "paired_delta";
-  activityIdBefore: string;
-  activityIdAfter: string;
-  beforeUploadMetadataId: string;
-  beforeTableName: string;
-  beforeColumnName: string;
-  afterUploadMetadataId: string;
-  afterTableName: string;
-  afterColumnName: string;
-  matchKey: string;
-  pairingGroupKey: string;
-  suggestedOutcome: OutcomeEvidencePairingSuggestedOutcome | null;
-}
-
-export interface OutcomeEvidencePairingProposalSingleDistribution {
-  proposalId: string;
-  shape: "single_distribution";
-  activityId: string;
-  uploadMetadataId: string;
-  tableName: string;
-  categoryColumnName: string;
-  suggestedOutcome: OutcomeEvidencePairingSuggestedOutcome | null;
-}
-
-export type OutcomeEvidencePairingProposal =
-  | OutcomeEvidencePairingProposalPairedDelta
-  | OutcomeEvidencePairingProposalSingleDistribution;
-
-export type OutcomeEvidencePairingProposalDecision = "assign" | "reject";
-
-export interface OutcomeEvidencePairingProposalDecisionRecord {
-  proposalId: string;
-  decision: OutcomeEvidencePairingProposalDecision;
-  outcomeId: string | null;
-  decidedById: string;
-  decidedAt: string;
-}
-
-export type OutcomeEvidencePairingReviewStatus = "needs_review" | "resolved";
-
-export type OutcomeEvidencePairingDiagnosticsTrigger = "propose" | "refresh";
-
-export type OutcomeEvidencePairingActivityDiagnosticStatus =
-  "no_uploads" | "already_ready" | "jobs_started" | "blocked";
-
-export type OutcomeEvidencePairingDiagnosticReasonCode =
-  | "no_ready_tables"
-  | "jobs_started"
-  | "no_shared_identifier"
-  | "no_matching_scale_columns"
-  | "no_categorical_columns"
-  | "duplicate_identifier_values"
-  | "scale_bounds_mismatch"
-  | "scale_bounds_not_declared"
-  | "no_declared_pairing_groups";
-
-export interface OutcomeEvidencePairingDiagnosticReason {
-  code: OutcomeEvidencePairingDiagnosticReasonCode;
-}
-
-export interface OutcomeEvidencePairingActivityUploadState {
-  uploadMetadataId: string;
-  originalFileName: string;
-  reason:
-    | "active_job"
-    | "already_interpreted"
-    | "ready_to_interpret"
-    | "privacy_safe_representation_missing"
-    | "unsupported_modality";
-  latestJobStatus:
-    | "queued"
-    | "processing"
-    | "awaiting_privacy_review"
-    | "transforming"
-    | "completed"
-    | "failed"
-    | "cancelled"
-    | null;
-  latestJobType:
-    | "workbook_split"
-    | "evidence_processing"
-    | "dataset_interpretation"
-    | "dataset_review"
-    | "metrics_generation"
-    | "dashboard_generation"
-    | "insight_generation"
-    | "report_generation"
-    | "chat"
-    | "other"
-    | "activity_analysis_v2"
-    | "qualitative_coding_review"
-    | "project_impact_story"
-    | null;
-  evidenceModality: string | null;
-}
-
-export interface OutcomeEvidencePairingActivityDiagnostic {
-  activityId: string;
-  activityName: string;
-  systemType: ActivitySystemType | null;
-  uploadCount: number;
-  interpretedUploadCount: number;
-  readyTableCount: number;
-  status: OutcomeEvidencePairingActivityDiagnosticStatus;
-  startedCount: number;
-  skippedCount: number;
-  startedJobIds: string[];
-  uploadStates: OutcomeEvidencePairingActivityUploadState[];
-}
-
-export interface OutcomeEvidencePairingDiagnostics {
-  trigger: OutcomeEvidencePairingDiagnosticsTrigger;
-  activityCount: number;
-  candidateCount: number;
-  readyTableCount: number;
-  activityDiagnostics: OutcomeEvidencePairingActivityDiagnostic[];
-  reasons: OutcomeEvidencePairingDiagnosticReason[];
-}
-
-export interface OutcomeEvidencePairingResultRecord {
-  id: string;
-  organizationId: string;
-  projectId: string;
-  status: OutcomeEvidencePairingReviewStatus;
-  proposals: OutcomeEvidencePairingProposal[];
-  eligibleEvidenceOptions: OutcomeEvidencePairingProposal[];
-  proposalDecisions: OutcomeEvidencePairingProposalDecisionRecord[];
-  outcomeSections: OutcomeEvidencePairingOutcomeSection[];
-  unassignedProposals: OutcomeEvidencePairingProposal[];
-  diagnostics: OutcomeEvidencePairingDiagnostics;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface OutcomeEvidencePairingOutcomeSection {
-  outcomeStatement: ProjectOutcomeStatement;
-  confirmedLinks: OutcomeEvidenceLink[];
-  recommendedProposals: OutcomeEvidencePairingProposal[];
-}
-
 export interface OutcomeEvidenceLinkPairedDelta {
   linkId: string;
   outcomeId: string;
@@ -1789,10 +1640,76 @@ export interface OutcomeEvidenceLinkSingleDistribution {
 export type OutcomeEvidenceLink =
   OutcomeEvidenceLinkPairedDelta | OutcomeEvidenceLinkSingleDistribution;
 
-export interface DecideOutcomeEvidencePairingProposalPayload {
-  proposalId: string;
-  decision: OutcomeEvidencePairingProposalDecision;
-  outcomeId?: string;
+// New joint pairing+outcome recommendation flow, scoped to one merged
+// "Ausgangslage & Wirkungsdaten" activity — see
+// OUTCOME_EVIDENCE_MERGE_PLAN.md §4.3/§4.4. Replaces
+// OutcomeEvidencePairingProposal for that activity: unlike a proposal
+// (deterministically detected from a human-declared pairing tag), a
+// recommendation is an LLM suggestion for both which columns pair up *and*
+// which outcome they support, always re-validated against real evidence at
+// approval time. There is no server-side cache of these yet (§8), so a
+// recommendation is only ever recomputed live and echoed back verbatim to
+// approve it.
+export interface OutcomeEvidenceRecommendationColumnReference {
+  uploadMetadataId: string;
+  tableName: string;
+  columnName: string;
+  label: string;
+  cohortTag: string | null;
+}
+
+export type OutcomeEvidenceRecommendation =
+  | {
+      shape: "paired_delta";
+      before: OutcomeEvidenceRecommendationColumnReference;
+      after: OutcomeEvidenceRecommendationColumnReference;
+      outcomeId: string | null;
+      rationale: string;
+    }
+  | {
+      shape: "single_distribution";
+      column: OutcomeEvidenceRecommendationColumnReference;
+      outcomeId: string | null;
+      rationale: string;
+    };
+
+// Read-side counterpart to OutcomeEvidenceRecommendation for an already
+// *confirmed* OutcomeEvidenceLink — same before/after/column shape (so the
+// panel can reuse its recommendation grouping/rendering logic for both),
+// but with linkId/confirmedAt instead of a rationale. Backed by a real
+// GET route, unlike recommendations: this is what makes the confirmed-links
+// summary survive a tab switch or page refresh.
+export type OutcomeEvidenceConfirmedLink =
+  | {
+      linkId: string;
+      shape: "paired_delta";
+      before: OutcomeEvidenceRecommendationColumnReference;
+      after: OutcomeEvidenceRecommendationColumnReference;
+      outcomeId: string;
+      confirmedAt: string;
+    }
+  | {
+      linkId: string;
+      shape: "single_distribution";
+      column: OutcomeEvidenceRecommendationColumnReference;
+      outcomeId: string;
+      confirmedAt: string;
+    };
+
+// The raw candidate catalog the recommend call is built from, with no LLM
+// call involved — powers the "manually add a pairing" picker for cases the
+// model missed.
+export interface OutcomeEvidenceCandidate {
+  columnId: string;
+  uploadMetadataId: string;
+  tableName: string;
+  columnName: string;
+  label: string;
+  epistemicRole: string | null;
+  inferredType: string | null;
+  distinctValueCount: number | null;
+  identifierColumn: string | null;
+  cohortTag: string | null;
 }
 
 export type ActivityWorkflowStage =
@@ -2227,11 +2144,19 @@ export function resolveApiUrl(path: string | null | undefined) {
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(`${apiBaseUrl}${path}`, {
-    ...init,
-    credentials: "include",
-    headers: withLanguageHeader(init?.headers),
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${apiBaseUrl}${path}`, {
+      ...init,
+      credentials: "include",
+      headers: withLanguageHeader(init?.headers),
+    });
+  } catch {
+    // A network-level failure (offline, DNS, CORS, unreachable backend)
+    // throws a raw TypeError from fetch — normalize it to ApiError so every
+    // caller's `error instanceof ApiError` check still holds.
+    throw new ApiError("Network request failed.", 0, "network_error");
+  }
 
   const text = await response.text();
   let payload: ApiEnvelope<T> | ApiFailureEnvelope | undefined;
@@ -2252,7 +2177,10 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
       payload &&
       typeof payload === "object" &&
       "success" in payload &&
-      payload.success === false
+      payload.success === false &&
+      payload.error &&
+      typeof payload.error === "object" &&
+      typeof payload.error.message === "string"
     ) {
       throw new ApiError(
         payload.error.message,
@@ -2671,43 +2599,78 @@ export const apiClient = {
       body: JSON.stringify({ proposalId, ...payload }),
     });
   },
-  // Recomputes candidates from current evidence and returns the refreshed
-  // result — this POST doubles as "read current state" on the backend, so
-  // it's safe to use as a query function too.
-  proposeOutcomeEvidencePairing(
-    projectId: string,
-  ): Promise<OutcomeEvidencePairingResultRecord> {
-    return request(`/projects/${projectId}/outcome-evidence-pairing/propose`, {
-      method: "POST",
-    });
-  },
-  refreshOutcomeEvidencePairing(
-    projectId: string,
-  ): Promise<OutcomeEvidencePairingResultRecord> {
-    return request(`/projects/${projectId}/outcome-evidence-pairing/refresh`, {
-      method: "POST",
-    });
-  },
-  decideOutcomeEvidencePairingProposal(
-    projectId: string,
-    payload: DecideOutcomeEvidencePairingProposalPayload,
-  ): Promise<OutcomeEvidencePairingResultRecord> {
-    return request(
-      `/projects/${projectId}/outcome-evidence-pairing/decisions`,
-      {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(payload),
-      },
-    );
-  },
+  // Un-confirming a link is independent of which review flow produced it —
+  // same route the old, now-removed outcome-evidence-pairing flow used.
+  // Kept even though no current UI action calls it yet (Phase 4 didn't
+  // build a "remove confirmed link" action) — the backend capability is
+  // real and intentionally preserved, see
+  // OUTCOME_EVIDENCE_MERGE_PLAN.md Phase 6.
   removeOutcomeEvidenceLink(
     projectId: string,
     linkId: string,
-  ): Promise<OutcomeEvidencePairingResultRecord> {
+  ): Promise<{ removed: boolean }> {
     return request(`/projects/${projectId}/outcome-evidence-links/${linkId}`, {
       method: "DELETE",
     });
+  },
+  // Triggers a real LLM call every time (no reconciliation cache exists yet
+  // — see OUTCOME_EVIDENCE_MERGE_PLAN.md §8) — this is a mutation, not a
+  // passive read.
+  recommendOutcomeEvidencePairings(
+    projectId: string,
+    activityId: string,
+  ): Promise<{ recommendations: OutcomeEvidenceRecommendation[] }> {
+    return request(
+      `/projects/${projectId}/activities/${activityId}/outcome-evidence-recommendations`,
+      { method: "POST" },
+    );
+  },
+  approveOutcomeEvidenceRecommendation(
+    projectId: string,
+    activityId: string,
+    recommendation: OutcomeEvidenceRecommendation,
+  ): Promise<OutcomeEvidenceLink> {
+    return request(
+      `/projects/${projectId}/activities/${activityId}/outcome-evidence-recommendations/approve`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(recommendation),
+      },
+    );
+  },
+  // Cheap DB read (no LLM call) — the persistent counterpart to
+  // recommendOutcomeEvidencePairings above, backing the confirmed-links
+  // summary that survives a tab switch or refresh.
+  listOutcomeEvidenceConfirmedLinks(
+    projectId: string,
+    activityId: string,
+  ): Promise<{ links: OutcomeEvidenceConfirmedLink[] }> {
+    return request(
+      `/projects/${projectId}/activities/${activityId}/outcome-evidence-links`,
+    );
+  },
+  // Cheap DB read (no LLM call) — the raw candidate catalog, for the
+  // "manually add a pairing" picker.
+  listOutcomeEvidenceCandidates(
+    projectId: string,
+    activityId: string,
+  ): Promise<{ candidates: OutcomeEvidenceCandidate[] }> {
+    return request(
+      `/projects/${projectId}/activities/${activityId}/outcome-evidence-candidates`,
+    );
+  },
+  // Bulk counterpart to removeOutcomeEvidenceLink above — clears every
+  // confirmed link for one activity in one call, backing the panel's
+  // "Alle entfernen" action.
+  removeAllOutcomeEvidenceConfirmedLinks(
+    projectId: string,
+    activityId: string,
+  ): Promise<{ removed: number }> {
+    return request(
+      `/projects/${projectId}/activities/${activityId}/outcome-evidence-links`,
+      { method: "DELETE" },
+    );
   },
   getLatestActivityAnalysisV2(
     activityId: string,
@@ -2771,6 +2734,16 @@ export const apiClient = {
       method: "POST",
     });
   },
+  // Lets a freshly (re)mounted ProjectImpactStoryPage discover a
+  // project_impact_story job it didn't personally start — e.g. one it lost
+  // track of after an in-app tab switch unmounted the page while the run
+  // was still going server-side — instead of only ever knowing about a job
+  // via runProjectAnalytics's own return value.
+  getActiveProjectAnalyticsJob(
+    projectId: string,
+  ): Promise<{ job: ProcessingJobRecord | null }> {
+    return request(`/projects/${projectId}/analytics/active-job`);
+  },
   getInterpretation(
     interpretationResultId: string,
   ): Promise<InterpretationResultRecord> {
@@ -2786,12 +2759,4 @@ export const apiClient = {
       body: JSON.stringify(payload),
     });
   },
-  acknowledgeInterpretationReview(
-    activityId: string,
-  ): Promise<ActivitySummary> {
-    return request(`/activities/${activityId}/interpretation-acknowledgment`, {
-      method: "POST",
-    });
-  },
 };
-import i18n from "@/lib/i18n";

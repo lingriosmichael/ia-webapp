@@ -390,7 +390,6 @@ const en = {
       evidence: "Evidence",
       interpretation: "Interpretation",
       analytics: "Analytics",
-      outcomeStatements: "Outcome statements",
       comingSoon: "Soon",
     },
     overview: {
@@ -582,18 +581,20 @@ const en = {
       questionSelectAllOptions: "Select all options",
       questionSubmit: "Submit",
       questionSubmitting: "Submitting…",
-      questionScaleBoundsCustom: "Custom",
-      questionScaleBoundsTo: "to",
-      questionScaleBoundsMinPlaceholder: "Min",
-      questionScaleBoundsMaxPlaceholder: "Max",
-      questionScaleBoundsHint:
-        "The observed responses don't prove the full questionnaire scale — we need the official range to compare baseline and endline safely.",
-      questionGroupBadge: "Same instrument, two timepoints",
-      questionGroupSubtitle: "Confirm once for both columns",
-      questionGroupExplanation:
-        "These columns look like the same survey instrument measured at two different times. Confirm the details once and they'll apply to both.",
-      questionGroupRejectAction:
-        "These aren't the same instrument — answer separately",
+      cohortGrouping: {
+        instruction:
+          "Group your files by who they're about. If every file is about the same group, just create one.",
+        instructionSingle:
+          'Who is this table about? Give this group a short name — for example "Older adults" or "Mentors."',
+        newGroupPlaceholder: 'Group name, e.g. "Older adults"',
+        addGroupAction: "New group",
+        addGroupConfirm: "Create",
+        addGroupCancel: "Cancel",
+        unassignedTitle: "Not yet assigned",
+        unassignedDescription: "Drag each file into the group it belongs to.",
+        groupEmptyHint: "Drag files here",
+        removeEmptyGroupAction: "Remove group",
+      },
       reviewPrivacyAction: "Review privacy",
       reviewQualitativeCodingAction: "Review coding",
       reviewFile: "File",
@@ -751,12 +752,17 @@ const en = {
     runPending: "Generating…",
     runSuccess: "The analysis has been updated.",
     runFailed: "The analysis could not be generated.",
+    regeneratingTitle: "Updating analysis…",
+    regeneratingDescription:
+      "This can take a few minutes. You can leave this page in the meantime — the update keeps running in the background and will be ready next time you visit.",
     narrativeFailed:
       "The narrative could not be generated. The figures below are still reliable.",
     staleNotice:
       "New evidence has arrived since this was last generated. Refresh to see the latest figures.",
     narrativeTemplatedNotice:
       "This summary was generated automatically from your data, not written by AI.",
+    narrativeUnverifiedNotice:
+      "This summary was written by AI, but a detail in it could not be automatically double-checked against your data.",
     exploratoryChartNotice:
       "Exploratory — before/after detected, not confirmed as a result",
     backlogPanelTitle: "Backlog",
@@ -1603,141 +1609,48 @@ const en = {
     removeSuccess: "Member removed.",
     removeFailure: "Member could not be removed.",
   },
-  outcomeStatements: {
-    eyebrow: "Outcome statements",
-    title: "Outcome statements",
-    description:
-      "Define the short-term and long-term outcomes this project is working toward. Evidence can be linked to these statements later to show what has actually been measured.",
-    loading: "Loading outcome statements…",
-    emptyTitle: "No outcome statements yet",
-    emptyDescription:
-      "Add the short-term and long-term outcomes this project is working toward.",
-    addAction: "Add outcome statement",
-    editAction: "Edit",
-    deleteAction: "Delete",
-    termShort: "Short-term",
-    termLong: "Long-term",
-    createSuccess: "Outcome statement added.",
-    createFailure: "Outcome statement could not be added.",
-    updateSuccess: "Outcome statement updated.",
-    updateFailure: "Outcome statement could not be updated.",
-    deleteSuccess: "Outcome statement deleted.",
-    deleteFailure: "Outcome statement could not be deleted.",
-    importFromIntendedChangesAction: "Import from long-term impact goals",
-    importTitle: "Import outcome statements",
-    importDescription:
-      "These are the long-term effects you already defined for this project. Select the ones to add as outcome statements — you can edit or remove them afterward.",
-    importAction: "Import {{count}} outcome statements",
-    importing: "Importing…",
-    importSuccess: "Outcome statements imported.",
-    importFailure: "Outcome statements could not be imported.",
-  },
-  outcomeStatementDelete: {
-    title: "Delete this outcome statement?",
-    description:
-      "This action cannot be undone. Deleting “{{statement}}” will also remove any evidence links attached to it.",
-    confirmAction: "Delete outcome statement",
-    deleting: "Deleting…",
-  },
-  outcomeEvidencePairing: {
-    title: "Evidence to review",
-    description:
-      "brindl starts with your outcome statements and places the most relevant evidence candidates next to them. You can keep the recommendation, assign different evidence, or reject candidates — the final decision stays with you.",
-    runAction: "Match and analyze evidence",
-    runningAction: "Matching evidence…",
-    runSuccess: "Evidence matching was updated.",
-    runStartedSuccess:
-      "Interpretation started for matching evidence. Refresh again after processing finishes.",
-    runFailure: "Evidence matching could not be updated.",
-    loading: "Checking for candidate evidence…",
-    pairedDeltaLabel: "Before / after comparison",
+  outcomeEvidenceRecommendation: {
+    getRecommendationsAction: "Get recommendations",
+    gettingRecommendationsAction: "Getting recommendations…",
+    getRecommendationsFailure: "The recommendations could not be retrieved.",
+    noRecommendations: "There are no recommendations for the current evidence.",
+    pairedDeltaLabel: "Before/after comparison",
     singleDistributionLabel: "Distribution",
-    beforeLabel: "Before",
-    afterLabel: "After",
-    outcomeSelectPlaceholder: "Select an outcome statement",
-    assignAction: "Assign to outcome",
-    rejectAction: "Not linked to any outcome",
+    beforeLabel: "Ausgangslage",
+    afterLabel: "Wirkungsdaten",
+    cohortLabel: "Cohort",
+    unassignedSectionTitle: "No clear outcome match",
+    outcomeSelectPlaceholder: "Select outcome statement",
+    assignAction: "Confirm",
+    dismissAction: "Hide for now",
+    dismissHint: "Will show up again the next time you get recommendations.",
     assignSuccess: "Evidence linked to the outcome statement.",
     assignFailure: "The evidence could not be linked.",
-    rejectSuccess: "Evidence marked as not linked.",
-    rejectFailure: "The evidence rejection could not be saved.",
-    errorTitle: "Could not check for candidate evidence",
-    errorDescription:
-      "Something went wrong loading evidence-pairing candidates. Try again shortly.",
-    suggestedOutcomeLabel: "Suggested:",
-    suggestedOutcomeUncertain:
-      "brindl could not confidently match this to one of your outcome statements.",
-    noOutcomeStatementsTitle: "Add outcome statements first",
-    noOutcomeStatementsDescription:
-      "Once this project has outcome statements, you can review and link supporting evidence here.",
-    recommendedEvidenceTitle: "Recommended supporting evidence",
-    noRecommendedEvidence:
-      "There is no direct recommendation for this outcome statement yet. You can still choose other evidence below.",
-    confirmedEvidenceTitle: "Already confirmed evidence",
-    noConfirmedEvidence:
-      "No evidence has been confirmed for this outcome statement yet.",
-    baselineSystemLabel: "Baseline",
-    impactMeasurementSystemLabel: "Impact measurement",
-    otherEvidenceTitle: "Choose other eligible supporting evidence",
-    otherEvidencePlaceholder: "Browse all eligible prepared evidence",
-    removeLinkAction: "Remove confirmed link",
-    removeLinkSuccess: "Confirmed evidence link removed.",
-    removeLinkFailure: "The confirmed evidence link could not be removed.",
-    unassignedCandidatesTitle: "Other open evidence candidates",
-    unassignedCandidatesDescription:
-      "These candidates were not confidently recommended for a specific outcome. You can still assign them manually or reject them.",
-    diagnosticsTitle: "Matching diagnostics",
-    diagnosticsSummary: ({
-      activityCount,
-      candidateCount,
-      readyTableCount,
-    }: {
-      activityCount: number;
-      candidateCount: number;
-      readyTableCount: number;
-    }) =>
-      `${candidateCount} candidate(s) from ${readyTableCount} ready table(s) across ${activityCount} project activity(ies).`,
-    diagnosticReasonJobsStarted:
-      "Missing interpretation work was started for one or more activities. Candidate evidence will expand after those jobs finish.",
-    diagnosticReasonNoReadyTables:
-      "No interpreted and analysis-ready tables are currently available for outcome matching.",
-    diagnosticReasonNoSharedIdentifier:
-      "No baseline/Wirkungsmessung table pair currently shares a common participant identifier.",
-    diagnosticReasonNoMatchingScaleColumns:
-      "Some columns are tagged as a before/after pair, but none of them resolved into a valid match (check the declared instrument label, cohort, and identifier column on each side).",
-    diagnosticReasonNoDeclaredPairingGroups:
-      "Validated-scale columns exist, but none have been tagged yet as part of a before/after pair. Answer the pairing question for each column during interpretation review to make it eligible for matching.",
-    diagnosticReasonNoCategoricalColumns:
-      "No categorical columns are currently available as standalone distribution evidence.",
-    diagnosticReasonDuplicateIdentifierValues:
-      "A table's participant identifier column has duplicate values, so it can't be safely joined. Deduplicate the identifier column before it can be matched.",
-    diagnosticReasonScaleBoundsMismatch:
-      "Two columns are tagged as a before/after pair, but their declared scale ranges don't match (e.g. 1-5 vs. 0-10), so they were not paired.",
-    diagnosticReasonScaleBoundsNotDeclared:
-      "Two columns are tagged as a before/after pair, but the scale's full range hasn't been declared yet for one or both — answer the scale-range question during interpretation review to make them eligible for matching.",
-    activityStatusJobsStarted: "Interpretation started",
-    activityStatusAlreadyReady: "Already interpreted",
-    activityStatusNoUploads: "No uploads",
-    activityStatusBlocked: "Blocked",
-    activityDiagnosticSummary: ({
-      uploadCount,
-      interpretedUploadCount,
-      readyTableCount,
-    }: {
-      uploadCount: number;
-      interpretedUploadCount: number;
-      readyTableCount: number;
-    }) =>
-      `${uploadCount} upload(s), ${interpretedUploadCount} interpreted, ${readyTableCount} ready table(s).`,
-    uploadStateActiveJob: "An interpretation job is already running.",
-    uploadStateAlreadyInterpreted:
-      "This file already has an interpretation result.",
-    uploadStateReadyToInterpret:
-      "This file is eligible for interpretation, but interpretation must be completed in the upstream interpretation flow first.",
-    uploadStatePrivacyMissing:
-      "Privacy-safe processing is not complete for this file yet.",
-    uploadStateUnsupportedModality:
-      "This file's extracted structure is not yet supported for interpretation.",
+    noOutcomeStatementsHint:
+      "This project has no declared outcome statements yet. You can still get recommendations, but confirming one requires at least one outcome statement to exist.",
+    confirmedLinksTitle: "Confirmed links",
+    confirmedLinksEmpty: "No links confirmed yet for this activity.",
+    confirmedLinksBeforeColumnHeader: "Ausgangslage",
+    confirmedLinksAfterColumnHeader: "Wirkungsdaten",
+    confirmedLinksSingleColumnHeader: "Evidence",
+    manualAddToggleAction: "Add manually",
+    manualAddTitle: "Manually add a link",
+    manualAddDescription: "Add a link that brindl did not suggest.",
+    manualAddBeforeColumnPlaceholder: "Select the Ausgangslage column",
+    manualAddAfterColumnPlaceholder: "Select the Wirkungsdaten column",
+    manualAddSameColumnError:
+      "The Ausgangslage and Wirkungsdaten columns must be different.",
+    manualAddSubmitAction: "Add",
+    manualAddRationale: "Manually added",
+    candidatesLoadFailure: "The available columns could not be loaded.",
+    removeAllToggleAction: "Remove all",
+    removeAllTitle: "Remove all confirmed links?",
+    removeAllDescription:
+      "This action cannot be undone. Every confirmed link for this activity will be permanently removed. You can get recommendations again or add links manually afterward.",
+    removeAllConfirmAction: "Remove all",
+    removeAllRemoving: "Removing…",
+    removeAllSuccess: "All confirmed links were removed.",
+    removeAllFailure: "The confirmed links could not be removed.",
   },
   organizationBilling: {
     eyebrow: "Billing",
@@ -1780,7 +1693,8 @@ const en = {
       initialSituation: "Initial situation",
       timeline: "Timeline",
       overarchingTargetGroup: "Overarching target group(s)",
-      intendedChanges: "Intended long-term effect / impact",
+      intendedChanges:
+        "What concrete short- to medium-term changes (outcomes) among the target groups do you aim to achieve with the project?",
       fundingProgram: "Funding programme",
       fundingOrganization: "Funding organization",
       targetGroups: "Target groups",
@@ -1846,13 +1760,14 @@ const en = {
       overarchingTargetGroup: "Overarching target group(s)",
       overarchingTargetGroupPlaceholder:
         "e.g. young people with a migration background",
-      intendedChanges: "Intended long-term effect / impact",
+      intendedChanges:
+        "What concrete short- to medium-term changes (outcomes) among the target groups do you aim to achieve with the project?",
       intendedChangesPlaceholder:
-        "Which long-term changes for the target groups should the project support?",
+        "Which short- to medium-term changes for the target groups should the project support?",
       intendedChangesValidation:
-        "Please provide one to six intended long-term effects / impacts.",
-      intendedChangesAddRow: "Add another impact",
-      intendedChangesRemoveRow: "Remove impact",
+        "Please provide one to six intended short- to medium-term changes / outcomes.",
+      intendedChangesAddRow: "Add another outcome",
+      intendedChangesRemoveRow: "Remove outcome",
       fundingProgram: "Funding programme",
       fundingProgramPlaceholder: "Erasmus+",
       fundingOrganization: "Funding organization",
@@ -1900,21 +1815,10 @@ const en = {
       output: "Output targets (Outputs)",
       outputTooltipLabel: "Guidance on output",
       outputTooltip: "What is directly carried out or created?",
-      outputPlaceholder:
-        "• Conduct 12 workshops within one year\n• Reach 150 participants\n• At least 80% of participants complete the programme\n• At least 75% of participants are satisfied with the programme",
+      outputPlaceholder: "e.g. Conduct 12 workshops within one year",
+      outputAddRow: "Add another output target",
+      outputRemoveRow: "Remove output target",
       status: "Status",
-    },
-    outcomeStatement: {
-      submit: "Add outcome statement",
-      updateSubmit: "Save changes",
-      creating: "Adding…",
-      updating: "Saving…",
-      term: "Term",
-      termShort: "Short-term",
-      termLong: "Long-term",
-      statement: "Outcome statement",
-      statementPlaceholder:
-        "e.g. Mentees report increased clarity about their next career steps.",
     },
     options: {
       targetGroups: [

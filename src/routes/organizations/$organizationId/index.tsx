@@ -270,6 +270,7 @@ function RecentProjectRow({ project }: { project: WorkspaceProject }) {
   const summary =
     resolveProjectSummaryText(project) ??
     locale.organizationPage.noProjectDescription;
+  const showStatusBadge = project.status === "completed";
 
   return (
     <Link
@@ -282,10 +283,12 @@ function RecentProjectRow({ project }: { project: WorkspaceProject }) {
           <div className="text-sm font-semibold text-foreground">
             {project.name}
           </div>
-          <StatusBadge
-            status={project.status}
-            label={translateStatus(t, project.status)}
-          />
+          {showStatusBadge ? (
+            <StatusBadge
+              status={project.status}
+              label={t("enums.status.completed")}
+            />
+          ) : null}
         </div>
         <p className="mt-1 line-clamp-2 max-w-[42rem] text-sm leading-6 text-muted-foreground">
           {summary}

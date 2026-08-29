@@ -4,7 +4,6 @@ import {
   ClipboardList,
   Database,
   FolderKanban,
-  Target,
   WandSparkles,
 } from "lucide-react";
 import type { ReactNode } from "react";
@@ -48,11 +47,6 @@ export function ProjectTabs({
       to: "/projects/$projectId/interpretation",
       label: t("projectWorkspace.tabs.interpretation"),
       icon: <WandSparkles className="h-4 w-4" />,
-    },
-    {
-      to: "/projects/$projectId/outcome-statements",
-      label: t("projectWorkspace.tabs.outcomeStatements"),
-      icon: <Target className="h-4 w-4" />,
     },
     {
       to: "/projects/$projectId/analytics",

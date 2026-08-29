@@ -19,7 +19,7 @@ export const Route = createFileRoute("/projects/$projectId/")({
 function ProjectOverviewPage() {
   const auth = useRequireAuth();
   const locale = useWorkspaceLocale();
-  const { openProjectDeleteDialog } = useWorkspaceShell();
+  const workspaceShell = useWorkspaceShell();
   const { project } = useProjectWorkspacePage();
   const [isEditing, setIsEditing] = useState(false);
   const updateProjectMutation = useUpdateProjectMutation(
@@ -102,7 +102,7 @@ function ProjectOverviewPage() {
           isEditing={isEditing}
           onCancelEditing={() => setIsEditing(false)}
           onDeleteProject={() =>
-            openProjectDeleteDialog({
+            workspaceShell.openProjectDeleteDialog({
               id: project.id,
               name: project.name,
               organizationId: project.organizationId,

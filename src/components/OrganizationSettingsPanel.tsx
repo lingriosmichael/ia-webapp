@@ -73,10 +73,28 @@ export function OrganizationSettingsPanel({
     organization.logoUrl,
   );
 
+  const previousInitialFormStateRef = useRef(initialFormState);
+
   useEffect(() => {
-    setFormState(initialFormState);
-    setFormErrors({});
-    setPreviewLogoUrl(organization.logoUrl);
+    const previousInitialFormState = previousInitialFormStateRef.current;
+    previousInitialFormStateRef.current = initialFormState;
+
+    // This form has no separate "editing" mode — inputs are always live —
+    // so unsaved-edit detection has to rely on dirtiness against the
+    // previous server state, not an isEditing flag. Without this guard, a
+    // background refetch (e.g. window refocus) hands back a new
+    // `organization.settings` object and silently overwrites in-progress,
+    // unsaved edits.
+    const hasUnsavedChanges =
+      Boolean(selectedLogoFile) ||
+      hasFormStateChanges(formState, previousInitialFormState);
+
+    if (!hasUnsavedChanges) {
+      setFormState(initialFormState);
+      setFormErrors({});
+      setPreviewLogoUrl(organization.logoUrl);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialFormState, organization.logoUrl]);
 
   useEffect(() => {
@@ -229,6 +247,7 @@ export function OrganizationSettingsPanel({
                 <FieldGroup
                   label={locale.organizationSettings.organizationNameLabel}
                   error={formErrors.organizationName}
+                  htmlFor="organization-name"
                 >
                   <Input
                     id="organization-name"
@@ -245,7 +264,10 @@ export function OrganizationSettingsPanel({
                   />
                 </FieldGroup>
 
-                <FieldGroup label={locale.organizationSettings.legalFormLabel}>
+                <FieldGroup
+                  label={locale.organizationSettings.legalFormLabel}
+                  htmlFor="organization-legal-form"
+                >
                   <Input
                     id="organization-legal-form"
                     value={formState.legalForm}
@@ -263,6 +285,7 @@ export function OrganizationSettingsPanel({
                 <FieldGroup
                   label={locale.organizationSettings.foundingYearLabel}
                   error={formErrors.foundingYear}
+                  htmlFor="organization-founding-year"
                 >
                   <Input
                     id="organization-founding-year"
@@ -280,7 +303,10 @@ export function OrganizationSettingsPanel({
                   />
                 </FieldGroup>
 
-                <FieldGroup label={locale.organizationSettings.countryLabel}>
+                <FieldGroup
+                  label={locale.organizationSettings.countryLabel}
+                  htmlFor="organization-country"
+                >
                   <Input
                     id="organization-country"
                     value={formState.country}
@@ -297,6 +323,7 @@ export function OrganizationSettingsPanel({
                   label={locale.organizationSettings.employeeCountLabel}
                   optionalLabel={locale.organizationSettings.optionalLabel}
                   error={formErrors.employeeCount}
+                  htmlFor="organization-employee-count"
                 >
                   <Input
                     id="organization-employee-count"
@@ -377,7 +404,10 @@ export function OrganizationSettingsPanel({
               title={locale.organizationSettings.missionSection}
               description={locale.organizationSettings.missionDescription}
             >
-              <FieldGroup label={locale.organizationSettings.missionLabel}>
+              <FieldGroup
+                label={locale.organizationSettings.missionLabel}
+                htmlFor="organization-mission"
+              >
                 <Textarea
                   id="organization-mission"
                   value={formState.mission}
@@ -394,6 +424,7 @@ export function OrganizationSettingsPanel({
               <div className="grid gap-6 lg:grid-cols-2">
                 <FieldGroup
                   label={locale.organizationSettings.activityAreasLabel}
+                  htmlFor="organization-activity-areas"
                 >
                   <Textarea
                     id="organization-activity-areas"
@@ -411,6 +442,7 @@ export function OrganizationSettingsPanel({
 
                 <FieldGroup
                   label={locale.organizationSettings.targetGroupsLabel}
+                  htmlFor="organization-target-groups"
                 >
                   <Textarea
                     id="organization-target-groups"
@@ -430,6 +462,7 @@ export function OrganizationSettingsPanel({
               <FieldGroup
                 label={locale.organizationSettings.operatingRegionsLabel}
                 optionalLabel={locale.organizationSettings.optionalLabel}
+                htmlFor="organization-operating-regions"
               >
                 <Textarea
                   id="organization-operating-regions"
@@ -456,6 +489,7 @@ export function OrganizationSettingsPanel({
             >
               <FieldGroup
                 label={locale.organizationSettings.isRecognizedNonProfitLabel}
+                labelId="organization-is-recognized-nonprofit-label"
               >
                 <RadioGroup
                   value={formState.isRecognizedNonProfit}
@@ -465,6 +499,7 @@ export function OrganizationSettingsPanel({
                       value as OrganizationSettingsFormState["isRecognizedNonProfit"],
                     )
                   }
+                  aria-labelledby="organization-is-recognized-nonprofit-label"
                   className="grid gap-3 sm:grid-cols-2"
                   disabled={!canEdit}
                 >
@@ -487,6 +522,7 @@ export function OrganizationSettingsPanel({
                 label={locale.organizationSettings.taxExemptionValidFromLabel}
                 optionalLabel={locale.organizationSettings.optionalLabel}
                 error={formErrors.taxExemptionValidFrom}
+                htmlFor="organization-tax-exemption-valid-from"
               >
                 <Input
                   id="organization-tax-exemption-valid-from"
@@ -692,11 +728,16 @@ function validateFormState(
     errors.organizationName = locale.validationOrganizationName;
   }
 
-  if (
-    formState.foundingYear.trim() &&
-    !/^\d{4}$/.test(formState.foundingYear.trim())
-  ) {
-    errors.foundingYear = locale.validationFoundingYear;
+  if (formState.foundingYear.trim()) {
+    const trimmedFoundingYear = formState.foundingYear.trim();
+    const foundingYear = Number(trimmedFoundingYear);
+    if (
+      !/^\d{4}$/.test(trimmedFoundingYear) ||
+      foundingYear < 1800 ||
+      foundingYear > 3000
+    ) {
+      errors.foundingYear = locale.validationFoundingYear;
+    }
   }
 
   if (
@@ -747,16 +788,26 @@ function FieldGroup({
   children,
   optionalLabel,
   error,
+  htmlFor,
+  labelId,
 }: {
   label: string;
   children: ReactNode;
   optionalLabel?: string;
   error?: string;
+  htmlFor?: string;
+  labelId?: string;
 }) {
   return (
     <div className="grid gap-2">
       <div className="flex items-center gap-2">
-        <Label className="text-sm font-medium text-foreground">{label}</Label>
+        <Label
+          id={labelId}
+          htmlFor={htmlFor}
+          className="text-sm font-medium text-foreground"
+        >
+          {label}
+        </Label>
         {optionalLabel ? (
           <span className="text-xs text-muted-foreground">{optionalLabel}</span>
         ) : null}

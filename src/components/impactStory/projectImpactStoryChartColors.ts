@@ -17,16 +17,6 @@ export const IMPACT_STORY_COLORS = {
   mint: "#8FBEA3",
 } as const;
 
-const GOAL_ASSESSMENT_STATUS_ORDER = [
-  "achieved",
-  "evidence_compiled",
-  "mixed_evidence",
-  "qualitative_evidence_only",
-  "not_achieved",
-  "requires_clarification",
-  "requires_capability",
-] as const;
-
 const STATUS_COLOR_BY_LABEL: Record<string, string> = {
   achieved: IMPACT_STORY_COLORS.green,
   not_achieved: IMPACT_STORY_COLORS.coral,
@@ -57,19 +47,6 @@ export function goalProgressStatusColor(
   status: ProjectImpactStoryGoalStatus,
 ): string {
   return GOAL_PROGRESS_STATUS_COLOR[status];
-}
-
-export function sortByStatusOrder<T extends { label: string }>(
-  items: T[],
-): T[] {
-  const orderIndex = new Map<string, number>(
-    GOAL_ASSESSMENT_STATUS_ORDER.map((status, index) => [status, index]),
-  );
-  return [...items].sort(
-    (a, b) =>
-      (orderIndex.get(a.label) ?? GOAL_ASSESSMENT_STATUS_ORDER.length) -
-      (orderIndex.get(b.label) ?? GOAL_ASSESSMENT_STATUS_ORDER.length),
-  );
 }
 
 const PIE_CATEGORY_PALETTE = [
@@ -137,17 +114,23 @@ export function rankedBarColor(
 
 export function verticalBarColor({
   index,
+  rawLabel,
   dataKind,
   chartType,
   chartId,
 }: {
   index: number;
+  rawLabel: string;
   dataKind: ProjectImpactStoryChartDataKind;
   chartType: "bar" | "comparison";
   chartId: string;
 }): string {
   if (dataKind === "status") {
-    return statusColor(["achieved", "not_achieved"][index] ?? "");
+    // Color by the bar's actual status label, not by its position — the
+    // backend can group goal-assessment statuses (up to 7 possible values)
+    // in arbitrary order, so an index-based guess drifts from the legend,
+    // which already colors by label via statusColor.
+    return statusColor(rawLabel);
   }
 
   if (chartType === "comparison") {

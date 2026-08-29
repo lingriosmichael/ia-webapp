@@ -24,12 +24,14 @@ export function ImpactStoryNarrativeBanner({
   story,
   isStale,
   onRegenerate,
-  isRegenerating,
 }: {
   story: ProjectImpactStoryRecord;
   isStale: boolean;
+  // No isRegenerating prop: ProjectImpactStoryPage replaces its entire
+  // dashboard (this banner included) with a full-page loading state for as
+  // long as a run is in flight, so this banner only ever renders while
+  // idle — see ImpactStoryRegeneratingState.
   onRegenerate: () => void;
-  isRegenerating: boolean;
 }) {
   const { t, i18n } = useTranslation();
   const hasUnanalyzedActivities =
@@ -46,7 +48,7 @@ export function ImpactStoryNarrativeBanner({
       <div className="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0 flex-1">
           <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-            <h2 className="font-[family-name:var(--font-editorial)] text-[0.85rem] leading-[0.95] tracking-[-0.04em] text-foreground sm:text-[0.95rem] lg:text-[1.05rem]">
+            <h2 className="text-[0.85rem] leading-[0.95] tracking-[-0.04em] text-foreground sm:text-[0.95rem] lg:text-[1.05rem]">
               {t("impactStory.narrativeTitle")}
             </h2>
             <p className="pt-0.5 text-[0.56rem] text-muted-foreground sm:pt-0 sm:text-[0.6rem]">
@@ -62,13 +64,10 @@ export function ImpactStoryNarrativeBanner({
             variant="outline"
             size="sm"
             onClick={onRegenerate}
-            disabled={isRegenerating}
             className="rounded-full px-2.5 py-1 text-[0.58rem]"
           >
             <RefreshCcw className="mr-1 h-2.5 w-2.5" />
-            {isRegenerating
-              ? t("impactStory.runPending")
-              : t("impactStory.refreshAction")}
+            {t("impactStory.refreshAction")}
           </Button>
         </div>
       </div>
@@ -79,11 +78,15 @@ export function ImpactStoryNarrativeBanner({
             {t("impactStory.staleNotice")}
           </p>
         )}
-        {story.narrativeStatus && story.narrativeStatus !== "generated" && (
+        {story.narrativeStatus === "generated_unverified" ? (
+          <p className="rounded-2xl bg-secondary px-2.5 py-1 text-[0.56rem] font-semibold text-secondary-foreground">
+            {t("impactStory.narrativeUnverifiedNotice")}
+          </p>
+        ) : story.narrativeStatus && story.narrativeStatus !== "generated" ? (
           <p className="rounded-2xl bg-secondary px-2.5 py-1 text-[0.56rem] font-semibold text-secondary-foreground">
             {t("impactStory.narrativeTemplatedNotice")}
           </p>
-        )}
+        ) : null}
       </div>
 
       {story.status === "failed" ? (
@@ -95,7 +98,7 @@ export function ImpactStoryNarrativeBanner({
           {paragraphs.map((paragraph, index) => (
             <p
               key={`${story.id}-paragraph-${index}`}
-              className="max-w-[72rem] text-[0.6rem] leading-[1.45] text-foreground sm:text-[0.66rem]"
+              className="max-w-[72rem] text-[0.78rem] leading-[1.45] text-foreground sm:text-[0.86rem]"
             >
               {paragraph}
             </p>

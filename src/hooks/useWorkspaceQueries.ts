@@ -10,16 +10,12 @@ import {
   type ActivityEvidenceLinkageResultRecord,
   type ActivitySummary,
   type ActivityAnalysisRunV2Record,
-  type ActivityWorkflowStageRecord,
   type ApproveQualitativeCodingReviewResponse,
   type CreateActivityPayload,
   type CreateOrganizationPayload,
-  type CreateOutcomeStatementPayload,
   type CreateProjectPayload,
-  type DecideOutcomeEvidencePairingProposalPayload,
   type DeleteActivityResponse,
   type DeleteEvidenceResponse,
-  type DeleteOutcomeStatementResponse,
   type DeleteProjectPayload,
   type DeleteProjectResponse,
   type InterpretationResultRecord,
@@ -27,7 +23,10 @@ import {
   type InvitationSummary,
   type OrganizationMemberSummary,
   type OrganizationWorkspace,
-  type OutcomeEvidencePairingResultRecord,
+  type OutcomeEvidenceCandidate,
+  type OutcomeEvidenceConfirmedLink,
+  type OutcomeEvidenceLink,
+  type OutcomeEvidenceRecommendation,
   type ProcessingJobRecord,
   type PrivacyReviewDecisionsInput,
   type PrivacyReviewRecord,
@@ -40,10 +39,8 @@ import {
   type ProjectSummary,
   type SessionResponse,
   type StartActivityInterpretationResponse,
-  type StartInterpretationResponse,
   type UpdateProjectPayload,
   type UpdateActivityPayload,
-  type UpdateOutcomeStatementPayload,
   type UploadMetadataRecord,
 } from "@/services/apiClient";
 
@@ -57,8 +54,6 @@ export const projectActivitiesQueryKey = (projectId: string) =>
   ["project-activities", projectId] as const;
 export const projectOutcomeStatementsQueryKey = (projectId: string) =>
   ["project-outcome-statements", projectId] as const;
-export const outcomeEvidencePairingQueryKey = (projectId: string) =>
-  ["outcome-evidence-pairing", projectId] as const;
 export const activityQueryKey = (activityId: string) =>
   ["activity", activityId] as const;
 export const activityUploadsQueryKey = (activityId: string) =>
@@ -73,6 +68,18 @@ export const activityAnalysisV2LatestQueryKey = (activityId: string) =>
   ["activity-analysis-v2-latest", activityId] as const;
 export const activityAnalysisV2RunsQueryKey = (activityId: string) =>
   ["activity-analysis-v2-runs", activityId] as const;
+export const outcomeEvidenceRecommendationsQueryKey = (
+  projectId: string,
+  activityId: string,
+) => ["outcome-evidence-recommendations", projectId, activityId] as const;
+export const outcomeEvidenceConfirmedLinksQueryKey = (
+  projectId: string,
+  activityId: string,
+) => ["outcome-evidence-links", projectId, activityId] as const;
+export const outcomeEvidenceCandidatesQueryKey = (
+  projectId: string,
+  activityId: string,
+) => ["outcome-evidence-candidates", projectId, activityId] as const;
 export const jobQueryKey = (jobId: string) => ["job", jobId] as const;
 export const privacyReviewQueryKey = (processingJobId: string) =>
   ["privacy-review", processingJobId] as const;
@@ -88,10 +95,10 @@ export const organizationInvitationsQueryKey = (organizationId: string) =>
   ["organization-invitations", organizationId] as const;
 export const invitationQueryKey = (token: string) =>
   ["invitation", token] as const;
-export const projectImpactStoryQueryKey = (projectId: string) =>
-  ["project-impact-story", projectId] as const;
 export const projectAnalyticsQueryKey = (projectId: string) =>
   ["project-analytics", projectId] as const;
+export const activeProjectAnalyticsJobQueryKey = (projectId: string) =>
+  ["project-analytics-active-job", projectId] as const;
 
 export function useOrganizationWorkspaceQuery(
   organizationId: string,
@@ -138,14 +145,6 @@ export function useProjectQuery(projectId: string, enabled = true) {
   return useQuery<ProjectSummary, ApiError>({
     queryKey: projectQueryKey(projectId),
     queryFn: () => apiClient.getProject(projectId),
-    enabled,
-  });
-}
-
-export function useProjectOverviewQuery(projectId: string, enabled = true) {
-  return useQuery<ProjectOverview, ApiError>({
-    queryKey: projectOverviewQueryKey(projectId),
-    queryFn: () => apiClient.getProjectOverview(projectId),
     enabled,
   });
 }
@@ -198,19 +197,6 @@ export function useActivityJobsQuery(
   });
 }
 
-export function useActivityWorkflowStageQuery(
-  activityId: string,
-  enabled = true,
-  refetchIntervalMs?: number,
-) {
-  return useQuery<ActivityWorkflowStageRecord, ApiError>({
-    queryKey: activityWorkflowStageQueryKey(activityId),
-    queryFn: () => apiClient.getActivityWorkflowStage(activityId),
-    enabled,
-    refetchInterval: refetchIntervalMs,
-  });
-}
-
 export function useActivityLinkageReviewQuery(
   activityId: string,
   enabled = true,
@@ -222,27 +208,140 @@ export function useActivityLinkageReviewQuery(
   });
 }
 
-export function useOutcomeEvidencePairingQuery(
+// Cached under the query client (not the mutation the server call actually
+// is under the hood) purely so a result survives the panel unmounting when
+// the user switches tabs and comes back — see OutcomeEvidenceRecommendation's
+// doc comment in apiClient.ts: there is still no server-side reconciliation
+// cache for this flow, and every call is a real LLM call, so `enabled` stays
+// false forever and the only way to (re)run it is the explicit `refetch()`
+// the "Empfehlungen abrufen" button calls. Nothing here triggers it
+// automatically on mount, refocus, or reconnect.
+export function useOutcomeEvidenceRecommendationsQuery(
   projectId: string,
+  activityId: string,
+) {
+  return useQuery<
+    { recommendations: OutcomeEvidenceRecommendation[] },
+    ApiError
+  >({
+    queryKey: outcomeEvidenceRecommendationsQueryKey(projectId, activityId),
+    queryFn: () =>
+      apiClient.recommendOutcomeEvidencePairings(projectId, activityId),
+    enabled: false,
+    retry: false,
+    staleTime: Infinity,
+  });
+}
+
+export function useApproveOutcomeEvidenceRecommendationMutation(
+  projectId: string,
+  activityId: string,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    OutcomeEvidenceLink,
+    ApiError,
+    OutcomeEvidenceRecommendation
+  >({
+    mutationFn: (recommendation) =>
+      apiClient.approveOutcomeEvidenceRecommendation(
+        projectId,
+        activityId,
+        recommendation,
+      ),
+    // Confirming a recommendation persists a real OutcomeEvidenceLink,
+    // which Project Impact Story's narrative reads directly (see
+    // OUTCOME_EVIDENCE_MERGE_PLAN.md/CLAUDE.md) and which can affect this
+    // activity's workflow stage — same downstream surfaces
+    // useReviewActivityLinkageProposalMutation above invalidates for its
+    // own "confirm a server-generated proposal" flow. Without this, those
+    // views silently keep serving pre-approval data until an unrelated
+    // refetch happens to occur. Also invalidates the confirmed-links list
+    // itself (whether this approval came from a recommendation card or the
+    // manual-add form), so the persistent summary picks it up immediately.
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: activityWorkflowStageQueryKey(activityId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: projectInterpretationsQueryKey(projectId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: projectAnalyticsQueryKey(projectId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: outcomeEvidenceConfirmedLinksQueryKey(projectId, activityId),
+      });
+    },
+  });
+}
+
+// Plain, auto-fetching read of already-confirmed OutcomeEvidenceLinks for
+// this activity — unlike useOutcomeEvidenceRecommendationsQuery above, this
+// is a cheap DB read (no LLM call) meant to reflect real, persisted state
+// on every visit, not something a human explicitly triggers each time. This
+// is what makes the confirmed-links summary survive a tab switch or a full
+// page refresh, where the recommendations panel's own local "just
+// confirmed" feedback used to reset to nothing.
+export function useOutcomeEvidenceConfirmedLinksQuery(
+  projectId: string,
+  activityId: string,
   enabled = true,
 ) {
-  return useQuery<OutcomeEvidencePairingResultRecord, ApiError>({
-    queryKey: outcomeEvidencePairingQueryKey(projectId),
-    queryFn: () => apiClient.proposeOutcomeEvidencePairing(projectId),
+  return useQuery<{ links: OutcomeEvidenceConfirmedLink[] }, ApiError>({
+    queryKey: outcomeEvidenceConfirmedLinksQueryKey(projectId, activityId),
+    queryFn: () =>
+      apiClient.listOutcomeEvidenceConfirmedLinks(projectId, activityId),
     enabled,
   });
 }
 
-export function useRunOutcomeEvidencePairingMutation(projectId: string) {
+// Lazy, like useOutcomeEvidenceRecommendationsQuery — only fetched when the
+// "manually add a pairing" form is opened (via refetch()), since most
+// visits to this panel never need the raw candidate list.
+export function useOutcomeEvidenceCandidatesQuery(
+  projectId: string,
+  activityId: string,
+) {
+  return useQuery<{ candidates: OutcomeEvidenceCandidate[] }, ApiError>({
+    queryKey: outcomeEvidenceCandidatesQueryKey(projectId, activityId),
+    queryFn: () =>
+      apiClient.listOutcomeEvidenceCandidates(projectId, activityId),
+    enabled: false,
+    retry: false,
+  });
+}
+
+// Bulk counterpart to useRemoveOutcomeEvidenceLinkMutation below — clears
+// every confirmed link for one activity in one call. Invalidates the same
+// query set useApproveOutcomeEvidenceRecommendationMutation does: clearing
+// links is symmetric with confirming them for every downstream surface
+// that reads OutcomeEvidenceLinks (workflow stage, Project Impact Story),
+// plus the confirmed-links list itself so the panel's recommend section can
+// reappear once the count reaches zero.
+export function useRemoveAllOutcomeEvidenceConfirmedLinksMutation(
+  projectId: string,
+  activityId: string,
+) {
   const queryClient = useQueryClient();
 
-  return useMutation<OutcomeEvidencePairingResultRecord, ApiError>({
-    mutationFn: () => apiClient.refreshOutcomeEvidencePairing(projectId),
-    onSuccess: (result) => {
-      queryClient.setQueryData(
-        outcomeEvidencePairingQueryKey(projectId),
-        result,
-      );
+  return useMutation<{ removed: number }, ApiError, void>({
+    mutationFn: () =>
+      apiClient.removeAllOutcomeEvidenceConfirmedLinks(projectId, activityId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: activityWorkflowStageQueryKey(activityId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: projectInterpretationsQueryKey(projectId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: projectAnalyticsQueryKey(projectId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: outcomeEvidenceConfirmedLinksQueryKey(projectId, activityId),
+      });
     },
   });
 }
@@ -285,8 +384,9 @@ export function useActivityAnalysisV2RunsQuery(
 // Creates an activity_analysis_v2 processing job — it does not return the
 // finished run. The caller is expected to poll the job with useJobQuery and
 // invalidate the analysis-v2 read queries once the job reaches a terminal
-// status (see activityAnalyticsPage.tsx); invalidating here, on job
-// creation, would be premature since nothing has actually changed yet.
+// status (see routes/projects/$projectId/interpretation.tsx); invalidating
+// here, on job creation, would be premature since nothing has actually
+// changed yet.
 export function useRunActivityAnalysisV2Mutation(activityId: string) {
   return useMutation<ProcessingJobRecord, ApiError>({
     mutationFn: () => apiClient.runActivityAnalysisV2(activityId),
@@ -312,14 +412,6 @@ export function useAnswerActivityAnalysisV2QuestionsMutation(
   });
 }
 
-export function useProjectImpactStoryQuery(projectId: string, enabled = true) {
-  return useQuery<ProjectImpactStoryReadResult, ApiError>({
-    queryKey: projectImpactStoryQueryKey(projectId),
-    queryFn: () => apiClient.getProjectImpactStory(projectId),
-    enabled,
-  });
-}
-
 export function useProjectAnalyticsQuery(projectId: string, enabled = true) {
   return useQuery<ProjectImpactStoryReadResult, ApiError>({
     queryKey: projectAnalyticsQueryKey(projectId),
@@ -328,20 +420,24 @@ export function useProjectAnalyticsQuery(projectId: string, enabled = true) {
   });
 }
 
-// Creates a project_impact_story processing job — it does not return the
-// finished story. The caller is expected to poll the job with useJobQuery
-// and invalidate useProjectImpactStoryQuery once the job reaches a terminal
-// status (see projectImpactStoryPage.tsx), same pattern as
-// useRunActivityAnalysisV2Mutation above.
-export function useRunProjectImpactStoryMutation(projectId: string) {
-  return useMutation<ProcessingJobRecord, ApiError>({
-    mutationFn: () => apiClient.runProjectImpactStory(projectId),
-  });
-}
-
 export function useRunProjectAnalyticsMutation(projectId: string) {
   return useMutation<ProcessingJobRecord, ApiError>({
     mutationFn: () => apiClient.runProjectAnalytics(projectId),
+  });
+}
+
+// One-shot check, not polled — ProjectImpactStoryPage reads this exactly
+// once per mount to discover a run it didn't personally start (see
+// apiClient.getActiveProjectAnalyticsJob), then hands off to useJobQuery's
+// own polling for the rest of that run's lifetime.
+export function useActiveProjectAnalyticsJobQuery(
+  projectId: string,
+  enabled = true,
+) {
+  return useQuery<{ job: ProcessingJobRecord | null }, ApiError>({
+    queryKey: activeProjectAnalyticsJobQueryKey(projectId),
+    queryFn: () => apiClient.getActiveProjectAnalyticsJob(projectId),
+    enabled,
   });
 }
 
@@ -372,39 +468,12 @@ export function useReviewActivityLinkageProposalMutation(activityId: string) {
   });
 }
 
-export function useDecideOutcomeEvidencePairingProposalMutation(
-  projectId: string,
-) {
-  const queryClient = useQueryClient();
-
-  return useMutation<
-    OutcomeEvidencePairingResultRecord,
-    ApiError,
-    DecideOutcomeEvidencePairingProposalPayload
-  >({
-    mutationFn: (payload) =>
-      apiClient.decideOutcomeEvidencePairingProposal(projectId, payload),
-    onSuccess: (result) => {
-      queryClient.setQueryData(
-        outcomeEvidencePairingQueryKey(projectId),
-        result,
-      );
-    },
-  });
-}
-
+// Kept even though no current UI action calls it yet — see
+// apiClient.ts's removeOutcomeEvidenceLink doc comment.
 export function useRemoveOutcomeEvidenceLinkMutation(projectId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation<OutcomeEvidencePairingResultRecord, ApiError, string>({
+  return useMutation<{ removed: boolean }, ApiError, string>({
     mutationFn: (linkId) =>
       apiClient.removeOutcomeEvidenceLink(projectId, linkId),
-    onSuccess: (result) => {
-      queryClient.setQueryData(
-        outcomeEvidencePairingQueryKey(projectId),
-        result,
-      );
-    },
   });
 }
 
@@ -474,17 +543,6 @@ export function useProjectInterpretationsQuery(
     queryKey: projectInterpretationsQueryKey(projectId),
     queryFn: () => apiClient.getProjectInterpretations(projectId),
     enabled,
-  });
-}
-
-export function useInterpretationQuery(
-  interpretationResultId: string | undefined,
-  enabled = true,
-) {
-  return useQuery<InterpretationResultRecord, ApiError>({
-    queryKey: interpretationQueryKey(interpretationResultId ?? "missing"),
-    queryFn: () => apiClient.getInterpretation(interpretationResultId!),
-    enabled: enabled && Boolean(interpretationResultId),
   });
 }
 
@@ -1022,37 +1080,6 @@ export function useApproveQualitativeCodingReviewMutation(
   });
 }
 
-export function useStartInterpretationMutation(
-  activityId: string,
-  projectId?: string,
-) {
-  const queryClient = useQueryClient();
-  const { i18n } = useTranslation();
-
-  return useMutation<StartInterpretationResponse, ApiError, string>({
-    mutationFn: (uploadMetadataId: string) => {
-      const language =
-        (i18n.resolvedLanguage ?? i18n.language).toLowerCase().slice(0, 2) ===
-        "en"
-          ? "en"
-          : "de";
-
-      return apiClient.startInterpretation(uploadMetadataId, { language });
-    },
-    onSuccess: ({ job }) => {
-      queryClient.setQueryData(jobQueryKey(job.id), job);
-      void queryClient.invalidateQueries({
-        queryKey: activityJobsQueryKey(activityId),
-      });
-      if (projectId) {
-        void queryClient.invalidateQueries({
-          queryKey: projectInterpretationsQueryKey(projectId),
-        });
-      }
-    },
-  });
-}
-
 export function useStartActivityInterpretationMutation(
   activityId: string,
   projectId?: string,
@@ -1126,31 +1153,6 @@ export function useAnswerInterpretationQuestionsMutation(
   });
 }
 
-export function useAcknowledgeInterpretationReviewMutation(
-  activityId: string,
-  organizationId?: string,
-) {
-  const queryClient = useQueryClient();
-
-  return useMutation<ActivitySummary, ApiError>({
-    mutationFn: () => apiClient.acknowledgeInterpretationReview(activityId),
-    onSuccess: (activity) => {
-      queryClient.setQueryData(activityQueryKey(activityId), activity);
-      void queryClient.invalidateQueries({
-        queryKey: activityQueryKey(activityId),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: activityAnalysisV2LatestQueryKey(activityId),
-      });
-      if (organizationId) {
-        void queryClient.invalidateQueries({
-          queryKey: workspaceQueryKey(organizationId),
-        });
-      }
-    },
-  });
-}
-
 export function useDeleteActivityMutation(
   activityId: string,
   projectId: string,
@@ -1184,56 +1186,6 @@ export function useDeleteActivityMutation(
           queryKey: workspaceQueryKey(organizationId),
         });
       }
-    },
-  });
-}
-
-export function useCreateOutcomeStatementMutation(projectId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation<
-    ProjectOutcomeStatement,
-    ApiError,
-    CreateOutcomeStatementPayload
-  >({
-    mutationFn: (payload) =>
-      apiClient.createOutcomeStatement(projectId, payload),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: projectOutcomeStatementsQueryKey(projectId),
-      });
-    },
-  });
-}
-
-export function useUpdateOutcomeStatementMutation(projectId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation<
-    ProjectOutcomeStatement,
-    ApiError,
-    { outcomeStatementId: string; payload: UpdateOutcomeStatementPayload }
-  >({
-    mutationFn: ({ outcomeStatementId, payload }) =>
-      apiClient.updateOutcomeStatement(projectId, outcomeStatementId, payload),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: projectOutcomeStatementsQueryKey(projectId),
-      });
-    },
-  });
-}
-
-export function useDeleteOutcomeStatementMutation(projectId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation<DeleteOutcomeStatementResponse, ApiError, string>({
-    mutationFn: (outcomeStatementId) =>
-      apiClient.deleteOutcomeStatement(projectId, outcomeStatementId),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: projectOutcomeStatementsQueryKey(projectId),
-      });
     },
   });
 }

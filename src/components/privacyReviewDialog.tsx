@@ -1,5 +1,5 @@
 import { AlertTriangle, ShieldAlert, ShieldCheck } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { DialogSection, EntityDialog } from "@/components/EntityDialog";
@@ -55,13 +55,36 @@ function createDecisionKey(field: string, entityType: string) {
   return `${field}::${entityType}`;
 }
 
+const ALL_PRIVACY_REVIEW_ACTIONS: PrivacyReviewDecisionValue[] = [
+  "keep",
+  "tokenize",
+  "generalize",
+  "remove",
+  "restrict",
+];
+
 function getActionOptions(
   finding: FindingSummaryItem,
 ): PrivacyReviewDecisionValue[] {
-  if (finding.recommendedAction === "keep") {
-    return ["keep", "tokenize"];
+  // The reviewer must always be able to choose the backend's actual
+  // recommendation (which can be generalize/remove/restrict, not just
+  // keep/tokenize), plus "keep" as an explicit, acknowledgeable override.
+  const options: PrivacyReviewDecisionValue[] = [];
+  const recommendedAction = finding.recommendedAction;
+  if (
+    ALL_PRIVACY_REVIEW_ACTIONS.includes(
+      recommendedAction as PrivacyReviewDecisionValue,
+    )
+  ) {
+    options.push(recommendedAction as PrivacyReviewDecisionValue);
   }
-  return ["tokenize", "keep"];
+  if (!options.includes("tokenize")) {
+    options.push("tokenize");
+  }
+  if (!options.includes("keep")) {
+    options.push("keep");
+  }
+  return options;
 }
 
 function getActionLabel(
@@ -111,10 +134,15 @@ export function PrivacyReviewDialog({
   const currentUpload = uploadsQuery.data?.find(
     (upload) => upload.id === job?.uploadMetadataId,
   );
+  // A query that has resolved successfully with no job (deleted job, wrong
+  // id) must not be mistaken for "still loading" — otherwise this renders a
+  // permanent spinner instead of surfacing the failure.
+  const isJobNotFound = jobQuery.isSuccess && !job;
   const isJobLoading =
-    jobQuery.isLoading || (open && !job && !jobQuery.isError);
+    jobQuery.isLoading || (open && !job && !jobQuery.isError && !isJobNotFound);
   const isReviewLoading = privacyReviewQuery.isLoading;
-  const hasError = jobQuery.isError || privacyReviewQuery.isError;
+  const hasError =
+    jobQuery.isError || privacyReviewQuery.isError || isJobNotFound;
 
   const approvePrivacyReviewMutation = useApprovePrivacyReviewMutation(
     job?.activityId ?? "",
@@ -145,16 +173,37 @@ export function PrivacyReviewDialog({
   });
   const canSubmit = canApproveReview && allDecisionsResolved;
 
+  const wasOpenRef = useRef(open);
+  const previousProcessingJobIdRef = useRef(processingJobId);
+  const hasSeededDecisionsRef = useRef(false);
+
   useEffect(() => {
+    const wasOpen = wasOpenRef.current;
+    const previousProcessingJobId = previousProcessingJobIdRef.current;
+    wasOpenRef.current = open;
+    previousProcessingJobIdRef.current = processingJobId;
+
     if (!open) {
+      hasSeededDecisionsRef.current = false;
       return;
     }
 
-    if (!review) {
+    const isFreshSession =
+      !wasOpen || previousProcessingJobId !== processingJobId;
+    if (isFreshSession) {
+      hasSeededDecisionsRef.current = false;
       setFieldDecisionMap({});
       setFieldKeepAcknowledgementMap({});
+    }
+
+    // Seed at most once per open session: `review` refetches in the
+    // background while the dialog stays open (job polling), and re-running
+    // this on every refetch would silently overwrite the reviewer's
+    // in-progress, not-yet-submitted keep/tokenize decisions.
+    if (!review || hasSeededDecisionsRef.current) {
       return;
     }
+    hasSeededDecisionsRef.current = true;
 
     const nextFieldDecisionMap: Record<string, PrivacyReviewDecisionValue> = {};
     const nextFieldKeepAcknowledgementMap: Record<string, boolean> = {};
@@ -167,7 +216,7 @@ export function PrivacyReviewDialog({
     }
     setFieldDecisionMap(nextFieldDecisionMap);
     setFieldKeepAcknowledgementMap(nextFieldKeepAcknowledgementMap);
-  }, [review, open]);
+  }, [review, open, processingJobId]);
 
   async function handleApprovePrivacyReview() {
     if (!job) {

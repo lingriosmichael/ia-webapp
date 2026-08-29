@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Info } from "lucide-react";
 import { useWorkspaceLocale } from "@/hooks/useWorkspaceLocale";
 import type {
@@ -12,6 +12,7 @@ import {
   DialogSection,
   FieldLabel,
 } from "@/components/EntityDialog";
+import { ProjectImpactListField } from "@/components/ProjectImpactListField";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -39,7 +40,7 @@ interface ActivityDialogState {
   endDate: string;
   targetAudience: string;
   objectives: string;
-  output: string;
+  output: string[];
   status: ActivityStatus;
 }
 
@@ -52,9 +53,28 @@ const initialState: ActivityDialogState = {
   endDate: "",
   targetAudience: "",
   objectives: "",
-  output: "",
+  output: [""],
   status: "active",
 };
+
+function parseOutputValues(value: string | null): string[] {
+  if (!value) {
+    return [""];
+  }
+
+  const values = value
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0)
+    .map((line) => line.replace(/^(?:[-*•]+|\d+[.)])\s+/, "").trim())
+    .filter((line) => line.length > 0);
+
+  return values.length > 0 ? values : [""];
+}
+
+function normalizeOutputValues(values: string[]) {
+  return values.map((value) => value.trim()).filter(Boolean);
+}
 
 function ActivityTextareaField({
   label,
@@ -124,9 +144,25 @@ export function ActivityDialog({
   const customActivityTypeOption =
     locale.dialogs.options.customActivityTypeOption;
 
+  // Seeded `false` rather than from `open` so that a dialog mounted already
+  // `open` (e.g. a future deep link into edit mode) still populates from
+  // `initialActivity` on its first effect run instead of rendering blank.
+  const wasOpenRef = useRef(false);
+
   useEffect(() => {
+    const wasOpen = wasOpenRef.current;
+    wasOpenRef.current = open;
+
     if (!open) {
       setForm(initialState);
+      return;
+    }
+
+    if (wasOpen) {
+      // Dialog was already open — don't resync from `initialActivity` here,
+      // since a background refetch can hand back a new object reference for
+      // otherwise-unchanged data and would silently overwrite in-progress,
+      // unsaved edits.
       return;
     }
 
@@ -151,7 +187,7 @@ export function ActivityDialog({
         endDate: toDateInputValue(initialActivity.endDate),
         targetAudience: initialActivity.targetAudience ?? "",
         objectives: initialActivity.objectives ?? "",
-        output: initialActivity.output ?? "",
+        output: parseOutputValues(initialActivity.output),
         status: initialActivity.status,
       });
       return;
@@ -168,6 +204,7 @@ export function ActivityDialog({
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    const normalizedOutput = normalizeOutputValues(form.output);
     const activityType =
       form.activityType === customActivityTypeOption
         ? form.customActivityType.trim() || undefined
@@ -183,7 +220,7 @@ export function ActivityDialog({
       endDate: form.endDate ? new Date(form.endDate).toISOString() : undefined,
       targetAudience: form.targetAudience || undefined,
       objectives: form.objectives || undefined,
-      output: form.output || undefined,
+      output: normalizedOutput.length > 0 ? normalizedOutput : undefined,
       status: form.status,
     });
 
@@ -347,16 +384,39 @@ export function ActivityDialog({
       <DialogSection>
         <div className="grid gap-5 md:grid-cols-2">
           <div className="space-y-2 md:col-span-2">
-            <ActivityTextareaField
+            <ProjectImpactListField
               label={locale.dialogs.activity.output}
+              optionalLabel={locale.common.optional}
               tooltipLabel={locale.dialogs.activity.outputTooltipLabel}
               tooltip={locale.dialogs.activity.outputTooltip}
-              value={form.output}
-              onChange={(value) =>
-                setForm((current) => ({ ...current, output: value }))
-              }
+              values={form.output}
               placeholder={locale.dialogs.activity.outputPlaceholder}
-              rows={5}
+              onChangeValue={(index, value) =>
+                setForm((current) => ({
+                  ...current,
+                  output: current.output.map((item, itemIndex) =>
+                    itemIndex === index ? value : item,
+                  ),
+                }))
+              }
+              onAddRow={() =>
+                setForm((current) => ({
+                  ...current,
+                  output: [...current.output, ""],
+                }))
+              }
+              onRemoveRow={(index) =>
+                setForm((current) => ({
+                  ...current,
+                  output: current.output.filter(
+                    (_item, itemIndex) => itemIndex !== index,
+                  ),
+                }))
+              }
+              addRowAriaLabel={locale.dialogs.activity.outputAddRow}
+              removeRowAriaLabel={locale.dialogs.activity.outputRemoveRow}
+              required={false}
+              maxItems={Number.POSITIVE_INFINITY}
             />
           </div>
         </div>

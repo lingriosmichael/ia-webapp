@@ -9,7 +9,7 @@ import {
   useProjectWorkspacePage,
 } from "@/contexts/projectWorkspaceContext";
 import { WorkspaceMobileNavigationButton } from "@/components/WorkspaceShell";
-import { formatMonthRange, translateStatus } from "@/lib/translationUtils";
+import { formatMonthRange } from "@/lib/translationUtils";
 
 export function ProjectWorkspaceShell({
   children,
@@ -26,6 +26,7 @@ export function ProjectWorkspaceShell({
   const { t, i18n } = useTranslation();
   const primaryArea =
     project.areaOfOperation?.split(",")[0]?.trim() || project.areaOfOperation;
+  const showStatusBadge = project.status === "completed";
   const metadataItems = [
     project.fundingProgram,
     formatMonthRange(project.startMonth, project.endMonth, i18n.language),
@@ -57,10 +58,12 @@ export function ProjectWorkspaceShell({
                   {metadataItems.join(" · ")}
                 </span>
               ) : null}
-              <StatusBadge
-                status={project.status}
-                label={translateStatus(t, project.status)}
-              />
+              {showStatusBadge ? (
+                <StatusBadge
+                  status={project.status}
+                  label={t("enums.status.completed")}
+                />
+              ) : null}
             </div>
           }
           description={
