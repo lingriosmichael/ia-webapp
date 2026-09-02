@@ -21,6 +21,11 @@ import { StatusBadge } from "@/components/statusBadge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/WorkspaceUI";
 import {
+  OutcomeEvidenceDatasetRoleUploader,
+  type OutcomeEvidenceDatasetRoleSelection,
+} from "@/components/evidence/outcomeEvidenceDatasetRoleUploader";
+import { OutcomeEvidenceDatasetRoleTag } from "@/components/evidence/outcomeEvidenceDatasetRoleTag";
+import {
   useCurrentWorkspaceProject,
   useProjectWorkspacePage,
 } from "@/contexts/projectWorkspaceContext";
@@ -33,6 +38,7 @@ import {
   useDeleteEvidenceMutation,
   useJobQuery,
   useStartEvidenceAnalysisMutation,
+  useUpdateUploadDatasetRoleMutation,
   useUploadActivityFileMutation,
 } from "@/hooks/useWorkspaceQueries";
 import {
@@ -46,6 +52,7 @@ import {
   ApiError,
   apiClient,
   type ProcessingJobRecord,
+  type UploadDatasetRole,
   type UploadMetadataRecord,
   type WorkspaceActivity,
 } from "@/services/apiClient";
@@ -200,6 +207,12 @@ function EvidenceActivityGroup({
   const inputRef = useRef<HTMLInputElement>(null);
   const completedQueueTimeoutRef = useRef<number | null>(null);
   const [uploadQueue, setUploadQueue] = useState<UploadQueueItem[]>([]);
+  // The fixed "Ausgangslage & Wirkungsdaten" system activity is the only
+  // one where a file's baseline/follow-up role means anything — every
+  // other activity keeps the plain multi-file picker below unchanged. See
+  // OUTCOME_EVIDENCE_MERGE_PLAN.md.
+  const isOutcomeEvidenceActivity = activity.systemType === "outcome_evidence";
+  const [datasetRoleUploaderOpen, setDatasetRoleUploaderOpen] = useState(false);
   const uploads = uploadsQuery.data ?? [];
   const evidenceCount = uploadsQuery.data
     ? uploads.length
@@ -338,7 +351,7 @@ function EvidenceActivityGroup({
 
       try {
         updateUploadQueueItem(queueItem.id, "uploading");
-        await uploadMutation.mutateAsync(file);
+        await uploadMutation.mutateAsync({ file });
         updateUploadQueueItem(queueItem.id, "uploaded");
         uploadedCount += 1;
       } catch (error) {
@@ -349,6 +362,10 @@ function EvidenceActivityGroup({
       }
     }
 
+    reportUploadQueueResult(uploadedCount, failedCount);
+  }
+
+  function reportUploadQueueResult(uploadedCount: number, failedCount: number) {
     if (uploadedCount > 0 && failedCount === 0) {
       toast.success(
         uploadedCount === 1
@@ -375,6 +392,51 @@ function EvidenceActivityGroup({
           : t("upload.multiFailedToast", { count: failedCount }),
       );
     }
+  }
+
+  async function handleDatasetRoleUploaderConfirm(
+    selections: OutcomeEvidenceDatasetRoleSelection[],
+  ) {
+    const nextQueue = selections.map(({ file }, index) => ({
+      id: `${Date.now()}-${index}-${file.name}`,
+      fileName: file.name,
+      status: "queued" as const,
+    }));
+
+    setUploadQueue(nextQueue);
+    setIsExpanded(true);
+    setDatasetRoleUploaderOpen(false);
+
+    let uploadedCount = 0;
+    let failedCount = 0;
+
+    for (const [index, { role, file }] of selections.entries()) {
+      const queueItem = nextQueue[index];
+      if (!queueItem) {
+        continue;
+      }
+
+      const validationMessage = getFileValidationMessage(file);
+      if (validationMessage) {
+        updateUploadQueueItem(queueItem.id, "failed", validationMessage);
+        failedCount += 1;
+        continue;
+      }
+
+      try {
+        updateUploadQueueItem(queueItem.id, "uploading");
+        await uploadMutation.mutateAsync({ file, datasetRole: role });
+        updateUploadQueueItem(queueItem.id, "uploaded");
+        uploadedCount += 1;
+      } catch (error) {
+        const message =
+          error instanceof ApiError ? error.message : t("upload.failedToast");
+        updateUploadQueueItem(queueItem.id, "failed", message);
+        failedCount += 1;
+      }
+    }
+
+    reportUploadQueueResult(uploadedCount, failedCount);
   }
 
   async function removeFile(uploadMetadataId: string) {
@@ -469,7 +531,9 @@ function EvidenceActivityGroup({
         </div>
 
         <div className="flex items-center gap-2">
-          {activity.permissions.canUploadEvidence && showExpandedDetails ? (
+          {activity.permissions.canUploadEvidence &&
+          showExpandedDetails &&
+          !(isOutcomeEvidenceActivity && datasetRoleUploaderOpen) ? (
             <>
               <input
                 ref={inputRef}
@@ -481,7 +545,11 @@ function EvidenceActivityGroup({
               />
               <Button
                 type="button"
-                onClick={() => inputRef.current?.click()}
+                onClick={() =>
+                  isOutcomeEvidenceActivity
+                    ? setDatasetRoleUploaderOpen(true)
+                    : inputRef.current?.click()
+                }
                 disabled={hasActiveUploadQueue}
               >
                 <UploadCloud className="h-4 w-4" />
@@ -510,6 +578,13 @@ function EvidenceActivityGroup({
           ) : null}
         </div>
       </div>
+
+      {isOutcomeEvidenceActivity && datasetRoleUploaderOpen ? (
+        <OutcomeEvidenceDatasetRoleUploader
+          onConfirm={handleDatasetRoleUploaderConfirm}
+          onCancel={() => setDatasetRoleUploaderOpen(false)}
+        />
+      ) : null}
 
       {uploadQueue.length > 0 && showExpandedDetails ? (
         <div className="border-t border-border/70 px-5 py-3">
@@ -640,6 +715,37 @@ function EvidenceFileRow({
     projectId,
     organizationId,
   );
+  const updateDatasetRoleMutation = useUpdateUploadDatasetRoleMutation(
+    activity.id,
+  );
+
+  async function handleToggleDatasetRole() {
+    if (!upload.datasetRole) {
+      return;
+    }
+    const nextRole: UploadDatasetRole =
+      upload.datasetRole === "baseline" ? "followup" : "baseline";
+    try {
+      await updateDatasetRoleMutation.mutateAsync({
+        evidenceId: upload.id,
+        datasetRole: nextRole,
+      });
+      toast.success(
+        t("projectWorkspace.evidence.datasetRoleChangeSuccess", {
+          role:
+            nextRole === "baseline"
+              ? t("projectWorkspace.evidence.datasetRoleSlotBaseline")
+              : t("projectWorkspace.evidence.datasetRoleSlotFollowup"),
+        }),
+      );
+    } catch (error) {
+      toast.error(
+        error instanceof ApiError
+          ? error.message
+          : t("projectWorkspace.evidence.datasetRoleChangeFailed"),
+      );
+    }
+  }
   const liveJobQuery = useJobQuery(latestJob?.id, Boolean(latestJob?.id));
   const job = liveJobQuery.data ?? latestJob;
   const hasActiveJob =
@@ -782,8 +888,18 @@ function EvidenceFileRow({
     <div className="px-5 py-4">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
-          <div className="truncate text-sm font-medium text-foreground">
-            {upload.originalFileName}
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="truncate text-sm font-medium text-foreground">
+              {upload.originalFileName}
+            </div>
+            {activity.systemType === "outcome_evidence" &&
+            upload.datasetRole ? (
+              <OutcomeEvidenceDatasetRoleTag
+                role={upload.datasetRole}
+                onToggle={() => void handleToggleDatasetRole()}
+                disabled={updateDatasetRoleMutation.isPending}
+              />
+            ) : null}
           </div>
           <div className="mt-2 grid gap-1 text-xs text-muted-foreground sm:grid-cols-2">
             <div>

@@ -4,6 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/WorkspaceUI";
 import type { ProjectImpactStoryRecord } from "@/services/apiClient";
 
+function readArray<T>(value: T[] | null | undefined): T[] {
+  return Array.isArray(value) ? value : [];
+}
+
 function formatTimestamp(value: string, language: string): string {
   if (language === "de") {
     return new Intl.DateTimeFormat("de-DE", {
@@ -34,8 +38,10 @@ export function ImpactStoryNarrativeBanner({
   onRegenerate: () => void;
 }) {
   const { t, i18n } = useTranslation();
-  const hasUnanalyzedActivities =
-    story.diagnostics.activitiesWithNoGroundedIndicators.length > 0;
+  const activitiesWithNoGroundedIndicators = readArray(
+    story.diagnostics?.activitiesWithNoGroundedIndicators,
+  );
+  const hasUnanalyzedActivities = activitiesWithNoGroundedIndicators.length > 0;
   const paragraphs = story.narrativeSummary
     ? story.narrativeSummary
         .split(/\n{2,}/)
@@ -109,8 +115,7 @@ export function ImpactStoryNarrativeBanner({
       {hasUnanalyzedActivities && (
         <p className="mt-2.5 text-[0.56rem] leading-[1.4] text-muted-foreground">
           {t("impactStory.notYetAnalyzedFootnote", {
-            names:
-              story.diagnostics.activitiesWithNoGroundedIndicators.join(", "),
+            names: activitiesWithNoGroundedIndicators.join(", "),
           })}
         </p>
       )}

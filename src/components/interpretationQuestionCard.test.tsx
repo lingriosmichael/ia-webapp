@@ -28,6 +28,7 @@ function baseQuestion(
     questionCode: "primary_status_field",
     targetTableName: "applications",
     targetColumnName: null,
+    questionData: null,
     status: "pending",
     answeredValue: null,
     answeredById: null,

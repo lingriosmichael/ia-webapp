@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Bar,
@@ -15,10 +16,15 @@ import type {
   ProjectImpactStoryGoalProgressEntry,
   ProjectImpactStoryGoalStatus,
 } from "@/services/apiClient";
+import { Button } from "@/components/ui/button";
 import {
+  coerceImpactStoryText,
+  DIALOG_CHART_MAX_HEIGHT_CLASS,
   formatImpactStoryValue,
   truncateChartLabel,
+  wrapChartLabel,
 } from "./impactStoryFormat";
+import { ImpactStoryVerticalAxisTick } from "./impactStoryAxisTick";
 import { ImpactStoryBoardCard } from "./impactStoryBoardCard";
 import {
   goalProgressStatusColor,
@@ -36,6 +42,26 @@ import {
 // sequential ramp.
 const MAX_CATEGORY_LABEL_LENGTH = 24;
 
+// IMPACT_STORY_CHART_IMPROVEMENT_PLAN.md §1: caps the chart so a
+// large/messy project doesn't render one illegible wall of bars. Chosen
+// from the plan's suggested 8–10 range — the lower end keeps the default
+// view compact; a reader who wants the rest expands in place rather than
+// losing anything (see showAll below), so there's no real cost to
+// starting conservative.
+const DEFAULT_VISIBLE_COUNT = 8;
+
+// Worst-first: a goal needing attention should never require scrolling
+// past a wall of already-achieved goals to find. requires_clarification/
+// requires_capability goals never reach this chart at all (they have no
+// resolvable measuredValue/target to plot — filtered out upstream in
+// buildProjectImpactStoryGoalProgressEntries), so "good"/"warn"/"risk" is
+// the complete set of statuses this ordering ever has to handle.
+const STATUS_PRIORITY: Record<ProjectImpactStoryGoalStatus, number> = {
+  risk: 0,
+  warn: 1,
+  good: 2,
+};
+
 const STATUS_LEGEND_ORDER: ProjectImpactStoryGoalStatus[] = [
   "good",
   "warn",
@@ -48,37 +74,65 @@ export function ProjectImpactStoryGoalProgressChart({
   entries: ProjectImpactStoryGoalProgressEntry[];
 }) {
   const { t, i18n } = useTranslation();
+  const [showAll, setShowAll] = useState(false);
 
-  const data = [...entries]
-    .sort((a, b) => b.progressPercent - a.progressPercent)
-    .map((entry) => ({
-      entryId: entry.entryId,
-      fullLabel: entry.label,
-      label: truncateChartLabel(entry.label, MAX_CATEGORY_LABEL_LENGTH),
-      activityName: entry.activityName,
-      value: entry.progressPercent / 100,
-      status: entry.status,
-    }));
+  const sortedData = [...entries]
+    .sort((a, b) => {
+      const statusDelta = STATUS_PRIORITY[a.status] - STATUS_PRIORITY[b.status];
+      return statusDelta !== 0
+        ? statusDelta
+        : a.progressPercent - b.progressPercent;
+    })
+    .map((entry) => {
+      const fullLabel = coerceImpactStoryText(entry.label, entry.activityName);
+      const displayLabel = coerceImpactStoryText(entry.displayLabel, fullLabel);
 
-  const chartHeight = Math.max(100, data.length * 32);
+      return {
+        entryId: entry.entryId,
+        // fullLabel is always the real, verbatim goal text — the tooltip
+        // must show it regardless of whether a short displayLabel exists,
+        // so a reader can never lose access to the exact original wording.
+        fullLabel,
+        displayLabel,
+        label: truncateChartLabel(displayLabel, MAX_CATEGORY_LABEL_LENGTH),
+        activityName: entry.activityName,
+        value: entry.progressPercent / 100,
+        status: entry.status,
+      };
+    });
+
+  const hiddenCount = sortedData.length - DEFAULT_VISIBLE_COUNT;
+  const data =
+    showAll || hiddenCount <= 0
+      ? sortedData
+      : sortedData.slice(0, DEFAULT_VISIBLE_COUNT);
   const statusLabel = (status: ProjectImpactStoryGoalStatus) =>
     t(
       `impactStory.goalProgressStatus${status[0]!.toUpperCase()}${status.slice(1)}`,
     );
   const presentStatuses = STATUS_LEGEND_ORDER.filter((status) =>
-    data.some((entry) => entry.status === status),
+    sortedData.some((entry) => entry.status === status),
   );
 
-  return (
-    <ImpactStoryBoardCard
-      title={t("impactStory.goalProgressChartTitle")}
-      subtitle={t("impactStory.goalProgressChartSubtitle")}
-    >
+  function renderChart(mode: "card" | "dialog") {
+    const isDialog = mode === "dialog";
+    const visibleData = isDialog ? sortedData : data;
+    const chartData = visibleData.map((entry) => ({
+      ...entry,
+      labelLines: wrapChartLabel(entry.displayLabel, isDialog ? 24 : 18, 2),
+    }));
+    const chartHeight = Math.max(
+      isDialog ? 260 : 100,
+      chartData.length * (isDialog ? 42 : 38),
+    );
+
+    return (
       <div
+        className={isDialog ? DIALOG_CHART_MAX_HEIGHT_CLASS : undefined}
         style={{ height: chartHeight }}
         role="img"
         aria-label={t("impactStory.goalProgressAriaLabel", {
-          summary: data
+          summary: chartData
             .map(
               (entry) =>
                 `${entry.fullLabel}: ${formatImpactStoryValue(entry.value, "percentage", i18n.language)}`,
@@ -88,9 +142,14 @@ export function ProjectImpactStoryGoalProgressChart({
       >
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
-            data={data}
+            data={chartData}
             layout="vertical"
-            margin={{ left: 4, right: 36 }}
+            margin={{
+              left: 4,
+              right: isDialog ? 44 : 36,
+              top: isDialog ? 10 : 4,
+              bottom: isDialog ? 10 : 4,
+            }}
           >
             <CartesianGrid
               stroke={IMPACT_STORY_COLORS.lineSoft}
@@ -102,8 +161,13 @@ export function ProjectImpactStoryGoalProgressChart({
               dataKey="label"
               tickLine={false}
               axisLine={false}
-              width={126}
-              tick={{ fontSize: 10, fill: IMPACT_STORY_COLORS.inkSoft }}
+              width={isDialog ? 220 : 148}
+              tick={
+                <ImpactStoryVerticalAxisTick
+                  data={chartData}
+                  lineHeight={isDialog ? 12 : 11}
+                />
+              }
             />
             <Tooltip
               labelFormatter={(_, payload) =>
@@ -129,13 +193,13 @@ export function ProjectImpactStoryGoalProgressChart({
             <Bar
               dataKey="value"
               radius={[0, 8, 8, 0]}
-              barSize={18}
+              maxBarSize={isDialog ? 22 : 18}
               background={{
                 fill: IMPACT_STORY_COLORS.lineSoft,
                 radius: 8,
               }}
             >
-              {data.map((entry) => (
+              {chartData.map((entry) => (
                 <Cell
                   key={entry.entryId}
                   fill={goalProgressStatusColor(entry.status)}
@@ -145,7 +209,7 @@ export function ProjectImpactStoryGoalProgressChart({
                 dataKey="value"
                 position="right"
                 fill={IMPACT_STORY_COLORS.inkSoft}
-                fontSize={10}
+                fontSize={isDialog ? 12 : 10}
                 formatter={(value: unknown) =>
                   typeof value === "number"
                     ? formatImpactStoryValue(value, "percentage", i18n.language)
@@ -156,6 +220,16 @@ export function ProjectImpactStoryGoalProgressChart({
           </BarChart>
         </ResponsiveContainer>
       </div>
+    );
+  }
+
+  return (
+    <ImpactStoryBoardCard
+      title={t("impactStory.goalProgressChartTitle")}
+      subtitle={t("impactStory.goalProgressChartSubtitle")}
+      expandedContent={renderChart("dialog")}
+    >
+      {renderChart("card")}
       <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
         {presentStatuses.map((status) => (
           <div key={status} className="flex items-center gap-1.5">
@@ -170,6 +244,19 @@ export function ProjectImpactStoryGoalProgressChart({
           </div>
         ))}
       </div>
+      {hiddenCount > 0 ? (
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          className="mt-2 h-auto px-0 py-0 text-xs font-normal text-muted-foreground hover:bg-transparent hover:text-signal"
+          onClick={() => setShowAll((current) => !current)}
+        >
+          {showAll
+            ? t("impactStory.goalProgressShowLess")
+            : t("impactStory.goalProgressShowMore", { count: hiddenCount })}
+        </Button>
+      ) : null}
     </ImpactStoryBoardCard>
   );
 }

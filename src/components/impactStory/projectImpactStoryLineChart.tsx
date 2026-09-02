@@ -10,7 +10,12 @@ import {
 } from "recharts";
 import type { ValueType } from "recharts/types/component/DefaultTooltipContent";
 import type { ProjectImpactStoryChartSpec } from "@/services/apiClient";
-import { formatImpactStoryValue } from "./impactStoryFormat";
+import {
+  formatImpactStoryValue,
+  truncateChartLabel,
+  wrapChartLabel,
+} from "./impactStoryFormat";
+import { ImpactStoryHorizontalAxisTick } from "./impactStoryAxisTick";
 import { ImpactStoryBoardCard } from "./impactStoryBoardCard";
 import { IMPACT_STORY_COLORS } from "./projectImpactStoryChartColors";
 
@@ -29,14 +34,21 @@ export function ProjectImpactStoryLineChart({
     return null;
   }
 
-  return (
-    <ImpactStoryBoardCard
-      title={chart.title}
-      subtitle={chart.subtitle}
-      note={chart.narrativeReason}
-    >
+  function renderChart(mode: "card" | "dialog") {
+    const isDialog = mode === "dialog";
+    const data = chart.data.map((entry) => ({
+      ...entry,
+      fullLabel: entry.label,
+      labelLines: isDialog
+        ? wrapChartLabel(entry.label, 14, 2)
+        : [truncateChartLabel(entry.label, 16)],
+    }));
+    const rotateLabels = isDialog ? data.length >= 10 : data.length >= 6;
+    const labelAngle = rotateLabels ? (isDialog ? -18 : -24) : 0;
+
+    return (
       <div
-        className="h-[205px]"
+        className={isDialog ? "h-[360px]" : "h-[205px]"}
         role="img"
         aria-label={t("impactStory.trendChartAriaLabel", {
           label: chart.title,
@@ -49,7 +61,14 @@ export function ProjectImpactStoryLineChart({
         })}
       >
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chart.data} margin={{ left: 4, right: 8 }}>
+          <LineChart
+            data={data}
+            margin={{
+              left: 4,
+              right: isDialog ? 24 : 8,
+              bottom: rotateLabels ? 16 : 4,
+            }}
+          >
             <CartesianGrid
               stroke={IMPACT_STORY_COLORS.lineSoft}
               vertical={false}
@@ -58,7 +77,14 @@ export function ProjectImpactStoryLineChart({
               dataKey="label"
               tickLine={false}
               axisLine={false}
-              tick={{ fontSize: 10, fill: IMPACT_STORY_COLORS.inkSoft }}
+              height={rotateLabels ? (isDialog ? 72 : 56) : isDialog ? 44 : 24}
+              tick={
+                <ImpactStoryHorizontalAxisTick
+                  data={data}
+                  angle={labelAngle}
+                  lineHeight={11}
+                />
+              }
             />
             <YAxis
               tickLine={false}
@@ -87,11 +113,23 @@ export function ProjectImpactStoryLineChart({
               dataKey="value"
               stroke={IMPACT_STORY_COLORS.blue}
               strokeWidth={2.5}
-              dot={{ fill: IMPACT_STORY_COLORS.blue, r: 3.5 }}
+              dot={{ fill: IMPACT_STORY_COLORS.blue, r: isDialog ? 4 : 3.5 }}
+              activeDot={{ r: isDialog ? 6 : 5 }}
             />
           </LineChart>
         </ResponsiveContainer>
       </div>
+    );
+  }
+
+  return (
+    <ImpactStoryBoardCard
+      title={chart.title}
+      subtitle={chart.subtitle}
+      note={chart.narrativeReason}
+      expandedContent={renderChart("dialog")}
+    >
+      {renderChart("card")}
     </ImpactStoryBoardCard>
   );
 }

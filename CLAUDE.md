@@ -41,9 +41,10 @@ now renders `components/impactStory/projectImpactStoryPage.tsx`, the
 **Project Impact Story** feature: a project-level narrative and chart plan.
 This is a separate feature from the `ActivityAnalystV2` pipeline, not part
 of it, but it isn't purely a downstream consumer of human-confirmed
-`OutcomeEvidenceLink` records either — activity cards and the chart-plan
-catalog read `ActivityAnalystV2` run output directly, gated only by V2's
-own grounding; only the narrative text is restricted to confirmed links.
+`OutcomeEvidenceLink` records either — activity cards and the
+chart-authoring catalog read `ActivityAnalystV2` run output directly,
+gated only by V2's own grounding; only the narrative text is restricted to
+confirmed links.
 Canonical doc: `CURRENT_ANALYTICS_PIPELINE.md` in `ia_backend/documentation/`
 — read it, not just this paragraph, before non-trivial changes here. The
 separate "Wirkungsaussagen" tab

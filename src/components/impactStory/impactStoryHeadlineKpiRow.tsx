@@ -13,7 +13,7 @@ const detailToneClasses = [
 
 // Recomputed status (good/warn/risk) takes priority over the positional
 // rotation above whenever a KPI carries one — a goal-verdict KPI's color
-// means something (see ContextCatalogEntry/ProjectImpactStoryGoalStatus in
+// means something (see ProjectImpactStoryGoalStatus in
 // IMPACT_STORY_OUTCOME_EXTENSION_PLAN.md §3.3), a plain fact KPI's doesn't.
 const statusToneClasses = {
   good: "text-success",

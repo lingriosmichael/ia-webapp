@@ -28,10 +28,7 @@ import {
 } from "@/hooks/useWorkspaceQueries";
 import {
   ApiError,
-  type ImpactCatalogEntry,
-  type OutcomeDistributionEntry,
   type ProjectImpactStoryReadResult,
-  type UnmeasuredOutcomeEntry,
 } from "@/services/apiClient";
 import { DashboardColumn } from "./dashboardColumn";
 import type { ColumnPair } from "./dashboardColumnDrag";
@@ -46,12 +43,13 @@ import {
 import { ImpactStoryHeadlineKpiRow } from "./impactStoryHeadlineKpiRow";
 import { ImpactStoryNarrativeBanner } from "./impactStoryNarrativeBanner";
 import { ProjectImpactStoryChart } from "./projectImpactStoryChart";
-import { ProjectImpactStoryContextChart } from "./projectImpactStoryContextChart";
 import { ProjectImpactStoryGoalProgressChart } from "./projectImpactStoryGoalProgressChart";
-import { ProjectImpactStoryImpactChart } from "./projectImpactStoryImpactChart";
-import { ProjectImpactStoryPairedDeltaGroupChart } from "./projectImpactStoryPairedDeltaGroupChart";
 
 const TERMINAL_JOB_STATUSES = ["completed", "failed", "cancelled"];
+
+function readArray<T>(value: T[] | null | undefined): T[] {
+  return Array.isArray(value) ? value : [];
+}
 
 export function ProjectImpactStoryPage() {
   const { projectId } = useParams({ from: "/projects/$projectId/analytics" });
@@ -154,84 +152,71 @@ export function ProjectImpactStoryPage() {
   const story = storyQuery.data?.story ?? null;
   const isStale = storyQuery.data?.isStale ?? false;
 
-  const pairedDeltaEntries: ImpactCatalogEntry[] =
-    story?.impactCatalog.filter(
-      (entry): entry is ImpactCatalogEntry => entry.shape === "paired_delta",
-    ) ?? [];
-  const otherCatalogEntries: Array<
-    OutcomeDistributionEntry | UnmeasuredOutcomeEntry
-  > =
-    story?.impactCatalog.filter(
-      (entry): entry is OutcomeDistributionEntry | UnmeasuredOutcomeEntry =>
-        entry.shape !== "paired_delta",
-    ) ?? [];
+  // Defaulted defensively, not just for a null story: ia_backend and
+  // ia_webapp are independently deployed with no shared release train (see
+  // root CLAUDE.md), and TanStack Query can also be holding onto a story
+  // object fetched before a newer field existed (e.g. across a dev-mode
+  // hot reload). A truthy `story` is not a guarantee every array field on
+  // it is populated.
+  const impactCatalog = readArray(story?.impactCatalog);
+  const goalProgressEntries = readArray(story?.goalProgressEntries);
+  const confirmedOutcomeCharts = readArray(story?.confirmedOutcomeCharts);
+  const chartPlan = readArray(story?.chartPlan);
+  const backlogChartPlan = readArray(story?.backlogChartPlan);
+  const headlineKpis = readArray(story?.headlineKpis);
 
   // Every chart card on the page is drawn from this one flat, ordered list
   // — useImpactStoryDashboardLayout splits it across the two independently
   // packed dashboard columns (see dashboardColumn.tsx) rather than each
   // source rendering into its own grid, which left a visible empty cell any
-  // time a section (e.g. the always-on goal-progress or paired-delta
-  // charts) contributed an odd number of cards on its own.
+  // time a section (e.g. the always-on goal-progress chart) contributed an
+  // odd number of cards on its own.
   //
-  // Default order is deliberate, not just "however each source happened to
-  // load": the two evidence tiers that answer "did it work" —
-  // target-vs-achieved (goalProgressEntries) and confirmed before/after
-  // outcome measurement (impactCatalog, both pairedDeltaEntries and
-  // otherCatalogEntries) — lead the page. The LLM-selected chartPlan
-  // (reach/process/context — weaker evidentiary weight, see
-  // CURRENT_ANALYSIS_PIPELINE.md's "Python plans" split) follows after,
-  // telling the "how we got there" half of the story once the reader
-  // already has the results. A viewer can drag any card to override this
-  // default — see useImpactStoryDashboardLayout.
+  // As of the 2026-08-30 chart-authoring redesign, confirmed
+  // paired_categorical_shift/single_distribution impactCatalog evidence is
+  // no longer converted into cards here — it arrives already mixed into
+  // `chartPlan`, in whatever grouping/order/framing the backend chose
+  // (ia_backend's projectImpactStoryChartAuthoringExecution.ts guarantees
+  // every confirmed entry still lands in some chart even if the LLM's
+  // proposal didn't cover it). `ProjectImpactStoryChart`'s dispatcher
+  // renders confirmed and unconfirmed charts through the same components,
+  // distinguished visually by ProjectImpactStoryChartSpec.isConfirmedEvidence
+  // (see impactStoryConfirmedEvidenceBadge.tsx) rather than by page
+  // position. Confirmed paired_delta evidence is the one exception: it's a
+  // third deterministic, LLM-independent tier of its own
+  // (`confirmedOutcomeCharts` — see
+  // projectImpactStoryConfirmedPairedDeltaCharts.ts), grouped and colored
+  // by before/after, since combining multiple confirmed pairs safely
+  // needs a real comparability decision no LLM call is positioned to make
+  // — see that file's own comment for the full reasoning. A viewer can
+  // drag any card to override this default order — see
+  // useImpactStoryDashboardLayout.
   const dashboardCards: Array<{ id: string; title: string; node: ReactNode }> =
     story
       ? [
-          ...(story.goalProgressEntries.length > 0
+          ...(goalProgressEntries.length > 0
             ? [
                 {
                   id: "goal-progress",
                   title: t("impactStory.goalProgressChartTitle"),
                   node: (
                     <ProjectImpactStoryGoalProgressChart
-                      entries={story.goalProgressEntries}
+                      entries={goalProgressEntries}
                     />
                   ),
                 },
               ]
             : []),
-          ...(pairedDeltaEntries.length > 0
-            ? [
-                {
-                  id: "paired-delta-group",
-                  title: t("impactStory.pairedDeltaGroupTitle"),
-                  node: (
-                    <ProjectImpactStoryPairedDeltaGroupChart
-                      entries={pairedDeltaEntries}
-                    />
-                  ),
-                },
-              ]
-            : []),
-          ...otherCatalogEntries.map((entry) => ({
-            id: entry.entryId,
-            title:
-              entry.shape === "unmeasured"
-                ? entry.outcomeStatement
-                : entry.questionLabelDe,
-            node: <ProjectImpactStoryImpactChart entry={entry} />,
-          })),
-          ...story.chartPlan.map((chart) => ({
+          ...confirmedOutcomeCharts.map((chart) => ({
             id: chart.chartId,
             title: chart.title,
             node: <ProjectImpactStoryChart chart={chart} />,
           })),
-          ...(story.chartPlan.length === 0
-            ? story.contextCharts.map((entry) => ({
-                id: entry.entryId,
-                title: entry.labelDe,
-                node: <ProjectImpactStoryContextChart entry={entry} />,
-              }))
-            : []),
+          ...chartPlan.map((chart) => ({
+            id: chart.chartId,
+            title: chart.title,
+            node: <ProjectImpactStoryChart chart={chart} />,
+          })),
         ]
       : [];
   // Deterministic, no-LLM charts for every ready catalog entry the chart
@@ -242,13 +227,11 @@ export function ProjectImpactStoryPage() {
   // defaultHiddenIds handling) and only appear on the dashboard once a
   // viewer clicks them in the backlog panel.
   const backlogCards: Array<{ id: string; title: string; node: ReactNode }> =
-    story
-      ? story.backlogChartPlan.map((chart) => ({
-          id: chart.chartId,
-          title: chart.title,
-          node: <ProjectImpactStoryChart chart={chart} />,
-        }))
-      : [];
+    backlogChartPlan.map((chart) => ({
+      id: chart.chartId,
+      title: chart.title,
+      node: <ProjectImpactStoryChart chart={chart} />,
+    }));
   const chartCardsById = new Map(
     [...dashboardCards, ...backlogCards].map(
       (card) => [card.id, card] as const,
@@ -364,7 +347,7 @@ export function ProjectImpactStoryPage() {
     );
   }
 
-  const hasOutcomeOverlay = story.impactCatalog.length > 0;
+  const hasOutcomeOverlay = impactCatalog.length > 0;
 
   return (
     <ProjectWorkspaceShell>
@@ -389,7 +372,7 @@ export function ProjectImpactStoryPage() {
           onAdd={dashboardLayout.showCard}
         />
 
-        <ImpactStoryHeadlineKpiRow kpis={story.headlineKpis} />
+        <ImpactStoryHeadlineKpiRow kpis={headlineKpis} />
 
         {(displayColumns[0].length > 0 || displayColumns[1].length > 0) && (
           <DndContext

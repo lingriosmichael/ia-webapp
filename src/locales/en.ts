@@ -567,6 +567,16 @@ const en = {
       unknownType: "Unknown type",
       unknownSize: "Unknown size",
       unknownUploader: "Unknown user",
+      datasetRoleSlotBaseline: "Baseline",
+      datasetRoleSlotFollowup: "Follow-up",
+      datasetRoleSlotHint:
+        "Pick one file each for baseline and follow-up data. One filled slot is enough to confirm.",
+      datasetRoleDropzoneHint: "Drag a file here or click to choose",
+      datasetRoleConfirm: "Confirm",
+      datasetRoleCancel: "Cancel",
+      datasetRoleToggleAria: "Switch role",
+      datasetRoleChangeSuccess: "Role changed to “{{role}}”.",
+      datasetRoleChangeFailed: "The role could not be changed.",
     },
     interpretation: {
       understoodEmpty:
@@ -611,6 +621,7 @@ const en = {
         "The qualitative coding review could not be approved.",
       qualitativeReviewGenerateFailed:
         "The qualitative coding review could not be generated.",
+      qualitativeReviewGenerateAction: "Generate coding review",
       qualitativeReviewUnavailableTitle:
         "Qualitative coding review unavailable",
       qualitativeReviewUnavailableDescription:
@@ -622,6 +633,11 @@ const en = {
       qualitativeReviewFindingMeta:
         "{{rows}} rows · {{codedRows}} coded rows · synthetic column: {{syntheticColumnName}}",
       qualitativeReviewCodebook: "Source codebook: {{fileName}}",
+      qualitativeReviewReuseCodebookTitle: "Reuse an approved codebook",
+      qualitativeReviewReuseCodebookDescription:
+        "Optionally choose an approved coding review from another file in this activity for each free-text column before generating this review.",
+      qualitativeReviewReuseCodebookPlaceholder: "Choose a source codebook",
+      qualitativeReviewReuseCodebookNone: "Do not reuse a codebook",
       qualitativeReviewExcerpts: "Sample excerpts",
       qualitativeReviewDecisionApprove: "Approve as proposed",
       qualitativeReviewDecisionReject: "Reject for now",
@@ -677,6 +693,16 @@ const en = {
         questionsAnswered: "Answer saved.",
         questionsAnsweredBatch: "{{count}} answers saved.",
         questionsAnswerFailed: "This answer could not be saved.",
+        evidencePreviewToggleShow: "View files",
+        evidencePreviewToggleHide: "Hide files",
+        evidencePreviewNote:
+          "Shows this file's privacy-reviewed values, not necessarily the original raw data.",
+        evidencePreviewLoading: "Loading preview…",
+        evidencePreviewError: "This file's preview could not be loaded.",
+        evidencePreviewNotAvailable:
+          "No privacy-safe preview is available for this file yet — it still needs to be processed.",
+        evidencePreviewEmpty: "No tables were found for this file.",
+        evidencePreviewRowCount: "Showing {{shown}} of {{total}} rows",
         submitAnswersAction: "Send {{count}} answers",
         submitAnswersPending: "Sending…",
         reviewLinkageAction: "Review linkage",
@@ -708,6 +734,8 @@ const en = {
           "AI interpretation could not be restarted.",
         activityNotReadyToast:
           "This activity is not ready for goal checking yet. Finish privacy review first or wait for processing to complete.",
+        missingDatasetRoleCoverageHint:
+          "Files are still missing from Ausgangslage or Wirkungsdaten before the data foundation can be interpreted.",
         actionOpenAnalysis: "View goal check",
         status: {
           no_evidence: "No evidence",
@@ -765,6 +793,7 @@ const en = {
       "This summary was written by AI, but a detail in it could not be automatically double-checked against your data.",
     exploratoryChartNotice:
       "Exploratory — before/after detected, not confirmed as a result",
+    confirmedEvidenceChartNotice: "Confirmed outcome evidence",
     backlogPanelTitle: "Backlog",
     backlogPanelSummary: "{{count}} charts available",
     backlogPanelEmpty: "Nothing in the backlog — hidden charts land here.",
@@ -774,13 +803,22 @@ const en = {
     pairedDeltaGroupSubtitle:
       "Confirmed results compared before and after the program.",
     pairedDeltaGroupAriaLabel: "{{summary}}",
+    pairedDeltaStatusGood: "Positive change",
+    pairedDeltaStatusRisk: "Negative change",
     goalProgressChartTitle: "Target vs. reached — by indicator",
     goalProgressChartSubtitle: "Share of the target reached so far",
     goalProgressAriaLabel: "{{summary}}",
     goalProgressStatusGood: "Target reached",
     goalProgressStatusWarn: "Close to target",
     goalProgressStatusRisk: "Needs attention",
+    goalProgressShowMore: "+ {{count}} more",
+    goalProgressShowLess: "Show less",
     dragHandleLabel: 'Drag "{{title}}" to reorder',
+    comparisonTableLabel: "Measure",
+    comparisonTableChange: "Change",
+    pieBreakdownTitle: "Breakdown",
+    pieTotalLabel: "Total",
+    expandChartLabel: 'Expand "{{title}}"',
     hideChartLabel: 'Hide "{{title}}"',
     outcomeNotYetMeasurable: "Not yet measurable — no linked evidence yet.",
     notYetAnalyzedFootnote: "No analyzed metrics yet for: {{names}}.",
@@ -1612,9 +1650,12 @@ const en = {
   outcomeEvidenceRecommendation: {
     getRecommendationsAction: "Get recommendations",
     gettingRecommendationsAction: "Getting recommendations…",
+    collapsePanelAction: "Collapse",
+    expandPanelAction: "Expand",
     getRecommendationsFailure: "The recommendations could not be retrieved.",
     noRecommendations: "There are no recommendations for the current evidence.",
     pairedDeltaLabel: "Before/after comparison",
+    pairedCategoricalShiftLabel: "Category shift",
     singleDistributionLabel: "Distribution",
     beforeLabel: "Ausgangslage",
     afterLabel: "Wirkungsdaten",
@@ -1636,10 +1677,14 @@ const en = {
     manualAddToggleAction: "Add manually",
     manualAddTitle: "Manually add a link",
     manualAddDescription: "Add a link that brindl did not suggest.",
+    manualAddNumericOnlyHint:
+      "Manual add currently supports numeric before/after measures only. Category-based shifts must come through a recommendation.",
     manualAddBeforeColumnPlaceholder: "Select the Ausgangslage column",
     manualAddAfterColumnPlaceholder: "Select the Wirkungsdaten column",
     manualAddSameColumnError:
       "The Ausgangslage and Wirkungsdaten columns must be different.",
+    manualAddDatasetRoleMismatchError:
+      "The first column must come from a file classified as Ausgangslage, the second from a file classified as Wirkungsdaten.",
     manualAddSubmitAction: "Add",
     manualAddRationale: "Manually added",
     candidatesLoadFailure: "The available columns could not be loaded.",

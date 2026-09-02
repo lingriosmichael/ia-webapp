@@ -20,6 +20,11 @@ export type OrganizationRole = "ORGANIZATION_ADMIN" | "PROJECT_MANAGER";
 export type ProjectStatus = "planning" | "active" | "completed";
 export type ActivityStatus = "active" | "completed";
 export type ActivitySystemType = "outcome_evidence";
+// Human-set at upload time (or after, via updateUploadDatasetRole) — never
+// inferred from filename. See OUTCOME_EVIDENCE_MERGE_PLAN.md's pre/post
+// inversion fix. Only meaningful for uploads on the "outcome_evidence"
+// system activity; every other activity's uploads stay null.
+export type UploadDatasetRole = "baseline" | "followup";
 export type OutcomeTerm = "short" | "long";
 
 export interface OrganizationPermissions {
@@ -332,10 +337,26 @@ export interface UploadMetadataRecord {
   storageKey: string | null;
   originalFileDeletedAt: string | null;
   status: "pending" | "uploaded" | "archived";
+  datasetRole: UploadDatasetRole | null;
   uploadedById: string;
   uploadedByName: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+// Sample rows for the evidence-preview panel, sourced from the current
+// privacy-safe representation (never the raw upload) — see
+// GET /evidence/:evidenceId/preview.
+export interface EvidenceTablePreview {
+  name: string;
+  columns: string[];
+  rows: Record<string, unknown>[];
+  totalRowCount: number;
+}
+
+export interface EvidencePreviewRecord {
+  evidenceId: string;
+  tables: EvidenceTablePreview[];
 }
 
 export interface ProcessingJobRecord {
@@ -512,6 +533,16 @@ export interface QualitativeCodingReviewProposedAssignment {
   assignedCode: string | null;
 }
 
+export interface QualitativeCodingSourceCodebookReference {
+  uploadMetadataId: string;
+  findingKey: string;
+}
+
+export interface QualitativeCodingReviewSourceCodebookSelectionInput {
+  targetFindingKey: string;
+  sourceCodebookFrom: QualitativeCodingSourceCodebookReference;
+}
+
 export interface QualitativeCodingReviewFindingRecord {
   findingKey: string;
   tableName: string;
@@ -523,7 +554,7 @@ export interface QualitativeCodingReviewFindingRecord {
   existingCodeColumnNames: string[];
   proposedCodes: QualitativeCodingReviewSuggestedCode[];
   proposedAssignments: QualitativeCodingReviewProposedAssignment[];
-  sourceCodebookUploadMetadataId: string | null;
+  sourceCodebookFrom: QualitativeCodingSourceCodebookReference | null;
   sourceCodebookOriginalFileName: string | null;
 }
 
@@ -569,6 +600,10 @@ export interface GenerateQualitativeCodingReviewResponse {
 
 export interface ApproveQualitativeCodingReviewPayload {
   decisions?: QualitativeCodingReviewDecisionsInput;
+}
+
+export interface GenerateQualitativeCodingReviewPayload {
+  sourceCodebookSelections?: QualitativeCodingReviewSourceCodebookSelectionInput[];
 }
 
 export interface ApproveQualitativeCodingReviewResponse {
@@ -687,7 +722,7 @@ export interface InterpretationQualitativeFinding {
 }
 
 export type InterpretationQuestionKind =
-  "single_choice" | "free_text" | "merge_confirmation";
+  "single_choice" | "multi_choice" | "free_text" | "merge_confirmation";
 export type InterpretationQuestionDomain = "preparation" | "interpretation";
 export type InterpretationQuestionCode =
   | "normalization_merge"
@@ -697,7 +732,9 @@ export type InterpretationQuestionCode =
   | "positive_status_values"
   | "primary_date_field"
   | "epistemic_role_clarification"
-  | "cohort_tag";
+  | "cohort_tag"
+  | "filter_value_grounding"
+  | "scale_direction";
 export type InterpretationQuestionStatus = "pending" | "answered";
 
 // Identifies one column targeted by a grouped instrument (e.g. the baseline
@@ -728,6 +765,7 @@ export interface InterpretationQuestion {
   questionCode: InterpretationQuestionCode | null;
   targetTableName: string | null;
   targetColumnName: string | null;
+  questionData: Record<string, unknown> | null;
   status: InterpretationQuestionStatus;
   answeredValue: string | null;
   answeredById: string | null;
@@ -896,6 +934,9 @@ export interface PreparedDatasetColumn {
   epistemicRole: EpistemicRole | null;
   metricKind?: PreparedDatasetMetricKind | null;
   valueScope?: PreparedDatasetValueScope | null;
+  // Not yet consumed by any chart component — captured ahead of the chart
+  // work that will read it (IMPACT_STORY_CHART_IMPROVEMENT_PLAN.md §4).
+  scaleDirection?: "higher_is_better" | "lower_is_better" | null;
 }
 
 export interface PreparedDatasetTable {
@@ -1429,30 +1470,19 @@ export interface ProjectImpactStoryHeadlineKpi {
   statusCallout?: string;
 }
 
-// A pure descriptive distribution over a categorical evidence column with no
-// goal or outcome link (e.g. a district breakdown) — computed
-// deterministically and kept structurally separate from outcome-linked
-// claims. The chart planner may still choose it as story-supporting
-// evidence; this shape remains for fallback-only descriptive charts.
-export interface ContextCatalogEntry {
-  entryId: string;
-  activityId: string;
-  activityName: string;
-  labelDe: string;
-  dimensionLabelDe: string;
-  shares: Array<{ labelDe: string; count: number }>;
-  n: number;
-  eligibleChartTypes: Array<"hbar_target" | "donut_share">;
-  sourceDe: string;
-}
-
 // Every goal_assessment with a resolved measuredValue/targetValue,
 // expressed as one ranked-progress entry — computed deterministically by
 // ia_backend and always present when non-empty, never subject to
 // chart-plan selection. See projectImpactStoryGoalProgressChart.tsx.
 export interface ProjectImpactStoryGoalProgressEntry {
   entryId: string;
+  // Full, verbatim goal text — never shortened. Use for accessibility/
+  // tooltip text; use displayLabel for what actually renders on the chart.
   label: string;
+  // Short (~3-5 word) rewrite of `label`, generated once and cached
+  // backend-side (IMPACT_STORY_CHART_IMPROVEMENT_PLAN.md §2). Equals
+  // `label` when no shortened version exists yet — never empty.
+  displayLabel: string;
   activityName: string;
   progressPercent: number;
   status: ProjectImpactStoryGoalStatus;
@@ -1463,7 +1493,21 @@ export type ProjectImpactStoryChartType =
 
 export interface ProjectImpactStoryChartDatum {
   label: string;
+  // The true deterministic value `label` was built from, before
+  // DisplayLabelService may have shortened it for display — only set when
+  // `label` actually differs from the real underlying category/bucket/tile
+  // value. Use this (falling back to `label` when absent) for a tooltip or
+  // accessible full-text affordance.
+  rawLabel?: string;
   value: number;
+  // Only set for a chartType: "comparison" spec built from more than two
+  // bars (e.g. a flattened paired_categorical_shift, whose real category
+  // count per wave can be >1) — tells the renderer which half of the bars
+  // is the "before" wave, since bar index alone can't distinguish a second
+  // before-wave category from an after-wave one. Omitted for the plain
+  // two-bar comparison case, where index 0 vs. everything else is already
+  // unambiguous.
+  group?: "before" | "after";
 }
 
 // What each datum's `label` means, set deterministically by the backend —
@@ -1490,6 +1534,13 @@ export interface ProjectImpactStoryChartSpec {
   // different evidentiary weight). Omitted (not false) on every other
   // chart.
   isExploratory?: boolean;
+  // True only when every entry behind this chart is confirmed
+  // impact-catalog evidence (human-confirmed OutcomeEvidenceLink) — added
+  // 2026-08-30 alongside the chart-authoring redesign, which folds
+  // confirmed evidence into this same chartPlan array instead of a
+  // separate always-first tier the page used to build client-side. See
+  // impactStoryConfirmedEvidenceBadge.tsx.
+  isConfirmedEvidence?: boolean;
 }
 
 export interface ImpactCatalogEntry {
@@ -1501,6 +1552,23 @@ export interface ImpactCatalogEntry {
   pairLabelDe: string;
   beforeValue: number;
   afterValue: number;
+  nMatched: number;
+  nBaseline: number;
+  sourceDe: string;
+  // null until the underlying column(s) have an answered scale_direction
+  // question (IMPACT_STORY_CHART_IMPROVEMENT_PLAN.md §4 consumer 1).
+  scaleDirection: "higher_is_better" | "lower_is_better" | null;
+}
+
+export interface PairedCategoricalShiftEntry {
+  entryId: string;
+  shape: "paired_categorical_shift";
+  outcomeId: string;
+  outcomeTerm: OutcomeTerm;
+  outcomeStatement: string;
+  pairLabelDe: string;
+  beforeShares: Array<{ labelDe: string; count: number }>;
+  afterShares: Array<{ labelDe: string; count: number }>;
   nMatched: number;
   nBaseline: number;
   sourceDe: string;
@@ -1527,7 +1595,10 @@ export interface UnmeasuredOutcomeEntry {
 }
 
 export type ImpactCatalogItem =
-  ImpactCatalogEntry | OutcomeDistributionEntry | UnmeasuredOutcomeEntry;
+  | ImpactCatalogEntry
+  | PairedCategoricalShiftEntry
+  | OutcomeDistributionEntry
+  | UnmeasuredOutcomeEntry;
 
 export type ProjectImpactStoryNarrativeStatus =
   | "generated"
@@ -1551,11 +1622,13 @@ export interface ProjectImpactStoryRecord {
   // plan didn't select this run — the backlog panel lets a viewer add any
   // of these to the dashboard instantly.
   backlogChartPlan: ProjectImpactStoryChartSpec[];
-  // Fallback-only descriptive charts when the planner produced no selected
-  // story charts.
-  contextCharts: ContextCatalogEntry[];
   impactCatalog: ImpactCatalogItem[];
   goalProgressEntries: ProjectImpactStoryGoalProgressEntry[];
+  // Deterministic, always-computed chart(s) for confirmed paired_delta
+  // evidence — never subject to chart-authoring LLM selection, same
+  // guarantee goalProgressEntries already has. Colored by group (see
+  // ProjectImpactStoryChartDatum.group).
+  confirmedOutcomeCharts: ProjectImpactStoryChartSpec[];
   narrativeSummary: string | null;
   narrativeStatus: ProjectImpactStoryNarrativeStatus | null;
   diagnostics: ProjectImpactStoryDiagnostics;
@@ -1625,6 +1698,24 @@ export interface OutcomeEvidenceLinkPairedDelta {
   confirmedAt: string;
 }
 
+export interface OutcomeEvidenceLinkPairedCategoricalShift {
+  linkId: string;
+  outcomeId: string;
+  shape: "paired_categorical_shift";
+  activityIdBefore: string;
+  activityIdAfter: string;
+  beforeUploadMetadataId: string;
+  beforeTableName: string;
+  beforeColumnName: string;
+  afterUploadMetadataId: string;
+  afterTableName: string;
+  afterColumnName: string;
+  matchKey: string;
+  pairLabelColumnName: string;
+  confirmedById: string;
+  confirmedAt: string;
+}
+
 export interface OutcomeEvidenceLinkSingleDistribution {
   linkId: string;
   outcomeId: string;
@@ -1638,7 +1729,9 @@ export interface OutcomeEvidenceLinkSingleDistribution {
 }
 
 export type OutcomeEvidenceLink =
-  OutcomeEvidenceLinkPairedDelta | OutcomeEvidenceLinkSingleDistribution;
+  | OutcomeEvidenceLinkPairedDelta
+  | OutcomeEvidenceLinkPairedCategoricalShift
+  | OutcomeEvidenceLinkSingleDistribution;
 
 // New joint pairing+outcome recommendation flow, scoped to one merged
 // "Ausgangslage & Wirkungsdaten" activity — see
@@ -1656,11 +1749,25 @@ export interface OutcomeEvidenceRecommendationColumnReference {
   columnName: string;
   label: string;
   cohortTag: string | null;
+  // Human-set baseline/follow-up classification — see
+  // OUTCOME_EVIDENCE_MERGE_PLAN.md's pre/post inversion fix. Always
+  // non-null on a paired_delta/paired_categorical_shift reference (the
+  // backend already used it, not label guessing, to decide before vs
+  // after); null on a single_distribution reference or a confirmed link
+  // (not tracked there, same posture as cohortTag).
+  datasetRole: UploadDatasetRole | null;
 }
 
 export type OutcomeEvidenceRecommendation =
   | {
       shape: "paired_delta";
+      before: OutcomeEvidenceRecommendationColumnReference;
+      after: OutcomeEvidenceRecommendationColumnReference;
+      outcomeId: string | null;
+      rationale: string;
+    }
+  | {
+      shape: "paired_categorical_shift";
       before: OutcomeEvidenceRecommendationColumnReference;
       after: OutcomeEvidenceRecommendationColumnReference;
       outcomeId: string | null;
@@ -1690,6 +1797,14 @@ export type OutcomeEvidenceConfirmedLink =
     }
   | {
       linkId: string;
+      shape: "paired_categorical_shift";
+      before: OutcomeEvidenceRecommendationColumnReference;
+      after: OutcomeEvidenceRecommendationColumnReference;
+      outcomeId: string;
+      confirmedAt: string;
+    }
+  | {
+      linkId: string;
       shape: "single_distribution";
       column: OutcomeEvidenceRecommendationColumnReference;
       outcomeId: string;
@@ -1710,6 +1825,7 @@ export interface OutcomeEvidenceCandidate {
   distinctValueCount: number | null;
   identifierColumn: string | null;
   cohortTag: string | null;
+  datasetRole: UploadDatasetRole | null;
 }
 
 export type ActivityWorkflowStage =
@@ -2486,19 +2602,40 @@ export const apiClient = {
       method: "POST",
     });
   },
+  getEvidencePreview(evidenceId: string): Promise<EvidencePreviewRecord> {
+    return request(`/evidence/${evidenceId}/preview`);
+  },
   listActivityJobs(activityId: string): Promise<ProcessingJobRecord[]> {
     return request(`/activities/${activityId}/jobs`);
   },
   uploadActivityFile(
     activityId: string,
     file: File,
+    datasetRole?: UploadDatasetRole | null,
   ): Promise<ActivityUploadResponse> {
     const formData = new FormData();
+    // datasetRole must be appended before file: @fastify/multipart only
+    // guarantees a sibling value field is readable off the file part's
+    // .fields without waiting on stream consumption if it arrives first in
+    // the multipart body — see activityUploadController.ts.
+    if (datasetRole) {
+      formData.append("datasetRole", datasetRole);
+    }
     formData.append("file", file);
 
     return request(`/activities/${activityId}/evidence`, {
       method: "POST",
       body: formData,
+    });
+  },
+  updateUploadDatasetRole(
+    evidenceId: string,
+    datasetRole: UploadDatasetRole,
+  ): Promise<UploadMetadataRecord> {
+    return request(`/evidence/${evidenceId}/dataset-role`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ datasetRole }),
     });
   },
   syncJob(jobId: string): Promise<ProcessingJobRecord> {
@@ -2525,9 +2662,12 @@ export const apiClient = {
   // useJobQuery, then re-fetch getQualitativeCodingReview once it's terminal.
   generateQualitativeCodingReview(
     uploadMetadataId: string,
+    payload: GenerateQualitativeCodingReviewPayload = {},
   ): Promise<ProcessingJobRecord> {
     return request(`/qualitative-coding-review/${uploadMetadataId}/generate`, {
       method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
     });
   },
   approvePrivacyReview(

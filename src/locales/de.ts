@@ -582,6 +582,16 @@ const de: TranslationDictionary = {
       unknownType: "Unbekannter Typ",
       unknownSize: "Unbekannte Größe",
       unknownUploader: "Unbekannter Nutzer",
+      datasetRoleSlotBaseline: "Ausgangslage",
+      datasetRoleSlotFollowup: "Wirkungsdaten",
+      datasetRoleSlotHint:
+        "Wähle jeweils eine Datei für Ausgangslage und Wirkungsdaten. Ein Slot genügt, um zu bestätigen.",
+      datasetRoleDropzoneHint: "Datei hierher ziehen oder klicken",
+      datasetRoleConfirm: "Bestätigen",
+      datasetRoleCancel: "Abbrechen",
+      datasetRoleToggleAria: "Rolle wechseln",
+      datasetRoleChangeSuccess: "Rolle geändert zu „{{role}}“.",
+      datasetRoleChangeFailed: "Die Rolle konnte nicht geändert werden.",
     },
     interpretation: {
       understoodEmpty:
@@ -626,6 +636,7 @@ const de: TranslationDictionary = {
         "Die qualitative Codierungsprüfung konnte nicht freigegeben werden.",
       qualitativeReviewGenerateFailed:
         "Die qualitative Codierungsprüfung konnte nicht erzeugt werden.",
+      qualitativeReviewGenerateAction: "Codierungsprüfung erzeugen",
       qualitativeReviewUnavailableTitle:
         "Qualitative Codierungsprüfung nicht verfügbar",
       qualitativeReviewUnavailableDescription:
@@ -637,6 +648,12 @@ const de: TranslationDictionary = {
       qualitativeReviewFindingMeta:
         "{{rows}} Zeilen · {{codedRows}} codierte Zeilen · synthetische Spalte: {{syntheticColumnName}}",
       qualitativeReviewCodebook: "Quell-Codebuch: {{fileName}}",
+      qualitativeReviewReuseCodebookTitle:
+        "Freigegebenes Codebuch wiederverwenden",
+      qualitativeReviewReuseCodebookDescription:
+        "Wählen Sie bei Bedarf vor dem Erzeugen dieser Prüfung für jede Freitextspalte eine freigegebene Codierungsprüfung aus einer anderen Datei derselben Aktivität aus.",
+      qualitativeReviewReuseCodebookPlaceholder: "Quell-Codebuch auswählen",
+      qualitativeReviewReuseCodebookNone: "Kein Codebuch wiederverwenden",
       qualitativeReviewExcerpts: "Beispielauszüge",
       qualitativeReviewDecisionApprove: "Wie vorgeschlagen freigeben",
       qualitativeReviewDecisionReject: "Vorerst ablehnen",
@@ -695,6 +712,17 @@ const de: TranslationDictionary = {
         questionsAnswered: "Antwort gespeichert.",
         questionsAnsweredBatch: "{{count}} Antworten gespeichert.",
         questionsAnswerFailed: "Diese Antwort konnte nicht gespeichert werden.",
+        evidencePreviewToggleShow: "Dateien ansehen",
+        evidencePreviewToggleHide: "Dateien ausblenden",
+        evidencePreviewNote:
+          "Zeigt die datenschutzsicher aufbereiteten Werte dieser Datei, nicht zwingend die ursprünglichen Rohdaten.",
+        evidencePreviewLoading: "Vorschau wird geladen…",
+        evidencePreviewError:
+          "Für diese Datei konnte keine Vorschau geladen werden.",
+        evidencePreviewNotAvailable:
+          "Für diese Datei liegt noch keine datenschutzsichere Vorschau vor — sie muss zuerst verarbeitet werden.",
+        evidencePreviewEmpty: "Für diese Datei wurden keine Tabellen gefunden.",
+        evidencePreviewRowCount: "Zeigt {{shown}} von {{total}} Zeilen",
         submitAnswersAction: "{{count}} Antworten senden",
         submitAnswersPending: "Wird gesendet…",
         reviewLinkageAction: "Verknüpfung prüfen",
@@ -728,6 +756,8 @@ const de: TranslationDictionary = {
           "KI-Interpretation konnte nicht neu gestartet werden.",
         activityNotReadyToast:
           "Diese Aktivität ist noch nicht bereit für die Zielprüfung. Schließen Sie zuerst die Datenschutzprüfung ab oder warten Sie, bis die Verarbeitung fertig ist.",
+        missingDatasetRoleCoverageHint:
+          "Es fehlen noch Dateien in Ausgangslage oder Wirkungsdaten, bevor die Datengrundlage interpretiert werden kann.",
         actionOpenAnalysis: "Zielprüfung ansehen",
         status: {
           no_evidence: "Keine Datengrundlage",
@@ -785,6 +815,7 @@ const de: TranslationDictionary = {
       "Diese Zusammenfassung wurde von einer KI verfasst, aber ein Detail darin konnte nicht automatisch mit Ihren Daten abgeglichen werden.",
     exploratoryChartNotice:
       "Explorativ — vorher/nachher erkannt, aber nicht als Ergebnis bestätigt",
+    confirmedEvidenceChartNotice: "Bestätigte Wirkungsevidenz",
     backlogPanelTitle: "Backlog",
     backlogPanelSummary: "{{count}} Diagramme verfügbar",
     backlogPanelEmpty:
@@ -795,6 +826,8 @@ const de: TranslationDictionary = {
     pairedDeltaGroupSubtitle:
       "Bestätigte Ergebnisse im Vergleich vor und nach dem Programm.",
     pairedDeltaGroupAriaLabel: "{{summary}}",
+    pairedDeltaStatusGood: "Positive Entwicklung",
+    pairedDeltaStatusRisk: "Negative Entwicklung",
     goalProgressChartTitle: "Ziel vs. erreicht — nach Kennzahl",
     goalProgressChartSubtitle:
       "Anteil des Zielwerts, der bislang erreicht wurde",
@@ -802,7 +835,14 @@ const de: TranslationDictionary = {
     goalProgressStatusGood: "Ziel erreicht",
     goalProgressStatusWarn: "Nahe am Ziel",
     goalProgressStatusRisk: "Braucht Aufmerksamkeit",
+    goalProgressShowMore: "+ {{count}} weitere",
+    goalProgressShowLess: "Weniger anzeigen",
     dragHandleLabel: "„{{title}}“ ziehen, um die Reihenfolge zu ändern",
+    comparisonTableLabel: "Kennzahl",
+    comparisonTableChange: "Veränderung",
+    pieBreakdownTitle: "Verteilung im Detail",
+    pieTotalLabel: "Gesamt",
+    expandChartLabel: "„{{title}}“ vergrößern",
     hideChartLabel: "„{{title}}“ ausblenden",
     outcomeNotYetMeasurable:
       "Noch nicht messbar — es liegt noch keine verknüpfte Datengrundlage vor.",
@@ -1653,11 +1693,14 @@ const de: TranslationDictionary = {
   outcomeEvidenceRecommendation: {
     getRecommendationsAction: "Empfehlungen abrufen",
     gettingRecommendationsAction: "Empfehlungen werden abgerufen…",
+    collapsePanelAction: "Einklappen",
+    expandPanelAction: "Ausklappen",
     getRecommendationsFailure:
       "Die Empfehlungen konnten nicht abgerufen werden.",
     noRecommendations:
       "Für die aktuelle Datengrundlage gibt es keine Empfehlungen.",
     pairedDeltaLabel: "Vorher-/Nachher-Vergleich",
+    pairedCategoricalShiftLabel: "Kategorieverschiebung",
     singleDistributionLabel: "Verteilung",
     beforeLabel: "Ausgangslage",
     afterLabel: "Wirkungsdaten",
@@ -1682,10 +1725,14 @@ const de: TranslationDictionary = {
     manualAddTitle: "Zuordnung manuell hinzufügen",
     manualAddDescription:
       "Fügen Sie eine Zuordnung hinzu, die brindl nicht vorgeschlagen hat.",
+    manualAddNumericOnlyHint:
+      "Das manuelle Hinzufügen unterstützt derzeit nur numerische Vorher/Nachher-Messungen. Kategorienbasierte Verschiebungen müssen über eine Empfehlung kommen.",
     manualAddBeforeColumnPlaceholder: "Ausgangslage-Spalte auswählen",
     manualAddAfterColumnPlaceholder: "Wirkungsdaten-Spalte auswählen",
     manualAddSameColumnError:
       "Ausgangslage- und Wirkungsdaten-Spalte müssen unterschiedlich sein.",
+    manualAddDatasetRoleMismatchError:
+      "Die erste Spalte muss aus einer als Ausgangslage eingestuften Datei stammen, die zweite aus einer als Wirkungsdaten eingestuften Datei.",
     manualAddSubmitAction: "Hinzufügen",
     manualAddRationale: "Manuell hinzugefügt",
     candidatesLoadFailure:

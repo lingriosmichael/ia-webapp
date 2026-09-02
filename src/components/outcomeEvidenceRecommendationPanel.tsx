@@ -54,14 +54,25 @@ import {
 // client-side-only inferAudienceFromText cohort guessing — every
 // recommendation already carries its real, declared cohortTag.
 //
-// The "get recommendations" trigger itself lives one level up, in
-// ActivityKnowledgeCard's header action row (next to the activity title,
-// the same spot other activities show their primary action button) — this
-// panel only renders the *results* of that call. recommendations/
-// dismissedKeys/onDismiss are passed down from there rather than owned
-// here, since the button and the results need to share state. There is no
-// server-side cache of recommendations (§8), so recommendations stays
-// `null` (nothing fetched yet) until the header button's query resolves.
+// The "get recommendations" fetch state (the query itself, and
+// dismissedKeys) is owned one level up, in ActivityKnowledgeCard — this
+// panel only renders the *results* of that call, plus the trigger button
+// itself once there's already a confirmed-links table to put it next to.
+// recommendations/dismissedKeys/onDismiss are passed down from there
+// rather than owned here, since the button and the results need to share
+// state. There is no server-side cache of recommendations (§8), so
+// recommendations stays `null` (nothing fetched yet) until the query
+// resolves.
+//
+// Before any link is confirmed, the trigger button instead lives in
+// ActivityKnowledgeCard's own header action row (next to the activity
+// title, the same spot other activities show their primary action
+// button) — there's no "Alle entfernen" row yet for it to sit beside.
+// Once the first link is confirmed, ActivityKnowledgeCard swaps that
+// header slot for a collapse toggle and this panel takes over rendering
+// the button (see OutcomeEvidenceConfirmedLinksSection below) — the same
+// onGetRecommendations/isGettingRecommendations props cover both cases,
+// only the render location moves.
 //
 // The panel has three sections: a persistent "confirmed links" summary (a
 // real GET read — this is what survives a tab switch or a refresh), the
@@ -73,12 +84,16 @@ export function OutcomeEvidenceRecommendationPanel({
   recommendations,
   dismissedKeys,
   onDismiss,
+  onGetRecommendations,
+  isGettingRecommendations,
 }: {
   projectId: string;
   activityId: string;
   recommendations: OutcomeEvidenceRecommendation[] | null;
   dismissedKeys: Set<string>;
   onDismiss: (recommendation: OutcomeEvidenceRecommendation) => void;
+  onGetRecommendations: () => void;
+  isGettingRecommendations: boolean;
 }) {
   const locale = useWorkspaceLocale();
   const outcomeStatementsQuery = useProjectOutcomeStatementsQuery(projectId);
@@ -185,6 +200,8 @@ export function OutcomeEvidenceRecommendationPanel({
         isLoading={confirmedLinksQuery.isLoading}
         isRemoving={removeAllConfirmedLinksMutation.isPending}
         onRemoveAll={handleRemoveAllConfirmedLinks}
+        onGetRecommendations={onGetRecommendations}
+        isGettingRecommendations={isGettingRecommendations}
         locale={locale}
       />
 
@@ -219,8 +236,11 @@ export function OutcomeEvidenceRecommendationPanel({
                             {subGroup.shape === "paired_delta"
                               ? locale.outcomeEvidenceRecommendation
                                   .pairedDeltaLabel
-                              : locale.outcomeEvidenceRecommendation
-                                  .singleDistributionLabel}
+                              : subGroup.shape === "paired_categorical_shift"
+                                ? locale.outcomeEvidenceRecommendation
+                                    .pairedCategoricalShiftLabel
+                                : locale.outcomeEvidenceRecommendation
+                                    .singleDistributionLabel}
                           </Badge>
                           {subGroup.cohortTags.map((cohortTag) => (
                             <Badge key={cohortTag} variant="outline">
@@ -323,7 +343,8 @@ function getRecommendationCohortTags(
   recommendation: OutcomeEvidenceRecommendation,
 ): string[] {
   const cohortTags =
-    recommendation.shape === "paired_delta"
+    recommendation.shape === "paired_delta" ||
+    recommendation.shape === "paired_categorical_shift"
       ? [recommendation.before.cohortTag, recommendation.after.cohortTag]
       : [recommendation.column.cohortTag];
   return [...new Set(cohortTags.filter((tag): tag is string => tag !== null))];
@@ -395,7 +416,8 @@ function OutcomeEvidenceRecommendationCard({
   return (
     <Card className="p-4">
       <div className="flex flex-wrap items-center gap-2">
-        {recommendation.shape === "paired_delta" ? (
+        {recommendation.shape === "paired_delta" ||
+        recommendation.shape === "paired_categorical_shift" ? (
           <>
             <span className="inline-flex items-center rounded-full border border-border bg-muted/40 px-3 py-1.5 text-sm text-foreground">
               {locale.outcomeEvidenceRecommendation.beforeLabel}:{" "}
@@ -489,6 +511,8 @@ function OutcomeEvidenceConfirmedLinksSection({
   isLoading,
   isRemoving,
   onRemoveAll,
+  onGetRecommendations,
+  isGettingRecommendations,
   locale,
 }: {
   groups: Array<{ outcomeId: string; items: OutcomeEvidenceConfirmedLink[] }>;
@@ -496,6 +520,8 @@ function OutcomeEvidenceConfirmedLinksSection({
   isLoading: boolean;
   isRemoving: boolean;
   onRemoveAll: () => void;
+  onGetRecommendations: () => void;
+  isGettingRecommendations: boolean;
   locale: WorkspaceLocale;
 }) {
   const [isRemoveAllDialogOpen, setIsRemoveAllDialogOpen] = useState(false);
@@ -512,14 +538,31 @@ function OutcomeEvidenceConfirmedLinksSection({
           {locale.outcomeEvidenceRecommendation.confirmedLinksTitle}
         </h4>
         {groups.length > 0 ? (
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            onClick={() => setIsRemoveAllDialogOpen(true)}
-          >
-            {locale.outcomeEvidenceRecommendation.removeAllToggleAction}
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={isGettingRecommendations}
+              onClick={onGetRecommendations}
+            >
+              {isGettingRecommendations ? (
+                <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+              ) : null}
+              {isGettingRecommendations
+                ? locale.outcomeEvidenceRecommendation
+                    .gettingRecommendationsAction
+                : locale.outcomeEvidenceRecommendation.getRecommendationsAction}
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => setIsRemoveAllDialogOpen(true)}
+            >
+              {locale.outcomeEvidenceRecommendation.removeAllToggleAction}
+            </Button>
+          </div>
         ) : null}
       </div>
 
@@ -572,13 +615,15 @@ function OutcomeEvidenceConfirmedLinksSection({
       ) : (
         <div className="space-y-4">
           {groups.map((group) => {
-            const pairedDeltaLinks = group.items.filter(
+            const pairedLinks = group.items.filter(
               (
                 link,
               ): link is Extract<
                 OutcomeEvidenceConfirmedLink,
-                { shape: "paired_delta" }
-              > => link.shape === "paired_delta",
+                { shape: "paired_delta" | "paired_categorical_shift" }
+              > =>
+                link.shape === "paired_delta" ||
+                link.shape === "paired_categorical_shift",
             );
             const singleDistributionLinks = group.items.filter(
               (
@@ -595,7 +640,7 @@ function OutcomeEvidenceConfirmedLinksSection({
                   {outcomeStatementById.get(group.outcomeId)?.statement ??
                     group.outcomeId}
                 </h5>
-                {pairedDeltaLinks.length > 0 ? (
+                {pairedLinks.length > 0 ? (
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -614,7 +659,7 @@ function OutcomeEvidenceConfirmedLinksSection({
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {pairedDeltaLinks.map((link) => (
+                      {pairedLinks.map((link) => (
                         <TableRow key={link.linkId}>
                           <TableCell>{link.before.label}</TableCell>
                           <TableCell>{link.after.label}</TableCell>
@@ -662,7 +707,27 @@ function candidateToColumnReference(
     columnName: candidate.columnName,
     label: candidate.label,
     cohortTag: candidate.cohortTag,
+    datasetRole: candidate.datasetRole,
   };
+}
+
+// Surfaces which file a candidate actually came from directly in the picker
+// — without this, two same-schema candidates render as identical-looking
+// labels and a human has no way to tell them apart before submitting (see
+// OUTCOME_EVIDENCE_MERGE_PLAN.md's pre/post inversion fix: this manual path
+// is the one place that never runs the LLM's own grounding, so getting it
+// right the first time matters more here, not less).
+function formatCandidateOptionLabel(
+  candidate: OutcomeEvidenceCandidate,
+  locale: WorkspaceLocale,
+): string {
+  const roleSuffix =
+    candidate.datasetRole === "baseline"
+      ? locale.outcomeEvidenceRecommendation.beforeLabel
+      : candidate.datasetRole === "followup"
+        ? locale.outcomeEvidenceRecommendation.afterLabel
+        : null;
+  return roleSuffix ? `${candidate.label} (${roleSuffix})` : candidate.label;
 }
 
 // Lets a human add a pairing brindl's recommend call missed — reuses the
@@ -702,8 +767,13 @@ function OutcomeEvidenceManualAddSection({
   const [afterColumnId, setAfterColumnId] = useState("");
   const [outcomeId, setOutcomeId] = useState("");
 
+  const manualPairCandidates = candidates.filter(
+    (candidate) =>
+      candidate.inferredType === "numeric" ||
+      candidate.epistemicRole === "validated_scale",
+  );
   const candidateById = new Map(
-    candidates.map((candidate) => [candidate.columnId, candidate]),
+    manualPairCandidates.map((candidate) => [candidate.columnId, candidate]),
   );
 
   function resetSelections() {
@@ -715,9 +785,21 @@ function OutcomeEvidenceManualAddSection({
   const isSameColumnSelected =
     beforeColumnId !== "" && beforeColumnId === afterColumnId;
 
+  // The approval safety check will 409 a role mismatch regardless (this
+  // manual path never runs the LLM's own grounding), but catching it here
+  // gives an immediate, specific hint instead of a submit-and-fail round
+  // trip — see OUTCOME_EVIDENCE_MERGE_PLAN.md's pre/post inversion fix.
+  const hasDatasetRoleMismatch =
+    beforeColumnId !== "" &&
+    afterColumnId !== "" &&
+    !isSameColumnSelected &&
+    (candidateById.get(beforeColumnId)?.datasetRole !== "baseline" ||
+      candidateById.get(afterColumnId)?.datasetRole !== "followup");
+
   const canSubmit =
     outcomeId !== "" &&
     !isSameColumnSelected &&
+    !hasDatasetRoleMismatch &&
     beforeColumnId !== "" &&
     afterColumnId !== "";
 
@@ -775,6 +857,14 @@ function OutcomeEvidenceManualAddSection({
             <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
           ) : (
             <>
+              {manualPairCandidates.length === 0 ? (
+                <p className="text-xs leading-5 text-muted-foreground">
+                  {
+                    locale.outcomeEvidenceRecommendation
+                      .manualAddNumericOnlyHint
+                  }
+                </p>
+              ) : null}
               <div className="flex flex-wrap items-center gap-2">
                 <Select
                   value={beforeColumnId}
@@ -789,12 +879,12 @@ function OutcomeEvidenceManualAddSection({
                     />
                   </SelectTrigger>
                   <SelectContent>
-                    {candidates.map((candidate) => (
+                    {manualPairCandidates.map((candidate) => (
                       <SelectItem
                         key={candidate.columnId}
                         value={candidate.columnId}
                       >
-                        {candidate.label}
+                        {formatCandidateOptionLabel(candidate, locale)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -812,12 +902,12 @@ function OutcomeEvidenceManualAddSection({
                     />
                   </SelectTrigger>
                   <SelectContent>
-                    {candidates.map((candidate) => (
+                    {manualPairCandidates.map((candidate) => (
                       <SelectItem
                         key={candidate.columnId}
                         value={candidate.columnId}
                       >
-                        {candidate.label}
+                        {formatCandidateOptionLabel(candidate, locale)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -829,6 +919,15 @@ function OutcomeEvidenceManualAddSection({
                   {
                     locale.outcomeEvidenceRecommendation
                       .manualAddSameColumnError
+                  }
+                </p>
+              ) : null}
+
+              {!isSameColumnSelected && hasDatasetRoleMismatch ? (
+                <p className="text-xs text-destructive">
+                  {
+                    locale.outcomeEvidenceRecommendation
+                      .manualAddDatasetRoleMismatchError
                   }
                 </p>
               ) : null}

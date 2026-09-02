@@ -24,6 +24,9 @@ export function ProjectWorkspaceShell({
   const workspaceProject = useCurrentWorkspaceProject();
   const hierarchy = useProjectHierarchy();
   const { t, i18n } = useTranslation();
+  const activityCount = Array.isArray(workspaceProject?.activities)
+    ? workspaceProject.activities.length
+    : 0;
   const primaryArea =
     project.areaOfOperation?.split(",")[0]?.trim() || project.areaOfOperation;
   const showStatusBadge = project.status === "completed";
@@ -32,7 +35,7 @@ export function ProjectWorkspaceShell({
     formatMonthRange(project.startMonth, project.endMonth, i18n.language),
     primaryArea ||
       (workspaceProject
-        ? `${workspaceProject.activities.length} ${t("projectCard.activities")}`
+        ? `${activityCount} ${t("projectCard.activities")}`
         : null),
   ].filter(Boolean);
 

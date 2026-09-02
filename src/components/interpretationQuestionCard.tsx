@@ -78,7 +78,7 @@ const ANSWER_CHOICE_CLASSNAME =
 const RECOMMENDATION_BADGE_CLASSNAME =
   "rounded-full border-primary/30 bg-white/85 px-2 py-0.5 text-[0.56rem] font-semibold uppercase tracking-[0.06em] text-primary";
 const TEXT_INPUT_CLASSNAME =
-  "h-8 w-full max-w-[24rem] rounded-[10px] border-border/80 bg-white/85 px-2.5 text-[0.8rem] shadow-[var(--shadow-soft)]";
+  "h-8 w-full rounded-[10px] border-border/80 bg-white/85 px-2.5 text-[0.8rem] shadow-[var(--shadow-soft)]";
 const TEXTAREA_CLASSNAME =
   "min-h-14 rounded-[10px] border-border/80 bg-white/85 px-2.5 py-2 text-[0.8rem] shadow-[var(--shadow-soft)]";
 const RECOMMENDATION_PANEL_CLASSNAME =
@@ -102,7 +102,7 @@ function normalizeOptionToken(value: string): string {
 // LLM-prefilled draft. Recognized independent of the current UI language,
 // since a stored answer may have been written under either locale; this
 // component's own "select all" button never produces this shorthand itself
-// (it writes out every option value instead — see buildSelectedStatusAnswer),
+// (it writes out every option value instead — see buildMultiChoiceAnswer),
 // so this exists purely to stay compatible with that upstream format.
 const ALL_OPTIONS_SHORTHAND_TOKENS = new Set(["alle", "all"]);
 
@@ -117,6 +117,28 @@ function parseSelectedOptionsFromAnswer(
   const normalizedAnswer = normalizeOptionToken(answer);
   if (ALL_OPTIONS_SHORTHAND_TOKENS.has(normalizedAnswer)) {
     return options;
+  }
+
+  if (answer.trim().startsWith("[")) {
+    try {
+      const parsed = JSON.parse(answer);
+      if (!Array.isArray(parsed)) {
+        return [];
+      }
+
+      const exactTokens = new Set(
+        parsed
+          .filter((token): token is string => typeof token === "string")
+          .map((token) => normalizeOptionToken(token))
+          .filter(Boolean),
+      );
+
+      return options.filter((option) =>
+        exactTokens.has(normalizeOptionToken(option)),
+      );
+    } catch {
+      return [];
+    }
   }
 
   const exactTokens = new Set(
@@ -280,13 +302,12 @@ export function InterpretationQuestionCard(
     question.recommendedOption && (question.recommendedConfidence ?? 0) >= 0.8
       ? question.recommendedOption
       : null;
-  const selectableStatusOptions: ClarificationQuestionOption[] | null =
-    question.questionCode === "positive_status_values" &&
-    question.userFacingOptions?.length
+  const multiChoiceOptions: ClarificationQuestionOption[] | null =
+    question.kind === "multi_choice" && question.userFacingOptions?.length
       ? question.userFacingOptions
       : null;
-  const selectableStatusValues =
-    selectableStatusOptions?.map((option) => option.value) ?? [];
+  const multiChoiceValues =
+    multiChoiceOptions?.map((option) => option.value) ?? [];
   const compositePrompt =
     question.kind === "free_text" || !question.userFacingOptions?.length
       ? parseCompositePrompt(displayPrompt)
@@ -298,13 +319,14 @@ export function InterpretationQuestionCard(
   const [compositeValues, setCompositeValues] = useState<string[]>(
     () => compositePrompt?.parts.map(() => "") ?? [],
   );
-  const [selectedStatusValues, setSelectedStatusValues] = useState<string[]>(
-    () =>
-      parseSelectedOptionsFromAnswer(
-        question.answeredValue ??
-          (props.mode === "select" ? (props.selectedValue ?? "") : ""),
-        selectableStatusValues,
-      ),
+  const [selectedMultiChoiceValues, setSelectedMultiChoiceValues] = useState<
+    string[]
+  >(() =>
+    parseSelectedOptionsFromAnswer(
+      question.answeredValue ??
+        (props.mode === "select" ? (props.selectedValue ?? "") : ""),
+      multiChoiceValues,
+    ),
   );
 
   function commitAnswer(answeredValue: string) {
@@ -343,17 +365,17 @@ export function InterpretationQuestionCard(
     }
   }
 
-  function buildSelectedStatusAnswer(values: string[]): string {
-    return values.join(", ");
+  function buildMultiChoiceAnswer(values: string[]): string {
+    return JSON.stringify(values);
   }
 
-  function toggleStatusValue(option: string) {
-    const nextValues = selectedStatusValues.includes(option)
-      ? selectedStatusValues.filter((value) => value !== option)
-      : [...selectedStatusValues, option];
-    setSelectedStatusValues(nextValues);
+  function toggleMultiChoiceValue(option: string) {
+    const nextValues = selectedMultiChoiceValues.includes(option)
+      ? selectedMultiChoiceValues.filter((value) => value !== option)
+      : [...selectedMultiChoiceValues, option];
+    setSelectedMultiChoiceValues(nextValues);
     if (props.mode === "select") {
-      commitAnswer(buildSelectedStatusAnswer(nextValues));
+      commitAnswer(buildMultiChoiceAnswer(nextValues));
     }
   }
 
@@ -444,38 +466,37 @@ export function InterpretationQuestionCard(
       <p className="mt-2 whitespace-pre-line text-[0.8rem] leading-5 text-foreground/75">
         {promptText}
       </p>
-      {selectableStatusOptions ? (
+      {multiChoiceOptions ? (
         <>
           {renderChoiceGroup({
-            options: selectableStatusOptions,
-            selectedValues: selectedStatusValues,
-            onSelect: toggleStatusValue,
+            options: multiChoiceOptions,
+            selectedValues: selectedMultiChoiceValues,
+            onSelect: toggleMultiChoiceValue,
             recommended:
-              recommendedValue &&
-              selectableStatusValues.includes(recommendedValue)
+              recommendedValue && multiChoiceValues.includes(recommendedValue)
                 ? recommendedValue
                 : null,
           })}
           <div className="mt-1 flex flex-wrap gap-1.5">
             {renderSubmitButton(
               () =>
-                commitAnswer(buildSelectedStatusAnswer(selectedStatusValues)),
-              !selectedStatusValues.length || isSubmitting,
+                commitAnswer(buildMultiChoiceAnswer(selectedMultiChoiceValues)),
+              !selectedMultiChoiceValues.length || isSubmitting,
             )}
             <Button
               type="button"
               size="sm"
               variant="outline"
               onClick={() => {
-                const nextValues = [...selectableStatusValues];
-                setSelectedStatusValues(nextValues);
+                const nextValues = [...multiChoiceValues];
+                setSelectedMultiChoiceValues(nextValues);
                 if (props.mode === "select") {
-                  commitAnswer(buildSelectedStatusAnswer(nextValues));
+                  commitAnswer(buildMultiChoiceAnswer(nextValues));
                 }
               }}
               disabled={
                 isSubmitting ||
-                selectedStatusValues.length === selectableStatusValues.length
+                selectedMultiChoiceValues.length === multiChoiceValues.length
               }
             >
               {t("projectWorkspace.interpretation.questionSelectAllOptions")}

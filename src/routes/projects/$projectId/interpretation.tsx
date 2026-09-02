@@ -3,6 +3,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   AlertTriangle,
   CheckCircle2,
+  ChevronDown,
+  ChevronRight,
   CircleHelp,
   Loader2,
   Sparkles,
@@ -11,8 +13,13 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { PrivacyReviewDialog } from "@/components/privacyReviewDialog";
-import { QualitativeCodingReviewDialog } from "@/components/qualitativeCodingReviewDialog";
+import {
+  QualitativeCodingReviewDialog,
+  type QualitativeCodingReviewSourceCodebookOption,
+  type QualitativeCodingReviewTargetFindingOption,
+} from "@/components/qualitativeCodingReviewDialog";
 import { InterpretationQuestionCard } from "@/components/interpretationQuestionCard";
+import { EvidenceFilePreviewPanel } from "@/components/evidenceFilePreview";
 import { InterpretationCohortGroupingBoard } from "@/components/interpretationCohortGroupingBoard";
 import { OutcomeEvidenceRecommendationPanel } from "@/components/outcomeEvidenceRecommendationPanel";
 import { ProjectWorkspaceShell } from "@/components/project/projectWorkspaceShell";
@@ -173,6 +180,85 @@ function requiresQualitativeCodingReview(
       (column) => column.epistemicRole === "subjective_code",
     );
     return hasFreeText && !hasSubjectiveCode;
+  });
+}
+
+function listQualitativeCodingTargetFindingOptions(
+  result: InterpretationResultRecord | undefined,
+): QualitativeCodingReviewTargetFindingOption[] {
+  return (result?.datasetProfile?.tables ?? []).flatMap((table) =>
+    table.columns.flatMap((column) => {
+      if (column.epistemicRole !== "free_text") {
+        return [];
+      }
+
+      const estimatedNonEmptyRows = Math.round(
+        table.rowCount * (1 - column.nullPercentage / 100),
+      );
+      if (
+        estimatedNonEmptyRows < MIN_NON_EMPTY_ROWS_FOR_QUALITATIVE_CODING_REVIEW
+      ) {
+        return [];
+      }
+
+      return [
+        {
+          findingKey: `${table.name}::${column.name}`,
+          tableName: table.name,
+          textColumnName: column.name,
+        },
+      ];
+    }),
+  );
+}
+
+function readQualitativeCodingReviewFindings(
+  review:
+    | {
+        findings: Record<string, unknown>;
+        decisions: {
+          columnDecisions?: Array<{ findingKey: string; decision: string }>;
+        } | null;
+        status: string;
+      }
+    | null
+    | undefined,
+): Array<{
+  findingKey: string;
+  tableName: string;
+  textColumnName: string;
+}> {
+  const summary = review?.findings?.summary;
+  if (!review || review.status !== "approved" || !Array.isArray(summary)) {
+    return [];
+  }
+  const approvedFindingKeys = new Set(
+    (review.decisions?.columnDecisions ?? [])
+      .filter((decision) => decision.decision === "approve_as_proposed")
+      .map((decision) => decision.findingKey),
+  );
+
+  return summary.flatMap((finding) => {
+    if (!finding || typeof finding !== "object") {
+      return [];
+    }
+    const findingKey =
+      typeof finding.findingKey === "string" ? finding.findingKey : null;
+    const tableName =
+      typeof finding.tableName === "string" ? finding.tableName : null;
+    const textColumnName =
+      typeof finding.textColumnName === "string"
+        ? finding.textColumnName
+        : null;
+    if (
+      !findingKey ||
+      !tableName ||
+      !textColumnName ||
+      !approvedFindingKeys.has(findingKey)
+    ) {
+      return [];
+    }
+    return [{ findingKey, tableName, textColumnName }];
   });
 }
 
@@ -748,6 +834,8 @@ function ProjectInterpretationPage() {
         activityId: string;
         activityName: string;
         originalFileName: string;
+        targetFindingOptions: QualitativeCodingReviewTargetFindingOption[];
+        sourceCodebookOptions: QualitativeCodingReviewSourceCodebookOption[];
       }
     | undefined
   >(undefined);
@@ -930,12 +1018,16 @@ function ProjectInterpretationPage() {
                     activityId,
                     activityName,
                     originalFileName,
+                    targetFindingOptions,
+                    sourceCodebookOptions,
                   ) =>
                     setQualitativeReviewTarget({
                       uploadMetadataId,
                       activityId,
                       activityName,
                       originalFileName,
+                      targetFindingOptions,
+                      sourceCodebookOptions,
                     })
                   }
                 />
@@ -969,6 +1061,12 @@ function ProjectInterpretationPage() {
           organizationId={workspaceProject?.organizationId ?? ""}
           activityName={qualitativeReviewTarget?.activityName}
           originalFileName={qualitativeReviewTarget?.originalFileName}
+          targetFindingOptions={
+            qualitativeReviewTarget?.targetFindingOptions ?? []
+          }
+          sourceCodebookOptions={
+            qualitativeReviewTarget?.sourceCodebookOptions ?? []
+          }
         />
       </section>
     </ProjectWorkspaceShell>
@@ -999,19 +1097,29 @@ function ActivityKnowledgeCard({
     activityId: string,
     activityName: string,
     originalFileName: string,
+    targetFindingOptions: QualitativeCodingReviewTargetFindingOption[],
+    sourceCodebookOptions: QualitativeCodingReviewSourceCodebookOption[],
   ) => void;
 }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [isAnalysisDialogOpen, setIsAnalysisDialogOpen] = useState(false);
   const [isLinkageDialogOpen, setIsLinkageDialogOpen] = useState(false);
-  // Outcome-evidence recommend flow: the trigger button lives in this
-  // card's header (below, alongside the other primary per-activity
-  // actions) rather than inside OutcomeEvidenceRecommendationPanel, so the
-  // fetch state has to live here too and gets passed down as props — see
+  // Outcome-evidence recommend flow: the "get recommendations" fetch state
+  // lives here (not inside OutcomeEvidenceRecommendationPanel) and gets
+  // passed down as props, since it's shared between two different render
+  // locations depending on whether any link is confirmed yet — see
   // outcomeEvidenceRecommendationPanel.tsx's own header comment for why.
   const [dismissedRecommendationKeys, setDismissedRecommendationKeys] =
     useState<Set<string>>(new Set());
+  // Before the first confirmed link, this card's header shows the trigger
+  // button directly (same spot other activities show their primary
+  // action). Once at least one link is confirmed, that header slot
+  // becomes a collapse toggle instead, and the trigger button moves down
+  // into the panel next to "Alle entfernen" — see the render below and
+  // OutcomeEvidenceConfirmedLinksSection in outcomeEvidenceRecommendationPanel.tsx.
+  const [isOutcomeEvidencePanelCollapsed, setIsOutcomeEvidencePanelCollapsed] =
+    useState(false);
   const recommendationsQuery = useOutcomeEvidenceRecommendationsQuery(
     projectId,
     activity.id,
@@ -1021,6 +1129,8 @@ function ActivityKnowledgeCard({
     activity.id,
     activity.systemType === "outcome_evidence",
   );
+  const hasConfirmedOutcomeEvidenceLinks =
+    (confirmedLinksQuery.data?.links.length ?? 0) > 0;
 
   async function handleGetOutcomeEvidenceRecommendations() {
     const result = await recommendationsQuery.refetch();
@@ -1329,6 +1439,35 @@ function ActivityKnowledgeCard({
       qualitativeCodingReviewQueries[index]?.data ?? null,
     ]),
   );
+  const qualitativeReviewTargetFindingOptionsByUploadId = new Map(
+    qualitativeReviewCandidateUploads.map((upload) => [
+      upload.id,
+      listQualitativeCodingTargetFindingOptions(
+        resultByUploadId.get(upload.id),
+      ),
+    ]),
+  );
+  const qualitativeReviewSourceCodebookOptionsByUploadId = new Map(
+    qualitativeReviewCandidateUploads.map((targetUpload) => [
+      targetUpload.id,
+      qualitativeReviewCandidateUploads.flatMap((sourceUpload) => {
+        if (sourceUpload.id === targetUpload.id) {
+          return [];
+        }
+        const sourceReview = qualitativeReviewByUploadId.get(sourceUpload.id);
+        return readQualitativeCodingReviewFindings(sourceReview).map(
+          (finding) =>
+            ({
+              uploadMetadataId: sourceUpload.id,
+              originalFileName: sourceUpload.originalFileName,
+              findingKey: finding.findingKey,
+              tableName: finding.tableName,
+              textColumnName: finding.textColumnName,
+            }) satisfies QualitativeCodingReviewSourceCodebookOption,
+        );
+      }),
+    ]),
+  );
   const unresolvedQualitativeReviewUploads =
     qualitativeReviewCandidateUploads.filter(
       (upload) =>
@@ -1378,13 +1517,28 @@ function ActivityKnowledgeCard({
     activeInterpretationJobs.length === 0;
   const isInterpretationProcessing =
     status === "processing" || hasQueuedInterpretationStart;
-  const canStartInterpretation =
+  // Only meaningful for the fixed "Ausgangslage & Wirkungsdaten" system
+  // activity — every other activity has no baseline/follow-up concept, so
+  // this stays true (a no-op) for them. See OUTCOME_EVIDENCE_MERGE_PLAN.md's
+  // pre/post inversion fix: interpretation on this activity is only useful
+  // once there's an actual pair to interpret, not just any files.
+  const hasOutcomeEvidenceDatasetRoleCoverage =
+    activity.systemType !== "outcome_evidence" ||
+    (uploads.some((upload) => upload.datasetRole === "baseline") &&
+      uploads.some((upload) => upload.datasetRole === "followup"));
+  const otherInterpretationStartConditionsMet =
     uploads.length > 0 &&
     readyToInterpretUploadCount > 0 &&
     activeInterpretationJobs.length === 0 &&
     !currentPendingPrivacyReview &&
     !startMutation.isPending &&
     !hasQueuedInterpretationStart;
+  const canStartInterpretation =
+    otherInterpretationStartConditionsMet &&
+    hasOutcomeEvidenceDatasetRoleCoverage;
+  const isBlockedOnlyByMissingDatasetRoleCoverage =
+    otherInterpretationStartConditionsMet &&
+    !hasOutcomeEvidenceDatasetRoleCoverage;
   const canGenerateAnalysis =
     !activity.systemType &&
     (status === "ready" || status === "reviewed") &&
@@ -1562,19 +1716,15 @@ function ActivityKnowledgeCard({
     }
   }
 
-  // Hidden outright (not just disabled) once this activity already has a
-  // confirmed link — a visible button here would still read as an open
-  // task even collapsed, and risks a non-technical user starting an AI
-  // flow they didn't mean to on an activity that's already covered. This
-  // does mean there's no way to check for newly-relevant evidence once one
-  // link is confirmed — an explicit, deliberate tradeoff, not an
-  // oversight; the "Alle entfernen" action in the confirmed-links summary
-  // is what brings this button back.
+  // Keep this visible for outcome_evidence activities even after some
+  // links have already been confirmed: the backend deduplicates against
+  // existing OutcomeEvidenceLinks, so a rerun can safely surface only
+  // newly-relevant evidence instead of forcing a destructive "remove all"
+  // reset just to ask for more recommendations.
   const showOutcomeEvidenceRecommendButton =
     activity.systemType === "outcome_evidence" &&
     (status === "ready" || status === "reviewed") &&
-    !confirmedLinksQuery.isLoading &&
-    (confirmedLinksQuery.data?.links.length ?? 0) === 0;
+    !confirmedLinksQuery.isLoading;
 
   return (
     <>
@@ -1630,6 +1780,12 @@ function ActivityKnowledgeCard({
                     activity.id,
                     activity.name,
                     currentPendingQualitativeReviewUpload.originalFileName,
+                    qualitativeReviewTargetFindingOptionsByUploadId.get(
+                      currentPendingQualitativeReviewUpload.id,
+                    ) ?? [],
+                    qualitativeReviewSourceCodebookOptionsByUploadId.get(
+                      currentPendingQualitativeReviewUpload.id,
+                    ) ?? [],
                   )
                 }
               >
@@ -1673,6 +1829,13 @@ function ActivityKnowledgeCard({
               >
                 {interpretationActionLabel}
               </Button>
+            ) : !isInterpretationProcessing &&
+              isBlockedOnlyByMissingDatasetRoleCoverage ? (
+              <p className="text-xs text-muted-foreground">
+                {t(
+                  "projectWorkspace.interpretation.simplified.missingDatasetRoleCoverageHint",
+                )}
+              </p>
             ) : null}
 
             {canGenerateAnalysis && hasOpenableAnalysis ? (
@@ -1731,7 +1894,8 @@ function ActivityKnowledgeCard({
               </Button>
             ) : null}
 
-            {showOutcomeEvidenceRecommendButton ? (
+            {showOutcomeEvidenceRecommendButton &&
+            !hasConfirmedOutcomeEvidenceLinks ? (
               <Button
                 size="sm"
                 variant="outline"
@@ -1749,8 +1913,53 @@ function ActivityKnowledgeCard({
                   : t("outcomeEvidenceRecommendation.getRecommendationsAction")}
               </Button>
             ) : null}
+
+            {showOutcomeEvidenceRecommendButton &&
+            hasConfirmedOutcomeEvidenceLinks ? (
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground"
+                aria-label={
+                  isOutcomeEvidencePanelCollapsed
+                    ? t("outcomeEvidenceRecommendation.expandPanelAction")
+                    : t("outcomeEvidenceRecommendation.collapsePanelAction")
+                }
+                onClick={() =>
+                  setIsOutcomeEvidencePanelCollapsed((current) => !current)
+                }
+              >
+                {isOutcomeEvidencePanelCollapsed ? (
+                  <ChevronRight className="h-4 w-4" />
+                ) : (
+                  <ChevronDown className="h-4 w-4" />
+                )}
+              </Button>
+            ) : null}
           </div>
         </div>
+
+        {(shouldShowDatasetQuestions || latestAnalysisNeedsClarification) &&
+        uploads.length > 0 ? (
+          <div className="mt-4 border-t border-border/70 pt-4">
+            <EvidenceFilePreviewPanel
+              uploads={uploads}
+              initialSelectedUploadId={
+                pendingQuestions[0]?.result.uploadMetadataId ?? null
+              }
+              highlightTableName={
+                pendingQuestions[0]?.question.targetTableName ??
+                pendingAnalysisClarificationQuestions[0]?.targetTableName ??
+                null
+              }
+              highlightColumnName={
+                pendingQuestions[0]?.question.targetColumnName ??
+                pendingAnalysisClarificationQuestions[0]?.targetColumnName ??
+                null
+              }
+            />
+          </div>
+        ) : null}
 
         {shouldShowDatasetQuestions ? (
           <div className="mt-4 space-y-3 border-t border-border/70 pt-4">
@@ -1902,13 +2111,18 @@ function ActivityKnowledgeCard({
         ) : null}
 
         {activity.systemType === "outcome_evidence" &&
-        (status === "ready" || status === "reviewed") ? (
+        (status === "ready" || status === "reviewed") &&
+        !isOutcomeEvidencePanelCollapsed ? (
           <OutcomeEvidenceRecommendationPanel
             projectId={projectId}
             activityId={activity.id}
             recommendations={recommendationsQuery.data?.recommendations ?? null}
             dismissedKeys={dismissedRecommendationKeys}
             onDismiss={handleDismissOutcomeEvidenceRecommendation}
+            onGetRecommendations={() =>
+              void handleGetOutcomeEvidenceRecommendations()
+            }
+            isGettingRecommendations={recommendationsQuery.isFetching}
           />
         ) : null}
       </Card>

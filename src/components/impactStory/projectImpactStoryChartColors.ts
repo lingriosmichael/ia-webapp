@@ -27,8 +27,9 @@ const STATUS_COLOR_BY_LABEL: Record<string, string> = {
   mixed_evidence: IMPACT_STORY_COLORS.blue,
 };
 
-export function statusColor(label: string): string {
-  return STATUS_COLOR_BY_LABEL[label] ?? "var(--color-muted-foreground)";
+export function statusColor(label: string | null | undefined): string {
+  const safeLabel = typeof label === "string" ? label : "";
+  return STATUS_COLOR_BY_LABEL[safeLabel] ?? "var(--color-muted-foreground)";
 }
 
 // Goal-progress status is a genuine good/bad signal (% of target reached),
@@ -88,15 +89,21 @@ const SEQUENTIAL_RAMPS = [
 // Deterministic (djb2-style) string hash — same chartId always picks the
 // same ramp within one render, but different charts spread across the
 // available hues instead of all defaulting to the first one.
-function hashStringToIndex(value: string, modulus: number): number {
+function hashStringToIndex(
+  value: string | null | undefined,
+  modulus: number,
+): number {
+  const safeValue = typeof value === "string" ? value : "";
   let hash = 5381;
-  for (let i = 0; i < value.length; i += 1) {
-    hash = (hash * 33) ^ value.charCodeAt(i);
+  for (let i = 0; i < safeValue.length; i += 1) {
+    hash = (hash * 33) ^ safeValue.charCodeAt(i);
   }
   return Math.abs(hash) % modulus;
 }
 
-function sequentialRampForChart(chartId: string): readonly string[] {
+function sequentialRampForChart(
+  chartId: string | null | undefined,
+): readonly string[] {
   return SEQUENTIAL_RAMPS[hashStringToIndex(chartId, SEQUENTIAL_RAMPS.length)]!;
 }
 
@@ -118,12 +125,14 @@ export function verticalBarColor({
   dataKind,
   chartType,
   chartId,
+  group,
 }: {
   index: number;
   rawLabel: string;
   dataKind: ProjectImpactStoryChartDataKind;
   chartType: "bar" | "comparison";
   chartId: string;
+  group?: "before" | "after";
 }): string {
   if (dataKind === "status") {
     // Color by the bar's actual status label, not by its position — the
@@ -134,6 +143,18 @@ export function verticalBarColor({
   }
 
   if (chartType === "comparison") {
+    // group is set for a flattened multi-category comparison (e.g.
+    // paired_categorical_shift, where each wave can contribute more than
+    // one bar) — index alone can't tell a second before-wave category
+    // apart from an after-wave one. Falls back to the plain two-bar rule
+    // (first bar grey, rest blue) when group is absent, which is every
+    // other "comparison" spec today (a single before/after pair, or an
+    // LLM chart-plan/backlog side-by-side KPI comparison).
+    if (group) {
+      return group === "before"
+        ? IMPACT_STORY_COLORS.grey
+        : IMPACT_STORY_COLORS.blue;
+    }
     return index === 0 ? IMPACT_STORY_COLORS.grey : IMPACT_STORY_COLORS.blue;
   }
 

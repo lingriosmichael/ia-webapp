@@ -18,6 +18,8 @@ import {
   type DeleteEvidenceResponse,
   type DeleteProjectPayload,
   type DeleteProjectResponse,
+  type EvidencePreviewRecord,
+  type GenerateQualitativeCodingReviewPayload,
   type InterpretationResultRecord,
   type InvitationAcceptanceSummary,
   type InvitationSummary,
@@ -41,6 +43,7 @@ import {
   type StartActivityInterpretationResponse,
   type UpdateProjectPayload,
   type UpdateActivityPayload,
+  type UploadDatasetRole,
   type UploadMetadataRecord,
 } from "@/services/apiClient";
 
@@ -60,6 +63,8 @@ export const activityUploadsQueryKey = (activityId: string) =>
   ["activity-uploads", activityId] as const;
 export const activityJobsQueryKey = (activityId: string) =>
   ["activity-jobs", activityId] as const;
+export const evidencePreviewQueryKey = (evidenceId: string) =>
+  ["evidence-preview", evidenceId] as const;
 export const activityWorkflowStageQueryKey = (activityId: string) =>
   ["activity-workflow-stage", activityId] as const;
 export const activityLinkageReviewQueryKey = (activityId: string) =>
@@ -197,6 +202,18 @@ export function useActivityJobsQuery(
   });
 }
 
+// Enabled defaults to false: fetched only once the user actually opens the
+// evidence-preview panel for a given file, not eagerly for every upload on
+// an activity card.
+export function useEvidencePreviewQuery(evidenceId: string, enabled = false) {
+  return useQuery<EvidencePreviewRecord, ApiError>({
+    queryKey: evidencePreviewQueryKey(evidenceId),
+    queryFn: () => apiClient.getEvidencePreview(evidenceId),
+    enabled,
+    staleTime: Infinity,
+  });
+}
+
 export function useActivityLinkageReviewQuery(
   activityId: string,
   enabled = true,
@@ -318,8 +335,7 @@ export function useOutcomeEvidenceCandidatesQuery(
 // query set useApproveOutcomeEvidenceRecommendationMutation does: clearing
 // links is symmetric with confirming them for every downstream surface
 // that reads OutcomeEvidenceLinks (workflow stage, Project Impact Story),
-// plus the confirmed-links list itself so the panel's recommend section can
-// reappear once the count reaches zero.
+// plus the confirmed-links list itself.
 export function useRemoveAllOutcomeEvidenceConfirmedLinksMutation(
   projectId: string,
   activityId: string,
@@ -853,7 +869,13 @@ export function useUploadActivityFileMutation(
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (file: File) => apiClient.uploadActivityFile(activityId, file),
+    mutationFn: ({
+      file,
+      datasetRole,
+    }: {
+      file: File;
+      datasetRole?: UploadDatasetRole | null;
+    }) => apiClient.uploadActivityFile(activityId, file, datasetRole),
     onSuccess: () => {
       queryClient.setQueryData(
         activityAnalysisV2LatestQueryKey(activityId),
@@ -891,6 +913,27 @@ export function useUploadActivityFileMutation(
           queryKey: workspaceQueryKey(organizationId),
         });
       }
+    },
+  });
+}
+
+// Lighter than upload/delete above — reassigning a role doesn't touch
+// analysis-v2 state, it only needs the file list itself to reflect the new
+// tag (evidence.tsx's role-tag toggle, outcome_evidence activity only).
+export function useUpdateUploadDatasetRoleMutation(activityId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    UploadMetadataRecord,
+    ApiError,
+    { evidenceId: string; datasetRole: UploadDatasetRole }
+  >({
+    mutationFn: ({ evidenceId, datasetRole }) =>
+      apiClient.updateUploadDatasetRole(evidenceId, datasetRole),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: activityUploadsQueryKey(activityId),
+      });
     },
   });
 }
@@ -1026,9 +1069,16 @@ export function useApprovePrivacyReviewMutation(
 // invalidating here, on job creation, would be premature since nothing has
 // actually changed yet.
 export function useGenerateQualitativeCodingReviewMutation() {
-  return useMutation<ProcessingJobRecord, ApiError, string>({
-    mutationFn: (uploadMetadataId: string) =>
-      apiClient.generateQualitativeCodingReview(uploadMetadataId),
+  return useMutation<
+    ProcessingJobRecord,
+    ApiError,
+    {
+      uploadMetadataId: string;
+      payload?: GenerateQualitativeCodingReviewPayload;
+    }
+  >({
+    mutationFn: ({ uploadMetadataId, payload }) =>
+      apiClient.generateQualitativeCodingReview(uploadMetadataId, payload),
   });
 }
 
