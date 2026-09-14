@@ -68,7 +68,7 @@ export function LandingBookingSection() {
 
       <div className="grid gap-10 px-8 py-16 sm:px-10 md:grid-cols-[1.1fr_0.9fr] md:items-center md:py-20">
         <div>
-          <h2 className="max-w-md text-balance text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+          <h2 className="max-w-md text-balance text-[1.725rem] font-semibold tracking-tight text-foreground sm:text-[2.156rem]">
             {t("landing.booking.titleBefore")}
             <span className="text-signal">{t("landing.booking.titleHighlight1")}</span>
             {t("landing.booking.titleMiddle")}

@@ -37,7 +37,7 @@ export function LandingPilotProgramSection() {
         <SectionFloorFade edge="bottom" />
       </div>
 
-      <h2 className="text-center text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+      <h2 className="text-center text-[1.725rem] font-semibold tracking-tight text-foreground sm:text-[2.156rem]">
         {t("landing.pilotProgram.title")}
       </h2>
 
@@ -70,7 +70,7 @@ export function LandingPilotProgramSection() {
                 }}
               />
               <div className="p-6">
-                <div className="text-sm font-semibold text-foreground">
+                <div className="text-[1.006rem] font-semibold text-foreground">
                   {title}
                 </div>
                 <ul className="mt-4 space-y-2.5">

@@ -16,7 +16,7 @@ export function LandingFaqSection() {
 
   return (
     <section id="faq" className="scroll-mt-24 py-16">
-      <h2 className="text-center text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+      <h2 className="text-center text-[1.725rem] font-semibold tracking-tight text-foreground sm:text-[2.156rem]">
         {t("landing.faq.title")}
       </h2>
 

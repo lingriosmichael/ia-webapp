@@ -42,7 +42,7 @@ export function LandingHowItWorksSection() {
           className="absolute left-1/2 top-1/2 -z-10 h-[26rem] w-[26rem] -translate-x-1/2 -translate-y-[58%] rotate-6 blur-2xl"
         />
         <div className="mx-auto h-1 w-10 rounded-full bg-signal" />
-        <h2 className="mt-4 text-center text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+        <h2 className="mt-4 text-center text-[2.156rem] font-semibold tracking-tight text-foreground sm:text-[2.588rem]">
           {t("landing.howItWorks.title")}
         </h2>
       </div>
@@ -73,7 +73,7 @@ export function LandingHowItWorksSection() {
                   {index + 1}
                 </span>
               </div>
-              <div className="mt-5 text-base font-semibold text-foreground">
+              <div className="mt-5 text-[1.15rem] font-semibold text-foreground">
                 {step.title}
               </div>
               <p className="mt-2 max-w-xs text-sm leading-6 text-muted-foreground">

@@ -38,7 +38,7 @@ export function LandingProblemSection() {
 
         <div>
           <div className="h-1 w-10 rounded-full bg-signal" />
-          <h2 className="mt-3 max-w-sm text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+          <h2 className="mt-3 max-w-sm text-[2.156rem] font-semibold tracking-tight text-foreground sm:text-[2.588rem]">
             {t("landing.problem.title")}
           </h2>
 

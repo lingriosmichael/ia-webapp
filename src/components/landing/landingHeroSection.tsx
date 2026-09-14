@@ -134,7 +134,9 @@ export function LandingHeroSection() {
         </div>
 
         <h1 className="mt-6 max-w-[16ch] font-display text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
-          {t("landing.hero.titleLine1")}
+          <span className="text-[2.588rem] sm:text-[3.45rem] lg:text-[4.313rem]">
+            {t("landing.hero.titleLine1")}
+          </span>
           <br />
           {t("landing.hero.titleLine2")}
           <span className="text-signal">
