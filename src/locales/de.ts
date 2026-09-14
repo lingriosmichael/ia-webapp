@@ -51,8 +51,6 @@ const de: TranslationDictionary = {
         "brindl bringt Projektdaten, Nachweise und Wirkungsinformationen an einem Ort zusammen. So erstellt Ihr Team Berichte schneller und erkennt leichter, was Ihre Arbeit bewirkt.",
       ctaPrimary: "Pilotprogramm ansehen",
       ctaSecondary: "15-minütigen Gespräch vereinbaren",
-      mockupAlt:
-        "brindl Dashboard-Vorschau mit der Übersicht eines Mentoring-Programms, seinen jüngsten Aktivitäten und einem Wirkungs-Insights-Panel mit einem Beziehungskapital-Wert von 79%.",
     },
     problem: {
       title: "Kommt Ihnen das bekannt vor?",
@@ -134,15 +132,17 @@ const de: TranslationDictionary = {
         ],
       },
     },
-    cta: {
+    booking: {
       titleBefore: "Bereit für ",
       titleHighlight1: "weniger Aufwand",
       titleMiddle: " und ",
       titleHighlight2: "mehr Wirkung",
       titleAfter: "?",
       description:
-        "Vereinbaren Sie jetzt ein unverbindliches Gespräch. Wir zeigen Ihnen, wie brindl Ihr Team entlastet und Ihre Wirkung sichtbar macht.",
-      primary: "Gespräch anfragen",
+        "Wählen Sie einen 15-minütigen Termin, um brindl gemeinsam mit uns durchzugehen – ganz ohne Vorbereitung, bringen Sie einfach eine Frage oder ein Projekt mit.",
+      cta: "Termin wählen",
+      note: "Die Live-Terminbuchung folgt hier in Kürze.",
+      slots: ["Di, 10:00", "Di, 14:30", "Mi, 09:00"],
     },
     faq: {
       title: "Häufige Fragen",

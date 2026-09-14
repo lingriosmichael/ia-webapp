@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { LandingCtaSection } from "@/components/landing/landingCtaSection";
+import { LandingBookingSection } from "@/components/landing/landingBookingSection";
 import { LandingFaqSection } from "@/components/landing/landingFaqSection";
 import { LandingFooter } from "@/components/landing/landingFooter";
 import { LandingHeroSection } from "@/components/landing/landingHeroSection";
@@ -67,7 +67,15 @@ function LandingPage() {
   ]);
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(90deg,_#e4ece1_0%,_#ece8e0_100%)] text-foreground">
+    <div
+      className="min-h-screen bg-[linear-gradient(90deg,_#e4ece1_0%,_#ece8e0_100%)] text-foreground"
+      // Landing-page-only accent: the brand logo's blue reads noticeably
+      // brighter than the app-wide --signal token. Scoping the override to
+      // this route (rather than repainting the shared styles.css token)
+      // keeps the rest of the app — dashboard, login, register — on the
+      // existing muted blue.
+      style={{ "--signal": "#4f7dee" } as React.CSSProperties}
+    >
       <div className="mx-auto max-w-7xl px-6 pb-6 pt-4 md:pb-8 md:pt-5">
         <PublicSiteHeader currentPage="landing" />
         <LandingHeroSection />
@@ -77,7 +85,7 @@ function LandingPage() {
         <LandingHowItWorksSection />
         <LandingTrustBar />
         <LandingPilotProgramSection />
-        <LandingCtaSection />
+        <LandingBookingSection />
         <LandingFaqSection />
         <LandingFooter />
       </div>

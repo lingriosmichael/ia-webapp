@@ -5,9 +5,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 export function LandingFaqSection() {
   const { t } = useTranslation();
+  const { ref, isRevealed } = useScrollReveal<HTMLDivElement>();
   const items = t("landing.faq.items", {
     returnObjects: true,
   }) as { question: string; answer: string }[];
@@ -18,7 +20,13 @@ export function LandingFaqSection() {
         {t("landing.faq.title")}
       </h2>
 
-      <div className="mt-10 rounded-2xl border border-border/70 bg-card px-6">
+      {/* Quiet opacity-only fade: the accordion's own open/close interaction
+          is this section's liveliness, not another slide-up entrance. */}
+      <div
+        ref={ref}
+        className="mt-10 rounded-2xl border border-border/70 bg-card px-6 transition-opacity duration-500 ease-out"
+        style={{ opacity: isRevealed ? 1 : 0 }}
+      >
         <Accordion type="single" collapsible>
           {items.map((item, index) => (
             <AccordionItem key={index} value={`item-${index}`}>

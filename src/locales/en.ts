@@ -49,8 +49,6 @@ const en = {
         "brindl brings project data, evidence, and impact information together in one place, so your team writes reports faster and sees more clearly what your work achieves.",
       ctaPrimary: "View pilot programme",
       ctaSecondary: "Book a 15-minute call",
-      mockupAlt:
-        "brindl dashboard preview showing a mentoring programme's overview, its recent activities, and an impact insights panel with a 79% relationship-capital score.",
     },
     problem: {
       title: "Does this sound familiar?",
@@ -132,15 +130,17 @@ const en = {
         ],
       },
     },
-    cta: {
+    booking: {
       titleBefore: "Ready for ",
       titleHighlight1: "less effort",
       titleMiddle: " and ",
       titleHighlight2: "more impact",
       titleAfter: "?",
       description:
-        "Book a no-obligation call now. We'll show you how brindl takes work off your team's plate and makes your impact visible.",
-      primary: "Request a call",
+        "Pick a 15-minute slot to walk through brindl with us — no preparation needed, just bring a question or a project you'd like to see it applied to.",
+      cta: "Choose a time",
+      note: "Live scheduling is opening here soon.",
+      slots: ["Tue, 10:00", "Tue, 14:30", "Wed, 09:00"],
     },
     faq: {
       title: "Frequently asked questions",
