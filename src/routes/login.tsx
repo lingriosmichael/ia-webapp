@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -102,15 +102,6 @@ function LoginPage() {
           {loginMutation.isPending ? t("auth.loggingIn") : t("common.logIn")}
         </Button>
       </form>
-      <div className="mt-6 border-t border-border pt-6 text-sm text-muted-foreground">
-        {t("auth.newHere")}{" "}
-        <Link
-          to="/register"
-          className="font-medium text-primary underline-offset-4 hover:underline"
-        >
-          {t("auth.createAnAccount")}
-        </Link>
-      </div>
     </AuthShell>
   );
 }

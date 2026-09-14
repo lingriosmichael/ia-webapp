@@ -1,4 +1,3 @@
-import { ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -131,18 +130,7 @@ export function LandingHeroSection() {
       </div>
 
       <div className="relative z-10 flex max-w-2xl flex-col items-center">
-        <div className="inline-flex flex-wrap items-center justify-center gap-2 rounded-full border border-primary/15 bg-card px-3 py-1.5 shadow-[var(--shadow-soft)]">
-          <span className="h-1.5 w-1.5 rounded-full bg-apricot" />
-          <span className="text-sm text-primary">
-            {t("landing.hero.pilotBadge")}
-          </span>
-          <span className="text-border">·</span>
-          <span className="text-sm text-muted-foreground">
-            {t("landing.hero.freeBadge")}
-          </span>
-        </div>
-
-        <h1 className="mt-6 max-w-[16ch] font-display text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
+        <h1 className="max-w-[16ch] font-display text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
           <span className="text-[2.588rem] sm:text-[3.45rem] lg:text-[4.313rem]">
             {t("landing.hero.titleLine1")}
           </span>
@@ -157,13 +145,11 @@ export function LandingHeroSection() {
           {t("landing.hero.description")}
         </p>
 
+        <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">
+          {t("landing.hero.developmentNote")}
+        </p>
+
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Button size="lg" asChild>
-            <a href="#pilotprogramm">
-              {t("landing.hero.ctaPrimary")}
-              <ArrowRight className="h-4 w-4" />
-            </a>
-          </Button>
           <Button size="lg" variant="outline" asChild>
             <a href="#termin">{t("landing.hero.ctaSecondary")}</a>
           </Button>

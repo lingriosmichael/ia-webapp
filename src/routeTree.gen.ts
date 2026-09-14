@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UeberUnsRouteImport } from './routes/ueber-uns'
-import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ImpressumRouteImport } from './routes/impressum'
 import { Route as DatenschutzRouteImport } from './routes/datenschutz'
@@ -49,11 +48,6 @@ import { Route as ProjectsProjectIdActivitiesActivityIdDataReviewIndexRouteImpor
 const UeberUnsRoute = UeberUnsRouteImport.update({
   id: '/ueber-uns',
   path: '/ueber-uns',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -255,7 +249,6 @@ export interface FileRoutesByFullPath {
   '/datenschutz': typeof DatenschutzRoute
   '/impressum': typeof ImpressumRoute
   '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
   '/ueber-uns': typeof UeberUnsRoute
   '/organizations/$organizationId': typeof OrganizationsOrganizationIdRouteRouteWithChildren
   '/projects/$projectId': typeof ProjectsProjectIdRouteRouteWithChildren
@@ -293,7 +286,6 @@ export interface FileRoutesByTo {
   '/datenschutz': typeof DatenschutzRoute
   '/impressum': typeof ImpressumRoute
   '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
   '/ueber-uns': typeof UeberUnsRoute
   '/onboarding/invite': typeof OnboardingInviteRoute
   '/onboarding/profile': typeof OnboardingProfileRoute
@@ -330,7 +322,6 @@ export interface FileRoutesById {
   '/datenschutz': typeof DatenschutzRoute
   '/impressum': typeof ImpressumRoute
   '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
   '/ueber-uns': typeof UeberUnsRoute
   '/organizations/$organizationId': typeof OrganizationsOrganizationIdRouteRouteWithChildren
   '/projects/$projectId': typeof ProjectsProjectIdRouteRouteWithChildren
@@ -370,7 +361,6 @@ export interface FileRouteTypes {
     | '/datenschutz'
     | '/impressum'
     | '/login'
-    | '/register'
     | '/ueber-uns'
     | '/organizations/$organizationId'
     | '/projects/$projectId'
@@ -408,7 +398,6 @@ export interface FileRouteTypes {
     | '/datenschutz'
     | '/impressum'
     | '/login'
-    | '/register'
     | '/ueber-uns'
     | '/onboarding/invite'
     | '/onboarding/profile'
@@ -444,7 +433,6 @@ export interface FileRouteTypes {
     | '/datenschutz'
     | '/impressum'
     | '/login'
-    | '/register'
     | '/ueber-uns'
     | '/organizations/$organizationId'
     | '/projects/$projectId'
@@ -483,7 +471,6 @@ export interface RootRouteChildren {
   DatenschutzRoute: typeof DatenschutzRoute
   ImpressumRoute: typeof ImpressumRoute
   LoginRoute: typeof LoginRoute
-  RegisterRoute: typeof RegisterRoute
   UeberUnsRoute: typeof UeberUnsRoute
   OrganizationsOrganizationIdRouteRoute: typeof OrganizationsOrganizationIdRouteRouteWithChildren
   ProjectsProjectIdRouteRoute: typeof ProjectsProjectIdRouteRouteWithChildren
@@ -501,13 +488,6 @@ declare module '@tanstack/react-router' {
       path: '/ueber-uns'
       fullPath: '/ueber-uns'
       preLoaderRoute: typeof UeberUnsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -854,7 +834,6 @@ const rootRouteChildren: RootRouteChildren = {
   DatenschutzRoute: DatenschutzRoute,
   ImpressumRoute: ImpressumRoute,
   LoginRoute: LoginRoute,
-  RegisterRoute: RegisterRoute,
   UeberUnsRoute: UeberUnsRoute,
   OrganizationsOrganizationIdRouteRoute:
     OrganizationsOrganizationIdRouteRouteWithChildren,

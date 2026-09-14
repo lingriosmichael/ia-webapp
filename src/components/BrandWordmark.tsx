@@ -9,7 +9,7 @@ export function BrandWordmark({
   imageClassName,
   textClassName,
 }: {
-  to?: "/" | "/login" | "/register";
+  to?: "/" | "/login";
   className?: string;
   imageClassName?: string;
   textClassName?: string;

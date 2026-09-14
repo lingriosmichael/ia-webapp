@@ -40,15 +40,14 @@ const en = {
       navAboutUs: "About us",
     },
     hero: {
-      pilotBadge: "Pilot phase from August 2026",
-      freeBadge: "Free participation",
       titleLine1: "Less time on funder reports.",
       titleLine2: "More clarity on ",
       titleHighlight: "your impact.",
       description:
         "brindl brings project data, evidence, and impact information together in one place, so your team writes reports faster and sees more clearly what your work achieves.",
-      ctaPrimary: "View pilot programme",
-      ctaSecondary: "Book a 15-minute call",
+      developmentNote:
+        "We're currently developing and testing brindl together with nonprofit organizations from the field.",
+      ctaSecondary: "Book a 30-minute call",
     },
     problem: {
       title: "Does this sound familiar?",
@@ -94,42 +93,6 @@ const en = {
       statement:
         "brindl is designed according to GDPR principles. We reduce direct personal identifiers before AI processing, use controlled AWS infrastructure, do not use customer data to train general AI models, and delete customer data when the service ends.",
     },
-    pilotProgram: {
-      title: "Our pilot programme",
-      whatYouGet: {
-        title: "What you get",
-        items: [
-          "Access to brindl during the 2026 pilot phase",
-          "Personal onboarding and walkthrough (if needed)",
-          "Regular check-ins & feedback rounds",
-        ],
-      },
-      whatYouBring: {
-        title: "What you bring",
-        items: [
-          "An existing project or programme",
-          "Results and evidence you already have",
-          "Willingness to collaborate and share feedback",
-        ],
-      },
-      goodToKnow: {
-        title: "Good to know",
-        items: [
-          "Free participation",
-          "Runtime: August – September 2026",
-          "Spots are limited",
-        ],
-      },
-      afterPilot: {
-        title: "After the pilot",
-        items: [
-          "You get an evaluation with insights",
-          "Joint feedback for optimization",
-          "Access to brindl on special terms",
-          "In a short conversation, you tell us how user-friendly brindl is and what is still missing.",
-        ],
-      },
-    },
     booking: {
       titleBefore: "Ready for ",
       titleHighlight1: "less effort",
@@ -137,10 +100,8 @@ const en = {
       titleHighlight2: "more impact",
       titleAfter: "?",
       description:
-        "Pick a 15-minute slot to walk through brindl with us — no preparation needed, just bring a question or a project you'd like to see it applied to.",
+        "Pick a 30-minute slot to walk through brindl with us — no preparation needed, just bring a question or a project you'd like to see it applied to.",
       cta: "Choose a time",
-      note: "Live scheduling is opening here soon.",
-      slots: ["Tue, 10:00", "Tue, 14:30", "Wed, 09:00"],
     },
     faq: {
       title: "Frequently asked questions",
@@ -201,10 +162,23 @@ const en = {
       title: "Terms & conditions",
       placeholder: "Placeholder — terms & conditions content to be added.",
     },
-    ueberUns: {
-      title: "About us",
-      placeholder: "Placeholder — about-us content to be added.",
-    },
+  },
+  about: {
+    title: "About us",
+    intro:
+      "In our work with nonprofit organizations, we've seen how time-consuming it can be to bring project data, impact information, and funder requirements together. With Brindl, we want to build a tool that makes this work easier and puts existing data to better use.",
+    team: [
+      {
+        name: "Katrina Zuchina",
+        role: "Impact & Product",
+        bio: "I bring over ten years of experience in the non-profit sector and a deep understanding of funding logic and impact orientation. It matters to me to make impact visible not just for reports, but to empower and support organizations in making better use of their data day to day and in developing their own understanding of impact.",
+      },
+      {
+        name: "Michael Ling Rios",
+        role: "Product & Technology",
+        bio: "I'm a data scientist with a mathematical background and experience building data-driven products. My focus is on making complex processes simpler with data, automation, and AI, and translating them into solutions that actually work in everyday use.",
+      },
+    ],
   },
   auth: {
     loginMarketingTitle:

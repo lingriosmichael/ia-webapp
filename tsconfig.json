@@ -5,6 +5,7 @@
     "vite.config.ts",
     "eslint.config.js"
   ],
+  "exclude": ["src/_archived/**"],
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",

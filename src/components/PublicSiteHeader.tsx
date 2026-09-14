@@ -46,20 +46,6 @@ export function PublicSiteHeader({ currentPage }: { currentPage: PublicPage }) {
         >
           {t("common.logIn")}
         </Link>
-        {isLandingPage ? null : (
-          <Link
-            to="/register"
-            className={cn(
-              "inline-flex h-9 items-center rounded-md px-4 text-sm font-medium shadow transition-colors",
-              currentPage === "register"
-                ? "bg-signal text-signal-foreground"
-                : "bg-signal text-signal-foreground hover:bg-signal/94",
-            )}
-            aria-current={currentPage === "register" ? "page" : undefined}
-          >
-            {t("common.register")}
-          </Link>
-        )}
       </div>
     </header>
   );

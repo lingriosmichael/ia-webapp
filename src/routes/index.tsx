@@ -5,7 +5,6 @@ import { LandingFaqSection } from "@/components/landing/landingFaqSection";
 import { LandingFooter } from "@/components/landing/landingFooter";
 import { LandingHeroSection } from "@/components/landing/landingHeroSection";
 import { LandingHowItWorksSection } from "@/components/landing/landingHowItWorksSection";
-import { LandingPilotProgramSection } from "@/components/landing/landingPilotProgramSection";
 import { LandingProblemSection } from "@/components/landing/landingProblemSection";
 import { LandingTrustBar } from "@/components/landing/landingTrustBar";
 import { PublicSiteHeader } from "@/components/PublicSiteHeader";
@@ -84,7 +83,6 @@ function LandingPage() {
         <LandingProblemSection />
         <LandingHowItWorksSection />
         <LandingTrustBar />
-        <LandingPilotProgramSection />
         <LandingBookingSection />
         <LandingFaqSection />
         <LandingFooter />

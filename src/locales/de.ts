@@ -42,15 +42,14 @@ const de: TranslationDictionary = {
       navAboutUs: "Über uns",
     },
     hero: {
-      pilotBadge: "Pilotphase ab August 2026",
-      freeBadge: "Kostenfreie Teilnahme",
       titleLine1: "Weniger Zeit für Förderberichte.",
       titleLine2: "Mehr Klarheit über ",
       titleHighlight: "Ihre Wirkung.",
       description:
         "brindl bringt Projektdaten, Nachweise und Wirkungsinformationen an einem Ort zusammen. So erstellt Ihr Team Berichte schneller und erkennt leichter, was Ihre Arbeit bewirkt.",
-      ctaPrimary: "Pilotprogramm ansehen",
-      ctaSecondary: "15-minütigen Gespräch vereinbaren",
+      developmentNote:
+        "Aktuell entwickeln und testen wir brindl gemeinsam mit gemeinnützigen Organisationen aus der Praxis.",
+      ctaSecondary: "30-minütigen Gespräch vereinbaren",
     },
     problem: {
       title: "Kommt Ihnen das bekannt vor?",
@@ -96,42 +95,6 @@ const de: TranslationDictionary = {
       statement:
         "brindl ist nach DSGVO-Grundsätzen konzipiert. Wir reduzieren direkte personenbezogene Identifikatoren vor der KI-Verarbeitung, nutzen kontrollierte AWS-Infrastruktur, verwenden Kundendaten nicht zum Training allgemeiner KI-Modelle und löschen Kundendaten, wenn der Service endet.",
     },
-    pilotProgram: {
-      title: "Unser Pilotprogramm",
-      whatYouGet: {
-        title: "Das erhalten Sie",
-        items: [
-          "Zugang zu brindl während der Pilotphase 2026",
-          "Persönliches Onboarding und Erklärung (Bei Bedarf)",
-          "Regelmäßiger Austausch & Feedbackrunden",
-        ],
-      },
-      whatYouBring: {
-        title: "Das bringen Sie mit",
-        items: [
-          "Ein bestehendes Projekt/Programm",
-          "Bereits vorhandene Ergebnisse und Nachweise",
-          "Bereitschaft zur Zusammenarbeit und zum Austausch von Feedback",
-        ],
-      },
-      goodToKnow: {
-        title: "Wichtig zu wissen",
-        items: [
-          "Kostenfreie Teilnahme",
-          "Laufzeit: August – September 2026",
-          "Plätze sind begrenzt",
-        ],
-      },
-      afterPilot: {
-        title: "Nach dem Pilot",
-        items: [
-          "Sie erhalten eine Auswertung mit Insights",
-          "Gemeinsames Feedback zur Optimierung",
-          "Zugang zu brindl zu Sonderkonditionen",
-          "Sie teilen uns in einem kurzen Gespräch mit, wie nutzerfreundlich brindl ist und was noch fehlt.",
-        ],
-      },
-    },
     booking: {
       titleBefore: "Bereit für ",
       titleHighlight1: "weniger Aufwand",
@@ -139,10 +102,8 @@ const de: TranslationDictionary = {
       titleHighlight2: "mehr Wirkung",
       titleAfter: "?",
       description:
-        "Wählen Sie einen 15-minütigen Termin, um brindl gemeinsam mit uns durchzugehen – ganz ohne Vorbereitung, bringen Sie einfach eine Frage oder ein Projekt mit.",
+        "Wählen Sie einen 30-minütigen Termin, um brindl gemeinsam mit uns durchzugehen – ganz ohne Vorbereitung, bringen Sie einfach eine Frage oder ein Projekt mit.",
       cta: "Termin wählen",
-      note: "Die Live-Terminbuchung folgt hier in Kürze.",
-      slots: ["Di, 10:00", "Di, 14:30", "Mi, 09:00"],
     },
     faq: {
       title: "Häufige Fragen",
@@ -202,10 +163,23 @@ const de: TranslationDictionary = {
       title: "AGB",
       placeholder: "Platzhalter – AGB-Inhalt wird noch ergänzt.",
     },
-    ueberUns: {
-      title: "Über uns",
-      placeholder: "Platzhalter – Inhalt zu „Über uns“ wird noch ergänzt.",
-    },
+  },
+  about: {
+    title: "Über uns",
+    intro:
+      "In unserer Arbeit mit gemeinnützigen Organisationen haben wir gesehen, wie aufwendig es sein kann, Projektdaten, Wirkungsinformationen und Förderanforderungen zusammenzubringen. Mit Brindl wollen wir ein Werkzeug entwickeln, das diese Arbeit einfacher macht und vorhandene Daten besser nutzbar macht.",
+    team: [
+      {
+        name: "Katrina Zuchina",
+        role: "Wirkung & Produkt",
+        bio: "Ich bringe über zehn Jahre Erfahrung im Non-Profit-Sektor und ein tiefes Verständnis für Förderlogiken und Wirkungsorientierung mit. Mir liegt es am Herzen, Wirkung nicht nur für Berichte sichtbar zu machen, sondern Organisationen dabei zu empowern und zu unterstützen, ihre Daten im Alltag besser zu nutzen und ihr eigenes Wirkungsverständnis weiterzuentwickeln.",
+      },
+      {
+        name: "Michael Ling Rios",
+        role: "Produkt & Technologie",
+        bio: "Ich bin Data Scientist mit mathematischem Hintergrund und Erfahrung in der Entwicklung datengetriebener Produkte. Mein Fokus liegt darauf, komplexe Prozesse mit Daten, Automatisierung und KI einfacher zu machen und in Lösungen zu übersetzen, die im Arbeitsalltag tatsächlich funktionieren.",
+      },
+    ],
   },
   auth: {
     loginMarketingTitle:

@@ -1,3 +1,16 @@
+// Archived 2026-09-14: public self-serve registration is disabled for the
+// discovery phase (product-decision, not a bug) — brindl only onboards
+// people through org-owner-issued invitations
+// (routes/invitations/$token/accept.tsx) while we're validating with pilot
+// organizations. Login stays fully functional; only account creation is
+// paused.
+//
+// This file lives outside src/routes/ on purpose, so TanStack Start's
+// file-based router does not register "/register" at all (not just
+// unlinked — visiting the URL directly 404s). To restore self-serve
+// registration: move this file back to src/routes/register.tsx, then
+// re-add the "Registrieren" button in PublicSiteHeader.tsx and the
+// "Konto erstellen" link in routes/login.tsx (see git history for both).
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
