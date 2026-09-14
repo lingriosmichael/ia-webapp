@@ -102,13 +102,14 @@ const de: TranslationDictionary = {
       titleHighlight2: "mehr Wirkung",
       titleAfter: "?",
       description:
-        "Wählen Sie einen 30-minütigen Termin, um brindl gemeinsam mit uns durchzugehen – ganz ohne Vorbereitung, bringen Sie einfach eine Frage oder ein Projekt mit.",
+        "30 Minuten Praxisgespräch zu Wirkungsdaten\n\nWie gehen Sie heute mit Wirkungsdaten und Förderberichten um – und wo wird es unnötig aufwendig?\n\nWir möchten verstehen, was gut funktioniert, wo es hakt und was Ihre Arbeit erleichtern würde.\n\nTeilen Sie Ihre Erfahrungen und gestalten Sie Brindl mit.",
       cta: "Termin wählen",
     },
     faq: {
       title: "Häufige Fragen",
       items: [
         {
+          hidden: true,
           question: "Wie viel Aufwand bedeutet die Teilnahme am Pilotprogramm?",
           answer:
             "Rechnen Sie während des Pilotprogramms mit durchschnittlich zwei bis drei Stunden pro Monat. Der größte Teil des Aufwands entsteht zu Beginn: In einem persönlichen Onboarding richten wir gemeinsam Ihr Projekt ein, klären Ihre Berichtsanforderungen und besprechen, welche vorhandenen Daten und Nachweise Sie nutzen möchten.\n\nAnschließend laden Sie bestehende Projektunterlagen hoch und prüfen die von brindl aufbereiteten Informationen. Zusätzliche Zeit benötigen wir vor allem für kurze Feedbackgespräche, damit wir verstehen, was für Ihren Arbeitsalltag hilfreich ist und wo die Plattform noch verbessert werden sollte.\n\nSie müssen dafür keine neue Monitoring-Struktur aufbauen und keine zusätzliche Datenerhebung starten. Das Pilotprogramm soll sich möglichst gut in Ihre bestehenden Abläufe integrieren, nicht neue Bürokratie schaffen. Im ersten Monat kann der Aufwand durch das Onboarding etwas höher sein; danach konzentriert sich die Teilnahme vor allem auf Nutzung, Prüfung und Feedback.",
@@ -125,6 +126,7 @@ const de: TranslationDictionary = {
             "brindl nutzt KI, um Informationen aus hochgeladenen Projektunterlagen zu strukturieren, zusammenzufassen und in einen verständlichen Zusammenhang zu bringen. Die KI kann beispielsweise relevante Inhalte erkennen, Nachweise verschiedenen Aktivitäten zuordnen, Entwicklungen beschreiben und auf fehlende oder widersprüchliche Informationen hinweisen.\n\nDer Schutz personenbezogener Daten beginnt, bevor Inhalte an das KI-Modell übermittelt werden. Ein integrierter PII-Scanner erkennt direkte Identifikatoren – derzeit insbesondere Personennamen – und ersetzt sie durch pseudonyme Platzhalter. Dadurch erhält das Modell beispielsweise nicht den Namen „Maria Mustermann“, sondern eine neutrale Kennzeichnung wie „Person 01“. Diese Pseudonymisierung reduziert das Risiko, ersetzt aber nicht alle weiteren Datenschutzmaßnahmen.\n\nOrganisationen sollten deshalb nur die für den jeweiligen Zweck erforderlichen Daten hochladen und besonders sensible oder nicht benötigte Angaben möglichst bereits vor dem Upload entfernen. Pseudonymisierte Informationen gelten rechtlich nicht automatisch als anonym und können weiterhin unter die DSGVO fallen.\n\nDie KI-Verarbeitung erfolgt über Amazon Bedrock. Nach Angaben von AWS haben die Anbieter der dort bereitgestellten Basismodelle keinen Zugriff auf Kundenprompts oder die generierten Antworten. AWS erklärt außerdem, dass Ein- und Ausgaben nicht zum Training der Basismodelle verwendet werden.\n\nbrindl verwendet KI als unterstützendes Werkzeug. Die Ergebnisse sollten durch die Nutzer:innen geprüft werden und ersetzen keine fachliche oder rechtliche Bewertung.",
         },
         {
+          hidden: true,
           question: "Ist meine Organisation rechtlich gebunden?",
           answer:
             "Die Teilnahme am Pilotprogramm verpflichtet Ihre Organisation nicht dazu, brindl anschließend kostenpflichtig weiterzunutzen. Es gibt keine automatische Verlängerung in ein kostenpflichtiges Abonnement und keine spätere Kaufverpflichtung.\n\nFür die Pilotphase vereinbaren wir lediglich die Rahmenbedingungen der Zusammenarbeit. Dazu gehören beispielsweise die Laufzeit des Piloten, der Umgang mit Daten, Zuständigkeiten und die Möglichkeit, Feedback zur Plattform zu geben. Ihre Organisation behält die Kontrolle über ihre eigenen Projektinformationen und entscheidet selbst, welche Daten für den Pilot genutzt werden.\n\nSollten Sie das Pilotprogramm vorzeitig beenden wollen, besprechen wir gemeinsam das weitere Vorgehen und den Umgang mit den bis dahin hochgeladenen Daten. Eine spätere Nutzung von brindl wird nur dann vereinbart, wenn beide Seiten dies ausdrücklich wünschen.",
@@ -135,6 +137,7 @@ const de: TranslationDictionary = {
             "Für die Einrichtung benötigen Sie keine eigene IT-Abteilung und müssen keine neue Software in Ihrer Organisation installieren. brindl wird über den Browser genutzt.\n\nZu Beginn führen wir ein persönliches Onboarding durch. Dabei richten wir gemeinsam Ihr erstes Projekt ein und besprechen unter anderem:\n\n• Welche Ziele und Aktivitäten umfasst das Projekt?\n• Welche Indikatoren oder Berichtspflichten sind relevant?\n• Welche Daten und Nachweise liegen bereits vor?\n• Wer soll innerhalb Ihrer Organisation mit brindl arbeiten?\n• Welche Auswertungen oder Berichtsfragen sind für Sie besonders wichtig?\n\nDanach können Sie bestehende Dateien direkt dem jeweiligen Projekt oder den passenden Aktivitäten zuordnen. Sie müssen Ihre bisherigen Ablagen nicht vollständig migrieren und auch keine neue Datenstruktur entwickeln, bevor Sie beginnen können.\n\nWährend der Pilotphase unterstützen wir Sie persönlich bei Fragen zur Einrichtung, zur Auswahl geeigneter Unterlagen und zur Nutzung der Ergebnisse. Das Ziel ist, möglichst schnell mit einem realen Projekt und Ihren bestehenden Daten arbeiten zu können.",
         },
         {
+          hidden: true,
           question:
             "Was passiert mit unseren Daten, wenn wir brindl nach dem Pilot nicht weiter nutzen?",
           answer:

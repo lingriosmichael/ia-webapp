@@ -10,9 +10,10 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 export function LandingFaqSection() {
   const { t } = useTranslation();
   const { ref, isRevealed } = useScrollReveal<HTMLDivElement>();
-  const items = t("landing.faq.items", {
+  const allItems = t("landing.faq.items", {
     returnObjects: true,
-  }) as { question: string; answer: string }[];
+  }) as { question: string; answer: string; hidden?: boolean }[];
+  const items = allItems.filter((item) => !item.hidden);
 
   return (
     <section id="faq" className="scroll-mt-24 py-16">

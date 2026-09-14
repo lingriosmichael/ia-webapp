@@ -107,6 +107,7 @@ const en = {
       title: "Frequently asked questions",
       items: [
         {
+          hidden: true,
           question:
             "How much effort does taking part in the pilot programme mean?",
           answer:
@@ -124,6 +125,7 @@ const en = {
             "brindl uses AI to structure, summarize, and place information from uploaded project documents into a clear and understandable context. For example, the AI can identify relevant content, assign evidence to different activities, describe developments, and point out missing or contradictory information.\n\nThe protection of personal data begins before content is sent to the AI model. An integrated PII scanner detects direct identifiers, currently especially personal names, and replaces them with pseudonymous placeholders. This means the model does not receive a name such as “Maria Mustermann”, but instead a neutral label such as “Person 01”. This pseudonymization reduces risk, but it does not replace all other data-protection measures.\n\nOrganizations should therefore upload only the data required for the specific purpose and, where possible, remove particularly sensitive or unnecessary details before upload. Pseudonymized information is not automatically anonymous in legal terms and may still fall under the GDPR.\n\nAI processing is carried out via Amazon Bedrock. According to AWS, the providers of the foundation models made available there do not have access to customer prompts or generated responses. AWS also states that inputs and outputs are not used to train the foundation models.\n\nbrindl uses AI as a supporting tool. The results should be reviewed by users and do not replace professional or legal judgment.",
         },
         {
+          hidden: true,
           question: "Is our organization legally bound by joining?",
           answer:
             "Taking part in the pilot programme does not oblige your organization to continue using brindl on a paid basis afterwards. There is no automatic conversion into a paid subscription and no later obligation to buy.\n\nFor the pilot phase, we only agree the framework of the collaboration. This can include, for example, the duration of the pilot, how data are handled, responsibilities, and the opportunity to provide feedback on the platform. Your organization remains in control of its own project information and decides which data are used for the pilot.\n\nIf you want to end the pilot programme early, we discuss together how to proceed and how to handle the data uploaded up to that point. Any later use of brindl is only agreed if both sides explicitly want that.",
@@ -134,6 +136,7 @@ const en = {
             "You do not need your own IT department for setup, and you do not have to install new software in your organization. brindl is used through the browser.\n\nAt the beginning, we carry out a personal onboarding session. Together, we set up your first project and discuss topics such as:\n\n• What goals and activities does the project include?\n• Which indicators or reporting obligations are relevant?\n• What data and evidence already exist?\n• Who within your organization should work with brindl?\n• Which analyses or reporting questions are especially important to you?\n\nAfter that, you can assign existing files directly to the relevant project or the appropriate activities. You do not need to migrate your entire existing filing structure or design a new data structure before you begin.\n\nThroughout the pilot phase, we support you personally with questions about setup, selecting suitable materials, and using the results. The goal is to start working as quickly as possible with a real project and your existing data.",
         },
         {
+          hidden: true,
           question:
             "What happens to our data if we do not continue using brindl after the pilot?",
           answer:

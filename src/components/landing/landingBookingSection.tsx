@@ -58,7 +58,7 @@ export function LandingBookingSection() {
           </span>
           {t("landing.booking.titleAfter")}
         </h2>
-        <p className="mt-4 max-w-md text-sm leading-6 text-muted-foreground">
+        <p className="mt-4 max-w-md whitespace-pre-line text-sm leading-6 text-muted-foreground">
           {t("landing.booking.description")}
         </p>
         <Button
