@@ -1,7 +1,10 @@
 import { ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { OrganicBlob, SectionFloorFade } from "@/components/landing/landingDecorations";
+import {
+  OrganicBlob,
+  SectionFloorFade,
+} from "@/components/landing/landingDecorations";
 import { Button } from "@/components/ui/button";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
@@ -11,7 +14,9 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 // Reduced-motion visitors get the static layout with no travel at all.
 function useHeroParallax() {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const prefersReducedMotion = useMediaQuery(
+    "(prefers-reduced-motion: reduce)",
+  );
   const [offset, setOffset] = useState(0);
 
   useEffect(() => {
@@ -86,7 +91,11 @@ export function LandingHeroSection() {
               playsInline
               poster="/hero-ambient-poster.jpg"
             >
-              <source src="/hero-ambient.mp4" type="video/mp4" media="(min-width: 768px)" />
+              <source
+                src="/hero-ambient.mp4"
+                type="video/mp4"
+                media="(min-width: 768px)"
+              />
               <source src="/hero-ambient-m.mp4" type="video/mp4" />
             </video>
           ) : (

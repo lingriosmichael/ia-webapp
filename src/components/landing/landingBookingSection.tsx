@@ -34,7 +34,9 @@ function BookingCalendarPreview({ slots }: { slots: string[] }) {
 
 export function LandingBookingSection() {
   const { t } = useTranslation();
-  const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const prefersReducedMotion = useMediaQuery(
+    "(prefers-reduced-motion: reduce)",
+  );
   const slots = t("landing.booking.slots", { returnObjects: true }) as string[];
 
   return (
@@ -52,7 +54,11 @@ export function LandingBookingSection() {
             playsInline
             poster="/booking-ambient-poster.jpg"
           >
-            <source src="/booking-ambient.mp4" type="video/mp4" media="(min-width: 768px)" />
+            <source
+              src="/booking-ambient.mp4"
+              type="video/mp4"
+              media="(min-width: 768px)"
+            />
             <source src="/booking-ambient-m.mp4" type="video/mp4" />
           </video>
         ) : (
@@ -70,9 +76,13 @@ export function LandingBookingSection() {
         <div>
           <h2 className="max-w-md text-balance text-[1.725rem] font-semibold tracking-tight text-foreground sm:text-[2.156rem]">
             {t("landing.booking.titleBefore")}
-            <span className="text-signal">{t("landing.booking.titleHighlight1")}</span>
+            <span className="text-signal">
+              {t("landing.booking.titleHighlight1")}
+            </span>
             {t("landing.booking.titleMiddle")}
-            <span className="text-signal">{t("landing.booking.titleHighlight2")}</span>
+            <span className="text-signal">
+              {t("landing.booking.titleHighlight2")}
+            </span>
             {t("landing.booking.titleAfter")}
           </h2>
           <p className="mt-4 max-w-md text-sm leading-6 text-muted-foreground">

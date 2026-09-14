@@ -7,12 +7,18 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 // motion-safe browser ever sees the hidden state.
 export function useScrollReveal<T extends HTMLElement>() {
   const ref = useRef<T | null>(null);
-  const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const prefersReducedMotion = useMediaQuery(
+    "(prefers-reduced-motion: reduce)",
+  );
   const [isRevealed, setIsRevealed] = useState(true);
 
   useEffect(() => {
     const node = ref.current;
-    if (!node || prefersReducedMotion || typeof IntersectionObserver === "undefined") {
+    if (
+      !node ||
+      prefersReducedMotion ||
+      typeof IntersectionObserver === "undefined"
+    ) {
       setIsRevealed(true);
       return;
     }

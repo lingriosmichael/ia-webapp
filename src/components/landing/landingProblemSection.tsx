@@ -1,5 +1,8 @@
 import { useTranslation } from "react-i18next";
-import { DotGridPattern, OrganicBlob } from "@/components/landing/landingDecorations";
+import {
+  DotGridPattern,
+  OrganicBlob,
+} from "@/components/landing/landingDecorations";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 export function LandingProblemSection() {
@@ -42,7 +45,10 @@ export function LandingProblemSection() {
             {t("landing.problem.title")}
           </h2>
 
-          <div ref={ref} className="relative mt-8 border-l border-border/70 pl-8">
+          <div
+            ref={ref}
+            className="relative mt-8 border-l border-border/70 pl-8"
+          >
             {items.map((item, index) => (
               <div
                 key={index}

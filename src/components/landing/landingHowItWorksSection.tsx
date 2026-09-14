@@ -6,7 +6,11 @@ import {
 } from "@/components/landing/landingDecorations";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
-const STEP_PHOTOS = ["/step-collect.jpg", "/step-understand.jpg", "/step-report.jpg"];
+const STEP_PHOTOS = [
+  "/step-collect.jpg",
+  "/step-understand.jpg",
+  "/step-report.jpg",
+];
 
 export function LandingHowItWorksSection() {
   const { t } = useTranslation();

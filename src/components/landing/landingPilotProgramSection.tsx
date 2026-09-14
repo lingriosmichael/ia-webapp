@@ -1,6 +1,9 @@
 import { Check } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { DotGridPattern, SectionFloorFade } from "@/components/landing/landingDecorations";
+import {
+  DotGridPattern,
+  SectionFloorFade,
+} from "@/components/landing/landingDecorations";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const CARD_KEYS = [
@@ -45,7 +48,10 @@ export function LandingPilotProgramSection() {
           each accent bar draws in left-to-right — a quieter echo of the
           connector-line device from "So hilft brindl", not the same
           translate-and-fade already used for the Problem timeline. */}
-      <div ref={ref} className="relative mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+      <div
+        ref={ref}
+        className="relative mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4"
+      >
         {CARD_KEYS.map((key, index) => {
           const title = t(`landing.pilotProgram.${key}.title`);
           const items = t(`landing.pilotProgram.${key}.items`, {
