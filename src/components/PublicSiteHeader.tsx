@@ -19,13 +19,22 @@ export function PublicSiteHeader({ currentPage }: { currentPage: PublicPage }) {
       />
 
       {isLandingPage ? (
+        // "landing" also covers /ueber-uns (same header treatment), where
+        // #so-funktionierts and #faq don't exist in the DOM — so these use
+        // TanStack Router's Link + hash rather than plain <a href="#...">,
+        // which routes to "/" first when needed and then scrolls once the
+        // target section is actually in the DOM.
         <nav className="hidden items-center gap-6 text-sm font-medium text-muted-foreground md:flex">
-          <a href="#so-funktionierts" className="hover:text-foreground">
+          <Link
+            to="/"
+            hash="so-funktionierts"
+            className="hover:text-foreground"
+          >
             {t("landing.header.navHowItWorks")}
-          </a>
-          <a href="#faq" className="hover:text-foreground">
+          </Link>
+          <Link to="/" hash="faq" className="hover:text-foreground">
             {t("landing.header.navFaq")}
-          </a>
+          </Link>
           <Link to="/ueber-uns" className="hover:text-foreground">
             {t("landing.header.navAboutUs")}
           </Link>
