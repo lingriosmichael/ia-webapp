@@ -25,12 +25,12 @@ export function LandingProblemSection() {
       </div>
 
       <div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)] lg:gap-16">
-        <div className="relative isolate hidden lg:block">
+        <div className="relative isolate">
           <OrganicBlob
             tone="apricot"
             className="absolute -bottom-8 -right-10 -z-10 h-36 w-36 rotate-45"
           />
-          <div className="overflow-hidden rounded-2xl shadow-[var(--shadow-elevated)]">
+          <div className="mx-auto overflow-hidden rounded-2xl shadow-[var(--shadow-elevated)] lg:mx-0">
             <img
               src="/problem-desk.jpg"
               alt=""

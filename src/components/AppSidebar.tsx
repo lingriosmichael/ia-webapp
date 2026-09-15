@@ -200,8 +200,8 @@ export function AppSidebar({
     <>
       <div className="flex items-center overflow-visible px-4 pb-4 pt-8">
         <BrandWordmark
-          className="-ml-[2.64rem] h-9 shrink-0"
-          imageClassName="h-9 w-auto origin-left scale-[3.84]"
+          className="h-9 shrink-0"
+          imageClassName="h-7 w-auto"
           textClassName="text-xs tracking-[0.1em]"
         />
       </div>

@@ -13,8 +13,8 @@ export function PublicSiteHeader({ currentPage }: { currentPage: PublicPage }) {
   return (
     <header className="flex h-20 items-center justify-between gap-4 overflow-visible md:h-24">
       <BrandWordmark
-        className="-ml-[3.2rem] h-full shrink-0"
-        imageClassName="h-12 w-auto origin-left scale-[3.84] md:h-14"
+        className="h-full shrink-0"
+        imageClassName="h-9 w-auto md:h-10"
         textClassName="text-sm tracking-[0.1em]"
       />
 
